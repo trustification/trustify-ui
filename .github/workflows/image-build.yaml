@@ -20,7 +20,7 @@ jobs:
       registry: "ghcr.io"
       image_name: "${{ github.repository_owner }}/trustify-ui"
       containerfile: "./Containerfile"
-      architectures: '[ "amd64" ]'
+      architectures: '[ "amd64", "arm64", "ppc64le", "s390x" ]'
       extra-args: "--ulimit nofile=4096:4096"
     secrets:
       registry_username: ${{ github.actor }}
