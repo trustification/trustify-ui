@@ -1,26 +1,19 @@
-name: frontend
+name: CI
 
 on:
   push:
     branches:
       - main
+      - "release-*"
   pull_request:
     branches:
       - main
-    paths:
-      - "frontend/**"
-      - ".github/workflows/**"
-
-env:
-  CI: true
+      - "release-*"
 
 jobs:
   ci:
     name: ci
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
 
     steps:
       - uses: actions/checkout@v4

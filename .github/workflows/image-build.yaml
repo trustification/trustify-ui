@@ -19,7 +19,7 @@ jobs:
     with:
       registry: "ghcr.io"
       image_name: "${{ github.repository_owner }}/trustify-ui"
-      containerfile: "./frontend/Containerfile"
+      containerfile: "./Containerfile"
       architectures: '[ "amd64" ]'
       extra-args: "--ulimit nofile=4096:4096"
     secrets:
