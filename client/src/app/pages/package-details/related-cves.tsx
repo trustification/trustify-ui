@@ -1,26 +1,29 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import { ToolbarContent } from "@patternfly/react-core";
-
 import dayjs from "dayjs";
 
-import {
-  ConditionalTableBody,
-  FilterType,
-  useClientTableBatteries,
-} from "@carlosthe19916-latest/react-table-batteries";
+import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
+import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
 import { RENDER_DATE_FORMAT } from "@app/Constants";
 import { CVEBase } from "@app/api/models";
+import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
+import { SimplePagination } from "@app/components/SimplePagination";
+import {
+  ConditionalTableBody,
+  TableHeaderContentWithControls,
+} from "@app/components/TableControls";
+import { useLocalTableControls } from "@app/hooks/table-controls";
 
 interface RelatedCVEsProps {
   cves: CVEBase[];
 }
 
 export const RelatedCVEs: React.FC<RelatedCVEsProps> = ({ cves }) => {
-  const tableControls = useClientTableBatteries({
+  const tableControls = useLocalTableControls({
+    tableName: "cves-table",
     idProperty: "id",
     items: cves,
     isLoading: false,
@@ -31,85 +34,95 @@ export const RelatedCVEs: React.FC<RelatedCVEsProps> = ({ cves }) => {
       datePublished: "Date published",
     },
     hasActionsColumn: true,
-    filter: {
-      isEnabled: true,
-      filterCategories: [
-        {
-          key: "filterText",
-          title: "Filter text",
-          placeholderText: "Search",
-          type: FilterType.search,
-          getItemValue: (item) => item.id,
-        },
-      ],
-    },
-    sort: {
-      isEnabled: true,
-      sortableColumns: [],
-    },
-    pagination: { isEnabled: true },
+    isSortEnabled: false,
+    isPaginationEnabled: true,
+    initialItemsPerPage: 10,
+    isExpansionEnabled: false,
+    isFilterEnabled: true,
+    filterCategories: [
+      {
+        categoryKey: "filterText",
+        title: "Filter text",
+        placeholderText: "Search",
+        type: FilterType.search,
+        getItemValue: (item) => item.id,
+      },
+    ],
   });
 
   const {
     currentPageItems,
     numRenderedColumns,
-    components: {
-      Table,
-      Thead,
-      Tr,
-      Th,
-      Tbody,
-      Td,
-      Toolbar,
-      FilterToolbar,
-      PaginationToolbarItem,
-      Pagination,
+    propHelpers: {
+      toolbarProps,
+      filterToolbarProps,
+      paginationToolbarItemProps,
+      paginationProps,
+      tableProps,
+      getThProps,
+      getTrProps,
+      getTdProps,
     },
   } = tableControls;
 
   return (
     <>
-      <Toolbar>
+      <Toolbar {...toolbarProps}>
         <ToolbarContent>
-          <FilterToolbar id="related-cves-toolbar" />
-          <PaginationToolbarItem>
-            <Pagination
-              variant="top"
-              isCompact
-              widgetId="related-cves-pagination-top"
+          <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
+          <ToolbarItem {...paginationToolbarItemProps}>
+            <SimplePagination
+              idPrefix="cves-table"
+              isTop
+              paginationProps={paginationProps}
             />
-          </PaginationToolbarItem>
+          </ToolbarItem>
         </ToolbarContent>
       </Toolbar>
 
-      <Table aria-label="CVEs table" className="vertical-aligned-table">
+      <Table {...tableProps} aria-label="CVEs table">
         <Thead>
-          <Tr isHeaderRow>
-            <Th columnKey="id" />
-            <Th columnKey="description" />
-            <Th columnKey="severity" />
-            <Th columnKey="datePublished" />
+          <Tr>
+            <TableHeaderContentWithControls {...tableControls}>
+              <Th {...getThProps({ columnKey: "id" })} />
+              <Th {...getThProps({ columnKey: "description" })} />
+              <Th {...getThProps({ columnKey: "severity" })} />
+              <Th {...getThProps({ columnKey: "datePublished" })} />
+            </TableHeaderContentWithControls>
           </Tr>
         </Thead>
         <ConditionalTableBody
           isLoading={false}
+          isError={undefined}
           isNoData={cves.length === 0}
           numRenderedColumns={numRenderedColumns}
         >
           {currentPageItems?.map((item, rowIndex) => {
             return (
               <Tbody key={item.id}>
-                <Tr item={item} rowIndex={rowIndex}>
-                  <Td width={15} columnKey="id">
+                <Tr {...getTrProps({ item })}>
+                  <Td width={15} {...getTdProps({ columnKey: "id" })}>
                     <NavLink to={`/cves/${item.id}`}>{item.id}</NavLink>
                   </Td>
-                  <Td width={50} modifier="truncate" columnKey="description">
+                  <Td
+                    width={50}
+                    modifier="truncate"
+                    {...getTdProps({ columnKey: "description" })}
+                  >
                     {item.description}
                   </Td>
-                  <Td width={15} modifier="truncate" columnKey="severity">
+                  <Td
+                    width={15}
+                    modifier="truncate"
+                    {...getTdProps({ columnKey: "severity" })}
+                  >
                     <SeverityShieldAndText value={item.severity} />
                   </Td>
-                  <Td width={15} modifier="truncate" columnKey="datePublished">
+                  <Td
+                    width={15}
+                    modifier="truncate"
+                    {...getTdProps({ columnKey: "datePublished" })}
+                  >
                     {dayjs(item.date_discovered).format(RENDER_DATE_FORMAT)}
                   </Td>
                 </Tr>
@@ -118,10 +131,11 @@ export const RelatedCVEs: React.FC<RelatedCVEsProps> = ({ cves }) => {
           })}
         </ConditionalTableBody>
       </Table>
-      <Pagination
-        variant="bottom"
+      <SimplePagination
+        idPrefix="cves-table"
+        isTop={false}
         isCompact
-        widgetId="related-cves-pagination-bottom"
+        paginationProps={paginationProps}
       />
     </>
   );

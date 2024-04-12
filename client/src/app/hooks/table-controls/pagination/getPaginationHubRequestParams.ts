@@ -1,5 +1,5 @@
 import { HubRequestParams } from "@app/api/models";
-import { PaginationState } from "@carlosthe19916-latest/react-table-batteries";
+import { IPaginationState } from "./usePaginationState";
 
 /**
  * Args for getPaginationHubRequestParams
@@ -9,7 +9,7 @@ export interface IGetPaginationHubRequestParamsArgs {
   /**
    * The "source of truth" state for the pagination feature (returned by usePaginationState)
    */
-  pagination?: PaginationState;
+  paginationState?: IPaginationState;
 }
 
 /**
@@ -18,7 +18,7 @@ export interface IGetPaginationHubRequestParamsArgs {
  * @see getHubRequestParams
  */
 export const getPaginationHubRequestParams = ({
-  pagination: paginationState,
+  paginationState,
 }: IGetPaginationHubRequestParamsArgs): Partial<HubRequestParams> => {
   if (!paginationState) return {};
   const { pageNumber, itemsPerPage } = paginationState;

@@ -18,7 +18,7 @@ export const mockCVEArray: CVE[] = mockAdvisoryArray.flatMap(({ cves }) => {
 
 export const handlers = [
   rest.get(AppRest.CVES, (req, res, ctx) => {
-    return res(ctx.json(mockCVEArray));
+    return res(ctx.json({ items: mockCVEArray, total: mockCVEArray.length }));
   }),
   rest.get(`${AppRest.CVES}/:id`, (req, res, ctx) => {
     const { id } = req.params;

@@ -5,7 +5,9 @@ import { mockPackageArray } from "./sboms";
 
 export const handlers = [
   rest.get(AppRest.PACKAGES, (req, res, ctx) => {
-    return res(ctx.json(mockPackageArray));
+    return res(
+      ctx.json({ items: mockPackageArray, total: mockPackageArray.length })
+    );
   }),
   rest.get(`${AppRest.PACKAGES}/:id`, (req, res, ctx) => {
     const { id } = req.params;

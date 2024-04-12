@@ -1,22 +1,25 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import { ToolbarContent } from "@patternfly/react-core";
-
-import {
-  ConditionalTableBody,
-  FilterType,
-  useClientTableBatteries,
-} from "@carlosthe19916-latest/react-table-batteries";
+import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
+import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
 import { SBOMBase } from "@app/api/models";
+import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
+import { SimplePagination } from "@app/components/SimplePagination";
+import {
+  ConditionalTableBody,
+  TableHeaderContentWithControls,
+} from "@app/components/TableControls";
+import { useLocalTableControls } from "@app/hooks/table-controls";
 
 interface RelatedSBOMsProps {
   sboms: SBOMBase[];
 }
 
 export const RelatedSBOMs: React.FC<RelatedSBOMsProps> = ({ sboms }) => {
-  const tableControls = useClientTableBatteries({
+  const tableControls = useLocalTableControls({
+    tableName: "sboms-table",
     idProperty: "id",
     items: sboms,
     isLoading: false,
@@ -27,92 +30,95 @@ export const RelatedSBOMs: React.FC<RelatedSBOMsProps> = ({ sboms }) => {
       packageTree: "Package tree",
     },
     hasActionsColumn: true,
-    filter: {
-      isEnabled: true,
-      filterCategories: [
-        {
-          key: "filterText",
-          title: "Filter text",
-          placeholderText: "Search",
-          type: FilterType.search,
-          getItemValue: (item) => item.name,
-        },
-      ],
-    },
-    sort: {
-      isEnabled: true,
-      sortableColumns: [],
-    },
-    pagination: { isEnabled: true },
-    expansion: {
-      isEnabled: false,
-      variant: "single",
-    },
+    isSortEnabled: false,
+    isPaginationEnabled: true,
+    initialItemsPerPage: 10,
+    isExpansionEnabled: false,
+    isFilterEnabled: true,
+    filterCategories: [
+      {
+        categoryKey: "filterText",
+        title: "Filter text",
+        placeholderText: "Search",
+        type: FilterType.search,
+        getItemValue: (item) => item.name,
+      },
+    ],
   });
 
   const {
     currentPageItems,
     numRenderedColumns,
-    components: {
-      Table,
-      Thead,
-      Tr,
-      Th,
-      Tbody,
-      Td,
-      Toolbar,
-      FilterToolbar,
-      PaginationToolbarItem,
-      Pagination,
+    propHelpers: {
+      toolbarProps,
+      filterToolbarProps,
+      paginationToolbarItemProps,
+      paginationProps,
+      tableProps,
+      getThProps,
+      getTrProps,
+      getTdProps,
     },
   } = tableControls;
 
   return (
     <>
-      <Toolbar>
+      <Toolbar {...toolbarProps}>
         <ToolbarContent>
-          <FilterToolbar id="related-sboms-toolbar" />
-          <PaginationToolbarItem>
-            <Pagination
-              variant="top"
-              isCompact
-              widgetId="related-sboms-pagination-top"
+          <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
+          <ToolbarItem {...paginationToolbarItemProps}>
+            <SimplePagination
+              idPrefix="sboms-table"
+              isTop
+              paginationProps={paginationProps}
             />
-          </PaginationToolbarItem>
+          </ToolbarItem>
         </ToolbarContent>
       </Toolbar>
 
-      <Table
-        aria-label="Related sboms table"
-        className="vertical-aligned-table"
-      >
+      <Table {...tableProps} aria-label="SBOMs table">
         <Thead>
-          <Tr isHeaderRow>
-            <Th columnKey="name" />
-            <Th columnKey="version" />
-            <Th columnKey="supplier" />
-            <Th columnKey="packageTree" />
+          <Tr>
+            <TableHeaderContentWithControls {...tableControls}>
+              <Th {...getThProps({ columnKey: "name" })} />
+              <Th {...getThProps({ columnKey: "version" })} />
+              <Th {...getThProps({ columnKey: "supplier" })} />
+              <Th {...getThProps({ columnKey: "packageTree" })} />
+            </TableHeaderContentWithControls>
           </Tr>
         </Thead>
         <ConditionalTableBody
           isLoading={false}
-          isNoData={sboms?.length === 0}
+          isError={undefined}
+          isNoData={sboms.length === 0}
           numRenderedColumns={numRenderedColumns}
         >
           {currentPageItems?.map((item, rowIndex) => {
             return (
               <Tbody key={item.id}>
-                <Tr item={item} rowIndex={rowIndex}>
-                  <Td width={45} columnKey="name">
+                <Tr {...getTrProps({ item })}>
+                  <Td width={45} {...getTdProps({ columnKey: "name" })}>
                     <NavLink to={`/sboms/${item?.id}`}>{item?.name}</NavLink>
                   </Td>
-                  <Td width={15} modifier="truncate" columnKey="version">
+                  <Td
+                    width={15}
+                    modifier="truncate"
+                    {...getTdProps({ columnKey: "version" })}
+                  >
                     {item?.version}
                   </Td>
-                  <Td width={25} modifier="truncate" columnKey="supplier">
+                  <Td
+                    width={25}
+                    modifier="truncate"
+                    {...getTdProps({ columnKey: "supplier" })}
+                  >
                     {item?.supplier}
                   </Td>
-                  <Td width={15} modifier="truncate" columnKey="packageTree">
+                  <Td
+                    width={15}
+                    modifier="truncate"
+                    {...getTdProps({ columnKey: "packageTree" })}
+                  >
                     TODO: Package Tree
                   </Td>
                 </Tr>
@@ -121,10 +127,11 @@ export const RelatedSBOMs: React.FC<RelatedSBOMsProps> = ({ sboms }) => {
           })}
         </ConditionalTableBody>
       </Table>
-      <Pagination
-        variant="bottom"
+      <SimplePagination
+        idPrefix="sboms-table"
+        isTop={false}
         isCompact
-        widgetId="related-sboms-pagination-bottom"
+        paginationProps={paginationProps}
       />
     </>
   );

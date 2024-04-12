@@ -1,21 +1,30 @@
 import React from "react";
 
-import { ToolbarContent } from "@patternfly/react-core";
+import dayjs from "dayjs";
+
+import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import {
   ExpandableRowContent,
   Td as PFTd,
   Tr as PFTr,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
 } from "@patternfly/react-table";
 
-import { useFetchCVEsBySbomId } from "@app/queries/sboms";
+import { RENDER_DATE_FORMAT } from "@app/Constants";
+import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
+import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
+import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
-  FilterType,
-  useClientTableBatteries,
-} from "@carlosthe19916-latest/react-table-batteries";
-import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
-import dayjs from "dayjs";
-import { RENDER_DATE_FORMAT } from "@app/Constants";
+  TableHeaderContentWithControls,
+} from "@app/components/TableControls";
+import { useLocalTableControls } from "@app/hooks/table-controls";
+import { useFetchCVEsBySbomId } from "@app/queries/sboms";
 
 interface CVEsProps {
   sbomId: string;
@@ -24,7 +33,8 @@ interface CVEsProps {
 export const CVEs: React.FC<CVEsProps> = ({ sbomId }) => {
   const { cves, isFetching, fetchError } = useFetchCVEsBySbomId(sbomId);
 
-  const tableControls = useClientTableBatteries({
+  const tableControls = useLocalTableControls({
+    tableName: "cves-table",
     idProperty: "id",
     items: cves,
     isLoading: isFetching,
@@ -35,69 +45,64 @@ export const CVEs: React.FC<CVEsProps> = ({ sbomId }) => {
       datePublished: "Date published",
       packages: "Packages",
     },
-    filter: {
-      isEnabled: true,
-      filterCategories: [
-        {
-          key: "filterText",
-          title: "Filter tex",
-          type: FilterType.search,
-          placeholderText: "Search...",
-          getItemValue: (item) => item.id,
-        },
-      ],
-    },
-    sort: {
-      isEnabled: true,
-      sortableColumns: [],
-    },
-    expansion: {
-      isEnabled: true,
-      variant: "single",
-    },
+    isSortEnabled: false,
+    isPaginationEnabled: true,
+    initialItemsPerPage: 10,
+    isExpansionEnabled: true,
+    expandableVariant: "single",
+    isFilterEnabled: true,
+    filterCategories: [
+      {
+        categoryKey: "filterText",
+        title: "Filter tex",
+        type: FilterType.search,
+        placeholderText: "Search...",
+        getItemValue: (item) => item.id,
+      },
+    ],
   });
 
   const {
     currentPageItems,
     numRenderedColumns,
-    components: {
-      Table,
-      Thead,
-      Tr,
-      Th,
-      Tbody,
-      Td,
-      Toolbar,
-      FilterToolbar,
-      PaginationToolbarItem,
-      Pagination,
+    propHelpers: {
+      toolbarProps,
+      filterToolbarProps,
+      paginationToolbarItemProps,
+      paginationProps,
+      tableProps,
+      getThProps,
+      getTrProps,
+      getTdProps,
     },
-    expansion: { isCellExpanded },
+    expansionDerivedState: { isCellExpanded },
   } = tableControls;
 
   return (
     <>
-      <Toolbar>
+      <Toolbar {...toolbarProps}>
         <ToolbarContent>
-          <FilterToolbar id="cves-toolbar" />
-          <PaginationToolbarItem>
-            <Pagination
-              variant="top"
-              isCompact
-              widgetId="cves-pagination-top"
+          <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
+          <ToolbarItem {...paginationToolbarItemProps}>
+            <SimplePagination
+              idPrefix="cves-table"
+              isTop
+              paginationProps={paginationProps}
             />
-          </PaginationToolbarItem>
+          </ToolbarItem>
         </ToolbarContent>
       </Toolbar>
 
-      <Table aria-label="CVEs table" className="vertical-aligned-table">
+      <Table {...tableProps} aria-label="CVEs table">
         <Thead>
-          <Tr isHeaderRow>
-            <Th columnKey="id" />
-            <Th columnKey="description" />
-            <Th columnKey="severity" />
-            <Th columnKey="datePublished" />
-            <Th columnKey="packages" />
+          <Tr>
+            <TableHeaderContentWithControls {...tableControls}>
+              <Th {...getThProps({ columnKey: "id" })} />
+              <Th {...getThProps({ columnKey: "description" })} />
+              <Th {...getThProps({ columnKey: "severity" })} />
+              <Th {...getThProps({ columnKey: "datePublished" })} />
+              <Th {...getThProps({ columnKey: "packages" })} />
+            </TableHeaderContentWithControls>
           </Tr>
         </Thead>
         <ConditionalTableBody
@@ -109,20 +114,40 @@ export const CVEs: React.FC<CVEsProps> = ({ sbomId }) => {
           {currentPageItems?.map((item, rowIndex) => {
             return (
               <Tbody key={item.id}>
-                <Tr item={item} rowIndex={rowIndex}>
-                  <Td width={15} modifier="truncate" columnKey="id">
+                <Tr {...getTrProps({ item })}>
+                  <Td
+                    width={15}
+                    modifier="truncate"
+                    {...getTdProps({ columnKey: "id" })}
+                  >
                     {item.id}
                   </Td>
-                  <Td width={10} modifier="truncate" columnKey="description">
+                  <Td
+                    width={10}
+                    modifier="truncate"
+                    {...getTdProps({ columnKey: "description" })}
+                  >
                     {item.description}
                   </Td>
-                  <Td width={10} modifier="truncate" columnKey="severity">
+                  <Td
+                    width={10}
+                    modifier="truncate"
+                    {...getTdProps({ columnKey: "severity" })}
+                  >
                     <SeverityShieldAndText value={item.severity} />
                   </Td>
-                  <Td width={10} modifier="truncate" columnKey="datePublished">
+                  <Td
+                    width={10}
+                    modifier="truncate"
+                    {...getTdProps({ columnKey: "datePublished" })}
+                  >
                     {dayjs(item.date_discovered).format(RENDER_DATE_FORMAT)}
                   </Td>
-                  <Td width={10} modifier="truncate" columnKey="packages">
+                  <Td
+                    width={10}
+                    modifier="truncate"
+                    {...getTdProps({ columnKey: "packages" })}
+                  >
                     TODO packages affected
                   </Td>
                 </Tr>
@@ -142,10 +167,11 @@ export const CVEs: React.FC<CVEsProps> = ({ sbomId }) => {
           })}
         </ConditionalTableBody>
       </Table>
-      <Pagination
-        variant="bottom"
+      <SimplePagination
+        idPrefix="cves-table"
+        isTop={false}
         isCompact
-        widgetId="cves-pagination-bottom"
+        paginationProps={paginationProps}
       />
     </>
   );

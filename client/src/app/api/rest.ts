@@ -1,35 +1,38 @@
 import axios from "axios";
 
-import { serializeRequestParamsForHub } from "@app/hooks/table-controls";
+import { serializeRequestParamsForHub } from "@app/hooks/table-controls/getHubRequestParams";
 import {
   Advisory,
   CVE,
-  SBOM,
   HubPaginatedResult,
   HubRequestParams,
   Package,
+  SBOM,
 } from "./models";
 
 const HUB = "/hub";
 
-export const ADVISORIES = HUB + "/advisories";
+export const ADVISORIES = HUB + "/api/v1/search/advisory";
 export const CVES = HUB + "/cves";
 export const SBOMS = HUB + "/sboms";
 export const PACKAGES = HUB + "/packages";
+
+export interface PaginatedResponse<T> {
+  items: T[];
+  total: number;
+}
 
 export const getHubPaginatedResult = <T>(
   url: string,
   params: HubRequestParams = {}
 ): Promise<HubPaginatedResult<T>> =>
   axios
-    .get<T[]>(url, {
+    .get<PaginatedResponse<T>>(url, {
       params: serializeRequestParamsForHub(params),
     })
-    .then(({ data, headers }) => ({
-      data,
-      total: headers["x-total"]
-        ? parseInt(headers["x-total"], 10)
-        : data.length,
+    .then(({ data }) => ({
+      data: data.items,
+      total: data.total,
       params,
     }));
 

@@ -44,7 +44,7 @@ export const mockPackageArray: Package[] = [
 
 export const handlers = [
   rest.get(AppRest.SBOMS, (req, res, ctx) => {
-    return res(ctx.json(mockSBOMArray));
+    return res(ctx.json({ items: mockSBOMArray, total: mockSBOMArray.length }));
   }),
   rest.get(`${AppRest.SBOMS}/:id`, (req, res, ctx) => {
     const { id } = req.params;

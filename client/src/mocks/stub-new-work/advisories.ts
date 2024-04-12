@@ -54,7 +54,9 @@ export const mockAdvisoryArray: Advisory[] = [
 
 export const handlers = [
   rest.get(AppRest.ADVISORIES, (req, res, ctx) => {
-    return res(ctx.json(mockAdvisoryArray));
+    return res(
+      ctx.json({ items: mockAdvisoryArray, total: mockAdvisoryArray.length })
+    );
   }),
   rest.get(`${AppRest.ADVISORIES}/:id`, (req, res, ctx) => {
     const { id } = req.params;

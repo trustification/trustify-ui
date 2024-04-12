@@ -1,18 +1,31 @@
 import React from "react";
 
-import { Label, ToolbarContent } from "@patternfly/react-core";
+import {
+  Label,
+  Toolbar,
+  ToolbarContent,
+  ToolbarItem,
+} from "@patternfly/react-core";
 import {
   ExpandableRowContent,
   Td as PFTd,
   Tr as PFTr,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
 } from "@patternfly/react-table";
 
-import { useFetchPackagesBySbomId } from "@app/queries/sboms";
+import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
+import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
-  FilterType,
-  useClientTableBatteries,
-} from "@carlosthe19916-latest/react-table-batteries";
+  TableHeaderContentWithControls,
+} from "@app/components/TableControls";
+import { useLocalTableControls } from "@app/hooks/table-controls";
+import { useFetchPackagesBySbomId } from "@app/queries/sboms";
 
 interface PackagesProps {
   sbomId: string;
@@ -21,7 +34,8 @@ interface PackagesProps {
 export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
   const { packages, isFetching, fetchError } = useFetchPackagesBySbomId(sbomId);
 
-  const tableControls = useClientTableBatteries({
+  const tableControls = useLocalTableControls({
+    tableName: "packages-table",
     idProperty: "id",
     items: packages,
     isLoading: isFetching,
@@ -34,71 +48,65 @@ export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
       qualifiers: "Qualifiers",
       cves: "CVEs",
     },
-    filter: {
-      isEnabled: true,
-      filterCategories: [
-        {
-          key: "filterText",
-          title: "Filter tex",
-          type: FilterType.search,
-          placeholderText: "Search...",
-          getItemValue: (item) => item.name,
-        },
-      ],
-    },
-    sort: {
-      isEnabled: true,
-      sortableColumns: [],
-    },
-    expansion: {
-      isEnabled: true,
-      variant: "single",
-    },
+    isPaginationEnabled: true,
+    initialItemsPerPage: 10,
+    isExpansionEnabled: true,
+    expandableVariant: "single",
+    isFilterEnabled: true,
+    filterCategories: [
+      {
+        categoryKey: "filterText",
+        title: "Filter tex",
+        type: FilterType.search,
+        placeholderText: "Search...",
+        getItemValue: (item) => item.name,
+      },
+    ],
   });
 
   const {
     currentPageItems,
     numRenderedColumns,
-    components: {
-      Table,
-      Thead,
-      Tr,
-      Th,
-      Tbody,
-      Td,
-      Toolbar,
-      FilterToolbar,
-      PaginationToolbarItem,
-      Pagination,
+    propHelpers: {
+      toolbarProps,
+      filterToolbarProps,
+      paginationToolbarItemProps,
+      paginationProps,
+      tableProps,
+      getThProps,
+      getTrProps,
+      getTdProps,
     },
-    expansion: { isCellExpanded },
+    expansionDerivedState: { isCellExpanded },
   } = tableControls;
 
   return (
     <>
-      <Toolbar>
+      <Toolbar {...toolbarProps}>
         <ToolbarContent>
-          <FilterToolbar id="packages-toolbar" />
-          <PaginationToolbarItem>
-            <Pagination
-              variant="top"
-              isCompact
-              widgetId="packages-pagination-top"
+          <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
+          <ToolbarItem {...paginationToolbarItemProps}>
+            <SimplePagination
+              idPrefix="cves-table"
+              isTop
+              paginationProps={paginationProps}
             />
-          </PaginationToolbarItem>
+          </ToolbarItem>
         </ToolbarContent>
       </Toolbar>
 
-      <Table aria-label="Packages table" className="vertical-aligned-table">
+      <Table {...tableProps} aria-label="CVEs table">
         <Thead>
-          <Tr isHeaderRow>
-            <Th columnKey="name" />
-            <Th columnKey="namespace" />
-            <Th columnKey="version" />
-            <Th columnKey="type" />
-            <Th columnKey="path" />
-            <Th columnKey="qualifiers" />
-            <Th columnKey="cves" />
+          <Tr>
+            <TableHeaderContentWithControls {...tableControls}>
+              <Th {...getThProps({ columnKey: "name" })} />
+              <Th {...getThProps({ columnKey: "namespace" })} />
+              <Th {...getThProps({ columnKey: "version" })} />
+              <Th {...getThProps({ columnKey: "type" })} />
+              <Th {...getThProps({ columnKey: "path" })} />
+              <Th {...getThProps({ columnKey: "qualifiers" })} />
+              <Th {...getThProps({ columnKey: "cves" })} />
+            </TableHeaderContentWithControls>
           </Tr>
         </Thead>
         <ConditionalTableBody
@@ -110,23 +118,43 @@ export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
           {currentPageItems?.map((item, rowIndex) => {
             return (
               <Tbody key={item.id}>
-                <Tr item={item} rowIndex={rowIndex}>
-                  <Td width={15} modifier="truncate" columnKey="name">
+                <Tr {...getTrProps({ item })}>
+                  <Td
+                    width={15}
+                    modifier="truncate"
+                    {...getTdProps({ columnKey: "name" })}
+                  >
                     {item.name}
                   </Td>
-                  <Td width={10} modifier="truncate" columnKey="namespace">
+                  <Td
+                    width={10}
+                    modifier="truncate"
+                    {...getTdProps({ columnKey: "namespace" })}
+                  >
                     {item.namespace}
                   </Td>
-                  <Td width={10} modifier="truncate" columnKey="version">
+                  <Td
+                    width={10}
+                    modifier="truncate"
+                    {...getTdProps({ columnKey: "version" })}
+                  >
                     {item.version}
                   </Td>
-                  <Td width={10} modifier="truncate" columnKey="type">
+                  <Td
+                    width={10}
+                    modifier="truncate"
+                    {...getTdProps({ columnKey: "type" })}
+                  >
                     {item.type}
                   </Td>
-                  <Td width={10} modifier="truncate" columnKey="path">
+                  <Td
+                    width={10}
+                    modifier="truncate"
+                    {...getTdProps({ columnKey: "path" })}
+                  >
                     {item.path}
                   </Td>
-                  <Td width={25} columnKey="qualifiers">
+                  <Td width={25} {...getTdProps({ columnKey: "qualifiers" })}>
                     {item.qualifiers &&
                       Object.entries(item.qualifiers || {}).map(
                         ([k, v], index) => (
@@ -134,7 +162,11 @@ export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
                         )
                       )}
                   </Td>
-                  <Td width={20} modifier="truncate" columnKey="cves">
+                  <Td
+                    width={20}
+                    modifier="truncate"
+                    {...getTdProps({ columnKey: "cves" })}
+                  >
                     TODO list of CVEs
                   </Td>
                 </Tr>
@@ -154,10 +186,11 @@ export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
           })}
         </ConditionalTableBody>
       </Table>
-      <Pagination
-        variant="bottom"
+      <SimplePagination
+        idPrefix="packages-table"
+        isTop={false}
         isCompact
-        widgetId="cves-pagination-bottom"
+        paginationProps={paginationProps}
       />
     </>
   );

@@ -1,5 +1,5 @@
 import { HubRequestParams } from "@app/api/models";
-import { SortState } from "@carlosthe19916-latest/react-table-batteries";
+import { ISortState } from "./useSortState";
 
 /**
  * Args for getSortHubRequestParams
@@ -11,7 +11,7 @@ export interface IGetSortHubRequestParamsArgs<
   /**
    * The "source of truth" state for the sort feature (returned by usePaginationState)
    */
-  sort?: SortState<TSortableColumnKey>;
+  sortState?: ISortState<TSortableColumnKey>;
   /**
    * A map of `columnKey` values (keys of the `columnNames` object passed to useTableControlState) to the field keys used by the hub API for sorting on those columns
    * - Keys and values in this object will usually be the same, but sometimes we need to present a hub field with a different name/key or have a column that is a composite of multiple hub fields.
@@ -25,7 +25,7 @@ export interface IGetSortHubRequestParamsArgs<
  * @see getHubRequestParams
  */
 export const getSortHubRequestParams = <TSortableColumnKey extends string>({
-  sort: sortState,
+  sortState,
   hubSortFieldKeys,
 }: IGetSortHubRequestParamsArgs<TSortableColumnKey>): Partial<HubRequestParams> => {
   if (!sortState?.activeSort || !hubSortFieldKeys) return {};
@@ -51,10 +51,6 @@ export const serializeSortRequestParamsForHub = (
   const { sort } = deserializedParams;
   if (sort) {
     const { field, direction } = sort;
-
-    serializedParams.append(
-      "sort",
-      `${direction === "desc" ? "-" : ""}sort:${field}`
-    );
+    serializedParams.append("sort", `${direction}:${field}`);
   }
 };

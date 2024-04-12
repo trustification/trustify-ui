@@ -8,6 +8,13 @@ import {
   getAdvisorySourceById,
 } from "@app/api/rest";
 
+export interface IAdvisoriesQueryParams {
+  filterText?: string;
+  offset?: number;
+  limit?: number;
+  sort_by?: string;
+}
+
 export const AdvisoriesQueryKey = "advisories";
 
 export const useFetchAdvisories = (params: HubRequestParams = {}) => {
