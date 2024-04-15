@@ -25,3 +25,5 @@ export const uploadLimit = "500m";
  * `WithUiId`.
  */
 export const UI_UNIQUE_ID = "_ui_unique_id";
+
+export const FORM_DATA_FILE_KEY = "file";

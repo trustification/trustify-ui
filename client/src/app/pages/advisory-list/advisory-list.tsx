@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import {
   Button,
@@ -32,8 +32,11 @@ import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchAdvisories } from "@app/queries/advisories";
 
 import { CVEGalleryCount } from "./components/CVEsGaleryCount";
+import { UploadFilesDrawer } from "./components/UploadFilesDrawer";
 
 export const AdvisoryList: React.FC = () => {
+  const [showUploadComponent, setShowUploadComponent] = React.useState(false);
+
   const tableControlState = useTableControlState({
     tableName: "advisories",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.advisories,
@@ -114,6 +117,17 @@ export const AdvisoryList: React.FC = () => {
           <Toolbar {...toolbarProps}>
             <ToolbarContent>
               <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
+              <ToolbarItem>
+                <Button
+                  type="button"
+                  id="upload-files"
+                  aria-label="Upload files"
+                  variant="secondary"
+                  onClick={() => setShowUploadComponent(true)}
+                >
+                  Upload files
+                </Button>
+              </ToolbarItem>
               <ToolbarItem {...paginationToolbarItemProps}>
                 <SimplePagination
                   idPrefix="advisories-table"
@@ -213,6 +227,11 @@ export const AdvisoryList: React.FC = () => {
           />
         </div>
       </PageSection>
+
+      <UploadFilesDrawer
+        isExpanded={showUploadComponent}
+        onCloseClick={() => setShowUploadComponent(false)}
+      />
     </>
   );
 };

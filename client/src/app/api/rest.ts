@@ -1,5 +1,6 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 
+import { FORM_DATA_FILE_KEY } from "@app/Constants";
 import { serializeRequestParamsForHub } from "@app/hooks/table-controls/getHubRequestParams";
 import {
   Advisory,
@@ -12,7 +13,8 @@ import {
 
 const HUB = "/hub";
 
-export const ADVISORIES = HUB + "/api/v1/search/advisory";
+export const ADVISORIES = HUB + "/advisories";
+export const ADVISORIES_SEARCH = HUB + "/api/v1/search/advisory";
 export const CVES = HUB + "/cves";
 export const SBOMS = HUB + "/sboms";
 export const PACKAGES = HUB + "/packages";
@@ -39,7 +41,7 @@ export const getHubPaginatedResult = <T>(
 //
 
 export const getAdvisories = (params: HubRequestParams = {}) => {
-  return getHubPaginatedResult<Advisory>(ADVISORIES, params);
+  return getHubPaginatedResult<Advisory>(ADVISORIES_SEARCH, params);
 };
 
 export const getAdvisoryById = (id: number | string) => {
@@ -58,6 +60,17 @@ export const downloadAdvisoryById = (id: number | string) => {
   return axios.get<string>(`${ADVISORIES}/${id}/source`, {
     responseType: "arraybuffer",
     headers: { Accept: "text/plain", responseType: "blob" },
+  });
+};
+
+export const uploadAdvisory = (
+  formData: FormData,
+  config?: AxiosRequestConfig
+) => {
+  const file = formData.get(FORM_DATA_FILE_KEY) as File;
+  return file.text().then((text) => {
+    const json = JSON.parse(text);
+    return axios.post<Advisory>(`${ADVISORIES}`, json, config);
   });
 };
 

@@ -6,6 +6,7 @@ import axios, {
   AxiosResponse,
   CancelTokenSource,
 } from "axios";
+import { FORM_DATA_FILE_KEY } from "@app/Constants";
 
 const CANCEL_MESSAGE = "cancelled";
 
@@ -163,7 +164,7 @@ export const useUpload = <T, E>({
 
       // Upload
       const formData = new FormData();
-      formData.set("file", file);
+      formData.set(FORM_DATA_FILE_KEY, file);
 
       const cancelFn = axios.CancelToken.source();
 

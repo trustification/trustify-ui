@@ -53,7 +53,7 @@ export const mockAdvisoryArray: Advisory[] = [
 ];
 
 export const handlers = [
-  rest.get(AppRest.ADVISORIES, (req, res, ctx) => {
+  rest.get(AppRest.ADVISORIES_SEARCH, (req, res, ctx) => {
     return res(
       ctx.json({ items: mockAdvisoryArray, total: mockAdvisoryArray.length })
     );
