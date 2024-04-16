@@ -171,7 +171,7 @@ export const AdvisoryList: React.FC = () => {
                         modifier="truncate"
                         {...getTdProps({ columnKey: "title" })}
                       >
-                        {item.metadata.title}
+                        {item.title}
                       </Td>
                       <Td
                         width={10}
@@ -179,7 +179,7 @@ export const AdvisoryList: React.FC = () => {
                         {...getTdProps({ columnKey: "severity" })}
                       >
                         <SeverityShieldAndText
-                          value={item.aggregated_severity}
+                          value={item.severity}
                         />
                       </Td>
                       <Td
@@ -188,7 +188,7 @@ export const AdvisoryList: React.FC = () => {
                         {...getTdProps({ columnKey: "revisionDate" })}
                       >
                         <SeverityShieldAndText
-                          value={item.aggregated_severity}
+                          value={item.severity}
                         />
                       </Td>
                       <Td

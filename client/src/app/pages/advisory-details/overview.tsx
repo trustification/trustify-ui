@@ -56,7 +56,7 @@ export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
                       </DescriptionListTerm>
                       <DescriptionListDescription>
                         <SeverityShieldAndText
-                          value={advisory.aggregated_severity}
+                          value={advisory.severity}
                         />
                       </DescriptionListDescription>
                     </DescriptionListGroup>

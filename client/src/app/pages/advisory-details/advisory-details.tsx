@@ -54,7 +54,7 @@ export const AdvisoryDetails: React.FC = () => {
               ? {
                   children: (
                     <SeverityShieldAndText
-                      value={advisory.aggregated_severity}
+                      value={advisory.severity}
                     />
                   ),
                   isCompact: true,

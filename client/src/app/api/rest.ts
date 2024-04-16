@@ -7,6 +7,8 @@ import {
   CVE,
   HubPaginatedResult,
   HubRequestParams,
+  Importer,
+  ImporterConfiguration,
   Package,
   SBOM,
 } from "./models";
@@ -18,6 +20,7 @@ export const ADVISORIES_SEARCH = HUB + "/api/v1/search/advisory";
 export const CVES = HUB + "/cves";
 export const SBOMS = HUB + "/sboms";
 export const PACKAGES = HUB + "/packages";
+export const IMPORTERS = HUB + "/api/v1/importer";
 
 export interface PaginatedResponse<T> {
   items: T[];
@@ -141,5 +144,39 @@ export const getPackagesBySbomId = (id: string | number) => {
 export const getCVEsBySbomId = (id: string | number) => {
   return axios
     .get<CVE[]>(`${SBOMS}/${id}/cves`)
+    .then((response) => response.data);
+};
+
+//
+
+export const getImporters = () => {
+  return axios.get<Importer[]>(IMPORTERS).then((response) => response.data);
+};
+
+export const getImporterById = (id: number | string) => {
+  return axios
+    .get<Importer>(`${IMPORTERS}/${id}`)
+    .then((response) => response.data);
+};
+
+export const createImporter = (
+  id: number | string,
+  body: ImporterConfiguration
+) => {
+  return axios.post<Importer>(`${IMPORTERS}/${id}`, body);
+};
+
+export const updateImporter = (
+  id: number | string,
+  body: ImporterConfiguration
+) => {
+  return axios
+    .put<Importer>(`${IMPORTERS}/${id}`, body)
+    .then((response) => response.data);
+};
+
+export const deleteImporter = (id: number | string) => {
+  return axios
+    .delete<Importer>(`${IMPORTERS}/${id}`)
     .then((response) => response.data);
 };

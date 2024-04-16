@@ -68,10 +68,10 @@ export interface SBOMBase {
 
 export interface AdvisoryBase {
   id: string;
-  aggregated_severity: Severity;
-  revision_date: string;
+  severity: Severity;
+  modified: string;
+  title: string;
   metadata: {
-    title: string;
     category: string;
     publisher: {
       name: string;
@@ -121,4 +121,27 @@ export interface SBOM extends SBOMBase {
     count: number;
   };
   related_cves: { [key in Severity]: number };
+}
+
+// Importer
+
+export type ImporterStatus = "waiting" | "running";
+
+export interface Importer {
+  name: string;
+  configuration: ImporterConfiguration;
+  state?: ImporterStatus;
+}
+
+export interface ImporterConfiguration {
+  sbom?: ImporterConfigurationValues;
+  csaf?: ImporterConfigurationValues;
+}
+
+export interface ImporterConfigurationValues {
+  period: string;
+  source: string;
+  disabled: boolean;
+  v3Signatures: boolean;
+  onlyPatterns: string[];
 }

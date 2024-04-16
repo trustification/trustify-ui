@@ -6,10 +6,10 @@ import { Advisory } from "@app/api/models";
 export const mockAdvisoryArray: Advisory[] = [
   {
     id: "advisory-1",
-    aggregated_severity: "critical",
-    revision_date: new Date().toString(),
+    severity: "critical",
+    modified: new Date().toString(),
+    title: "Title 1",
     metadata: {
-      title: "Title 1",
       category: "advisory.document.category",
       publisher: {
         name: "advisory.document.publisher.name",
