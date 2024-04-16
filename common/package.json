@@ -1,5 +1,5 @@
 {
-  "name": "@trustification-ui/common",
+  "name": "@trustify-ui/common",
   "description": "ESM module for code common to client and server",
   "version": "0.1.0",
   "license": "Apache-2.0",

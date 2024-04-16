@@ -29,7 +29,7 @@ const results = {
   unresolved: [],
 };
 Object.entries(lockFile.packages).forEach(([name, p]) => {
-  const bucket = p.name?.startsWith("@trustification-ui")
+  const bucket = p.name?.startsWith("@trustify-ui")
     ? results.project
     : p.resolved
     ? results.resolved

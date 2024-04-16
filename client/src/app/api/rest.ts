@@ -13,14 +13,14 @@ import {
   SBOM,
 } from "./models";
 
-const HUB = "/hub";
+const API = "/api";
 
-export const ADVISORIES = HUB + "/advisories";
-export const ADVISORIES_SEARCH = HUB + "/api/v1/search/advisory";
-export const CVES = HUB + "/cves";
-export const SBOMS = HUB + "/sboms";
-export const PACKAGES = HUB + "/packages";
-export const IMPORTERS = HUB + "/api/v1/importer";
+export const ADVISORIES = API + "/advisories";
+export const ADVISORIES_SEARCH = API + "/v1/search/advisory";
+export const CVES = API + "/cves";
+export const SBOMS = API + "/sboms";
+export const PACKAGES = API + "/packages";
+export const IMPORTERS = API + "/v1/importer";
 
 export interface PaginatedResponse<T> {
   items: T[];

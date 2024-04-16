@@ -5,7 +5,7 @@ import Dotenv from "dotenv-webpack";
 import { TsconfigPathsPlugin } from "tsconfig-paths-webpack-plugin";
 import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
 
-import { brandingAssetPath } from "@trustification-ui/common";
+import { brandingAssetPath } from "@trustify-ui/common";
 import { LANGUAGES_BY_FILE_EXTENSION } from "./monacoConstants";
 
 const pathTo = (relativePath: string) => path.resolve(__dirname, relativePath);

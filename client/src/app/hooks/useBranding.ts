@@ -1,4 +1,4 @@
-import { BrandingStrings, brandingStrings } from "@trustification-ui/common";
+import { BrandingStrings, brandingStrings } from "@trustify-ui/common";
 
 /**
  * Wrap the branding strings in a hook so components access it in a standard

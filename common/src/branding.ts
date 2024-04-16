@@ -44,5 +44,5 @@ export const brandingStrings =
  */
 export const brandingAssetPath = () =>
   require
-    .resolve("@trustification-ui/common/package.json")
+    .resolve("@trustify-ui/common/package.json")
     .replace(/(.)\/package.json$/, "$1") + "/dist/branding";

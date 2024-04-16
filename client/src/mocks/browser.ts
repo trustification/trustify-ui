@@ -4,11 +4,11 @@ import config from "./config";
 import stubNewWork from "./stub-new-work";
 
 /**
- * Handler to catch unhandled traffic to `/hub/*`, log it, and pass it through to the
+ * Handler to catch unhandled traffic to `/api/*`, log it, and pass it through to the
  * server to handle.  This is useful to see traffic, in the console logs, that is not
  * being mocked elsewhere.
  */
-const passthroughHandler: RestHandler = rest.all("/hub/*", (req) => {
+const passthroughHandler: RestHandler = rest.all("/api/*", (req) => {
   console.log(
     "%cmsw passthrough%c \u{1fa83} %s",
     "font-weight: bold",
@@ -19,7 +19,7 @@ const passthroughHandler: RestHandler = rest.all("/hub/*", (req) => {
 });
 
 const handlers = [
-  // TODO: Add handlers for a FULL hub mock data set
+  // TODO: Add handlers for a FULL api mock data set
   ...stubNewWork,
   config.passthrough && passthroughHandler,
 ].filter(Boolean);

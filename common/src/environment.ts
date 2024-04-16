@@ -7,7 +7,7 @@ declare global {
 }
 
 /**
- * The set of environment variables used by `@trustification-ui` packages.
+ * The set of environment variables used by `@trustify-ui` packages.
  */
 export type TrustificationEnvType = {
   NODE_ENV: "development" | "production" | "test";
@@ -34,8 +34,8 @@ export type TrustificationEnvType = {
   /** Target URL for the UI server's `/auth` proxy */
   OIDC_SERVER_URL?: string;
 
-  /** Target URL for the UI server's `/hub` proxy */
-  TRUSTIFICATION_HUB_URL?: string;
+  /** Target URL for the UI server's `/api` proxy */
+  TRUSTIFICATION_API_URL?: string;
 
   /** Location of branding files (relative paths computed from the project source root) */
   BRANDING?: string;
@@ -51,7 +51,7 @@ export type TrustificationEnvType = {
  * Keys in `TrustificationEnv` that are only used on the server and therefore do not
  * need to be sent to the client.
  */
-export const SERVER_ENV_KEYS = ["PORT", "TRUSTIFICATION_HUB_URL", "BRANDING"];
+export const SERVER_ENV_KEYS = ["PORT", "TRUSTIFICATION_API_URL", "BRANDING"];
 
 /**
  * Create a `TrustificationEnv` from a partial `TrustificationEnv` with a set of default values.
@@ -68,7 +68,7 @@ export const buildTrustificationEnv = ({
   OIDC_SCOPE,
 
   UI_INGRESS_PROXY_BODY_SIZE = "500m",
-  TRUSTIFICATION_HUB_URL,
+  TRUSTIFICATION_API_URL,
   BRANDING,
 
   ANALYTICS_ENABLED = "false",
@@ -85,7 +85,7 @@ export const buildTrustificationEnv = ({
   OIDC_SCOPE,
 
   UI_INGRESS_PROXY_BODY_SIZE,
-  TRUSTIFICATION_HUB_URL,
+  TRUSTIFICATION_API_URL: TRUSTIFICATION_API_URL,
   BRANDING,
 
   ANALYTICS_ENABLED,
@@ -98,6 +98,6 @@ export const buildTrustificationEnv = ({
 export const TRUSTIFICATION_ENV_DEFAULTS = buildTrustificationEnv();
 
 /**
- * Current `@trustification-ui` environment configurations from `process.env`.
+ * Current `@trustify-ui` environment configurations from `process.env`.
  */
 export const TRUSTIFICATION_ENV = buildTrustificationEnv(process.env);

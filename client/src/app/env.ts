@@ -1,4 +1,4 @@
-import { decodeEnv, buildTrustificationEnv } from "@trustification-ui/common";
+import { decodeEnv, buildTrustificationEnv } from "@trustify-ui/common";
 
 export const ENV = buildTrustificationEnv(decodeEnv(window._env));
 

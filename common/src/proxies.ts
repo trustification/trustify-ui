@@ -2,15 +2,12 @@ import type { Options } from "http-proxy-middleware";
 import { TRUSTIFICATION_ENV } from "./environment.js";
 
 export const proxyMap: Record<string, Options> = {
-  "/hub": {
+  "/api": {
     target:
-      TRUSTIFICATION_ENV.TRUSTIFICATION_HUB_URL || "http://localhost:8080",
+      TRUSTIFICATION_ENV.TRUSTIFICATION_API_URL || "http://localhost:8080",
     logLevel: process.env.DEBUG ? "debug" : "info",
 
     changeOrigin: true,
-    pathRewrite: {
-      "^/hub": "",
-    },
 
     onProxyReq: (proxyReq, req, _res) => {
       // Add the Bearer token to the request if it is not already present, AND if

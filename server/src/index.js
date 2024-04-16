@@ -15,7 +15,7 @@ import {
   SERVER_ENV_KEYS,
   proxyMap,
   brandingStrings,
-} from "@trustification-ui/common";
+} from "@trustify-ui/common";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const pathToClientDist = path.join(__dirname, "../../client/dist");
