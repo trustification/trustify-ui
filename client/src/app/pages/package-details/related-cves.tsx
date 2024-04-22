@@ -7,7 +7,7 @@ import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
 import { RENDER_DATE_FORMAT } from "@app/Constants";
-import { CVEBase } from "@app/api/models";
+import { VulnerabilityBase } from "@app/api/models";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -18,13 +18,13 @@ import {
 import { useLocalTableControls } from "@app/hooks/table-controls";
 
 interface RelatedCVEsProps {
-  cves: CVEBase[];
+  cves: VulnerabilityBase[];
 }
 
 export const RelatedCVEs: React.FC<RelatedCVEsProps> = ({ cves }) => {
   const tableControls = useLocalTableControls({
     tableName: "cves-table",
-    idProperty: "id",
+    idProperty: "vulnerability_id",
     items: cves,
     isLoading: false,
     columnNames: {
@@ -45,7 +45,7 @@ export const RelatedCVEs: React.FC<RelatedCVEsProps> = ({ cves }) => {
         title: "Filter text",
         placeholderText: "Search",
         type: FilterType.search,
-        getItemValue: (item) => item.id,
+        getItemValue: (item) => item.vulnerability_id,
       },
     ],
   });
@@ -99,10 +99,12 @@ export const RelatedCVEs: React.FC<RelatedCVEsProps> = ({ cves }) => {
         >
           {currentPageItems?.map((item, rowIndex) => {
             return (
-              <Tbody key={item.id}>
+              <Tbody key={item.vulnerability_id}>
                 <Tr {...getTrProps({ item })}>
                   <Td width={15} {...getTdProps({ columnKey: "id" })}>
-                    <NavLink to={`/cves/${item.id}`}>{item.id}</NavLink>
+                    <NavLink to={`/cves/${item.vulnerability_id}`}>
+                      {item.vulnerability_id}
+                    </NavLink>
                   </Td>
                   <Td
                     width={50}

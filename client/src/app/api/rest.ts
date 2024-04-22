@@ -15,8 +15,7 @@ import {
 
 const API = "/api";
 
-export const ADVISORIES = API + "/advisories";
-export const ADVISORIES_SEARCH = API + "/v1/search/advisory";
+export const ADVISORIES = API + "/v1/advisory";
 export const CVES = API + "/cves";
 export const SBOMS = API + "/sboms";
 export const PACKAGES = API + "/packages";
@@ -44,7 +43,7 @@ export const getHubPaginatedResult = <T>(
 //
 
 export const getAdvisories = (params: HubRequestParams = {}) => {
-  return getHubPaginatedResult<Advisory>(ADVISORIES_SEARCH, params);
+  return getHubPaginatedResult<Advisory>(ADVISORIES, params);
 };
 
 export const getAdvisoryById = (id: number | string) => {

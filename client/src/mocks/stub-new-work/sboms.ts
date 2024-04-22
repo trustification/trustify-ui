@@ -37,7 +37,7 @@ export const mockPackageArray: Package[] = [
       key1: "value1",
       key2: "value2",
     },
-    related_cves: mockAdvisoryArray.flatMap((e) => e.cves),
+    related_cves: mockAdvisoryArray.flatMap((e) => e.vulnerabilities),
     related_sboms: mockSBOMArray,
   },
 ];

@@ -1,6 +1,8 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
+import dayjs from "dayjs";
+
 import {
   Button,
   PageSection,
@@ -11,12 +13,21 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core";
-import DownloadIcon from "@patternfly/react-icons/dist/esm/icons/download-icon";
-import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
+import {
+  ActionsColumn,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@patternfly/react-table";
 
-import { TablePersistenceKeyPrefixes } from "@app/Constants";
+import {
+  RENDER_DATE_FORMAT,
+  TablePersistenceKeyPrefixes,
+} from "@app/Constants";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
-import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -31,7 +42,6 @@ import { useDownload } from "@app/hooks/useDownload";
 import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchAdvisories } from "@app/queries/advisories";
 
-import { CVEGalleryCount } from "./components/CVEsGaleryCount";
 import { UploadFilesDrawer } from "./components/UploadFilesDrawer";
 
 export const AdvisoryList: React.FC = () => {
@@ -41,20 +51,20 @@ export const AdvisoryList: React.FC = () => {
     tableName: "advisories",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.advisories,
     columnNames: {
-      id: "ID",
+      identifier: "Identifier",
       title: "Title",
-      severity: "Aggregated severity",
-      revisionDate: "Revision",
+      severity: "Severity",
+      published: "Published",
+      modified: "Modified",
       cves: "CVEs",
-      download: "Download",
     },
+    isPaginationEnabled: true,
     isSortEnabled: true,
-    sortableColumns: ["id"],
-    initialItemsPerPage: 10,
+    sortableColumns: ["identifier", "published", "modified"],
     isFilterEnabled: true,
     filterCategories: [
       {
-        categoryKey: "filterText",
+        categoryKey: "",
         title: "Filter text",
         placeholderText: "Search",
         type: FilterType.search,
@@ -69,18 +79,23 @@ export const AdvisoryList: React.FC = () => {
   } = useFetchAdvisories(
     getHubRequestParams({
       ...tableControlState,
+      hubSortFieldKeys: {
+        identifier: "identifier",
+        published: "published",
+        modified: "modified",
+      },
     })
   );
 
   const tableControls = useTableControlProps({
     ...tableControlState,
-    idProperty: "id",
+    idProperty: "sha256",
     currentPageItems: advisories,
     totalItemCount,
     isLoading: isFetching,
     selectionState: useSelectionState({
       items: advisories,
-      isEqual: (a, b) => a.id === b.id,
+      isEqual: (a, b) => a.identifier === b.identifier,
     }),
   });
 
@@ -120,12 +135,12 @@ export const AdvisoryList: React.FC = () => {
               <ToolbarItem>
                 <Button
                   type="button"
-                  id="upload-files"
-                  aria-label="Upload files"
+                  id="upload"
+                  aria-label="Upload"
                   variant="secondary"
                   onClick={() => setShowUploadComponent(true)}
                 >
-                  Upload files
+                  Upload
                 </Button>
               </ToolbarItem>
               <ToolbarItem {...paginationToolbarItemProps}>
@@ -142,12 +157,12 @@ export const AdvisoryList: React.FC = () => {
             <Thead>
               <Tr>
                 <TableHeaderContentWithControls {...tableControls}>
-                  <Th {...getThProps({ columnKey: "id" })} />
+                  <Th {...getThProps({ columnKey: "identifier" })} />
                   <Th {...getThProps({ columnKey: "title" })} />
                   <Th {...getThProps({ columnKey: "severity" })} />
-                  <Th {...getThProps({ columnKey: "revisionDate" })} />
+                  <Th {...getThProps({ columnKey: "published" })} />
+                  <Th {...getThProps({ columnKey: "modified" })} />
                   <Th {...getThProps({ columnKey: "cves" })} />
-                  <Th {...getThProps({ columnKey: "download" })} />
                 </TableHeaderContentWithControls>
               </Tr>
             </Thead>
@@ -159,11 +174,14 @@ export const AdvisoryList: React.FC = () => {
             >
               {currentPageItems.map((item) => {
                 return (
-                  <Tbody key={item.id}>
+                  <Tbody key={item.identifier}>
                     <Tr {...getTrProps({ item })}>
-                      <Td width={15} {...getTdProps({ columnKey: "id" })}>
-                        <NavLink to={`/advisories/${item.id}`}>
-                          {item.id}
+                      <Td
+                        width={15}
+                        {...getTdProps({ columnKey: "identifier" })}
+                      >
+                        <NavLink to={`/advisories/${item.sha256}`}>
+                          {item.identifier}
                         </NavLink>
                       </Td>
                       <Td
@@ -178,40 +196,40 @@ export const AdvisoryList: React.FC = () => {
                         modifier="truncate"
                         {...getTdProps({ columnKey: "severity" })}
                       >
-                        <SeverityShieldAndText
+                        {/* <SeverityShieldAndText
                           value={item.severity}
-                        />
+                        /> */}
                       </Td>
                       <Td
                         width={10}
                         modifier="truncate"
-                        {...getTdProps({ columnKey: "revisionDate" })}
+                        {...getTdProps({ columnKey: "published" })}
                       >
-                        <SeverityShieldAndText
-                          value={item.severity}
-                        />
+                        {dayjs(item.published).format(RENDER_DATE_FORMAT)}
+                      </Td>
+                      <Td
+                        width={10}
+                        modifier="truncate"
+                        {...getTdProps({ columnKey: "modified" })}
+                      >
+                        {dayjs(item.modified).format(RENDER_DATE_FORMAT)}
                       </Td>
                       <Td
                         width={15}
                         modifier="truncate"
                         {...getTdProps({ columnKey: "cves" })}
                       >
-                        <CVEGalleryCount cves={item.cves} />
+                        {/* <CVEGalleryCount cves={item.cves} /> */}
                       </Td>
-                      <Td
-                        width={10}
-                        modifier="truncate"
-                        {...getTdProps({ columnKey: "download" })}
-                      >
-                        <Button
-                          variant="plain"
-                          aria-label="Download"
-                          onClick={() => {
-                            downloadAdvisory(item.id);
-                          }}
-                        >
-                          <DownloadIcon />
-                        </Button>
+                      <Td isActionCell>
+                        <ActionsColumn
+                          items={[
+                            {
+                              title: "Download",
+                              onClick: () => downloadAdvisory(item.identifier),
+                            },
+                          ]}
+                        />
                       </Td>
                     </Tr>
                   </Tbody>

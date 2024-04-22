@@ -10,18 +10,14 @@ import {
   DescriptionListTerm,
   Grid,
   GridItem,
-  List,
-  ListItem,
   Stack,
   StackItem,
 } from "@patternfly/react-core";
-import ExternalLinkAltIcon from "@patternfly/react-icons/dist/esm/icons/external-link-alt-icon";
 
 import dayjs from "dayjs";
 
-import { Advisory } from "@app/api/models";
 import { RENDER_DATE_FORMAT } from "@app/Constants";
-import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
+import { Advisory } from "@app/api/models";
 
 interface OverviewProps {
   advisory: Advisory;
@@ -35,22 +31,34 @@ export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
           <Grid hasGutter>
             <GridItem md={4}>
               <Card isFullHeight>
-                <CardTitle>Overview</CardTitle>
+                <CardTitle>General view</CardTitle>
                 <CardBody>
                   <DescriptionList>
                     <DescriptionListGroup>
                       <DescriptionListTerm>Title</DescriptionListTerm>
                       <DescriptionListDescription>
-                        {advisory.cves.map((e) => e.title)}
+                        {advisory.title}
                       </DescriptionListDescription>
                     </DescriptionListGroup>
                     <DescriptionListGroup>
+                      <DescriptionListTerm>Published</DescriptionListTerm>
+                      <DescriptionListDescription>
+                        {dayjs(advisory.published).format(RENDER_DATE_FORMAT)}
+                      </DescriptionListDescription>
+                    </DescriptionListGroup>
+                    <DescriptionListGroup>
+                      <DescriptionListTerm>Modified</DescriptionListTerm>
+                      <DescriptionListDescription>
+                        {dayjs(advisory.modified).format(RENDER_DATE_FORMAT)}
+                      </DescriptionListDescription>
+                    </DescriptionListGroup>
+                    {/* <DescriptionListGroup>
                       <DescriptionListTerm>Category</DescriptionListTerm>
                       <DescriptionListDescription>
                         {advisory.metadata.category}
                       </DescriptionListDescription>
-                    </DescriptionListGroup>
-                    <DescriptionListGroup>
+                    </DescriptionListGroup> */}
+                    {/* <DescriptionListGroup>
                       <DescriptionListTerm>
                         Aggregate severity
                       </DescriptionListTerm>
@@ -59,12 +67,12 @@ export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
                           value={advisory.severity}
                         />
                       </DescriptionListDescription>
-                    </DescriptionListGroup>
+                    </DescriptionListGroup> */}
                   </DescriptionList>
                 </CardBody>
               </Card>
             </GridItem>
-            <GridItem md={4}>
+            {/* <GridItem md={4}>
               <Card isFullHeight>
                 <CardTitle>Publisher</CardTitle>
                 <CardBody>
@@ -98,8 +106,8 @@ export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
                   </DescriptionList>
                 </CardBody>
               </Card>
-            </GridItem>
-            <GridItem md={4}>
+            </GridItem> */}
+            {/* <GridItem md={4}>
               <Card isFullHeight>
                 <CardTitle>Tracking</CardTitle>
                 <CardBody>
@@ -133,10 +141,10 @@ export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
                   </DescriptionList>
                 </CardBody>
               </Card>
-            </GridItem>
+            </GridItem> */}
           </Grid>
         </StackItem>
-        <StackItem>
+        {/* <StackItem>
           <Grid hasGutter>
             <GridItem md={4}>
               <Card isFullHeight>
@@ -161,7 +169,7 @@ export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
               </Card>
             </GridItem>
           </Grid>
-        </StackItem>
+        </StackItem> */}
       </Stack>
     </>
   );

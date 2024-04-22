@@ -35,7 +35,7 @@ export const CVEs: React.FC<CVEsProps> = ({ sbomId }) => {
 
   const tableControls = useLocalTableControls({
     tableName: "cves-table",
-    idProperty: "id",
+    idProperty: "vulnerability_id",
     items: cves,
     isLoading: isFetching,
     columnNames: {
@@ -57,7 +57,7 @@ export const CVEs: React.FC<CVEsProps> = ({ sbomId }) => {
         title: "Filter tex",
         type: FilterType.search,
         placeholderText: "Search...",
-        getItemValue: (item) => item.id,
+        getItemValue: (item) => item.vulnerability_id,
       },
     ],
   });
@@ -113,14 +113,14 @@ export const CVEs: React.FC<CVEsProps> = ({ sbomId }) => {
         >
           {currentPageItems?.map((item, rowIndex) => {
             return (
-              <Tbody key={item.id}>
+              <Tbody key={item.vulnerability_id}>
                 <Tr {...getTrProps({ item })}>
                   <Td
                     width={15}
                     modifier="truncate"
                     {...getTdProps({ columnKey: "id" })}
                   >
-                    {item.id}
+                    {item.vulnerability_id}
                   </Td>
                   <Td
                     width={10}

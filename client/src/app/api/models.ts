@@ -35,8 +35,8 @@ export interface HubPaginatedResult<T> {
 
 // Base
 
-export interface CVEBase {
-  id: string;
+export interface VulnerabilityBase {
+  vulnerability_id: string;
   title: string;
   description: string;
   severity: Severity;
@@ -67,10 +67,12 @@ export interface SBOMBase {
 }
 
 export interface AdvisoryBase {
-  id: string;
+  identifier: string;
   severity: Severity;
+  published: string;
   modified: string;
   title: string;
+  sha256: string;
   metadata: {
     category: string;
     publisher: {
@@ -97,12 +99,12 @@ export interface AdvisoryBase {
 export type Severity = "low" | "moderate" | "important" | "critical";
 
 export interface Advisory extends AdvisoryBase {
-  cves: CVEBase[];
+  vulnerabilities: VulnerabilityBase[];
 }
 
 // CVE
 
-export interface CVE extends CVEBase {
+export interface CVE extends VulnerabilityBase {
   related_sboms: SBOMBase[];
   related_advisories: AdvisoryBase[];
 }
@@ -110,7 +112,7 @@ export interface CVE extends CVEBase {
 // Package
 
 export interface Package extends PackageBase {
-  related_cves: CVEBase[];
+  related_cves: VulnerabilityBase[];
   related_sboms: SBOMBase[];
 }
 

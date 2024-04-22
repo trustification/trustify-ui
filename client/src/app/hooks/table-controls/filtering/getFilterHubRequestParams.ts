@@ -162,13 +162,16 @@ export const serializeFilterForHub = (filter: HubFilter): string => {
   const { field, operator, value } = filter;
   const joinedValue =
     typeof value === "string"
-      ? wrapInQuotesAndEscape(value)
+      ? value
       : typeof value === "number"
-      ? `"${value}"`
-      : `(${value.list
-          .map(wrapInQuotesAndEscape)
-          .join(value.operator === "OR" ? "|" : ",")})`;
-  return `${field}${operator}${joinedValue}`;
+        ? `"${value}"`
+        : `(${value.list.join(value.operator === "OR" ? "|" : ",")})`;
+
+  if (!field) {
+    return joinedValue;
+  } else {
+    return `${field}${operator}${joinedValue}`;
+  }
 };
 
 /**
@@ -183,9 +186,6 @@ export const serializeFilterRequestParamsForHub = (
 ) => {
   const { filters } = deserializedParams;
   if (filters) {
-    serializedParams.append(
-      "filter",
-      filters.map(serializeFilterForHub).join(",")
-    );
+    serializedParams.append("q", filters.map(serializeFilterForHub).join(","));
   }
 };

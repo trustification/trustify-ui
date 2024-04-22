@@ -5,7 +5,7 @@ import { CVE } from "@app/api/models";
 import { mockAdvisoryArray } from "./advisories";
 import { mockSBOMArray } from "./sboms";
 
-export const mockCVEArray: CVE[] = mockAdvisoryArray.flatMap(({ cves }) => {
+export const mockCVEArray: CVE[] = mockAdvisoryArray.flatMap(({ vulnerabilities: cves }) => {
   return cves.map((cve) => {
     const result: CVE = {
       ...cve,
@@ -22,7 +22,7 @@ export const handlers = [
   }),
   rest.get(`${AppRest.CVES}/:id`, (req, res, ctx) => {
     const { id } = req.params;
-    const item = mockCVEArray.find((app) => app.id === id);
+    const item = mockCVEArray.find((app) => app.vulnerability_id === id);
     if (item) {
       return res(ctx.json(item));
     } else {

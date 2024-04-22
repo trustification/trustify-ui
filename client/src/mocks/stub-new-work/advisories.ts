@@ -5,10 +5,12 @@ import { Advisory } from "@app/api/models";
 
 export const mockAdvisoryArray: Advisory[] = [
   {
-    id: "advisory-1",
+    identifier: "advisory-1",
     severity: "critical",
+    published: new Date().toString(),
     modified: new Date().toString(),
     title: "Title 1",
+    sha256: "sha356-1",
     metadata: {
       category: "advisory.document.category",
       publisher: {
@@ -25,9 +27,9 @@ export const mockAdvisoryArray: Advisory[] = [
       references: [{ url: "http://somedomain.com" }],
       notes: [`# Title \n - List \n ## Subtitle \n _Italian_ \n > Note`],
     },
-    cves: [
+    vulnerabilities: [
       {
-        id: "cve1",
+        vulnerability_id: "cve1",
         title: "title1",
         description: "description1",
         severity: "critical",
@@ -38,7 +40,7 @@ export const mockAdvisoryArray: Advisory[] = [
         date_updated: new Date().toString(),
       },
       {
-        id: "cve2",
+        vulnerability_id: "cve2",
         title: "title2",
         description: "description2",
         severity: "low",
@@ -53,14 +55,14 @@ export const mockAdvisoryArray: Advisory[] = [
 ];
 
 export const handlers = [
-  rest.get(AppRest.ADVISORIES_SEARCH, (req, res, ctx) => {
+  rest.get(AppRest.ADVISORIES, (req, res, ctx) => {
     return res(
       ctx.json({ items: mockAdvisoryArray, total: mockAdvisoryArray.length })
     );
   }),
   rest.get(`${AppRest.ADVISORIES}/:id`, (req, res, ctx) => {
     const { id } = req.params;
-    const item = mockAdvisoryArray.find((app) => app.id === id);
+    const item = mockAdvisoryArray.find((app) => app.identifier === id);
     if (item) {
       return res(ctx.json(item));
     } else {

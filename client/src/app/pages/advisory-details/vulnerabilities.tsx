@@ -16,11 +16,8 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { RENDER_DATE_FORMAT } from "@app/Constants";
-
-import { CVEBase } from "@app/api/models";
+import { VulnerabilityBase } from "@app/api/models";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
-import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -28,17 +25,19 @@ import {
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 
-interface CVEsProps {
-  cves: CVEBase[];
+interface VulnerabilitiesProps {
+  vulnerabilities: VulnerabilityBase[];
 }
 
-export const CVEs: React.FC<CVEsProps> = ({ cves }) => {
+export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
+  vulnerabilities,
+}) => {
   const tableControls = useLocalTableControls({
     tableName: "cves-table",
-    idProperty: "id",
-    items: cves,
+    idProperty: "vulnerability_id",
+    items: vulnerabilities,
     columnNames: {
-      cve: "CVE ID",
+      vulnerabilityId: "ID",
       title: "Title",
       discovery: "Discovery",
       release: "Release",
@@ -47,9 +46,9 @@ export const CVEs: React.FC<CVEsProps> = ({ cves }) => {
     },
     hasActionsColumn: true,
     isSortEnabled: true,
-    sortableColumns: ["cve", "discovery", "release"],
+    sortableColumns: ["vulnerabilityId", "discovery", "release"],
     getSortValues: (vuln) => ({
-      cve: vuln?.id || "",
+      vulnerabilityId: vuln?.vulnerability_id || "",
       discovery: vuln ? dayjs(vuln.date_discovered).millisecond() : 0,
       release: vuln ? dayjs(vuln.date_released).millisecond() : 0,
     }),
@@ -60,11 +59,11 @@ export const CVEs: React.FC<CVEsProps> = ({ cves }) => {
     isFilterEnabled: true,
     filterCategories: [
       {
-        categoryKey: "cve",
+        categoryKey: "id",
         title: "ID",
         type: FilterType.search,
         placeholderText: "Search by ID...",
-        getItemValue: (item) => item.id || "",
+        getItemValue: (item) => item.vulnerability_id || "",
       },
     ],
   });
@@ -92,7 +91,7 @@ export const CVEs: React.FC<CVEsProps> = ({ cves }) => {
           <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
           <ToolbarItem {...paginationToolbarItemProps}>
             <SimplePagination
-              idPrefix="cves-table"
+              idPrefix="vulnerability-table"
               isTop
               paginationProps={paginationProps}
             />
@@ -100,11 +99,11 @@ export const CVEs: React.FC<CVEsProps> = ({ cves }) => {
         </ToolbarContent>
       </Toolbar>
 
-      <Table {...tableProps} aria-label="CVEs table">
+      <Table {...tableProps} aria-label="Vulnerability table">
         <Thead>
           <Tr>
             <TableHeaderContentWithControls {...tableControls}>
-              <Th {...getThProps({ columnKey: "cve" })} />
+              <Th {...getThProps({ columnKey: "vulnerabilityId" })} />
               <Th {...getThProps({ columnKey: "title" })} />
               <Th {...getThProps({ columnKey: "discovery" })} />
               <Th {...getThProps({ columnKey: "release" })} />
@@ -116,15 +115,20 @@ export const CVEs: React.FC<CVEsProps> = ({ cves }) => {
         <ConditionalTableBody
           isLoading={false}
           isError={undefined}
-          isNoData={cves.length === 0}
+          isNoData={vulnerabilities.length === 0}
           numRenderedColumns={numRenderedColumns}
         >
           {currentPageItems?.map((item, rowIndex) => {
             return (
-              <Tbody key={item.id}>
+              <Tbody key={item.vulnerability_id}>
                 <Tr {...getTrProps({ item })}>
-                  <Td width={15} {...getTdProps({ columnKey: "cve" })}>
-                    <NavLink to={`/cves/${item.id}`}>{item.id}</NavLink>
+                  <Td
+                    width={15}
+                    {...getTdProps({ columnKey: "vulnerabilityId" })}
+                  >
+                    <NavLink to={`/vulnerabilities/${item.vulnerability_id}`}>
+                      {item.vulnerability_id}
+                    </NavLink>
                   </Td>
                   <Td
                     width={40}
@@ -134,16 +138,16 @@ export const CVEs: React.FC<CVEsProps> = ({ cves }) => {
                     {item.title}
                   </Td>
                   <Td width={10} {...getTdProps({ columnKey: "discovery" })}>
-                    {dayjs(item.date_discovered).format(RENDER_DATE_FORMAT)}
+                    {/* {dayjs(item.date_discovered).format(RENDER_DATE_FORMAT)} */}
                   </Td>
                   <Td width={10} {...getTdProps({ columnKey: "release" })}>
-                    {dayjs(item.date_released).format(RENDER_DATE_FORMAT)}
+                    {/* {dayjs(item.date_released).format(RENDER_DATE_FORMAT)} */}
                   </Td>
                   <Td width={15} {...getTdProps({ columnKey: "severity" })}>
-                    <SeverityShieldAndText value={item.severity} />
+                    {/* <SeverityShieldAndText value={item.severity} /> */}
                   </Td>
                   <Td width={10} {...getTdProps({ columnKey: "cwe" })}>
-                    {item.cwe}
+                    {/* {item.cwe} */}
                   </Td>
                 </Tr>
                 {isCellExpanded(item) ? (
@@ -161,7 +165,7 @@ export const CVEs: React.FC<CVEsProps> = ({ cves }) => {
         </ConditionalTableBody>
       </Table>
       <SimplePagination
-        idPrefix="cves-table"
+        idPrefix="vulnerability-table"
         isTop={false}
         isCompact
         paginationProps={paginationProps}

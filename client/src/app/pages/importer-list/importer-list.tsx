@@ -21,6 +21,7 @@ import {
   ToolbarItem,
 } from "@patternfly/react-core";
 import {
+  ActionsColumn,
   ExpandableRowContent,
   Td as PFTd,
   Tr as PFTr,
@@ -223,6 +224,20 @@ export const ImporterList: React.FC = () => {
                           ) : (
                             <Label color="orange">Disabled</Label>
                           )}
+                        </Td>
+                        <Td isActionCell>
+                          <ActionsColumn
+                            items={[
+                              {
+                                title: "Edit",
+                                onClick: () => setCreateUpdateModalState(item),
+                              },
+                              {
+                                title: "Delete",
+                                onClick: () => deleteRow(item),
+                              },
+                            ]}
+                          />
                         </Td>
                       </TableRowContentWithControls>
                     </Tr>

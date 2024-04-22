@@ -1,6 +1,6 @@
 import React from "react";
 
-import { CVEBase, Severity } from "@app/api/models";
+import { VulnerabilityBase, Severity } from "@app/api/models";
 import { CveGallery } from "@app/components/CveGallery";
 
 type SeverityCount = { [key in Severity]: number };
@@ -12,7 +12,7 @@ const defaultSeverityCount: SeverityCount = {
 };
 
 interface CVEsCountProps {
-  cves: CVEBase[];
+  cves: VulnerabilityBase[];
 }
 
 export const CVEGalleryCount: React.FC<CVEsCountProps> = ({ cves }) => {

@@ -160,7 +160,7 @@ export const UploadFilesDrawer: React.FC<IUploadFilesDrawerProps> = ({
                   ) : upload.response ? (
                     <HelperText isLiveRegion>
                       <HelperTextItem variant="default">
-                        {`Document ${upload.response.data.id} uploaded`}
+                        {`Document ${upload.response.data.identifier} uploaded`}
                       </HelperTextItem>
                     </HelperText>
                   ) : undefined
