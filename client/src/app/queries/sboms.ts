@@ -7,7 +7,7 @@ import {
   getSBOMById,
   getSBOMSourceById,
   getPackagesBySbomId,
-  getCVEsBySbomId,
+  getVulnerabilitiesBySbomId,
 } from "@app/api/rest";
 
 export const SBOMsQueryKey = "sboms";
@@ -82,7 +82,7 @@ export const useFetchCVEsBySbomId = (sbomId: string | number) => {
     queryFn: () =>
       sbomId === undefined
         ? Promise.resolve(undefined)
-        : getCVEsBySbomId(sbomId),
+        : getVulnerabilitiesBySbomId(sbomId),
     enabled: sbomId !== undefined,
   });
 

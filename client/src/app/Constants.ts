@@ -5,7 +5,7 @@ export const FILTER_DATE_FORMAT = "YYYY-MM-DD";
 
 export const TablePersistenceKeyPrefixes = {
   advisories: "ad",
-  cves: "cv",
+  vulnerabilities: "vn",
   sboms: "sb",
   packages: "pk",
 };

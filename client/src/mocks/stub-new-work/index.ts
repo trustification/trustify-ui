@@ -1,7 +1,7 @@
 import { type RestHandler } from "msw";
 import { config } from "../config";
 import advisories from "./advisories";
-import cves from "./cves";
+import cves from "./vulnerabilities";
 import packages from "./packages";
 import sboms from "./sboms";
 

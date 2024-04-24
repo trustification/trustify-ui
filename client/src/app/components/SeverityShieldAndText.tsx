@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Flex, FlexItem } from "@patternfly/react-core";
+import { Flex, FlexItem, Tooltip } from "@patternfly/react-core";
 import ShieldIcon from "@patternfly/react-icons/dist/esm/icons/shield-alt-icon";
 
 import { severityList } from "@app/api/model-utils";
@@ -16,6 +16,7 @@ export const SeverityShieldAndText: React.FC<SeverityShieldAndTextProps> = ({
   hideLabel,
 }) => {
   const severityProps = severityList[value];
+  const label = value.charAt(0).toUpperCase() + value.slice(1);
 
   return (
     <Flex
@@ -25,11 +26,15 @@ export const SeverityShieldAndText: React.FC<SeverityShieldAndTextProps> = ({
       style={{ whiteSpace: "nowrap" }}
     >
       <FlexItem>
-        <ShieldIcon color={severityProps.shieldIconColor.value} />
+        {hideLabel ? (
+          <Tooltip content={label}>
+            <ShieldIcon color={severityProps.shieldIconColor.value} />
+          </Tooltip>
+        ) : (
+          <ShieldIcon color={severityProps.shieldIconColor.value} />
+        )}
       </FlexItem>
-      {!hideLabel && (
-        <FlexItem>{value.charAt(0).toUpperCase() + value.slice(1)}</FlexItem>
-      )}
+      {!hideLabel && <FlexItem>{label}</FlexItem>}
     </Flex>
   );
 };

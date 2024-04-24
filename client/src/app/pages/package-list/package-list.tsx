@@ -28,7 +28,7 @@ import {
 import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchPackages } from "@app/queries/packages";
 
-import { CVEGalleryCount } from "../advisory-list/components/CVEsGaleryCount";
+import { VulnerabilitiesGalleryCount } from "../advisory-list/components/VulnerabilitiesGaleryCount";
 
 export const PackageList: React.FC = () => {
   const tableControlState = useTableControlState({
@@ -203,7 +203,7 @@ export const PackageList: React.FC = () => {
                         )}
                       </Td>
                       <Td width={10} {...getTdProps({ columnKey: "cve" })}>
-                        <CVEGalleryCount cves={item.related_cves} />
+                        <VulnerabilitiesGalleryCount vulnerabilities={item.related_cves} />
                       </Td>
                     </Tr>
                   </Tbody>

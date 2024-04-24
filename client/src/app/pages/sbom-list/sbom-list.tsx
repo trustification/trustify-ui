@@ -20,7 +20,7 @@ import {
   RENDER_DATE_FORMAT,
   TablePersistenceKeyPrefixes,
 } from "@app/Constants";
-import { CveGallery } from "@app/components/CveGallery";
+import { VulnerabilityGallery } from "@app/components/VulnerabilityGallery";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
@@ -175,7 +175,7 @@ export const SbomList: React.FC = () => {
                         {item.related_packages.count}
                       </Td>
                       <Td width={20} {...getTdProps({ columnKey: "cves" })}>
-                        <CveGallery severities={item.related_cves} />
+                        <VulnerabilityGallery severities={item.related_cves} />
                       </Td>
                       <Td width={10} {...getTdProps({ columnKey: "download" })}>
                         <Button

@@ -6,8 +6,10 @@ import { Bullseye, Spinner } from "@patternfly/react-core";
 const Home = lazy(() => import("./pages/home"));
 const AdvisoryList = lazy(() => import("./pages/advisory-list"));
 const AdvisoryDetails = lazy(() => import("./pages/advisory-details"));
-const CVEList = lazy(() => import("./pages/cve-list"));
-const CVEDetails = lazy(() => import("./pages/cve-details"));
+const VulnerabilityList = lazy(() => import("./pages/vulnerability-list"));
+const VulnerabilityDetails = lazy(
+  () => import("./pages/vulnerability-details")
+);
 const PackageList = lazy(() => import("./pages/package-list"));
 const PackageDetails = lazy(() => import("./pages/package-details"));
 const SBOMList = lazy(() => import("./pages/sbom-list"));
@@ -16,7 +18,7 @@ const ImporterList = lazy(() => import("./pages/importer-list"));
 
 export enum PathParam {
   ADVISORY_ID = "advisoryId",
-  CVE_ID = "cveId",
+  VULNERABILITY_ID = "vulnerabilityId",
   SBOM_ID = "sbomId",
   PACKAGE_ID = "packageId",
   IMPORTER_ID = "importerId",
@@ -30,10 +32,10 @@ export const AppRoutes = () => {
       path: `/advisories/:${PathParam.ADVISORY_ID}`,
       element: <AdvisoryDetails />,
     },
-    { path: "/cves", element: <CVEList /> },
+    { path: "/vulnerabilities", element: <VulnerabilityList /> },
     {
-      path: `/cves/:${PathParam.CVE_ID}`,
-      element: <CVEDetails />,
+      path: `/vulnerabilities/:${PathParam.VULNERABILITY_ID}`,
+      element: <VulnerabilityDetails />,
     },
     { path: "/packages", element: <PackageList /> },
     {

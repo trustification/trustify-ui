@@ -73,38 +73,19 @@ export interface AdvisoryBase {
   modified: string;
   title: string;
   sha256: string;
-  metadata: {
-    category: string;
-    publisher: {
-      name: string;
-      namespace: string;
-      contact_details: string;
-      issuing_authority: string;
-    };
-    tracking: {
-      status: string;
-      initial_release_date: string;
-      current_release_date: string;
-    };
-    references: {
-      url: string;
-      label?: string;
-    }[];
-    notes: string[];
-  };
 }
 
 // Advisories
 
-export type Severity = "low" | "moderate" | "important" | "critical";
+export type Severity = "none" | "low" | "medium" | "high" | "critical";
 
 export interface Advisory extends AdvisoryBase {
-  vulnerabilities: VulnerabilityBase[];
+  vulnerabilities: { severity: Severity; vulnerability_id: string }[];
 }
 
-// CVE
+// Vulnerability
 
-export interface CVE extends VulnerabilityBase {
+export interface Vulnerability extends VulnerabilityBase {
   related_sboms: SBOMBase[];
   related_advisories: AdvisoryBase[];
 }
@@ -112,7 +93,7 @@ export interface CVE extends VulnerabilityBase {
 // Package
 
 export interface Package extends PackageBase {
-  related_cves: VulnerabilityBase[];
+  related_cves: { severity: Severity; vulnerability_id: string }[];
   related_sboms: SBOMBase[];
 }
 

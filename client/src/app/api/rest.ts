@@ -4,7 +4,7 @@ import { FORM_DATA_FILE_KEY } from "@app/Constants";
 import { serializeRequestParamsForHub } from "@app/hooks/table-controls/getHubRequestParams";
 import {
   Advisory,
-  CVE,
+  Vulnerability,
   HubPaginatedResult,
   HubRequestParams,
   Importer,
@@ -16,7 +16,7 @@ import {
 const API = "/api";
 
 export const ADVISORIES = API + "/v1/advisory";
-export const CVES = API + "/cves";
+export const VULNERABILITIES = API + "/v1/vulnerability";
 export const SBOMS = API + "/sboms";
 export const PACKAGES = API + "/packages";
 export const IMPORTERS = API + "/v1/importer";
@@ -78,22 +78,24 @@ export const uploadAdvisory = (
 
 //
 
-export const getCVEs = (params: HubRequestParams = {}) => {
-  return getHubPaginatedResult<CVE>(CVES, params);
+export const getVulnerabilities = (params: HubRequestParams = {}) => {
+  return getHubPaginatedResult<Vulnerability>(VULNERABILITIES, params);
 };
 
-export const getCVEById = (id: number | string) => {
-  return axios.get<CVE>(`${CVES}/${id}`).then((response) => response.data);
-};
-
-export const getCVESourceById = (id: number | string) => {
+export const getVulnerabilityById = (id: number | string) => {
   return axios
-    .get<string>(`${CVES}/${id}/source`)
+    .get<Vulnerability>(`${VULNERABILITIES}/${id}`)
     .then((response) => response.data);
 };
 
-export const downloadCVEById = (id: number | string) => {
-  return axios.get<string>(`${CVES}/${id}/source`, {
+export const getVulnerabilitySourceById = (id: number | string) => {
+  return axios
+    .get<string>(`${VULNERABILITIES}/${id}/source`)
+    .then((response) => response.data);
+};
+
+export const downloadVulnerabilityById = (id: number | string) => {
+  return axios.get<string>(`${VULNERABILITIES}/${id}/source`, {
     responseType: "arraybuffer",
     headers: { Accept: "text/plain", responseType: "blob" },
   });
@@ -140,9 +142,9 @@ export const getPackagesBySbomId = (id: string | number) => {
     .then((response) => response.data);
 };
 
-export const getCVEsBySbomId = (id: string | number) => {
+export const getVulnerabilitiesBySbomId = (id: string | number) => {
   return axios
-    .get<CVE[]>(`${SBOMS}/${id}/cves`)
+    .get<Vulnerability[]>(`${SBOMS}/${id}/vulnerabilities`)
     .then((response) => response.data);
 };
 

@@ -16,24 +16,28 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { VulnerabilityBase } from "@app/api/models";
+import { Severity, VulnerabilityBase } from "@app/api/models";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
   TableHeaderContentWithControls,
+  TableRowContentWithControls,
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 
 interface VulnerabilitiesProps {
-  vulnerabilities: VulnerabilityBase[];
+  vulnerabilities: {
+    vulnerability_id: string;
+    severity: Severity;
+  }[];
 }
 
 export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
   vulnerabilities,
 }) => {
   const tableControls = useLocalTableControls({
-    tableName: "cves-table",
+    tableName: "vulnerability-table",
     idProperty: "vulnerability_id",
     items: vulnerabilities,
     columnNames: {
@@ -45,13 +49,13 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
       cwe: "CWE",
     },
     hasActionsColumn: true,
-    isSortEnabled: true,
-    sortableColumns: ["vulnerabilityId", "discovery", "release"],
-    getSortValues: (vuln) => ({
-      vulnerabilityId: vuln?.vulnerability_id || "",
-      discovery: vuln ? dayjs(vuln.date_discovered).millisecond() : 0,
-      release: vuln ? dayjs(vuln.date_released).millisecond() : 0,
-    }),
+    isSortEnabled: false,
+    // sortableColumns: ["vulnerabilityId", "discovery", "release"],
+    // getSortValues: (vuln) => ({
+    //   vulnerabilityId: vuln?.vulnerability_id || "",
+    //   discovery: vuln ? dayjs(vuln.date_discovered).millisecond() : 0,
+    //   release: vuln ? dayjs(vuln.date_released).millisecond() : 0,
+    // }),
     isPaginationEnabled: true,
     initialItemsPerPage: 10,
     isExpansionEnabled: true,
@@ -122,33 +126,39 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
             return (
               <Tbody key={item.vulnerability_id}>
                 <Tr {...getTrProps({ item })}>
-                  <Td
-                    width={15}
-                    {...getTdProps({ columnKey: "vulnerabilityId" })}
+                  <TableRowContentWithControls
+                    {...tableControls}
+                    item={item}
+                    rowIndex={rowIndex}
                   >
-                    <NavLink to={`/vulnerabilities/${item.vulnerability_id}`}>
-                      {item.vulnerability_id}
-                    </NavLink>
-                  </Td>
-                  <Td
-                    width={40}
-                    modifier="truncate"
-                    {...getTdProps({ columnKey: "title" })}
-                  >
-                    {item.title}
-                  </Td>
-                  <Td width={10} {...getTdProps({ columnKey: "discovery" })}>
-                    {/* {dayjs(item.date_discovered).format(RENDER_DATE_FORMAT)} */}
-                  </Td>
-                  <Td width={10} {...getTdProps({ columnKey: "release" })}>
-                    {/* {dayjs(item.date_released).format(RENDER_DATE_FORMAT)} */}
-                  </Td>
-                  <Td width={15} {...getTdProps({ columnKey: "severity" })}>
-                    {/* <SeverityShieldAndText value={item.severity} /> */}
-                  </Td>
-                  <Td width={10} {...getTdProps({ columnKey: "cwe" })}>
-                    {/* {item.cwe} */}
-                  </Td>
+                    <Td
+                      width={15}
+                      {...getTdProps({ columnKey: "vulnerabilityId" })}
+                    >
+                      <NavLink to={`/vulnerabilities/${item.vulnerability_id}`}>
+                        {item.vulnerability_id}
+                      </NavLink>
+                    </Td>
+                    <Td
+                      width={40}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "title" })}
+                    >
+                      {/* {item.title} */}
+                    </Td>
+                    <Td width={10} {...getTdProps({ columnKey: "discovery" })}>
+                      {/* {dayjs(item.date_discovered).format(RENDER_DATE_FORMAT)} */}
+                    </Td>
+                    <Td width={10} {...getTdProps({ columnKey: "release" })}>
+                      {/* {dayjs(item.date_released).format(RENDER_DATE_FORMAT)} */}
+                    </Td>
+                    <Td width={15} {...getTdProps({ columnKey: "severity" })}>
+                      {/* <SeverityShieldAndText value={item.severity} /> */}
+                    </Td>
+                    <Td width={10} {...getTdProps({ columnKey: "cwe" })}>
+                      {/* {item.cwe} */}
+                    </Td>
+                  </TableRowContentWithControls>
                 </Tr>
                 {isCellExpanded(item) ? (
                   <PFTr isExpanded>

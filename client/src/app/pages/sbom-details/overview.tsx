@@ -24,7 +24,9 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
   return (
     <Grid hasGutter>
       <GridItem md={6}>
-        <CVEsChart data={{ low: 1, critical: 2, important: 3, moderate: 4 }} />
+        <CVEsChart
+          data={{ none: 1, low: 1, critical: 2, medium: 3, high: 4 }}
+        />
       </GridItem>
       <GridItem md={6}>
         <DescriptionList

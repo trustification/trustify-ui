@@ -3,7 +3,7 @@ import { rest } from "msw";
 import * as AppRest from "@app/api/rest";
 import { Package, SBOM } from "@app/api/models";
 import { mockAdvisoryArray } from "./advisories";
-import { mockCVEArray } from "./cves";
+import { mockVulnerabilityArray } from "./vulnerabilities";
 
 export const mockSBOMArray: SBOM[] = [
   {
@@ -14,10 +14,11 @@ export const mockSBOMArray: SBOM[] = [
     supplier: "supplier 1",
     created_on: new Date().toString(),
     related_cves: {
+      none: 1,
       low: 1,
+      medium: 4,
       critical: 2,
-      important: 3,
-      moderate: 4,
+      high: 3,
     },
     related_packages: {
       count: 123,
@@ -67,7 +68,7 @@ export const handlers = [
     return res(ctx.json(mockPackageArray));
   }),
   rest.get(`${AppRest.SBOMS}/:id/cves`, (req, res, ctx) => {
-    return res(ctx.json(mockCVEArray));
+    return res(ctx.json(mockVulnerabilityArray));
   }),
 ];
 

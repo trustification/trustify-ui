@@ -1,6 +1,6 @@
 import {
   downloadAdvisoryById,
-  downloadCVEById,
+  downloadVulnerabilityById,
   downloadSBOMById,
 } from "@app/api/rest";
 import { saveAs } from "file-saver";
@@ -13,7 +13,7 @@ export const useDownload = () => {
   };
 
   const downloadCVE = (id: string, filename?: string) => {
-    downloadCVEById(id).then((response) => {
+    downloadVulnerabilityById(id).then((response) => {
       saveAs(new Blob([response.data]), filename || `${id}.json`);
     });
   };

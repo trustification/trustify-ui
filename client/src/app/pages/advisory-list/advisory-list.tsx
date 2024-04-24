@@ -43,6 +43,7 @@ import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchAdvisories } from "@app/queries/advisories";
 
 import { UploadFilesDrawer } from "./components/UploadFilesDrawer";
+import { VulnerabilitiesGalleryCount } from "./components/VulnerabilitiesGaleryCount";
 
 export const AdvisoryList: React.FC = () => {
   const [showUploadComponent, setShowUploadComponent] = React.useState(false);
@@ -56,7 +57,7 @@ export const AdvisoryList: React.FC = () => {
       severity: "Severity",
       published: "Published",
       modified: "Modified",
-      cves: "CVEs",
+      vulnerabilities: "Vulnerabilities",
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
@@ -162,7 +163,7 @@ export const AdvisoryList: React.FC = () => {
                   <Th {...getThProps({ columnKey: "severity" })} />
                   <Th {...getThProps({ columnKey: "published" })} />
                   <Th {...getThProps({ columnKey: "modified" })} />
-                  <Th {...getThProps({ columnKey: "cves" })} />
+                  <Th {...getThProps({ columnKey: "vulnerabilities" })} />
                 </TableHeaderContentWithControls>
               </Tr>
             </Thead>
@@ -217,9 +218,9 @@ export const AdvisoryList: React.FC = () => {
                       <Td
                         width={15}
                         modifier="truncate"
-                        {...getTdProps({ columnKey: "cves" })}
+                        {...getTdProps({ columnKey: "vulnerabilities" })}
                       >
-                        {/* <CVEGalleryCount cves={item.cves} /> */}
+                        <VulnerabilitiesGalleryCount vulnerabilities={item.vulnerabilities} />
                       </Td>
                       <Td isActionCell>
                         <ActionsColumn

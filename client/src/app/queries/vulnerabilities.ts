@@ -2,14 +2,18 @@ import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 import { HubRequestParams } from "@app/api/models";
-import { getCVEs, getCVEById, getCVESourceById } from "@app/api/rest";
+import {
+  getVulnerabilities,
+  getVulnerabilityById,
+  getVulnerabilitySourceById,
+} from "@app/api/rest";
 
-export const CVEsQueryKey = "cves";
+export const VulnerabilitiesQueryKey = "vulnerabilities";
 
-export const useFetchCVEs = (params: HubRequestParams = {}) => {
+export const useFetchVulnerabilities = (params: HubRequestParams = {}) => {
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: [CVEsQueryKey, params],
-    queryFn: () => getCVEs(params),
+    queryKey: [VulnerabilitiesQueryKey, params],
+    queryFn: () => getVulnerabilities(params),
   });
   return {
     result: {
@@ -23,26 +27,28 @@ export const useFetchCVEs = (params: HubRequestParams = {}) => {
   };
 };
 
-export const useFetchCVEById = (id?: number | string) => {
+export const useFetchVulnerabilityById = (id?: number | string) => {
   const { data, isLoading, error } = useQuery({
-    queryKey: [CVEsQueryKey, id],
+    queryKey: [VulnerabilitiesQueryKey, id],
     queryFn: () =>
-      id === undefined ? Promise.resolve(undefined) : getCVEById(id),
+      id === undefined ? Promise.resolve(undefined) : getVulnerabilityById(id),
     enabled: id !== undefined,
   });
 
   return {
-    cve: data,
+    vulnerability: data,
     isFetching: isLoading,
     fetchError: error as AxiosError,
   };
 };
 
-export const useFetchCVESourceById = (id?: number | string) => {
+export const useFetchVulnerabilitySourceById = (id?: number | string) => {
   const { data, isLoading, error } = useQuery({
-    queryKey: [CVEsQueryKey, id, "source"],
+    queryKey: [VulnerabilitiesQueryKey, id, "source"],
     queryFn: () =>
-      id === undefined ? Promise.resolve(undefined) : getCVESourceById(id),
+      id === undefined
+        ? Promise.resolve(undefined)
+        : getVulnerabilitySourceById(id),
     enabled: id !== undefined,
   });
 

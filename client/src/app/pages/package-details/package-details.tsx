@@ -66,7 +66,8 @@ export const PackageDetails: React.FC = () => {
                     isFetching={isFetchingSbom}
                     fetchError={fetchErrorSbom}
                   >
-                    {pkg && <RelatedCVEs cves={pkg?.related_cves || []} />}
+                    {/* {pkg && <RelatedCVEs cves={pkg?.related_cves || []} />} */}
+                    related cves
                   </LoadingWrapper>
                 </div>
               ),
