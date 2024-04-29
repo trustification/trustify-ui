@@ -5,7 +5,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/trustification/trustification-ui.git"
+    "url": "https://github.com/trustification/trustify-ui.git"
   },
   "scripts": {
     "clean": "rimraf ./dist && npm run clean -ws --if-present",
