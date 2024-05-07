@@ -17,7 +17,7 @@ const API = "/api";
 
 export const ADVISORIES = API + "/v1/advisory";
 export const VULNERABILITIES = API + "/v1/vulnerability";
-export const SBOMS = API + "/sboms";
+export const SBOMS = API + "/v1/sbom";
 export const PACKAGES = API + "/packages";
 export const IMPORTERS = API + "/v1/importer";
 

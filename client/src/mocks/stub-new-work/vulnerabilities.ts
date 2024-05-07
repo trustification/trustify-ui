@@ -11,13 +11,10 @@ export const mockVulnerabilityArray: Vulnerability[] =
       const result: Vulnerability = {
         ...vuln,
         title: `title${index}`,
-        description: `description${index}`,
         severity: "critical",
         cwe: `cwe${index}`,
-        date_discovered: new Date().toString(),
-        date_released: new Date().toString(),
-        date_reserved: new Date().toString(),
-        date_updated: new Date().toString(),
+        published: new Date().toString(),
+        modified: new Date().toString(),
 
         related_advisories: mockAdvisoryArray,
         related_sboms: mockSBOMArray,
@@ -37,9 +34,7 @@ export const handlers = [
   }),
   rest.get(`${AppRest.VULNERABILITIES}/:id`, (req, res, ctx) => {
     const { id } = req.params;
-    const item = mockVulnerabilityArray.find(
-      (app) => app.vulnerability_id === id
-    );
+    const item = mockVulnerabilityArray.find((app) => app.identifier === id);
     if (item) {
       return res(ctx.json(item));
     } else {

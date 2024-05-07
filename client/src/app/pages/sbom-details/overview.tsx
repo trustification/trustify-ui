@@ -36,7 +36,7 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
         >
           <DescriptionListGroup>
             <DescriptionListTerm>Name</DescriptionListTerm>
-            <DescriptionListDescription>{sbom.name}</DescriptionListDescription>
+            <DescriptionListDescription>{sbom.title}</DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>
             <DescriptionListTerm>Version</DescriptionListTerm>
@@ -47,13 +47,13 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
           <DescriptionListGroup>
             <DescriptionListTerm>Supplier</DescriptionListTerm>
             <DescriptionListDescription>
-              {sbom.supplier}
+              {sbom.authors}
             </DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>
             <DescriptionListTerm>Created</DescriptionListTerm>
             <DescriptionListDescription>
-              {dayjs(sbom.created_on).format(RENDER_DATE_FORMAT)}
+              {dayjs(sbom.published).format(RENDER_DATE_FORMAT)}
             </DescriptionListDescription>
           </DescriptionListGroup>
         </DescriptionList>

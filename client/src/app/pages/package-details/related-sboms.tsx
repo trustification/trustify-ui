@@ -41,7 +41,7 @@ export const RelatedSBOMs: React.FC<RelatedSBOMsProps> = ({ sboms }) => {
         title: "Filter text",
         placeholderText: "Search",
         type: FilterType.search,
-        getItemValue: (item) => item.name,
+        getItemValue: (item) => item.title,
       },
     ],
   });
@@ -98,7 +98,7 @@ export const RelatedSBOMs: React.FC<RelatedSBOMsProps> = ({ sboms }) => {
               <Tbody key={item.id}>
                 <Tr {...getTrProps({ item })}>
                   <Td width={45} {...getTdProps({ columnKey: "name" })}>
-                    <NavLink to={`/sboms/${item?.id}`}>{item?.name}</NavLink>
+                    <NavLink to={`/sboms/${item?.id}`}>{item?.title}</NavLink>
                   </Td>
                   <Td
                     width={15}
@@ -112,7 +112,7 @@ export const RelatedSBOMs: React.FC<RelatedSBOMsProps> = ({ sboms }) => {
                     modifier="truncate"
                     {...getTdProps({ columnKey: "supplier" })}
                   >
-                    {item?.supplier}
+                    {item?.authors}
                   </Td>
                   <Td
                     width={15}

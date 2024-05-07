@@ -2,8 +2,8 @@ import React, { useContext } from "react";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { AxiosError } from "axios";
-import { useForm } from "react-hook-form";
-import { boolean, number, object, string } from "yup";
+import { Control, Controller, useFieldArray, useForm } from "react-hook-form";
+import { array, boolean, number, object, string } from "yup";
 
 import {
   ActionGroup,
@@ -15,14 +15,21 @@ import {
   FormGroup,
   FormSelect,
   FormSelectOption,
+  Level,
+  LevelItem,
   NumberInput,
   Popover,
   PopoverPosition,
   Split,
   SplitItem,
+  Stack,
+  StackItem,
   Switch,
+  TextInput,
 } from "@patternfly/react-core";
-import { QuestionCircleIcon } from "@patternfly/react-icons";
+import QuestionCircleIcon from "@patternfly/react-icons/dist/esm/icons/question-circle-icon";
+import PlusCircleIcon from "@patternfly/react-icons/dist/esm/icons/plus-circle-icon";
+import MinusIcon from "@patternfly/react-icons/dist/esm/icons/minus-icon";
 import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
 
 import { Importer, ImporterConfigurationValues } from "@app/api/models";
@@ -76,7 +83,7 @@ const PERIOD_UNIT_LIST: PeriodUnitProps = {
 export const ALL_IMPORTER_TYPES = ["sbom", "csaf"] as const;
 type ImporterType = (typeof ALL_IMPORTER_TYPES)[number];
 
-export interface FormValues {
+type FormValues = {
   name: string;
   type: ImporterType;
   source: string;
@@ -84,7 +91,9 @@ export interface FormValues {
   periodUnit: PeriodUnitType;
   v3Signatures: boolean;
   enabled: boolean;
-}
+  keys: { value: string }[];
+  onlyPatterns: { value: string }[];
+};
 
 export interface IImporterFormProps {
   importer?: Importer;
@@ -105,10 +114,13 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
     periodUnit: string().trim().required().max(250),
     v3Signatures: boolean().required(),
     enabled: boolean().required(),
+    keys: array(object().shape({ value: string() })),
+    onlyPatterns: array(object().shape({ value: string() })),
   });
 
   const importerConfiguration =
     importer?.configuration.sbom || importer?.configuration.csaf;
+
   const periodValue = getPeriodValue(importerConfiguration?.period);
   const periodUnit = getPeriodUnit(importerConfiguration?.period);
 
@@ -130,19 +142,32 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
       source: importerConfiguration?.source || "",
       periodValue: periodValue || 60,
       periodUnit: periodUnit || "s",
-      v3Signatures:
-        importerConfiguration?.v3Signatures !== undefined &&
-        importerConfiguration?.v3Signatures !== null
-          ? importerConfiguration?.v3Signatures
-          : false,
-      enabled:
-        importerConfiguration?.disabled !== undefined &&
-        importerConfiguration?.disabled !== null
-          ? !importerConfiguration?.disabled
-          : true,
+      v3Signatures: importerConfiguration?.v3Signatures ?? false,
+      enabled: !importerConfiguration?.disabled ?? true,
+      keys: importerConfiguration?.keys?.map((e) => ({ value: e })) ?? [],
+      onlyPatterns:
+        importerConfiguration?.onlyPatterns?.map((e) => ({ value: e })) ?? [],
     },
     resolver: yupResolver(validationSchema),
-    mode: "onChange",
+    // mode: "onChange",
+  });
+
+  const {
+    fields: fieldsKeys,
+    append: appendKeys,
+    remove: removeKeys,
+  } = useFieldArray({
+    control: control,
+    name: "keys",
+  });
+
+  const {
+    fields: fieldsOnlyPatterns,
+    append: appendOnlyPatterns,
+    remove: removeOnlyPatterns,
+  } = useFieldArray({
+    control: control,
+    name: "onlyPatterns",
   });
 
   const onCreateSuccess = (_: Importer) =>
@@ -187,6 +212,8 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
       period: `${formValues.periodValue}${formValues.periodUnit.trim()}`,
       v3Signatures: formValues.v3Signatures,
       disabled: !formValues.enabled,
+      keys: formValues.keys.map((e) => e.value),
+      onlyPatterns: formValues.onlyPatterns.map((e) => e.value),
     };
     const payload: Importer = {
       name: formValues.name.trim(),
@@ -205,11 +232,18 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
   const fillDemoSettings = () => {
     if (getValues().type === "sbom") {
       setValue("source", "https://access.redhat.com/security/data/sbom/beta/");
+      setValue("keys", [
+        {
+          value:
+            "https://access.redhat.com/security/data/97f5eac4.txt#77E79ABE93673533ED09EBE2DCE3823597F5EAC4",
+        },
+      ]);
     } else if (getValues().type === "csaf") {
       setValue(
         "source",
         "https://redhat.com/.well-known/csaf/provider-metadata.json"
       );
+      setValue("keys", []);
     }
     setValue("v3Signatures", true);
     trigger();
@@ -372,6 +406,55 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
               </span>
             )}
           />
+
+          <FormGroup label="Keys" isRequired fieldId="keys">
+            <Stack hasGutter>
+              {fieldsKeys.map((field, index) => {
+                return (
+                  <StackItem key={field.id}>
+                    <Split hasGutter>
+                      <SplitItem isFilled>
+                        <HookFormPFGroupController
+                          control={control}
+                          name={`keys.${index}.value`}
+                          fieldId={`keys.${index}.value`}
+                          renderInput={({
+                            field: { value, onChange, onBlur },
+                          }) => (
+                            <TextInput
+                              onChange={(_, value) => {
+                                onChange(value);
+                              }}
+                              onBlur={onBlur}
+                              value={value}
+                            />
+                          )}
+                        />
+                      </SplitItem>
+                      <SplitItem>
+                        <Button
+                          variant="tertiary"
+                          onClick={() => {
+                            removeKeys(index);
+                          }}
+                        >
+                          <MinusIcon /> Remove
+                        </Button>
+                      </SplitItem>
+                    </Split>
+                  </StackItem>
+                );
+              })}
+              <StackItem>
+                <Button
+                  variant="tertiary"
+                  onClick={() => appendKeys({ value: "" })}
+                >
+                  <PlusCircleIcon /> Add Key
+                </Button>
+              </StackItem>
+            </Stack>
+          </FormGroup>
         </FormFieldGroupExpandable>
 
         <ActionGroup>

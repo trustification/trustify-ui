@@ -35,7 +35,7 @@ export const CVEs: React.FC<CVEsProps> = ({ sbomId }) => {
 
   const tableControls = useLocalTableControls({
     tableName: "cves-table",
-    idProperty: "vulnerability_id",
+    idProperty: "identifier",
     items: cves,
     isLoading: isFetching,
     columnNames: {
@@ -57,7 +57,7 @@ export const CVEs: React.FC<CVEsProps> = ({ sbomId }) => {
         title: "Filter tex",
         type: FilterType.search,
         placeholderText: "Search...",
-        getItemValue: (item) => item.vulnerability_id,
+        getItemValue: (item) => item.identifier,
       },
     ],
   });
@@ -113,21 +113,21 @@ export const CVEs: React.FC<CVEsProps> = ({ sbomId }) => {
         >
           {currentPageItems?.map((item, rowIndex) => {
             return (
-              <Tbody key={item.vulnerability_id}>
+              <Tbody key={item.identifier}>
                 <Tr {...getTrProps({ item })}>
                   <Td
                     width={15}
                     modifier="truncate"
                     {...getTdProps({ columnKey: "id" })}
                   >
-                    {item.vulnerability_id}
+                    {item.identifier}
                   </Td>
                   <Td
                     width={10}
                     modifier="truncate"
                     {...getTdProps({ columnKey: "description" })}
                   >
-                    {item.description}
+                    {/* {item.description} */}
                   </Td>
                   <Td
                     width={10}
@@ -141,7 +141,7 @@ export const CVEs: React.FC<CVEsProps> = ({ sbomId }) => {
                     modifier="truncate"
                     {...getTdProps({ columnKey: "datePublished" })}
                   >
-                    {dayjs(item.date_discovered).format(RENDER_DATE_FORMAT)}
+                    {dayjs(item.published).format(RENDER_DATE_FORMAT)}
                   </Td>
                   <Td
                     width={10}

@@ -44,7 +44,7 @@ export const SbomDetails: React.FC = () => {
             </Breadcrumb>
           }
           pageHeading={{
-            title: sbom?.name ?? sbomId ?? "",
+            title: sbom?.title ?? sbomId ?? "",
             label: sbom
               ? {
                   children: sbom.type,

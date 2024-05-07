@@ -44,18 +44,17 @@ export const SbomList: React.FC = () => {
       name: "Name",
       version: "Version",
       supplier: "Supplier",
-      createdOn: "Created on",
+      published: "Published",
       packages: "Packages",
       cves: "CVEs",
-      download: "Download",
     },
     isSortEnabled: true,
-    sortableColumns: ["createdOn"],
+    sortableColumns: ["published"],
     initialItemsPerPage: 10,
     isFilterEnabled: true,
     filterCategories: [
       {
-        categoryKey: "filterText",
+        categoryKey: "",
         title: "Filter text",
         placeholderText: "Search",
         type: FilterType.search,
@@ -70,6 +69,9 @@ export const SbomList: React.FC = () => {
   } = useFetchSBOMs(
     getHubRequestParams({
       ...tableControlState,
+      hubSortFieldKeys: {
+        published: "published",
+      },
     })
   );
 
@@ -135,9 +137,9 @@ export const SbomList: React.FC = () => {
                   <Th {...getThProps({ columnKey: "name" })} />
                   <Th {...getThProps({ columnKey: "version" })} />
                   <Th {...getThProps({ columnKey: "supplier" })} />
-                  <Th {...getThProps({ columnKey: "createdOn" })} />
+                  <Th {...getThProps({ columnKey: "published" })} />
                   <Th {...getThProps({ columnKey: "packages" })} />
-                  <Th {...getThProps({ columnKey: "download" })} />
+                  <Th {...getThProps({ columnKey: "cves" })} />
                 </TableHeaderContentWithControls>
               </Tr>
             </Thead>
@@ -152,7 +154,7 @@ export const SbomList: React.FC = () => {
                   <Tbody key={item.id}>
                     <Tr {...getTrProps({ item })}>
                       <Td width={20} {...getTdProps({ columnKey: "name" })}>
-                        <NavLink to={`/sboms/${item.id}`}>{item.name}</NavLink>
+                        <NavLink to={`/sboms/${item.id}`}>{item.title}</NavLink>
                       </Td>
                       <Td
                         width={10}
@@ -161,32 +163,25 @@ export const SbomList: React.FC = () => {
                       >
                         {item.version}
                       </Td>
-                      <Td width={20} {...getTdProps({ columnKey: "supplier" })}>
-                        {item.supplier}
+                      <Td
+                        width={30}
+                        modifier="truncate"
+                        {...getTdProps({ columnKey: "supplier" })}
+                      >
+                        {item.authors}
                       </Td>
                       <Td
                         width={10}
                         modifier="truncate"
-                        {...getTdProps({ columnKey: "createdOn" })}
+                        {...getTdProps({ columnKey: "published" })}
                       >
-                        {dayjs(item.created_on).format(RENDER_DATE_FORMAT)}
+                        {dayjs(item.published).format(RENDER_DATE_FORMAT)}
                       </Td>
                       <Td width={10} {...getTdProps({ columnKey: "packages" })}>
-                        {item.related_packages.count}
+                        {/* {item.related_packages.count} */}
                       </Td>
                       <Td width={20} {...getTdProps({ columnKey: "cves" })}>
-                        <VulnerabilityGallery severities={item.related_cves} />
-                      </Td>
-                      <Td width={10} {...getTdProps({ columnKey: "download" })}>
-                        <Button
-                          variant="plain"
-                          aria-label="Download"
-                          onClick={() => {
-                            downloadSBOM(item.id);
-                          }}
-                        >
-                          <DownloadIcon />
-                        </Button>
+                        {/* <VulnerabilityGallery severities={item.related_cves} /> */}
                       </Td>
                     </Tr>
                   </Tbody>

@@ -36,15 +36,12 @@ export interface HubPaginatedResult<T> {
 // Base
 
 export interface VulnerabilityBase {
-  vulnerability_id: string;
+  identifier: string;
   title: string;
-  description: string;
   severity: Severity;
   cwe: string;
-  date_discovered: string;
-  date_released: string;
-  date_reserved: string;
-  date_updated: string;
+  published: string;
+  modified: string;
 }
 
 export interface PackageBase {
@@ -60,10 +57,10 @@ export interface PackageBase {
 export interface SBOMBase {
   id: string;
   type: "CycloneDX" | "SPDX";
-  name: string;
+  title: string;
   version: string;
-  supplier: string;
-  created_on: string;
+  authors: string[];
+  published: string;
 }
 
 export interface AdvisoryBase {
@@ -80,7 +77,7 @@ export interface AdvisoryBase {
 export type Severity = "none" | "low" | "medium" | "high" | "critical";
 
 export interface Advisory extends AdvisoryBase {
-  vulnerabilities: { severity: Severity; vulnerability_id: string }[];
+  vulnerabilities: VulnerabilityBase[];
 }
 
 // Vulnerability
@@ -93,7 +90,7 @@ export interface Vulnerability extends VulnerabilityBase {
 // Package
 
 export interface Package extends PackageBase {
-  related_cves: { severity: Severity; vulnerability_id: string }[];
+  related_cves: { severity: Severity; identifier: string }[];
   related_sboms: SBOMBase[];
 }
 
@@ -126,5 +123,6 @@ export interface ImporterConfigurationValues {
   source: string;
   disabled: boolean;
   v3Signatures: boolean;
-  onlyPatterns: string[];
+  onlyPatterns?: string[];
+  keys?: string[];
 }

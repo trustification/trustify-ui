@@ -13,12 +13,20 @@ export const mockAdvisoryArray: Advisory[] = [
     sha256: "sha356-1",
     vulnerabilities: [
       {
-        vulnerability_id: "cve1",
+        identifier: "cve1",
         severity: "critical",
+        title: "Title1",
+        published: new Date().toString(),
+        modified: new Date().toString(),
+        cwe: "Cwe1",
       },
       {
-        vulnerability_id: "cve2",
+        identifier: "cve2",
         severity: "low",
+        title: "Title2",
+        published: new Date().toString(),
+        modified: new Date().toString(),
+        cwe: "Cwe2",
       },
     ],
   },

@@ -24,7 +24,7 @@ interface RelatedCVEsProps {
 export const RelatedCVEs: React.FC<RelatedCVEsProps> = ({ cves }) => {
   const tableControls = useLocalTableControls({
     tableName: "cves-table",
-    idProperty: "vulnerability_id",
+    idProperty: "identifier",
     items: cves,
     isLoading: false,
     columnNames: {
@@ -45,7 +45,7 @@ export const RelatedCVEs: React.FC<RelatedCVEsProps> = ({ cves }) => {
         title: "Filter text",
         placeholderText: "Search",
         type: FilterType.search,
-        getItemValue: (item) => item.vulnerability_id,
+        getItemValue: (item) => item.identifier,
       },
     ],
   });
@@ -99,11 +99,11 @@ export const RelatedCVEs: React.FC<RelatedCVEsProps> = ({ cves }) => {
         >
           {currentPageItems?.map((item, rowIndex) => {
             return (
-              <Tbody key={item.vulnerability_id}>
+              <Tbody key={item.identifier}>
                 <Tr {...getTrProps({ item })}>
                   <Td width={15} {...getTdProps({ columnKey: "id" })}>
-                    <NavLink to={`/cves/${item.vulnerability_id}`}>
-                      {item.vulnerability_id}
+                    <NavLink to={`/cves/${item.identifier}`}>
+                      {item.identifier}
                     </NavLink>
                   </Td>
                   <Td
@@ -111,7 +111,7 @@ export const RelatedCVEs: React.FC<RelatedCVEsProps> = ({ cves }) => {
                     modifier="truncate"
                     {...getTdProps({ columnKey: "description" })}
                   >
-                    {item.description}
+                    {/* {item.description} */}
                   </Td>
                   <Td
                     width={15}
@@ -125,7 +125,7 @@ export const RelatedCVEs: React.FC<RelatedCVEsProps> = ({ cves }) => {
                     modifier="truncate"
                     {...getTdProps({ columnKey: "datePublished" })}
                   >
-                    {dayjs(item.date_discovered).format(RENDER_DATE_FORMAT)}
+                    {dayjs(item.published).format(RENDER_DATE_FORMAT)}
                   </Td>
                 </Tr>
               </Tbody>

@@ -19,7 +19,6 @@
     "*.{css,json,md,yaml,yml}": "prettier --write"
   },
   "dependencies": {
-    "@carlosthe19916-latest/react-table-batteries": "^0.0.3",
     "@hookform/resolvers": "^2.9.11",
     "@patternfly/patternfly": "^5.2.1",
     "@patternfly/react-charts": "^7.2.1",

@@ -70,7 +70,7 @@ export const ImporterList: React.FC = () => {
 
   const onDeleteImporterSuccess = () => {
     pushNotification({
-      title: "Importer created",
+      title: "Importer deleted",
       variant: "success",
     });
   };

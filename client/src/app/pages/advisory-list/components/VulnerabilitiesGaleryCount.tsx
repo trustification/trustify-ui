@@ -13,7 +13,7 @@ const defaultSeverityCount: SeverityCount = {
 };
 
 interface VulnerabilitiesGalleryCountProps {
-  vulnerabilities: { severity: Severity; vulnerability_id: string }[];
+  vulnerabilities: { severity: Severity; identifier: string }[];
 }
 
 export const VulnerabilitiesGalleryCount: React.FC<
