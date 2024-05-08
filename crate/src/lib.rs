@@ -103,7 +103,7 @@ pub fn trustify_ui(ui: &UI) -> Result<HashMap<&'static str, Resource>, ()> {
     });
 
     resources.insert(
-        "index.html",
+        "",
         new_resource(index_html.as_bytes(), 0, "text/html"),
     );
 
