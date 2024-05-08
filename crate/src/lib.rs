@@ -1,16 +1,16 @@
 include!(concat!(env!("OUT_DIR"), "/generated.rs"));
 
+use base64::prelude::BASE64_STANDARD;
+use base64::Engine;
+use serde::Serialize;
+use serde_json::Value;
+use static_files::resource::new_resource;
+use static_files::Resource;
 use std::cell::OnceCell;
 use std::collections::HashMap;
 use std::fs;
 use std::str::from_utf8;
 use std::sync::{Arc, Mutex, OnceLock};
-use base64::Engine;
-use base64::prelude::BASE64_STANDARD;
-use serde_json::Value;
-use static_files::Resource;
-use static_files::resource::new_resource;
-use serde::Serialize;
 
 #[derive(Serialize, Clone, Default)]
 pub struct UI {
@@ -39,18 +39,20 @@ pub struct UI {
 pub fn trustify_ui_resources() -> HashMap<&'static str, Resource> {
     let mut resources = generate();
     if let Some(index) = resources.get("index.html.ejs") {
-        resources.insert("index.html",
-                         new_resource(
-                             index.data,
-                             index.modified,
-                             "text/html",
-                         ));
+        resources.insert(
+            "index.html",
+            new_resource(index.data, index.modified, "text/html"),
+        );
     }
 
     resources
 }
 
-pub fn generate_index_html(ui: &UI, template_file: String, branding_file_content: String) -> tera::Result<String> {
+pub fn generate_index_html(
+    ui: &UI,
+    template_file: String,
+    branding_file_content: String,
+) -> tera::Result<String> {
     let template = template_file
         .replace("<%=", "{{")
         .replace("%>", "}}")
@@ -81,21 +83,29 @@ pub fn trustify_ui(ui: &UI) -> Result<HashMap<&'static str, Resource>, ()> {
     let template_file = resources.get("index.html.ejs");
     let branding_file_content = resources.get("branding/strings.json");
 
-
-    let index_html = INDEX_HTML.get_or_init(
-        || {
-            if let (Some(template_file), Some(branding_file_content)) = (template_file, branding_file_content) {
-                let template_file = from_utf8(template_file.data).map_err(|_| ()).unwrap();
-                let branding_file_content = from_utf8(branding_file_content.data).map_err(|_| ()).unwrap();
-                generate_index_html(ui, template_file.to_string(), branding_file_content.to_string()).unwrap()
-            } else {
-                "Something went wrong".to_string()
-            }
+    let index_html = INDEX_HTML.get_or_init(|| {
+        if let (Some(template_file), Some(branding_file_content)) =
+            (template_file, branding_file_content)
+        {
+            let template_file = from_utf8(template_file.data).map_err(|_| ()).unwrap();
+            let branding_file_content = from_utf8(branding_file_content.data)
+                .map_err(|_| ())
+                .unwrap();
+            generate_index_html(
+                ui,
+                template_file.to_string(),
+                branding_file_content.to_string(),
+            )
+            .unwrap()
+        } else {
+            "Something went wrong".to_string()
         }
-    );
+    });
 
-    resources.insert("index.html",
-                     new_resource( index_html.as_bytes(), 0, "text/html", ) );
+    resources.insert(
+        "index.html",
+        new_resource(index_html.as_bytes(), 0, "text/html"),
+    );
 
     Ok(resources)
 }

@@ -1,8 +1,7 @@
-
+use static_files::resource_dir;
 use std::path::Path;
 use std::process::{Command, ExitStatus};
 use std::{fs, io};
-use static_files::resource_dir;
 
 static UI_DIR: &str = "../";
 static UI_DIR_SRC: &str = "../src";
@@ -19,8 +18,7 @@ fn main() {
 
     println!("cargo:rerun-if-changed={}", UI_DIR_SRC);
 
-    let build_ui_status =
-        install_ui_deps()
+    let build_ui_status = install_ui_deps()
         .and_then(|_| build_ui())
         .and_then(|_| copy_dir_all(UI_DIST_DIR, STATIC_DIR));
 
