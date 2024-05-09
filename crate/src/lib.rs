@@ -6,11 +6,9 @@ use serde::Serialize;
 use serde_json::Value;
 use static_files::resource::new_resource;
 use static_files::Resource;
-use std::cell::OnceCell;
 use std::collections::HashMap;
-use std::fs;
 use std::str::from_utf8;
-use std::sync::{Arc, Mutex, OnceLock};
+use std::sync::OnceLock;
 
 #[derive(Serialize, Clone, Default)]
 pub struct UI {
@@ -77,7 +75,7 @@ pub fn generate_index_html(
     tera::Tera::one_off(&template, &context, true)
 }
 
-pub fn trustify_ui(ui: &UI) -> Result<HashMap<&'static str, Resource>, ()> {
+pub fn trustify_ui(ui: &UI) -> HashMap<&'static str, Resource> {
     let mut resources = generate();
 
     let template_file = resources.get("index.html.ejs");
@@ -87,10 +85,8 @@ pub fn trustify_ui(ui: &UI) -> Result<HashMap<&'static str, Resource>, ()> {
         if let (Some(template_file), Some(branding_file_content)) =
             (template_file, branding_file_content)
         {
-            let template_file = from_utf8(template_file.data).map_err(|_| ()).unwrap();
-            let branding_file_content = from_utf8(branding_file_content.data)
-                .map_err(|_| ())
-                .unwrap();
+            let template_file = from_utf8(template_file.data).unwrap();
+            let branding_file_content = from_utf8(branding_file_content.data).unwrap();
             generate_index_html(
                 ui,
                 template_file.to_string(),
@@ -102,12 +98,9 @@ pub fn trustify_ui(ui: &UI) -> Result<HashMap<&'static str, Resource>, ()> {
         }
     });
 
-    resources.insert(
-        "",
-        new_resource(index_html.as_bytes(), 0, "text/html"),
-    );
+    resources.insert("", new_resource(index_html.as_bytes(), 0, "text/html"));
 
-    Ok(resources)
+    resources
 }
 
 static INDEX_HTML: OnceLock<String> = OnceLock::new();

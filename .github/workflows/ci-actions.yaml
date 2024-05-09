@@ -17,6 +17,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
@@ -31,3 +32,13 @@ jobs:
         run: npm run build
       - name: Test
         run: npm run test -- --coverage --watchAll=false
+
+     - name: Format
+        run: cargo fmt --check
+        working-directory: ./crate
+      - name: Check
+        run: cargo check
+        working-directory: ./crate
+      - name: Clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings -D clippy::unwrap_used -D clippy::expect_used
+        working-directory: ./crate
