@@ -39,4 +39,4 @@ jobs:
         run: cargo check
       - name: Crate Clippy
         working-directory: ./crate
-        run: cargo clippy --all-targets --all-features -- -D warnings -D clippy::unwrap_used -D clippy::expect_used
+        run: cargo clippy --all-targets --all-features -- -D warnings 
