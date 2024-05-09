@@ -10,10 +10,14 @@ import {
 
 export const VulnerabilitiesQueryKey = "vulnerabilities";
 
-export const useFetchVulnerabilities = (params: HubRequestParams = {}) => {
+export const useFetchVulnerabilities = (
+  params: HubRequestParams = {},
+  refetchDisabled: boolean = false
+) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [VulnerabilitiesQueryKey, params],
     queryFn: () => getVulnerabilities(params),
+    refetchInterval: !refetchDisabled ? 5000 : false,
   });
   return {
     result: {

@@ -40,18 +40,18 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
     idProperty: "identifier",
     items: vulnerabilities,
     columnNames: {
-      vulnerabilityId: "ID",
+      identifier: "Identifier",
       title: "Title",
+      severity: "Severity",
       published: "Published",
       modified: "Modified",
-      severity: "Severity",
       cwe: "CWE",
     },
     hasActionsColumn: true,
     isSortEnabled: true,
-    sortableColumns: ["vulnerabilityId", "published", "modified"],
+    sortableColumns: ["identifier", "published", "modified"],
     getSortValues: (vuln) => ({
-      vulnerabilityId: vuln?.identifier || "",
+      identifier: vuln?.identifier || "",
       published: vuln ? dayjs(vuln.published).millisecond() : 0,
       modified: vuln ? dayjs(vuln.modified).millisecond() : 0,
     }),
@@ -106,7 +106,7 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
         <Thead>
           <Tr>
             <TableHeaderContentWithControls {...tableControls}>
-              <Th {...getThProps({ columnKey: "vulnerabilityId" })} />
+              <Th {...getThProps({ columnKey: "identifier" })} />
               <Th {...getThProps({ columnKey: "title" })} />
               <Th {...getThProps({ columnKey: "published" })} />
               <Th {...getThProps({ columnKey: "modified" })} />
@@ -130,10 +130,7 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
                     item={item}
                     rowIndex={rowIndex}
                   >
-                    <Td
-                      width={15}
-                      {...getTdProps({ columnKey: "vulnerabilityId" })}
-                    >
+                    <Td width={15} {...getTdProps({ columnKey: "identifier" })}>
                       <NavLink to={`/vulnerabilities/${item.identifier}`}>
                         {item.identifier}
                       </NavLink>
@@ -143,19 +140,25 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
                       modifier="truncate"
                       {...getTdProps({ columnKey: "title" })}
                     >
-                      {item.title}
+                      {/* {item.title} */}
+                      <p style={{ color: "red" }}>Title</p>
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "published" })}>
-                      {dayjs(item.published).format(RENDER_DATE_FORMAT)}
+                      {/* {item.published &&
+                        dayjs(item.published).format(RENDER_DATE_FORMAT)} */}
+                      <p style={{ color: "red" }}>Published</p>
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "modified" })}>
-                      {dayjs(item.modified).format(RENDER_DATE_FORMAT)}
+                      {/* {item.modified &&
+                        dayjs(item.modified).format(RENDER_DATE_FORMAT)} */}
+                      <p style={{ color: "red" }}>Modified</p>
                     </Td>
                     <Td width={15} {...getTdProps({ columnKey: "severity" })}>
                       <SeverityShieldAndText value={item.severity} />
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "cwe" })}>
-                      {item.cwe}
+                      {/* {item.cwe} */}
+                      <p style={{ color: "red" }}>CWE?</p>
                     </Td>
                   </TableRowContentWithControls>
                 </Tr>

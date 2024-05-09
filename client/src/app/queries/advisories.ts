@@ -17,10 +17,14 @@ export interface IAdvisoriesQueryParams {
 
 export const AdvisoriesQueryKey = "advisories";
 
-export const useFetchAdvisories = (params: HubRequestParams = {}) => {
+export const useFetchAdvisories = (
+  params: HubRequestParams = {},
+  refetchDisabled: boolean = false
+) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [AdvisoriesQueryKey, params],
     queryFn: () => getAdvisories(params),
+    refetchInterval: !refetchDisabled ? 5000 : false,
   });
   return {
     result: {

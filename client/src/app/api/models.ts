@@ -84,7 +84,7 @@ export interface Advisory extends AdvisoryBase {
 
 export interface Vulnerability extends VulnerabilityBase {
   related_sboms: SBOMBase[];
-  related_advisories: AdvisoryBase[];
+  advisories: AdvisoryBase[];
 }
 
 // Package

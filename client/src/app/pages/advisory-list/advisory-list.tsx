@@ -200,6 +200,7 @@ export const AdvisoryList: React.FC = () => {
                         {/* <SeverityShieldAndText
                           value={item.severity}
                         /> */}
+                        <p style={{ color: "red" }}>Severity</p>
                       </Td>
                       <Td
                         width={10}
@@ -220,14 +221,18 @@ export const AdvisoryList: React.FC = () => {
                         modifier="truncate"
                         {...getTdProps({ columnKey: "vulnerabilities" })}
                       >
-                        <VulnerabilitiesGalleryCount vulnerabilities={item.vulnerabilities} />
+                        <VulnerabilitiesGalleryCount
+                          vulnerabilities={item.vulnerabilities}
+                        />
                       </Td>
                       <Td isActionCell>
                         <ActionsColumn
                           items={[
                             {
                               title: "Download",
-                              onClick: () => downloadAdvisory(item.identifier),
+                              onClick: () => {
+                                // downloadAdvisory(item.identifier);
+                              },
                             },
                           ]}
                         />

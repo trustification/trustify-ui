@@ -161,7 +161,8 @@ export const SbomList: React.FC = () => {
                         modifier="truncate"
                         {...getTdProps({ columnKey: "version" })}
                       >
-                        {item.version}
+                        {/* {item.version} */}
+                        <p style={{ color: "red" }}>Version?</p>
                       </Td>
                       <Td
                         width={30}
@@ -179,9 +180,11 @@ export const SbomList: React.FC = () => {
                       </Td>
                       <Td width={10} {...getTdProps({ columnKey: "packages" })}>
                         {/* {item.related_packages.count} */}
+                        <p style={{ color: "red" }}>Count packages</p>
                       </Td>
                       <Td width={20} {...getTdProps({ columnKey: "cves" })}>
                         {/* <VulnerabilityGallery severities={item.related_cves} /> */}
+                        <p style={{ color: "red" }}>Summary of CVEs/Vulnerabilities</p>
                       </Td>
                     </Tr>
                   </Tbody>

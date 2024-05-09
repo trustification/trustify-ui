@@ -16,7 +16,7 @@ export const mockVulnerabilityArray: Vulnerability[] =
         published: new Date().toString(),
         modified: new Date().toString(),
 
-        related_advisories: mockAdvisoryArray,
+        advisories: mockAdvisoryArray,
         related_sboms: mockSBOMArray,
       };
       return result;

@@ -52,6 +52,11 @@ export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
                         {dayjs(advisory.modified).format(RENDER_DATE_FORMAT)}
                       </DescriptionListDescription>
                     </DescriptionListGroup>
+
+                    <p style={{ color: "red" }}>
+                      Is this all the metadata we intent to expose?
+                    </p>
+
                     {/* <DescriptionListGroup>
                       <DescriptionListTerm>Category</DescriptionListTerm>
                       <DescriptionListDescription>

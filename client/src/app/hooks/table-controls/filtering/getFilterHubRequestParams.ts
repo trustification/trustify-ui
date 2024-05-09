@@ -186,6 +186,12 @@ export const serializeFilterRequestParamsForHub = (
 ) => {
   const { filters } = deserializedParams;
   if (filters) {
-    serializedParams.append("q", filters.map(serializeFilterForHub).join(","));
+    serializedParams.append(
+      "q",
+      filters
+        .filter((e) => e.value !== null && e.value !== undefined)
+        .map(serializeFilterForHub)
+        .join(",")
+    );
   }
 };
