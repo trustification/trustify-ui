@@ -85,8 +85,10 @@ pub fn trustify_ui(ui: &UI) -> HashMap<&'static str, Resource> {
         if let (Some(template_file), Some(branding_file_content)) =
             (template_file, branding_file_content)
         {
-            let template_file = from_utf8(template_file.data).expect("cannot interpret template as UTF-8");
-            let branding_file_content = from_utf8(branding_file_content.data).expect("cannot interpret branding as UTF-8");
+            let template_file =
+                from_utf8(template_file.data).expect("cannot interpret template as UTF-8");
+            let branding_file_content =
+                from_utf8(branding_file_content.data).expect("cannot interpret branding as UTF-8");
             generate_index_html(
                 ui,
                 template_file.to_string(),
