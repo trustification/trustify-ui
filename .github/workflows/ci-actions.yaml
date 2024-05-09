@@ -31,3 +31,12 @@ jobs:
         run: npm run build
       - name: Test
         run: npm run test -- --coverage --watchAll=false
+      - name: Crate Format
+        working-directory: ./crate
+        run: cargo fmt --check
+      - name: Crate Check
+        working-directory: ./crate
+        run: cargo check
+      - name: Crate Clippy
+        working-directory: ./crate
+        run: cargo clippy --all-targets --all-features -- -D warnings 

@@ -28,3 +28,6 @@ npm-debug.log*
 
 # Intellij IDEA
 .idea/
+
+crate/target
+crate/Cargo.lock
