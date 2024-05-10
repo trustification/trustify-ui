@@ -12,10 +12,14 @@ import {
 
 export const SBOMsQueryKey = "sboms";
 
-export const useFetchSBOMs = (params: HubRequestParams = {}) => {
+export const useFetchSBOMs = (
+  params: HubRequestParams = {},
+  refetchDisabled: boolean = false
+) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [SBOMsQueryKey, params],
     queryFn: () => getSBOMs(params),
+    refetchInterval: !refetchDisabled ? 5000 : false,
   });
   return {
     result: {
