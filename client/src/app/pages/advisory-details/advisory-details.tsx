@@ -30,9 +30,7 @@ export const AdvisoryDetails: React.FC = () => {
               <BreadcrumbItem key="advisories">
                 <Link to="/advisories">Advisories</Link>
               </BreadcrumbItem>
-              <BreadcrumbItem to="#" isActive>
-                Advisory details
-              </BreadcrumbItem>
+              <BreadcrumbItem isActive>Advisory details</BreadcrumbItem>
             </Breadcrumb>
           }
           pageHeading={{

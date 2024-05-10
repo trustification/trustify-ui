@@ -38,9 +38,7 @@ export const SbomDetails: React.FC = () => {
               <BreadcrumbItem key="advisories">
                 <Link to="/sboms">SBOMs</Link>
               </BreadcrumbItem>
-              <BreadcrumbItem to="#" isActive>
-                SBOM details
-              </BreadcrumbItem>
+              <BreadcrumbItem isActive>SBOM details</BreadcrumbItem>
             </Breadcrumb>
           }
           pageHeading={{

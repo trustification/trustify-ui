@@ -36,9 +36,7 @@ export const PackageDetails: React.FC = () => {
               <BreadcrumbItem key="packages">
                 <Link to="/packages">Packages</Link>
               </BreadcrumbItem>
-              <BreadcrumbItem to="#" isActive>
-                Package details
-              </BreadcrumbItem>
+              <BreadcrumbItem isActive>Package details</BreadcrumbItem>
             </Breadcrumb>
           }
           pageHeading={{
