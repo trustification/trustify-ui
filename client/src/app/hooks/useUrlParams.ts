@@ -86,13 +86,16 @@ export const useUrlParams = <
     const existingSearchParams = new URLSearchParams(search);
     // We prefix the params object here so the serialize function doesn't have to care about the keyPrefix.
     const newPrefixedSerializedParams = withPrefixes(serialize(newParams));
-    navigate({
-      pathname,
-      search: trimAndStringifyUrlParams({
-        existingSearchParams,
-        newPrefixedSerializedParams,
-      }),
-    });
+    navigate(
+      {
+        pathname,
+        search: trimAndStringifyUrlParams({
+          existingSearchParams,
+          newPrefixedSerializedParams,
+        }),
+      },
+      { replace: true }
+    );
   };
 
   // We use useLocation here so we are re-rendering when the params change.
