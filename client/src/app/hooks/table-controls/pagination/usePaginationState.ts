@@ -112,11 +112,11 @@ export const usePaginationState = <
           },
         }
       : persistTo === "localStorage" || persistTo === "sessionStorage"
-      ? {
-          persistTo,
-          key: "pagination",
-        }
-      : { persistTo }),
+        ? {
+            persistTo,
+            key: "pagination",
+          }
+        : { persistTo }),
   });
   const { pageNumber, itemsPerPage } = paginationState || defaultValue;
   const setPageNumber = (num: number) =>

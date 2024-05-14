@@ -16,7 +16,7 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { Severity, VulnerabilityBase } from "@app/api/models";
+import { VulnerabilityBase } from "@app/api/models";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
@@ -25,7 +25,6 @@ import {
   TableRowContentWithControls,
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
-import { RENDER_DATE_FORMAT } from "@app/Constants";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 
 interface VulnerabilitiesProps {

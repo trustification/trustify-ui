@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { AxiosError } from "axios";
-import { Control, Controller, useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { array, boolean, number, object, string } from "yup";
 
 import {
@@ -15,8 +15,6 @@ import {
   FormGroup,
   FormSelect,
   FormSelectOption,
-  Level,
-  LevelItem,
   NumberInput,
   Popover,
   PopoverPosition,
@@ -358,6 +356,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
                   fieldId="periodUnit"
                   renderInput={({ field: { value, onChange, onBlur } }) => (
                     <FormSelect
+                      aria-label="period-unit"
                       isRequired
                       onChange={onChange}
                       onBlur={onBlur}

@@ -5,5 +5,5 @@ export interface Page {
 
 export interface SortBy {
   index: number;
-  direction: 'asc' | 'desc';
+  direction: "asc" | "desc";
 }

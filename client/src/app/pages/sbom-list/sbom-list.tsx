@@ -4,7 +4,6 @@ import { NavLink } from "react-router-dom";
 import dayjs from "dayjs";
 
 import {
-  Button,
   PageSection,
   PageSectionVariants,
   Text,
@@ -13,14 +12,12 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core";
-import DownloadIcon from "@patternfly/react-icons/dist/esm/icons/download-icon";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
 import {
   RENDER_DATE_FORMAT,
   TablePersistenceKeyPrefixes,
 } from "@app/Constants";
-import { VulnerabilityGallery } from "@app/components/VulnerabilityGallery";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
@@ -35,6 +32,7 @@ import {
 import { useDownload } from "@app/hooks/useDownload";
 import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchSBOMs } from "@app/queries/sboms";
+import { PackagesCount } from "./components/packages-count";
 
 export const SbomList: React.FC = () => {
   const tableControlState = useTableControlState({
@@ -48,6 +46,7 @@ export const SbomList: React.FC = () => {
       packages: "Packages",
       vulnerabilities: "Vulnerabilities",
     },
+    isPaginationEnabled: true,
     isSortEnabled: true,
     sortableColumns: ["published"],
     initialItemsPerPage: 10,
@@ -179,10 +178,12 @@ export const SbomList: React.FC = () => {
                         {dayjs(item.published).format(RENDER_DATE_FORMAT)}
                       </Td>
                       <Td width={10} {...getTdProps({ columnKey: "packages" })}>
-                        {/* {item.related_packages.count} */}
-                        <p style={{ color: "red" }}>Count packages</p>
+                        <PackagesCount sbomId={item.id} />
                       </Td>
-                      <Td width={20} {...getTdProps({ columnKey: "vulnerabilities" })}>
+                      <Td
+                        width={20}
+                        {...getTdProps({ columnKey: "vulnerabilities" })}
+                      >
                         {/* <VulnerabilityGallery severities={item.related_cves} /> */}
                         <p style={{ color: "red" }}>issue-285</p>
                       </Td>

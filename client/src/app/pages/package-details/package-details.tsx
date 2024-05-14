@@ -15,7 +15,6 @@ import { PathParam, useRouteParams } from "@app/Routes";
 import { useFetchPackageById } from "@app/queries/packages";
 
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
-import { RelatedCVEs } from "./related-cves";
 import { RelatedSBOMs } from "./related-sboms";
 
 export const PackageDetails: React.FC = () => {

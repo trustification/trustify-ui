@@ -43,9 +43,9 @@ export const PackageList: React.FC = () => {
       qualifiers: "Qualifiers",
       cve: "CVEs",
     },
+    isPaginationEnabled: true,
     isSortEnabled: true,
     sortableColumns: [],
-    initialItemsPerPage: 10,
     isFilterEnabled: true,
     filterCategories: [
       {

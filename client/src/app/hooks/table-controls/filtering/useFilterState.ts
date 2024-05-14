@@ -103,8 +103,8 @@ export const useFilterState = <
           deserialize: deserializeFilterUrlParams,
         }
       : persistTo === "localStorage" || persistTo === "sessionStorage"
-      ? { persistTo, key: "filters" }
-      : { persistTo }),
+        ? { persistTo, key: "filters" }
+        : { persistTo }),
   });
   return { filterValues, setFilterValues };
 };

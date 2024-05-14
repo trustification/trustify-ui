@@ -32,7 +32,11 @@ interface PackagesProps {
 }
 
 export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
-  const { packages, isFetching, fetchError } = useFetchPackagesBySbomId(sbomId);
+  const {
+    result: { data: packages },
+    isFetching,
+    fetchError,
+  } = useFetchPackagesBySbomId(sbomId);
 
   const tableControls = useLocalTableControls({
     tableName: "packages-table",

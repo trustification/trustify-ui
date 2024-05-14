@@ -107,11 +107,11 @@ export const useExpansionState = <
           },
         }
       : persistTo === "localStorage" || persistTo === "sessionStorage"
-      ? {
-          persistTo,
-          key: "expandedCells",
-        }
-      : { persistTo }),
+        ? {
+            persistTo,
+            key: "expandedCells",
+          }
+        : { persistTo }),
   });
   return { expandedCells, setExpandedCells };
 };

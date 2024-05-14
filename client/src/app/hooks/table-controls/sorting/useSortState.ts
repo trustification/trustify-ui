@@ -107,11 +107,11 @@ export const useSortState = <
               : null,
         }
       : persistTo === "localStorage" || persistTo === "sessionStorage"
-      ? {
-          persistTo,
-          key: "sort",
-        }
-      : { persistTo }),
+        ? {
+            persistTo,
+            key: "sort",
+          }
+        : { persistTo }),
   });
   return { activeSort, setActiveSort };
 };

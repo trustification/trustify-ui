@@ -63,20 +63,25 @@ export const useFetchSBOMSourceById = (id?: number | string) => {
   };
 };
 
-export const useFetchPackagesBySbomId = (sbomId: string | number) => {
-  const { data, isLoading, error } = useQuery({
-    queryKey: [SBOMsQueryKey, sbomId, "packages"],
-    queryFn: () =>
-      sbomId === undefined
-        ? Promise.resolve(undefined)
-        : getPackagesBySbomId(sbomId),
+export const useFetchPackagesBySbomId = (
+  sbomId: string | number,
+  params: HubRequestParams = {}
+) => {
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: [SBOMsQueryKey, sbomId, "packages", params],
+    queryFn: () => getPackagesBySbomId(sbomId, params),
     enabled: sbomId !== undefined,
   });
 
   return {
-    packages: data || [],
+    result: {
+      data: data?.data || [],
+      total: data?.total ?? 0,
+      params: data?.params ?? params,
+    },
     isFetching: isLoading,
     fetchError: error as AxiosError,
+    refetch,
   };
 };
 

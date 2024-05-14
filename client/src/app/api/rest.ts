@@ -137,10 +137,11 @@ export const downloadSBOMById = (id: number | string) => {
   });
 };
 
-export const getPackagesBySbomId = (id: string | number) => {
-  return axios
-    .get<Package[]>(`${SBOMS}/${id}/packages`)
-    .then((response) => response.data);
+export const getPackagesBySbomId = (
+  id: number | string,
+  params: HubRequestParams = {}
+) => {
+  return getHubPaginatedResult<Package>(`${SBOMS}/${id}/packages`, params);
 };
 
 export const getVulnerabilitiesBySbomId = (id: string | number) => {

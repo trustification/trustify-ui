@@ -54,7 +54,7 @@ import { useLocalTableControls } from "@app/hooks/table-controls";
 import { ImporterForm } from "./components/importer-form";
 import { ImporterStatusIcon } from "./components/importer-status-icon";
 import dayjs from "dayjs";
-import { RENDER_DATETIME_FORMAT, RENDER_DATE_FORMAT } from "@app/Constants";
+import { RENDER_DATETIME_FORMAT } from "@app/Constants";
 
 export const ImporterList: React.FC = () => {
   const { pushNotification } = React.useContext(NotificationsContext);
@@ -117,7 +117,6 @@ export const ImporterList: React.FC = () => {
       name: item.name,
     }),
     isPaginationEnabled: true,
-    initialItemsPerPage: 10,
     isExpansionEnabled: true,
     expandableVariant: "single",
     isFilterEnabled: true,

@@ -72,11 +72,11 @@ export const useActiveItemState = <
           deserialize: ({ activeItem }) => parseMaybeNumericString(activeItem),
         }
       : persistTo === "localStorage" || persistTo === "sessionStorage"
-      ? {
-          persistTo,
-          key: "activeItem",
-        }
-      : { persistTo }),
+        ? {
+            persistTo,
+            key: "activeItem",
+          }
+        : { persistTo }),
   });
   return { activeItemId, setActiveItemId };
 };
