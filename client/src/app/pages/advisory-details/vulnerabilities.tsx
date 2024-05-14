@@ -141,24 +141,24 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
                       {...getTdProps({ columnKey: "title" })}
                     >
                       {/* {item.title} */}
-                      <p style={{ color: "red" }}>Title</p>
+                      <p style={{ color: "red" }}>issue-280</p>
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "published" })}>
                       {/* {item.published &&
                         dayjs(item.published).format(RENDER_DATE_FORMAT)} */}
-                      <p style={{ color: "red" }}>Published</p>
+                      <p style={{ color: "red" }}>issue-280</p>
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "modified" })}>
                       {/* {item.modified &&
                         dayjs(item.modified).format(RENDER_DATE_FORMAT)} */}
-                      <p style={{ color: "red" }}>Modified</p>
+                      <p style={{ color: "red" }}>issue-280</p>
                     </Td>
                     <Td width={15} {...getTdProps({ columnKey: "severity" })}>
                       <SeverityShieldAndText value={item.severity} />
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "cwe" })}>
                       {/* {item.cwe} */}
-                      <p style={{ color: "red" }}>CWE?</p>
+                      <p style={{ color: "red" }}>issue-281</p>
                     </Td>
                   </TableRowContentWithControls>
                 </Tr>

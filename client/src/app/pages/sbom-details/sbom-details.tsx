@@ -32,6 +32,7 @@ export const SbomDetails: React.FC = () => {
   return (
     <>
       <PageSection variant="light">
+        <h1 style={{ color: "red" }}>issue-253</h1>
         <DetailsPage
           breadcrumbs={
             <Breadcrumb>

@@ -200,7 +200,7 @@ export const AdvisoryList: React.FC = () => {
                         {/* <SeverityShieldAndText
                           value={item.severity}
                         /> */}
-                        <p style={{ color: "red" }}>Severity</p>
+                        <p style={{ color: "red" }}>issue-277</p>
                       </Td>
                       <Td
                         width={10}
@@ -224,6 +224,7 @@ export const AdvisoryList: React.FC = () => {
                         <VulnerabilitiesGalleryCount
                           vulnerabilities={item.vulnerabilities}
                         />
+                        <p style={{ color: "orange" }}>issue-278</p>
                       </Td>
                       <Td isActionCell>
                         <ActionsColumn

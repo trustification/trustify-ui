@@ -2,15 +2,18 @@
 
 ## dev-env
 
-### Install node and npm
+### Requisites
 
-Use [nvm](https://github.com/nvm-sh/nvm?tab=readme-ov-file#install--update-script)
-that installs both node and npm.
-
-Then
+- You need NodeJS 20. Use [nvm](https://github.com/nvm-sh/nvm?tab=readme-ov-file#install--update-script) to install NodeJS
 
 ```shell
-nvm install node
+nvm install 20
+nvm use 20
+```
+
+Verify your NodeJS and NPM version with:
+
+```shell
 node --version
 npm --version
 ```

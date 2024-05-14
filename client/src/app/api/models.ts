@@ -111,6 +111,7 @@ export interface Importer {
   name: string;
   configuration: ImporterConfiguration;
   state?: ImporterStatus;
+  report?: ImporterReportDetails; // This field is added in the rest fetch process
 }
 
 export interface ImporterConfiguration {
@@ -125,4 +126,19 @@ export interface ImporterConfigurationValues {
   v3Signatures: boolean;
   onlyPatterns?: string[];
   keys?: string[];
+}
+
+export interface ImporterReport {
+  id: string;
+  report: {
+    startDate: string;
+    endDate: string;
+    numerOfItems: string;
+  };
+}
+
+export interface ImporterReportDetails {
+  startDate: string;
+  endDate: string;
+  numerOfItems: string;
 }

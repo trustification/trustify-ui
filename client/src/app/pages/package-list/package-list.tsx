@@ -122,7 +122,9 @@ export const PackageList: React.FC = () => {
     <>
       <PageSection variant={PageSectionVariants.light}>
         <TextContent>
-          <Text component="h1">Packages</Text>
+          <Text component="h1">
+            Packages <span style={{ color: "red" }}>issue-254</span>
+          </Text>
         </TextContent>
       </PageSection>
       <PageSection>
@@ -203,7 +205,9 @@ export const PackageList: React.FC = () => {
                         )}
                       </Td>
                       <Td width={10} {...getTdProps({ columnKey: "cve" })}>
-                        <VulnerabilitiesGalleryCount vulnerabilities={item.related_cves} />
+                        <VulnerabilitiesGalleryCount
+                          vulnerabilities={item.related_cves}
+                        />
                       </Td>
                     </Tr>
                   </Tbody>

@@ -46,7 +46,7 @@ export const SbomList: React.FC = () => {
       supplier: "Supplier",
       published: "Published",
       packages: "Packages",
-      cves: "CVEs",
+      vulnerabilities: "Vulnerabilities",
     },
     isSortEnabled: true,
     sortableColumns: ["published"],
@@ -139,7 +139,7 @@ export const SbomList: React.FC = () => {
                   <Th {...getThProps({ columnKey: "supplier" })} />
                   <Th {...getThProps({ columnKey: "published" })} />
                   <Th {...getThProps({ columnKey: "packages" })} />
-                  <Th {...getThProps({ columnKey: "cves" })} />
+                  <Th {...getThProps({ columnKey: "vulnerabilities" })} />
                 </TableHeaderContentWithControls>
               </Tr>
             </Thead>
@@ -162,7 +162,7 @@ export const SbomList: React.FC = () => {
                         {...getTdProps({ columnKey: "version" })}
                       >
                         {/* {item.version} */}
-                        <p style={{ color: "red" }}>Version?</p>
+                        <p style={{ color: "red" }}>issue-284</p>
                       </Td>
                       <Td
                         width={30}
@@ -182,9 +182,9 @@ export const SbomList: React.FC = () => {
                         {/* {item.related_packages.count} */}
                         <p style={{ color: "red" }}>Count packages</p>
                       </Td>
-                      <Td width={20} {...getTdProps({ columnKey: "cves" })}>
+                      <Td width={20} {...getTdProps({ columnKey: "vulnerabilities" })}>
                         {/* <VulnerabilityGallery severities={item.related_cves} /> */}
-                        <p style={{ color: "red" }}>Summary of CVEs/Vulnerabilities</p>
+                        <p style={{ color: "red" }}>issue-285</p>
                       </Td>
                     </Tr>
                   </Tbody>

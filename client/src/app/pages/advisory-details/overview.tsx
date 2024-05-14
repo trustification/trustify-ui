@@ -54,7 +54,7 @@ export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
                     </DescriptionListGroup>
 
                     <p style={{ color: "red" }}>
-                      Is this all the metadata we intent to expose?
+                      Is this all the metadata we intent to expose? ISSUE-279
                     </p>
 
                     {/* <DescriptionListGroup>

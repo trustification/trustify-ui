@@ -11,6 +11,7 @@ import {
   ImporterConfiguration,
   Package,
   SBOM,
+  ImporterReport,
 } from "./models";
 
 const API = "/api";
@@ -151,7 +152,16 @@ export const getVulnerabilitiesBySbomId = (id: string | number) => {
 //
 
 export const getImporters = () => {
-  return axios.get<Importer[]>(IMPORTERS).then((response) => response.data);
+  return axios.get<Importer[]>(IMPORTERS).then((response) =>
+    Promise.all(
+      response.data.map((importer) =>
+        getLastImporterReport(importer.name).then((report) => {
+          const result: Importer = { ...importer, report: report?.report };
+          return result;
+        })
+      )
+    )
+  );
 };
 
 export const getImporterById = (id: number | string) => {
@@ -180,4 +190,16 @@ export const deleteImporter = (id: number | string) => {
   return axios
     .delete<Importer>(`${IMPORTERS}/${id}`)
     .then((response) => response.data);
+};
+
+export const getLastImporterReport = (id: string) => {
+  const params: HubRequestParams = {
+    page: { pageNumber: 1, itemsPerPage: 1 },
+    sort: { field: "report.endDate", direction: "desc" },
+  };
+
+  return getHubPaginatedResult<ImporterReport>(
+    `${IMPORTERS}/${id}/report`,
+    params
+  ).then((e) => (e.total > 0 ? e.data[0] : undefined));
 };

@@ -53,6 +53,8 @@ import { useLocalTableControls } from "@app/hooks/table-controls";
 
 import { ImporterForm } from "./components/importer-form";
 import { ImporterStatusIcon } from "./components/importer-status-icon";
+import dayjs from "dayjs";
+import { RENDER_DATETIME_FORMAT, RENDER_DATE_FORMAT } from "@app/Constants";
 
 export const ImporterList: React.FC = () => {
   const { pushNotification } = React.useContext(NotificationsContext);
@@ -104,6 +106,9 @@ export const ImporterList: React.FC = () => {
     columnNames: {
       name: "Name",
       state: "State",
+      start: "Start",
+      end: "End",
+      itemsImported: "Items imported",
     },
     hasActionsColumn: true,
     isSortEnabled: true,
@@ -152,7 +157,7 @@ export const ImporterList: React.FC = () => {
     <>
       <PageSection variant={PageSectionVariants.light}>
         <TextContent>
-          <Text component="h1">Sources</Text>
+          <Text component="h1">Importers</Text>
         </TextContent>
       </PageSection>
       <PageSection>
@@ -191,6 +196,9 @@ export const ImporterList: React.FC = () => {
                 <TableHeaderContentWithControls {...tableControls}>
                   <Th {...getThProps({ columnKey: "name" })} />
                   <Th {...getThProps({ columnKey: "state" })} />
+                  <Th {...getThProps({ columnKey: "start" })} />
+                  <Th {...getThProps({ columnKey: "end" })} />
+                  <Th {...getThProps({ columnKey: "itemsImported" })} />
                 </TableHeaderContentWithControls>
               </Tr>
             </Thead>
@@ -215,7 +223,7 @@ export const ImporterList: React.FC = () => {
                           {item.name}
                         </Td>
                         <Td
-                          width={40}
+                          width={20}
                           modifier="truncate"
                           {...getTdProps({ columnKey: "state" })}
                         >
@@ -224,6 +232,33 @@ export const ImporterList: React.FC = () => {
                           ) : (
                             <Label color="orange">Disabled</Label>
                           )}
+                        </Td>
+                        <Td
+                          width={15}
+                          modifier="truncate"
+                          {...getTdProps({ columnKey: "start" })}
+                        >
+                          {item.report?.startDate &&
+                            dayjs(item.report.startDate).format(
+                              RENDER_DATETIME_FORMAT
+                            )}
+                        </Td>
+                        <Td
+                          width={15}
+                          modifier="truncate"
+                          {...getTdProps({ columnKey: "end" })}
+                        >
+                          {item.report?.endDate &&
+                            dayjs(item.report.endDate).format(
+                              RENDER_DATETIME_FORMAT
+                            )}
+                        </Td>
+                        <Td
+                          width={15}
+                          modifier="truncate"
+                          {...getTdProps({ columnKey: "itemsImported" })}
+                        >
+                          {item.report?.numerOfItems}
                         </Td>
                         <Td isActionCell>
                           <ActionsColumn
