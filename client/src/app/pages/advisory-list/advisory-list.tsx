@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
+import { AxiosError, AxiosResponse } from "axios";
 import dayjs from "dayjs";
 
 import {
@@ -33,6 +34,7 @@ import {
   ConditionalTableBody,
   TableHeaderContentWithControls,
 } from "@app/components/TableControls";
+import { UploadFilesDrawer } from "@app/components/UploadFilesDrawer";
 import {
   getHubRequestParams,
   useTableControlProps,
@@ -40,13 +42,13 @@ import {
 } from "@app/hooks/table-controls";
 import { useDownload } from "@app/hooks/useDownload";
 import { useSelectionState } from "@app/hooks/useSelectionState";
-import { useFetchAdvisories } from "@app/queries/advisories";
+import { useFetchAdvisories, useUploadAdvisory } from "@app/queries/advisories";
 
-import { UploadFilesDrawer } from "./components/UploadFilesDrawer";
 import { VulnerabilitiesGalleryCount } from "./components/VulnerabilitiesGaleryCount";
 
 export const AdvisoryList: React.FC = () => {
   const [showUploadComponent, setShowUploadComponent] = React.useState(false);
+  const { uploads, handleUpload, handleRemoveUpload } = useUploadAdvisory();
 
   const tableControlState = useTableControlState({
     tableName: "advisories",
@@ -232,7 +234,10 @@ export const AdvisoryList: React.FC = () => {
                             {
                               title: "Download",
                               onClick: () => {
-                                // downloadAdvisory(item.identifier);
+                                downloadAdvisory(
+                                  item.sha256,
+                                  `${item.identifier}.json`
+                                );
                               },
                             },
                           ]}
@@ -255,6 +260,15 @@ export const AdvisoryList: React.FC = () => {
 
       <UploadFilesDrawer
         isExpanded={showUploadComponent}
+        uploads={uploads}
+        handleUpload={handleUpload}
+        handleRemoveUpload={handleRemoveUpload}
+        extractSuccessMessage={(response: AxiosResponse<string>) => {
+          return `${response.data} uploaded`;
+        }}
+        extractErrorMessage={(error: AxiosError<{ message: string }>) => {
+          return error.response?.data.message ?? "Error while uploading file";
+        }}
         onCloseClick={() => setShowUploadComponent(false)}
       />
     </>

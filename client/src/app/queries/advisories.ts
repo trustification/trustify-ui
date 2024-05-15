@@ -1,12 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-import { HubRequestParams } from "@app/api/models";
+import { Advisory, HubRequestParams } from "@app/api/models";
 import {
   getAdvisories,
   getAdvisoryById,
   getAdvisorySourceById,
+  uploadAdvisory,
 } from "@app/api/rest";
+import { useUpload } from "@app/hooks/useUpload";
 
 export interface IAdvisoriesQueryParams {
   filterText?: string;
@@ -66,4 +68,19 @@ export const useFetchAdvisorySourceById = (id?: number | string) => {
     isFetching: isLoading,
     fetchError: error as AxiosError,
   };
+};
+
+export const useUploadAdvisory = () => {
+  const queryClient = useQueryClient();
+  return useUpload<Advisory, { message: string }>({
+    parallel: true,
+    uploadFn: (formData, config) => {
+      return uploadAdvisory(formData, config);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [AdvisoriesQueryKey],
+      });
+    },
+  });
 };

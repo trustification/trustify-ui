@@ -41,7 +41,7 @@ export const RelatedSBOMs: React.FC<RelatedSBOMsProps> = ({ sboms }) => {
         title: "Filter text",
         placeholderText: "Search",
         type: FilterType.search,
-        getItemValue: (item) => item.title,
+        getItemValue: (item) => item.name,
       },
     ],
   });
@@ -93,12 +93,12 @@ export const RelatedSBOMs: React.FC<RelatedSBOMsProps> = ({ sboms }) => {
           isNoData={sboms.length === 0}
           numRenderedColumns={numRenderedColumns}
         >
-          {currentPageItems?.map((item, rowIndex) => {
+          {currentPageItems?.map((item) => {
             return (
               <Tbody key={item.id}>
                 <Tr {...getTrProps({ item })}>
                   <Td width={45} {...getTdProps({ columnKey: "name" })}>
-                    <NavLink to={`/sboms/${item?.id}`}>{item?.title}</NavLink>
+                    <NavLink to={`/sboms/${item?.id}`}>{item?.name}</NavLink>
                   </Td>
                   <Td
                     width={15}

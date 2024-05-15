@@ -4,14 +4,14 @@ import { FORM_DATA_FILE_KEY } from "@app/Constants";
 import { serializeRequestParamsForHub } from "@app/hooks/table-controls/getHubRequestParams";
 import {
   Advisory,
-  Vulnerability,
   HubPaginatedResult,
   HubRequestParams,
   Importer,
   ImporterConfiguration,
+  ImporterReport,
   Package,
   SBOM,
-  ImporterReport,
+  Vulnerability,
 } from "./models";
 
 const API = "/api";
@@ -60,7 +60,7 @@ export const getAdvisorySourceById = (id: number | string) => {
 };
 
 export const downloadAdvisoryById = (id: number | string) => {
-  return axios.get<string>(`${ADVISORIES}/${id}/source`, {
+  return axios.get<string>(`${ADVISORIES}/${id}/download`, {
     responseType: "arraybuffer",
     headers: { Accept: "text/plain", responseType: "blob" },
   });
@@ -148,6 +148,14 @@ export const getVulnerabilitiesBySbomId = (id: string | number) => {
   return axios
     .get<Vulnerability[]>(`${SBOMS}/${id}/vulnerabilities`)
     .then((response) => response.data);
+};
+
+export const uploadSbom = (formData: FormData, config?: AxiosRequestConfig) => {
+  const file = formData.get(FORM_DATA_FILE_KEY) as File;
+  return file.text().then((text) => {
+    const json = JSON.parse(text);
+    return axios.post<SBOM>(`${SBOMS}`, json, config);
+  });
 };
 
 //

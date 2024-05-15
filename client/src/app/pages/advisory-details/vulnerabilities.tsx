@@ -55,7 +55,6 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
       modified: vuln ? dayjs(vuln.modified).millisecond() : 0,
     }),
     isPaginationEnabled: true,
-    initialItemsPerPage: 10,
     isExpansionEnabled: true,
     expandableVariant: "single",
     isFilterEnabled: true,

@@ -9,7 +9,7 @@ export const mockSBOMArray: SBOM[] = [
   {
     id: "sbom1",
     type: "CycloneDX",
-    title: "SBOM 1",
+    name: "SBOM 1",
     version: "v1",
     authors: ["supplier 1"],
     published: new Date().toString(),

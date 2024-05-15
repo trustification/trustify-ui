@@ -97,7 +97,7 @@ export const RelatedCVEs: React.FC<RelatedCVEsProps> = ({ cves }) => {
           isNoData={cves.length === 0}
           numRenderedColumns={numRenderedColumns}
         >
-          {currentPageItems?.map((item, rowIndex) => {
+          {currentPageItems?.map((item) => {
             return (
               <Tbody key={item.identifier}>
                 <Tr {...getTrProps({ item })}>

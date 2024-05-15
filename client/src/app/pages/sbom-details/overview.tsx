@@ -37,7 +37,7 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
           <DescriptionListGroup>
             <DescriptionListTerm>Name</DescriptionListTerm>
             <DescriptionListDescription>
-              {sbom.title}
+              {sbom.name}
             </DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>

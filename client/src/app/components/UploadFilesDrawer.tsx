@@ -1,5 +1,3 @@
-import * as React from "react";
-import { FileRejection } from "react-dropzone";
 import {
   DropEvent,
   HelperText,
@@ -14,49 +12,47 @@ import {
   TextContent,
   Title,
 } from "@patternfly/react-core";
+import * as React from "react";
+import { FileRejection } from "react-dropzone";
 
-import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
-import UploadIcon from "@patternfly/react-icons/dist/esm/icons/upload-icon";
 import FileIcon from "@patternfly/react-icons/dist/esm/icons/file-code-icon";
+import UploadIcon from "@patternfly/react-icons/dist/esm/icons/upload-icon";
+import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
 
 import {
   IPageDrawerContentProps,
   PageDrawerContent,
 } from "@app/components/PageDrawerContext";
+import { AxiosError, AxiosResponse, CancelTokenSource } from "axios";
 
-import { useUpload } from "@app/hooks/useUpload";
-import { uploadAdvisory } from "@app/api/rest";
-import { Advisory } from "@app/api/models";
-
-import { useQueryClient } from "@tanstack/react-query";
-import { AdvisoriesQueryKey } from "@app/queries/advisories";
+interface Upload {
+  progress: number;
+  status: "queued" | "inProgress" | "complete";
+  response?: AxiosResponse;
+  error?: AxiosError;
+  wasCancelled: boolean;
+  cancelFn?: CancelTokenSource;
+}
 
 export interface IUploadFilesDrawerProps
   extends Pick<IPageDrawerContentProps, "onCloseClick"> {
   isExpanded: boolean;
+  uploads: Map<File, Upload>;
+  handleUpload: (files: File[]) => void;
+  handleRemoveUpload: (file: File) => void;
+  extractSuccessMessage: (response: AxiosResponse) => string;
+  extractErrorMessage: (error: AxiosError) => string;
 }
 
 export const UploadFilesDrawer: React.FC<IUploadFilesDrawerProps> = ({
   isExpanded,
+  uploads,
   onCloseClick,
+  handleUpload,
+  handleRemoveUpload,
+  extractSuccessMessage,
+  extractErrorMessage,
 }) => {
-  const queryClient = useQueryClient();
-
-  const { uploads, handleUpload, handleRemoveUpload } = useUpload<
-    Advisory,
-    { message: string }
-  >({
-    parallel: true,
-    uploadFn: (formData, config) => {
-      return uploadAdvisory(formData, config);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [AdvisoriesQueryKey],
-      });
-    },
-  });
-
   const [showStatus, setShowStatus] = React.useState(false);
   const [statusIcon, setStatusIcon] = React.useState<
     "danger" | "success" | "inProgress"
@@ -154,13 +150,13 @@ export const UploadFilesDrawer: React.FC<IUploadFilesDrawerProps> = ({
                   upload.error ? (
                     <HelperText isLiveRegion>
                       <HelperTextItem variant="error">
-                        {upload.error.response?.data.message}
+                        {extractErrorMessage(upload.error)}
                       </HelperTextItem>
                     </HelperText>
                   ) : upload.response ? (
                     <HelperText isLiveRegion>
                       <HelperTextItem variant="default">
-                        {`Document ${upload.response.data.identifier} uploaded`}
+                        {extractSuccessMessage(upload.response)}
                       </HelperTextItem>
                     </HelperText>
                   ) : undefined
@@ -180,8 +176,8 @@ export const UploadFilesDrawer: React.FC<IUploadFilesDrawerProps> = ({
           variant="small"
         >
           <List>
-            {rejectedFiles.map((e) => (
-              <ListItem>{e.file.name}</ListItem>
+            {rejectedFiles.map((e, index) => (
+              <ListItem key={index}>{e.file.name}</ListItem>
             ))}
           </List>
         </Modal>

@@ -57,7 +57,7 @@ export interface PackageBase {
 export interface SBOMBase {
   id: string;
   type: "CycloneDX" | "SPDX";
-  title: string;
+  name: string;
   version: string;
   authors: string[];
   published: string;

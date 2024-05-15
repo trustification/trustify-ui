@@ -1,14 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-import { HubRequestParams } from "@app/api/models";
+import { HubRequestParams, SBOM } from "@app/api/models";
 import {
   getSBOMs,
   getSBOMById,
   getSBOMSourceById,
   getPackagesBySbomId,
   getVulnerabilitiesBySbomId,
+  uploadSbom,
 } from "@app/api/rest";
+import { useUpload } from "@app/hooks/useUpload";
 
 export const SBOMsQueryKey = "sboms";
 
@@ -100,4 +102,19 @@ export const useFetchCVEsBySbomId = (sbomId: string | number) => {
     isFetching: isLoading,
     fetchError: error as AxiosError,
   };
+};
+
+export const useUploadSBOM = () => {
+  const queryClient = useQueryClient();
+  return useUpload<SBOM, { message: string }>({
+    parallel: true,
+    uploadFn: (formData, config) => {
+      return uploadSbom(formData, config);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [SBOMsQueryKey],
+      });
+    },
+  });
 };

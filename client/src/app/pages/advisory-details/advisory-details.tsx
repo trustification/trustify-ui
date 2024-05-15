@@ -1,17 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import DetailsPage from "@patternfly/react-component-groups/dist/dynamic/DetailsPage";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  PageSection,
+  PageSection
 } from "@patternfly/react-core";
-
-import DetailsPage from "@patternfly/react-component-groups/dist/dynamic/DetailsPage";
+import DownloadIcon from "@patternfly/react-icons/dist/esm/icons/download-icon";
 
 import { PathParam, useRouteParams } from "@app/Routes";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
-
+import { useDownload } from "@app/hooks/useDownload";
 import { useFetchAdvisoryById } from "@app/queries/advisories";
 
 import { Overview } from "./overview";
@@ -20,6 +20,8 @@ import { Vulnerabilities } from "./vulnerabilities";
 export const AdvisoryDetails: React.FC = () => {
   const advisoryId = useRouteParams(PathParam.ADVISORY_ID);
   const { advisory, isFetching, fetchError } = useFetchAdvisoryById(advisoryId);
+
+  const { downloadAdvisory } = useDownload();
 
   return (
     <>
@@ -33,6 +35,21 @@ export const AdvisoryDetails: React.FC = () => {
               <BreadcrumbItem isActive>Advisory details</BreadcrumbItem>
             </Breadcrumb>
           }
+          actionButtons={[
+            {
+              children: (
+                <>
+                  <DownloadIcon /> Download
+                </>
+              ),
+              variant: "secondary",
+              onClick: () => {
+                if (advisoryId) {
+                  downloadAdvisory(advisoryId, `${advisory?.identifier}.json`);
+                }
+              },
+            },
+          ]}
           pageHeading={{
             title: advisory?.identifier ?? "",
             // label: advisory

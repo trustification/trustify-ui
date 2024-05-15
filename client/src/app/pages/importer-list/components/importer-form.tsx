@@ -159,15 +159,6 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
     name: "keys",
   });
 
-  const {
-    fields: fieldsOnlyPatterns,
-    append: appendOnlyPatterns,
-    remove: removeOnlyPatterns,
-  } = useFieldArray({
-    control: control,
-    name: "onlyPatterns",
-  });
-
   const onCreateSuccess = (_: Importer) =>
     pushNotification({
       title: "Importer created",

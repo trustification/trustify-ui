@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import dayjs from "dayjs";
 
 import {
+  Button,
   PageSection,
   PageSectionVariants,
   Text,
@@ -12,7 +13,15 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core";
-import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
+import {
+  ActionsColumn,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@patternfly/react-table";
 
 import {
   RENDER_DATE_FORMAT,
@@ -31,10 +40,15 @@ import {
 } from "@app/hooks/table-controls";
 import { useDownload } from "@app/hooks/useDownload";
 import { useSelectionState } from "@app/hooks/useSelectionState";
-import { useFetchSBOMs } from "@app/queries/sboms";
+import { useFetchSBOMs, useUploadSBOM } from "@app/queries/sboms";
 import { PackagesCount } from "./components/packages-count";
+import { UploadFilesDrawer } from "@app/components/UploadFilesDrawer";
+import { AxiosError, AxiosResponse } from "axios";
 
 export const SbomList: React.FC = () => {
+  const [showUploadComponent, setShowUploadComponent] = React.useState(false);
+  const { uploads, handleUpload, handleRemoveUpload } = useUploadSBOM();
+
   const tableControlState = useTableControlState({
     tableName: "sboms",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.sboms,
@@ -49,7 +63,6 @@ export const SbomList: React.FC = () => {
     isPaginationEnabled: true,
     isSortEnabled: true,
     sortableColumns: ["published"],
-    initialItemsPerPage: 10,
     isFilterEnabled: true,
     filterCategories: [
       {
@@ -119,6 +132,17 @@ export const SbomList: React.FC = () => {
           <Toolbar {...toolbarProps}>
             <ToolbarContent>
               <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
+              <ToolbarItem>
+                <Button
+                  type="button"
+                  id="upload"
+                  aria-label="Upload"
+                  variant="secondary"
+                  onClick={() => setShowUploadComponent(true)}
+                >
+                  Upload
+                </Button>
+              </ToolbarItem>
               <ToolbarItem {...paginationToolbarItemProps}>
                 <SimplePagination
                   idPrefix="sboms-table"
@@ -153,7 +177,7 @@ export const SbomList: React.FC = () => {
                   <Tbody key={item.id}>
                     <Tr {...getTrProps({ item })}>
                       <Td width={20} {...getTdProps({ columnKey: "name" })}>
-                        <NavLink to={`/sboms/${item.id}`}>{item.title}</NavLink>
+                        <NavLink to={`/sboms/${item.id}`}>{item.name}</NavLink>
                       </Td>
                       <Td
                         width={10}
@@ -187,6 +211,18 @@ export const SbomList: React.FC = () => {
                         {/* <VulnerabilityGallery severities={item.related_cves} /> */}
                         <p style={{ color: "red" }}>issue-285</p>
                       </Td>
+                      <Td isActionCell>
+                        <ActionsColumn
+                          items={[
+                            {
+                              title: "Download",
+                              onClick: () => {
+                                downloadSBOM(item.id, `${item.name}.json`);
+                              },
+                            },
+                          ]}
+                        />
+                      </Td>
                     </Tr>
                   </Tbody>
                 );
@@ -201,6 +237,20 @@ export const SbomList: React.FC = () => {
           />
         </div>
       </PageSection>
+
+      <UploadFilesDrawer
+        isExpanded={showUploadComponent}
+        uploads={uploads}
+        handleUpload={handleUpload}
+        handleRemoveUpload={handleRemoveUpload}
+        extractSuccessMessage={(response: AxiosResponse<string>) => {
+          return `${response.data} uploaded`;
+        }}
+        extractErrorMessage={(error: AxiosError<{ message: string }>) => {
+          return error.response?.data.message ?? "Error while uploading file";
+        }}
+        onCloseClick={() => setShowUploadComponent(false)}
+      />
     </>
   );
 };
