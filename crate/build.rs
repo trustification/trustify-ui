@@ -46,7 +46,7 @@ fn build_ui() -> io::Result<ExitStatus> {
     if !Path::new(STATIC_DIR).exists() || Path::new(STATIC_DIR).read_dir()?.next().is_none() {
         println!("Building UI...");
         Command::new(NPM_CMD)
-            .args(["run", "build", "--dev"])
+            .args(["run", "build"])
             .current_dir(UI_DIR)
             .status()
     } else {
