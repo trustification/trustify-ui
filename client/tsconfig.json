@@ -34,6 +34,10 @@
   "ts-node": {
     "compilerOptions": {
       "module": "commonjs" // node16 == commonjs or es2020 depending on package.json/type
-    }
+    },
+    "ignore": [
+      "(?:^|/)node_modules/",
+      "(?:^|/)node_modules.*/"
+    ]
   }
 }
