@@ -56,62 +56,31 @@ export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
                     <p style={{ color: "red" }}>
                       Is this all the metadata we intent to expose? ISSUE-279
                     </p>
-
-                    {/* <DescriptionListGroup>
-                      <DescriptionListTerm>Category</DescriptionListTerm>
-                      <DescriptionListDescription>
-                        {advisory.metadata.category}
-                      </DescriptionListDescription>
-                    </DescriptionListGroup> */}
-                    {/* <DescriptionListGroup>
-                      <DescriptionListTerm>
-                        Aggregate severity
-                      </DescriptionListTerm>
-                      <DescriptionListDescription>
-                        <SeverityShieldAndText
-                          value={advisory.severity}
-                        />
-                      </DescriptionListDescription>
-                    </DescriptionListGroup> */}
                   </DescriptionList>
                 </CardBody>
               </Card>
             </GridItem>
-            {/* <GridItem md={4}>
+            <GridItem md={4}>
               <Card isFullHeight>
-                <CardTitle>Publisher</CardTitle>
+                <CardTitle>Issuer</CardTitle>
                 <CardBody>
                   <DescriptionList>
                     <DescriptionListGroup>
                       <DescriptionListTerm>Name</DescriptionListTerm>
                       <DescriptionListDescription>
-                        {advisory.metadata.publisher.name}
+                        {advisory.issuer.name}
                       </DescriptionListDescription>
                     </DescriptionListGroup>
                     <DescriptionListGroup>
-                      <DescriptionListTerm>Namespace</DescriptionListTerm>
+                      <DescriptionListTerm>Website</DescriptionListTerm>
                       <DescriptionListDescription>
-                        {advisory.metadata.publisher.namespace}
-                      </DescriptionListDescription>
-                    </DescriptionListGroup>
-                    <DescriptionListGroup>
-                      <DescriptionListTerm>Contact details</DescriptionListTerm>
-                      <DescriptionListDescription>
-                        {advisory.metadata.publisher.contact_details}
-                      </DescriptionListDescription>
-                    </DescriptionListGroup>
-                    <DescriptionListGroup>
-                      <DescriptionListTerm>
-                        Issuing authority
-                      </DescriptionListTerm>
-                      <DescriptionListDescription>
-                        {advisory.metadata.publisher.issuing_authority}
+                        {advisory.issuer.website}
                       </DescriptionListDescription>
                     </DescriptionListGroup>
                   </DescriptionList>
                 </CardBody>
               </Card>
-            </GridItem> */}
+            </GridItem>
             {/* <GridItem md={4}>
               <Card isFullHeight>
                 <CardTitle>Tracking</CardTitle>
