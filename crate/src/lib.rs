@@ -1,5 +1,3 @@
-include!(concat!(env!("OUT_DIR"), "/generated.rs"));
-
 use base64::prelude::BASE64_STANDARD;
 use base64::Engine;
 use serde::Serialize;
@@ -34,18 +32,6 @@ pub struct UI {
     pub analytics_write_key: String,
 }
 
-pub fn trustify_ui_resources() -> HashMap<&'static str, Resource> {
-    let mut resources = generate();
-    if let Some(index) = resources.get("index.html.ejs") {
-        resources.insert(
-            "index.html",
-            new_resource(index.data, index.modified, "text/html"),
-        );
-    }
-
-    resources
-}
-
 pub fn generate_index_html(
     ui: &UI,
     template_file: String,
@@ -75,9 +61,10 @@ pub fn generate_index_html(
     tera::Tera::one_off(&template, &context, true)
 }
 
-pub fn trustify_ui(ui: &UI) -> HashMap<&'static str, Resource> {
-    let mut resources = generate();
-
+pub fn trustify_ui(
+    ui: &UI,
+    mut resources: HashMap<&'static str, Resource>,
+) -> HashMap<&'static str, Resource> {
     let template_file = resources.get("index.html.ejs");
     let branding_file_content = resources.get("branding/strings.json");
 
