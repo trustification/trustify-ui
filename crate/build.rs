@@ -1,7 +1,8 @@
-use static_files::resource_dir;
 use std::path::Path;
 use std::process::{Command, ExitStatus};
 use std::{fs, io};
+
+use static_files::resource_dir;
 
 static UI_DIR: &str = "../";
 static UI_DIR_SRC: &str = "../src";
@@ -18,15 +19,9 @@ fn main() {
 
     println!("cargo:rerun-if-changed={}", UI_DIR_SRC);
 
-    let build_ui_status = install_ui_deps()
-        .and_then(|_| build_ui())
-        .and_then(|_| copy_dir_all(UI_DIST_DIR, STATIC_DIR));
+    build_ui().expect("Error while building UI");
 
-    match build_ui_status {
-        Ok(_) => println!("UI built successfully"),
-        Err(_) => panic!("Error while building UI"),
-    }
-
+    copy_dir_all(UI_DIST_DIR, STATIC_DIR).expect("Failed to copy UI files");
     resource_dir("./target/generated").build().unwrap();
 }
 
@@ -43,13 +38,16 @@ fn install_ui_deps() -> io::Result<ExitStatus> {
 }
 
 fn build_ui() -> io::Result<ExitStatus> {
-    if !Path::new(STATIC_DIR).exists() || Path::new(STATIC_DIR).read_dir()?.next().is_none() {
+    if !Path::new(UI_DIST_DIR).exists() || Path::new(UI_DIST_DIR).read_dir()?.next().is_none() {
+        install_ui_deps()?;
+
         println!("Building UI...");
         Command::new(NPM_CMD)
             .args(["run", "build"])
             .current_dir(UI_DIR)
             .status()
     } else {
+        println!("Using previously built UI files");
         Ok(ExitStatus::default())
     }
 }
