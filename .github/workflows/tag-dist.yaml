@@ -1,0 +1,33 @@
+name: Tag Dist Build
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+
+jobs:
+  tag-dist:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: npm clean-install --ignore-scripts
+      - name: Build
+        run: npm run build
+      - name: Commit and Tag the static dist dir
+        shell: bash
+        run: |
+          git config --global user.name "${GITHUB_ACTOR}"
+          git config --global user.email "${GITHUB_ACTOR}@users.noreply.${INPUT_ORGANIZATION_DOMAIN}"
+          git add -f client/dist
+          git commit -m "Checkin dist dir"
+          git fetch --tags
+          git tag static-${{ github.ref_name }} --force
+          git push origin static-${{ github.ref_name }} --force
+
