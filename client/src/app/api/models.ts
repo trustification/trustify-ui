@@ -65,7 +65,7 @@ export interface SBOMBase {
 
 export interface AdvisoryBase {
   identifier: string;
-  severity: Severity;
+  average_severity: Severity;
   published: string;
   modified: string;
   title: string;
