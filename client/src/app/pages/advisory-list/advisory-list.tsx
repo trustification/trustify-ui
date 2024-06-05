@@ -200,7 +200,11 @@ export const AdvisoryList: React.FC = () => {
                         modifier="truncate"
                         {...getTdProps({ columnKey: "severity" })}
                       >
-                        <SeverityShieldAndText value={item.average_severity} />
+                        {item.average_severity && (
+                          <SeverityShieldAndText
+                            value={item.average_severity}
+                          />
+                        )}
                       </Td>
                       <Td
                         width={10}
