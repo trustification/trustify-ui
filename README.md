@@ -6,19 +6,20 @@
 
 ### Requisites
 
-- You need NodeJS 20. Use [nvm](https://github.com/nvm-sh/nvm?tab=readme-ov-file#install--update-script) to install NodeJS
+- NodeJS 20. Use [nvm](https://github.com/nvm-sh/nvm?tab=readme-ov-file#install--update-script) to install NodeJS
 
 ```shell
 nvm install 20
 nvm use 20
 ```
 
-Verify your NodeJS and NPM version with:
+- Backend. Clone [trustify](https://github.com/trustification/trustify) and there execute:
 
 ```shell
-node --version
-npm --version
+cargo run --bin trustd
 ```
+
+It will start the backend in http://localhost:8080
 
 ### Install dependencies
 
@@ -43,15 +44,15 @@ Open browser at <http://localhost:3000>
 
 ## Environment variables
 
-| ENV VAR                | Description                   | Default value                          |
-| ---------------------- | ----------------------------- | ------------------------------------   |
-| TRUSTIFICATION_API_URL | Set Trustification API URL    | `http://localhost:8080`                |
-| AUTH_REQUIRED          | Enable/Disable authentication | false                                  |
-| OIDC_CLIENT_ID         | Set Oidc Client               | frontend                               |
-| OIDC_SERVER_URL        | Set Oidc Server URL           | `http://localhost:8090/realms/chicken` |
-| OIDC_SCOPE             | Set Oidc Scope                | openid                                 |
-| ANALYTICS_ENABLED      | Enable/Disable analytics      | false                                  |
-| ANALYTICS_WRITE_KEY    | Set Segment Write key         | null                                   |
+| ENV VAR             | Description                   | Default value                           |
+| ------------------- | ----------------------------- | --------------------------------------- |
+| TRUSTIFY_API_URL    | Set Trustification API URL    | `http://localhost:8080`                 |
+| AUTH_REQUIRED       | Enable/Disable authentication | true                                    |
+| OIDC_CLIENT_ID      | Set Oidc Client               | frontend                                |
+| OIDC_SERVER_URL     | Set Oidc Server URL           | `http://localhost:8090/realms/trustify` |
+| OIDC_SCOPE          | Set Oidc Scope                | openid                                  |
+| ANALYTICS_ENABLED   | Enable/Disable analytics      | false                                   |
+| ANALYTICS_WRITE_KEY | Set Segment Write key         | null                                    |
 
 ## Mock data
 
