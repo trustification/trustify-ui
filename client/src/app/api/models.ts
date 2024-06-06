@@ -35,15 +35,6 @@ export interface HubPaginatedResult<T> {
 
 // Base
 
-export interface VulnerabilityBase {
-  identifier: string;
-  title: string;
-  severity: Severity;
-  cwe: string;
-  published: string;
-  modified: string;
-}
-
 export interface PackageBase {
   id: string;
   namespace: string;
@@ -81,12 +72,28 @@ export interface AdvisoryBase {
 export type Severity = "none" | "low" | "medium" | "high" | "critical";
 
 export interface Advisory extends AdvisoryBase {
-  vulnerabilities: VulnerabilityBase[];
+  vulnerabilities: AdvisoryVulnerability[];
+}
+
+export interface AdvisoryVulnerability {
+  identifier: string;
+  title: string;
+  severity: Severity;
+  cwe: string;
+  published: string;
+  modified: string;
 }
 
 // Vulnerability
 
-export interface Vulnerability extends VulnerabilityBase {
+export interface Vulnerability {
+  identifier: string;
+  title: string;
+  average_severity?: Severity;
+  cwe: string;
+  published: string;
+  modified: string;
+
   related_sboms: SBOMBase[];
   advisories: AdvisoryBase[];
 }

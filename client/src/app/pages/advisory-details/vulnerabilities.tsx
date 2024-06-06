@@ -16,7 +16,7 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { VulnerabilityBase } from "@app/api/models";
+import { AdvisoryVulnerability } from "@app/api/models";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
@@ -28,7 +28,7 @@ import { useLocalTableControls } from "@app/hooks/table-controls";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 
 interface VulnerabilitiesProps {
-  vulnerabilities: VulnerabilityBase[];
+  vulnerabilities: AdvisoryVulnerability[];
 }
 
 export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
