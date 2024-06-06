@@ -7,7 +7,7 @@ import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
 import { RENDER_DATE_FORMAT } from "@app/Constants";
-import { VulnerabilityBase } from "@app/api/models";
+import { AdvisoryVulnerability } from "@app/api/models";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -18,7 +18,7 @@ import {
 import { useLocalTableControls } from "@app/hooks/table-controls";
 
 interface RelatedCVEsProps {
-  cves: VulnerabilityBase[];
+  cves: AdvisoryVulnerability[];
 }
 
 export const RelatedCVEs: React.FC<RelatedCVEsProps> = ({ cves }) => {

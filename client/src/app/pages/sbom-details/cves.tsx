@@ -134,7 +134,9 @@ export const CVEs: React.FC<CVEsProps> = ({ sbomId }) => {
                     modifier="truncate"
                     {...getTdProps({ columnKey: "severity" })}
                   >
-                    <SeverityShieldAndText value={item.severity} />
+                    {item.average_severity && (
+                      <SeverityShieldAndText value={item.average_severity} />
+                    )}
                   </Td>
                   <Td
                     width={10}

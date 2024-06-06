@@ -11,7 +11,7 @@ export const mockVulnerabilityArray: Vulnerability[] =
       const result: Vulnerability = {
         ...vuln,
         title: `title${index}`,
-        severity: "critical",
+        average_severity: "critical",
         cwe: `cwe${index}`,
         published: new Date().toString(),
         modified: new Date().toString(),
