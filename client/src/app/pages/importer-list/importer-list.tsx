@@ -1,6 +1,7 @@
 import React from "react";
 
 import { AxiosError } from "axios";
+import dayjs from "dayjs";
 
 import {
   Button,
@@ -23,8 +24,6 @@ import {
 import {
   ActionsColumn,
   ExpandableRowContent,
-  Td as PFTd,
-  Tr as PFTr,
   Table,
   Tbody,
   Td,
@@ -51,10 +50,9 @@ import {
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 
+import { RENDER_DATETIME_FORMAT } from "@app/Constants";
 import { ImporterForm } from "./components/importer-form";
 import { ImporterStatusIcon } from "./components/importer-status-icon";
-import dayjs from "dayjs";
-import { RENDER_DATETIME_FORMAT } from "@app/Constants";
 
 export const ImporterList: React.FC = () => {
   const { pushNotification } = React.useContext(NotificationsContext);
@@ -276,8 +274,8 @@ export const ImporterList: React.FC = () => {
                       </TableRowContentWithControls>
                     </Tr>
                     {isCellExpanded(item) ? (
-                      <PFTr isExpanded>
-                        <PFTd colSpan={7}>
+                      <Tr isExpanded>
+                        <Td colSpan={7}>
                           <ExpandableRowContent>
                             <div className="pf-v5-u-m-md">
                               <DescriptionList>
@@ -300,8 +298,8 @@ export const ImporterList: React.FC = () => {
                               </DescriptionList>
                             </div>
                           </ExpandableRowContent>
-                        </PFTd>
-                      </PFTr>
+                        </Td>
+                      </Tr>
                     ) : null}
                   </Tbody>
                 );

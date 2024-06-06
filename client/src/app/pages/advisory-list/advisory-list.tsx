@@ -44,6 +44,7 @@ import { useDownload } from "@app/hooks/useDownload";
 import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchAdvisories, useUploadAdvisory } from "@app/queries/advisories";
 
+import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { VulnerabilitiesGalleryCount } from "./components/VulnerabilitiesGaleryCount";
 
 export const AdvisoryList: React.FC = () => {
@@ -199,10 +200,11 @@ export const AdvisoryList: React.FC = () => {
                         modifier="truncate"
                         {...getTdProps({ columnKey: "severity" })}
                       >
-                        {/* <SeverityShieldAndText
-                          value={item.severity}
-                        /> */}
-                        <p style={{ color: "red" }}>issue-277</p>
+                        {item.average_severity && (
+                          <SeverityShieldAndText
+                            value={item.average_severity}
+                          />
+                        )}
                       </Td>
                       <Td
                         width={10}
@@ -226,7 +228,6 @@ export const AdvisoryList: React.FC = () => {
                         <VulnerabilitiesGalleryCount
                           vulnerabilities={item.vulnerabilities}
                         />
-                        <p style={{ color: "orange" }}>issue-278</p>
                       </Td>
                       <Td isActionCell>
                         <ActionsColumn
