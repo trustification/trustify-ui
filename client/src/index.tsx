@@ -1,6 +1,6 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
 
+import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -25,9 +25,8 @@ dayjs.extend(arraySupport);
 
 const queryClient = new QueryClient();
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
+const container = document.getElementById('root');
+const root = createRoot(container!)
 
 const renderApp = () => {
   return root.render(
