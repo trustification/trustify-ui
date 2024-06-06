@@ -25,12 +25,17 @@ import {
   Switch,
   TextInput,
 } from "@patternfly/react-core";
-import QuestionCircleIcon from "@patternfly/react-icons/dist/esm/icons/question-circle-icon";
-import PlusCircleIcon from "@patternfly/react-icons/dist/esm/icons/plus-circle-icon";
 import MinusIcon from "@patternfly/react-icons/dist/esm/icons/minus-icon";
+import PlusCircleIcon from "@patternfly/react-icons/dist/esm/icons/plus-circle-icon";
+import QuestionCircleIcon from "@patternfly/react-icons/dist/esm/icons/question-circle-icon";
 import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
 
-import { Importer, ImporterConfigurationValues } from "@app/api/models";
+import {
+  ALL_IMPORTER_TYPES,
+  Importer,
+  ImporterConfigurationValues,
+  ImporterType,
+} from "@app/api/models";
 import {
   useCreateImporterMutation,
   useUpdateImporterMutation,
@@ -39,6 +44,7 @@ import {
 import {
   HookFormPFGroupController,
   HookFormPFSelect,
+  HookFormPFTextArea,
   HookFormPFTextInput,
 } from "@app/components/HookFormPFFields";
 import { NotificationsContext } from "@app/components/NotificationsContext";
@@ -78,11 +84,9 @@ const PERIOD_UNIT_LIST: PeriodUnitProps = {
   y: { label: "years" },
 };
 
-export const ALL_IMPORTER_TYPES = ["sbom", "csaf"] as const;
-type ImporterType = (typeof ALL_IMPORTER_TYPES)[number];
-
 type FormValues = {
   name: string;
+  description: string;
   type: ImporterType;
   source: string;
   periodValue: number;
@@ -106,6 +110,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
 
   const validationSchema = object().shape({
     name: string().trim().required().min(3).max(120),
+    description: string().trim().max(250),
     type: string().trim().required().min(3).max(250),
     source: string().trim().required().min(3).max(250),
     periodValue: number().required().min(1),
@@ -116,8 +121,10 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
     onlyPatterns: array(object().shape({ value: string() })),
   });
 
-  const importerConfiguration =
-    importer?.configuration.sbom || importer?.configuration.csaf;
+  const importerType = Object.keys(
+    importer?.configuration ?? {}
+  )[0] as ImporterType;
+  const importerConfiguration = importer?.configuration[importerType];
 
   const periodValue = getPeriodValue(importerConfiguration?.period);
   const periodUnit = getPeriodUnit(importerConfiguration?.period);
@@ -132,11 +139,8 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
   } = useForm<FormValues>({
     defaultValues: {
       name: importer?.name || "",
-      type: importer?.configuration.sbom
-        ? "sbom"
-        : importer?.configuration.csaf
-          ? "csaf"
-          : "csaf",
+      description: importerConfiguration?.description || "",
+      type: importerType,
       source: importerConfiguration?.source || "",
       periodValue: periodValue || 60,
       periodUnit: periodUnit || "s",
@@ -197,6 +201,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
   const onSubmit = (formValues: FormValues) => {
     const configuration: ImporterConfigurationValues = {
       ...importerConfiguration!,
+      description: formValues.description.trim(),
       source: formValues.source.trim(),
       period: `${formValues.periodValue}${formValues.periodUnit.trim()}`,
       v3Signatures: formValues.v3Signatures,
@@ -259,6 +264,13 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
           fieldId="name"
           isRequired
           isDisabled={!!importer}
+        />
+        <HookFormPFTextArea
+          control={control}
+          name="description"
+          label="Description"
+          fieldId="description"
+          resizeOrientation="vertical"
         />
         <HookFormPFGroupController
           control={control}

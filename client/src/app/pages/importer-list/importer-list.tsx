@@ -32,7 +32,7 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { Importer } from "@app/api/models";
+import { Importer, ImporterType } from "@app/api/models";
 import { ConfirmDialog } from "@app/components/ConfirmDialog";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import {
@@ -103,6 +103,8 @@ export const ImporterList: React.FC = () => {
     items: importers,
     columnNames: {
       name: "Name",
+      type: "Type",
+      description: "Description",
       state: "State",
       start: "Start",
       end: "End",
@@ -192,6 +194,8 @@ export const ImporterList: React.FC = () => {
               <Tr>
                 <TableHeaderContentWithControls {...tableControls}>
                   <Th {...getThProps({ columnKey: "name" })} />
+                  <Th {...getThProps({ columnKey: "type" })} />
+                  <Th {...getThProps({ columnKey: "description" })} />
                   <Th {...getThProps({ columnKey: "state" })} />
                   <Th {...getThProps({ columnKey: "start" })} />
                   <Th {...getThProps({ columnKey: "end" })} />
@@ -206,8 +210,11 @@ export const ImporterList: React.FC = () => {
               numRenderedColumns={numRenderedColumns}
             >
               {currentPageItems?.map((item, rowIndex) => {
-                const configValues =
-                  item.configuration.csaf || item.configuration.sbom;
+                const importerType = Object.keys(
+                  item.configuration ?? {}
+                )[0] as ImporterType;
+                const configValues = item.configuration[importerType];
+
                 return (
                   <Tbody key={item.name}>
                     <Tr {...getTrProps({ item })}>
@@ -219,8 +226,18 @@ export const ImporterList: React.FC = () => {
                         <Td width={15} {...getTdProps({ columnKey: "name" })}>
                           {item.name}
                         </Td>
+                        <Td width={10} {...getTdProps({ columnKey: "type" })}>
+                          {importerType}
+                        </Td>
                         <Td
-                          width={20}
+                          width={25}
+                          {...getTdProps({ columnKey: "description" })}
+                          modifier="truncate"
+                        >
+                          {configValues?.description}
+                        </Td>
+                        <Td
+                          width={10}
                           modifier="truncate"
                           {...getTdProps({ columnKey: "state" })}
                         >
@@ -251,7 +268,7 @@ export const ImporterList: React.FC = () => {
                             )}
                         </Td>
                         <Td
-                          width={15}
+                          width={10}
                           modifier="truncate"
                           {...getTdProps({ columnKey: "itemsImported" })}
                         >
