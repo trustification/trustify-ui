@@ -1,10 +1,11 @@
-import ENV from "@app/env";
 import axios from "axios";
 import { User } from "oidc-client-ts";
 
+import { OIDC_CLIENT_ID, OIDC_SERVER_URL } from "@app/oidc";
+
 function getUser() {
   const oidcStorage = sessionStorage.getItem(
-    `oidc.user:${ENV.OIDC_SERVER_URL}:${ENV.OIDC_CLIENT_ID}`
+    `oidc.user:${OIDC_SERVER_URL}:${OIDC_CLIENT_ID}`
   );
   if (!oidcStorage) {
     return null;

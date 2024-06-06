@@ -2,8 +2,8 @@
 
 set -e
 
-if [[ -z "$TRUSTIFICATION_API_URL" ]]; then
-  echo "You must provide TRUSTIFICATION_API_URL environment variable" 1>&2
+if [[ -z "$TRUSTIFY_API_URL" ]]; then
+  echo "You must provide TRUSTIFY_API_URL environment variable" 1>&2
   exit 1
 fi
 

@@ -3,8 +3,7 @@ import { TRUSTIFICATION_ENV } from "./environment.js";
 
 export const proxyMap: Record<string, Options> = {
   "/api": {
-    target:
-      TRUSTIFICATION_ENV.TRUSTIFICATION_API_URL || "http://localhost:8080",
+    target: TRUSTIFICATION_ENV.TRUSTIFY_API_URL || "http://localhost:8080",
     logLevel: process.env.DEBUG ? "debug" : "info",
 
     changeOrigin: true,
