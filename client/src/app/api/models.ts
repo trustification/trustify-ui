@@ -111,6 +111,9 @@ export interface SBOM extends SBOMBase {
 
 export type ImporterStatus = "waiting" | "running";
 
+export const ALL_IMPORTER_TYPES = ["sbom", "csaf", "osv", "cve"] as const;
+export type ImporterType = (typeof ALL_IMPORTER_TYPES)[number];
+
 export interface Importer {
   name: string;
   configuration: ImporterConfiguration;
@@ -118,12 +121,12 @@ export interface Importer {
   report?: ImporterReportDetails; // This field is added in the rest fetch process
 }
 
-export interface ImporterConfiguration {
-  sbom?: ImporterConfigurationValues;
-  csaf?: ImporterConfigurationValues;
-}
+export type ImporterConfiguration = {
+  [key in ImporterType]?: ImporterConfigurationValues;
+};
 
 export interface ImporterConfigurationValues {
+  description: string;
   period: string;
   source: string;
   disabled: boolean;
