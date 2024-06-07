@@ -10,7 +10,7 @@ export const mockAdvisoryArray: Advisory[] = [
     published: new Date().toString(),
     modified: new Date().toString(),
     title: "Title 1",
-    sha256: "sha356-1",
+    uuid: "sha356-1",
     issuer: { name: "Issuer 1", website: "http://website.com" },
     vulnerabilities: [
       {

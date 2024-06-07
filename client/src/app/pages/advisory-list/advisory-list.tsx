@@ -93,7 +93,7 @@ export const AdvisoryList: React.FC = () => {
 
   const tableControls = useTableControlProps({
     ...tableControlState,
-    idProperty: "sha256",
+    idProperty: "uuid",
     currentPageItems: advisories,
     totalItemCount,
     isLoading: isFetching,
@@ -184,7 +184,7 @@ export const AdvisoryList: React.FC = () => {
                         width={15}
                         {...getTdProps({ columnKey: "identifier" })}
                       >
-                        <NavLink to={`/advisories/${item.sha256}`}>
+                        <NavLink to={`/advisories/${item.uuid}`}>
                           {item.identifier}
                         </NavLink>
                       </Td>
@@ -236,7 +236,7 @@ export const AdvisoryList: React.FC = () => {
                               title: "Download",
                               onClick: () => {
                                 downloadAdvisory(
-                                  item.sha256,
+                                  item.uuid,
                                   `${item.identifier}.json`
                                 );
                               },
