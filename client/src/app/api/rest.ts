@@ -43,28 +43,22 @@ export const getHubPaginatedResult = <T>(
 
 //
 
-export const getAdvisories = (params: HubRequestParams = {}) => {
-  return getHubPaginatedResult<Advisory>(ADVISORIES, params);
-};
+export const getAdvisories = (params: HubRequestParams = {}) =>
+  getHubPaginatedResult<Advisory>(ADVISORIES, params);
 
-export const getAdvisoryById = (id: number | string) => {
-  return axios
-    .get<Advisory>(`${ADVISORIES}/${id}`)
-    .then((response) => response.data);
-};
+export const getAdvisoryById = (id: number | string) =>
+  axios.get<Advisory>(`${ADVISORIES}/${id}`).then((response) => response.data);
 
-export const getAdvisorySourceById = (id: number | string) => {
-  return axios
+export const getAdvisorySourceById = (id: number | string) =>
+  axios
     .get<string>(`${ADVISORIES}/${id}/source`)
     .then((response) => response.data);
-};
 
-export const downloadAdvisoryById = (id: number | string) => {
-  return axios.get<string>(`${ADVISORIES}/${id}/download`, {
+export const downloadAdvisoryById = (id: number | string) =>
+  axios.get<string>(`${ADVISORIES}/${id}/download`, {
     responseType: "arraybuffer",
     headers: { Accept: "text/plain", responseType: "blob" },
   });
-};
 
 export const uploadAdvisory = (
   formData: FormData,
@@ -79,76 +73,59 @@ export const uploadAdvisory = (
 
 //
 
-export const getVulnerabilities = (params: HubRequestParams = {}) => {
-  return getHubPaginatedResult<Vulnerability>(VULNERABILITIES, params);
-};
+export const getVulnerabilities = (params: HubRequestParams = {}) =>
+  getHubPaginatedResult<Vulnerability>(VULNERABILITIES, params);
 
-export const getVulnerabilityById = (id: number | string) => {
-  return axios
+export const getVulnerabilityById = (id: number | string) =>
+  axios
     .get<Vulnerability>(`${VULNERABILITIES}/${id}`)
     .then((response) => response.data);
-};
 
-export const getVulnerabilitySourceById = (id: number | string) => {
-  return axios
+export const getVulnerabilitySourceById = (id: number | string) =>
+  axios
     .get<string>(`${VULNERABILITIES}/${id}/source`)
     .then((response) => response.data);
-};
 
-export const downloadVulnerabilityById = (id: number | string) => {
-  return axios.get<string>(`${VULNERABILITIES}/${id}/source`, {
+export const downloadVulnerabilityById = (id: number | string) =>
+  axios.get<string>(`${VULNERABILITIES}/${id}/source`, {
     responseType: "arraybuffer",
     headers: { Accept: "text/plain", responseType: "blob" },
   });
-};
 
 //
 
-export const getPackages = (params: HubRequestParams = {}) => {
-  return getHubPaginatedResult<Package>(PACKAGES, params);
-};
+export const getPackages = (params: HubRequestParams = {}) =>
+  getHubPaginatedResult<Package>(PACKAGES, params);
 
-export const getPackageById = (id: number | string) => {
-  return axios
-    .get<Package>(`${PACKAGES}/${id}`)
-    .then((response) => response.data);
-};
+export const getPackageById = (id: number | string) =>
+  axios.get<Package>(`${PACKAGES}/${id}`).then((response) => response.data);
 
 //
 
-export const getSBOMs = (params: HubRequestParams = {}) => {
-  return getHubPaginatedResult<SBOM>(SBOMS, params);
-};
+export const getSBOMs = (params: HubRequestParams = {}) =>
+  getHubPaginatedResult<SBOM>(SBOMS, params);
 
-export const getSBOMById = (id: number | string) => {
-  return axios.get<SBOM>(`${SBOMS}/${id}`).then((response) => response.data);
-};
+export const getSBOMById = (id: number | string) =>
+  axios.get<SBOM>(`${SBOMS}/${id}`).then((response) => response.data);
 
-export const getSBOMSourceById = (id: number | string) => {
-  return axios
-    .get<string>(`${SBOMS}/${id}/source`)
-    .then((response) => response.data);
-};
+export const getSBOMSourceById = (id: number | string) =>
+  axios.get<string>(`${SBOMS}/${id}/source`).then((response) => response.data);
 
-export const downloadSBOMById = (id: number | string) => {
-  return axios.get<string>(`${SBOMS}/${id}/source`, {
+export const downloadSBOMById = (id: number | string) =>
+  axios.get<string>(`${SBOMS}/${id}/source`, {
     responseType: "arraybuffer",
     headers: { Accept: "text/plain", responseType: "blob" },
   });
-};
 
 export const getPackagesBySbomId = (
   id: number | string,
   params: HubRequestParams = {}
-) => {
-  return getHubPaginatedResult<Package>(`${SBOMS}/${id}/packages`, params);
-};
+) => getHubPaginatedResult<Package>(`${SBOMS}/${id}/packages`, params);
 
-export const getVulnerabilitiesBySbomId = (id: string | number) => {
-  return axios
+export const getVulnerabilitiesBySbomId = (id: string | number) =>
+  axios
     .get<Vulnerability[]>(`${SBOMS}/${id}/vulnerabilities`)
     .then((response) => response.data);
-};
 
 export const uploadSbom = (formData: FormData, config?: AxiosRequestConfig) => {
   const file = formData.get(FORM_DATA_FILE_KEY) as File;
@@ -160,8 +137,8 @@ export const uploadSbom = (formData: FormData, config?: AxiosRequestConfig) => {
 
 //
 
-export const getImporters = () => {
-  return axios.get<Importer[]>(IMPORTERS).then((response) =>
+export const getImporters = () =>
+  axios.get<Importer[]>(IMPORTERS).then((response) =>
     Promise.all(
       response.data.map((importer) =>
         getLastImporterReport(importer.name).then((report) => {
@@ -171,35 +148,27 @@ export const getImporters = () => {
       )
     )
   );
-};
 
-export const getImporterById = (id: number | string) => {
-  return axios
-    .get<Importer>(`${IMPORTERS}/${id}`)
-    .then((response) => response.data);
-};
+export const getImporterById = (id: number | string) =>
+  axios.get<Importer>(`${IMPORTERS}/${id}`).then((response) => response.data);
 
 export const createImporter = (
   id: number | string,
   body: ImporterConfiguration
-) => {
-  return axios.post<Importer>(`${IMPORTERS}/${id}`, body);
-};
+) => axios.post<Importer>(`${IMPORTERS}/${id}`, body);
 
 export const updateImporter = (
   id: number | string,
   body: ImporterConfiguration
-) => {
-  return axios
+) =>
+  axios
     .put<Importer>(`${IMPORTERS}/${id}`, body)
     .then((response) => response.data);
-};
 
-export const deleteImporter = (id: number | string) => {
-  return axios
+export const deleteImporter = (id: number | string) =>
+  axios
     .delete<Importer>(`${IMPORTERS}/${id}`)
     .then((response) => response.data);
-};
 
 export const getLastImporterReport = (id: string) => {
   const params: HubRequestParams = {
