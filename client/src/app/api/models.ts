@@ -60,7 +60,7 @@ export interface AdvisoryBase {
   published: string;
   modified: string;
   title: string;
-  sha256: string;
+  uuid: string;
   issuer: {
     name?: string;
     website?: string;
