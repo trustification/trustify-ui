@@ -68,13 +68,13 @@ export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
                     <DescriptionListGroup>
                       <DescriptionListTerm>Name</DescriptionListTerm>
                       <DescriptionListDescription>
-                        {advisory.issuer.name}
+                        {advisory.issuer?.name}
                       </DescriptionListDescription>
                     </DescriptionListGroup>
                     <DescriptionListGroup>
                       <DescriptionListTerm>Website</DescriptionListTerm>
                       <DescriptionListDescription>
-                        {advisory.issuer.website}
+                        {advisory.issuer?.website}
                       </DescriptionListDescription>
                     </DescriptionListGroup>
                   </DescriptionList>

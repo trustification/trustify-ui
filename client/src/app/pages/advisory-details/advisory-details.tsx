@@ -5,7 +5,7 @@ import DetailsPage from "@patternfly/react-component-groups/dist/dynamic/Details
 import {
   Breadcrumb,
   BreadcrumbItem,
-  PageSection
+  PageSection,
 } from "@patternfly/react-core";
 import DownloadIcon from "@patternfly/react-icons/dist/esm/icons/download-icon";
 
@@ -16,6 +16,7 @@ import { useFetchAdvisoryById } from "@app/queries/advisories";
 
 import { Overview } from "./overview";
 import { Vulnerabilities } from "./vulnerabilities";
+import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 
 export const AdvisoryDetails: React.FC = () => {
   const advisoryId = useRouteParams(PathParam.ADVISORY_ID);
@@ -39,7 +40,8 @@ export const AdvisoryDetails: React.FC = () => {
             {
               children: (
                 <>
-                  <DownloadIcon /> Download
+                  <DownloadIcon /> Download{" "}
+                  <p style={{ color: "red" }}>issue-394</p>
                 </>
               ),
               variant: "secondary",
@@ -52,12 +54,11 @@ export const AdvisoryDetails: React.FC = () => {
           ]}
           pageHeading={{
             title: advisory?.identifier ?? "",
-            // label: advisory
+            label: { children: <p style={{ color: "red" }}>issue-393</p> },
+            // label: advisory?.average_severity
             //   ? {
             //       children: (
-            //         <SeverityShieldAndText
-            //           value={advisory.severity}
-            //         />
+            //         <SeverityShieldAndText value={advisory.average_severity} />
             //       ),
             //       isCompact: true,
             //     }

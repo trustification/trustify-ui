@@ -61,7 +61,7 @@ export interface AdvisoryBase {
   modified: string;
   title: string;
   uuid: string;
-  issuer: {
+  issuer?: {
     name?: string;
     website?: string;
   };
@@ -77,11 +77,13 @@ export interface Advisory extends AdvisoryBase {
 
 export interface AdvisoryVulnerability {
   identifier: string;
-  title: string;
   severity: Severity;
+  non_normative: {
+    title: string;
+    discovered?: string;
+    released?: string;
+  };
   cwe: string;
-  published: string;
-  modified: string;
 }
 
 // Vulnerability

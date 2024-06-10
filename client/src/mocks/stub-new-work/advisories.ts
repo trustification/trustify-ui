@@ -16,17 +16,21 @@ export const mockAdvisoryArray: Advisory[] = [
       {
         identifier: "cve1",
         severity: "critical",
-        title: "Title1",
-        published: new Date().toString(),
-        modified: new Date().toString(),
+        non_normative: {
+          title: "Title1",
+          discovered: new Date().toString(),
+          released: new Date().toString(),
+        },
         cwe: "Cwe1",
       },
       {
         identifier: "cve2",
         severity: "low",
-        title: "Title2",
-        published: new Date().toString(),
-        modified: new Date().toString(),
+        non_normative: {
+          title: "Title2",
+          discovered: new Date().toString(),
+          released: new Date().toString(),
+        },
         cwe: "Cwe2",
       },
     ],
