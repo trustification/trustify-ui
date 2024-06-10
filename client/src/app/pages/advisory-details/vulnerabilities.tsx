@@ -16,8 +16,10 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
+import { RENDER_DATE_FORMAT } from "@app/Constants";
 import { AdvisoryVulnerability } from "@app/api/models";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
+import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -25,7 +27,6 @@ import {
   TableRowContentWithControls,
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
-import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 
 interface VulnerabilitiesProps {
   vulnerabilities: AdvisoryVulnerability[];
@@ -51,8 +52,8 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
     sortableColumns: ["identifier", "published", "modified"],
     getSortValues: (vuln) => ({
       identifier: vuln?.identifier || "",
-      published: vuln ? dayjs(vuln.published).millisecond() : 0,
-      modified: vuln ? dayjs(vuln.modified).millisecond() : 0,
+      published: vuln ? dayjs(vuln.non_normative.discovered).millisecond() : 0,
+      modified: vuln ? dayjs(vuln.non_normative.released).millisecond() : 0,
     }),
     isPaginationEnabled: true,
     isExpansionEnabled: true,
@@ -138,18 +139,24 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
                       modifier="truncate"
                       {...getTdProps({ columnKey: "title" })}
                     >
-                      {/* {item.title} */}
-                      <p style={{ color: "red" }}>issue-280</p>
+                      {item.non_normative.title}
+                      <p style={{ color: "orange" }}>issue-280</p>
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "published" })}>
-                      {/* {item.published &&
-                        dayjs(item.published).format(RENDER_DATE_FORMAT)} */}
-                      <p style={{ color: "red" }}>issue-280</p>
+                      {item.non_normative &&
+                        item.non_normative.discovered &&
+                        dayjs(item.non_normative.discovered).format(
+                          RENDER_DATE_FORMAT
+                        )}
+                      <p style={{ color: "orange" }}>issue-280</p>
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "modified" })}>
-                      {/* {item.modified &&
-                        dayjs(item.modified).format(RENDER_DATE_FORMAT)} */}
-                      <p style={{ color: "red" }}>issue-280</p>
+                      {item.non_normative &&
+                        item.non_normative.released &&
+                        dayjs(item.non_normative.released).format(
+                          RENDER_DATE_FORMAT
+                        )}
+                      <p style={{ color: "orange" }}>issue-280</p>
                     </Td>
                     <Td width={15} {...getTdProps({ columnKey: "severity" })}>
                       <SeverityShieldAndText value={item.severity} />

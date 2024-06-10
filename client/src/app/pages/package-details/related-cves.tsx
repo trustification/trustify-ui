@@ -125,7 +125,8 @@ export const RelatedCVEs: React.FC<RelatedCVEsProps> = ({ cves }) => {
                     modifier="truncate"
                     {...getTdProps({ columnKey: "datePublished" })}
                   >
-                    {dayjs(item.published).format(RENDER_DATE_FORMAT)}
+                    {/* {dayjs(item.published).format(RENDER_DATE_FORMAT)} */}
+                    missing
                   </Td>
                 </Tr>
               </Tbody>
