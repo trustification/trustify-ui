@@ -1,7 +1,6 @@
 import React from "react";
 
 import { AxiosError } from "axios";
-import dayjs from "dayjs";
 
 import {
   Button,
@@ -39,7 +38,7 @@ import {
   useDeleteiIporterMutation as useDeleteIporterMutation,
   useFetchImporters,
 } from "@app/queries/importers";
-import { getAxiosErrorMessage } from "@app/utils/utils";
+import { formatDate, getAxiosErrorMessage } from "@app/utils/utils";
 
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -50,7 +49,6 @@ import {
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 
-import { RENDER_DATETIME_FORMAT } from "@app/Constants";
 import { ImporterForm } from "./components/importer-form";
 import { ImporterStatusIcon } from "./components/importer-status-icon";
 
@@ -252,20 +250,14 @@ export const ImporterList: React.FC = () => {
                           modifier="truncate"
                           {...getTdProps({ columnKey: "start" })}
                         >
-                          {item.report?.startDate &&
-                            dayjs(item.report.startDate).format(
-                              RENDER_DATETIME_FORMAT
-                            )}
+                          {formatDate(item.report?.startDate)}
                         </Td>
                         <Td
                           width={15}
                           modifier="truncate"
                           {...getTdProps({ columnKey: "end" })}
                         >
-                          {item.report?.endDate &&
-                            dayjs(item.report.endDate).format(
-                              RENDER_DATETIME_FORMAT
-                            )}
+                          {formatDate(item.report?.endDate)}
                         </Td>
                         <Td
                           width={10}

@@ -1,5 +1,7 @@
+import { RENDER_DATE_FORMAT } from "@app/Constants";
 import { ToolbarChip } from "@patternfly/react-core";
 import { AxiosError } from "axios";
+import dayjs from "dayjs";
 
 // Axios error
 
@@ -29,28 +31,8 @@ export const getToolbarChipKey = (value: string | ToolbarChip) => {
 
 // Dates
 
-export const formatDate = (value: Date, includeTime = true) => {
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const dateOptions: Intl.DateTimeFormatOptions = {
-    timeZone,
-    timeZoneName: "short",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-  const timeOptions = {
-    timeZone,
-    timeZoneName: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  };
-
-  let options = dateOptions;
-  if (includeTime) {
-    options = Object.assign({}, dateOptions, timeOptions);
-  }
-
-  return value.toLocaleDateString("en", options);
+export const formatDate = (value?: string) => {
+  return value ? dayjs(value).format(RENDER_DATE_FORMAT) : undefined;
 };
 
 export const duplicateFieldCheck = <T>(

@@ -16,7 +16,6 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { RENDER_DATE_FORMAT } from "@app/Constants";
 import { AdvisoryVulnerability } from "@app/api/models";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
@@ -27,6 +26,7 @@ import {
   TableRowContentWithControls,
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
+import { formatDate } from "@app/utils/utils";
 
 interface VulnerabilitiesProps {
   vulnerabilities: AdvisoryVulnerability[];
@@ -143,19 +143,11 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
                       <p style={{ color: "orange" }}>issue-280</p>
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "published" })}>
-                      {item.non_normative &&
-                        item.non_normative.discovered &&
-                        dayjs(item.non_normative.discovered).format(
-                          RENDER_DATE_FORMAT
-                        )}
+                      {formatDate(item.non_normative.discovered)}
                       <p style={{ color: "orange" }}>issue-280</p>
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "modified" })}>
-                      {item.non_normative &&
-                        item.non_normative.released &&
-                        dayjs(item.non_normative.released).format(
-                          RENDER_DATE_FORMAT
-                        )}
+                      {formatDate(item.non_normative.released)}
                       <p style={{ color: "orange" }}>issue-280</p>
                     </Td>
                     <Td width={15} {...getTdProps({ columnKey: "severity" })}>

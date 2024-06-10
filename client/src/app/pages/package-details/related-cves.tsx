@@ -1,12 +1,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import dayjs from "dayjs";
-
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
-import { RENDER_DATE_FORMAT } from "@app/Constants";
 import { AdvisoryVulnerability } from "@app/api/models";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
@@ -125,7 +122,7 @@ export const RelatedCVEs: React.FC<RelatedCVEsProps> = ({ cves }) => {
                     modifier="truncate"
                     {...getTdProps({ columnKey: "datePublished" })}
                   >
-                    {/* {dayjs(item.published).format(RENDER_DATE_FORMAT)} */}
+                    {/* {formatDate(item.published)} */}
                     missing
                   </Td>
                 </Tr>

@@ -14,10 +14,8 @@ import {
   StackItem,
 } from "@patternfly/react-core";
 
-import dayjs from "dayjs";
-
-import { RENDER_DATE_FORMAT } from "@app/Constants";
 import { Advisory } from "@app/api/models";
+import { formatDate } from "@app/utils/utils";
 
 interface OverviewProps {
   advisory: Advisory;
@@ -43,13 +41,13 @@ export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
                     <DescriptionListGroup>
                       <DescriptionListTerm>Published</DescriptionListTerm>
                       <DescriptionListDescription>
-                        {dayjs(advisory.published).format(RENDER_DATE_FORMAT)}
+                        {formatDate(advisory.published)}
                       </DescriptionListDescription>
                     </DescriptionListGroup>
                     <DescriptionListGroup>
                       <DescriptionListTerm>Modified</DescriptionListTerm>
                       <DescriptionListDescription>
-                        {dayjs(advisory.modified).format(RENDER_DATE_FORMAT)}
+                        {formatDate(advisory.modified)}
                       </DescriptionListDescription>
                     </DescriptionListGroup>
 
@@ -97,9 +95,9 @@ export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
                         Initial release date
                       </DescriptionListTerm>
                       <DescriptionListDescription>
-                        {dayjs(
+                        {formatDate(
                           advisory.metadata.tracking.initial_release_date
-                        ).format(RENDER_DATE_FORMAT)}
+                        )}
                       </DescriptionListDescription>
                     </DescriptionListGroup>
                     <DescriptionListGroup>
@@ -107,9 +105,9 @@ export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
                         Current release date
                       </DescriptionListTerm>
                       <DescriptionListDescription>
-                        {dayjs(
+                        {formatDate(
                           advisory.metadata.tracking.current_release_date
-                        ).format(RENDER_DATE_FORMAT)}
+                        )}
                       </DescriptionListDescription>
                     </DescriptionListGroup>
                   </DescriptionList>

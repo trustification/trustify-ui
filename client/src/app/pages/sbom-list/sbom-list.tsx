@@ -1,8 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import dayjs from "dayjs";
-
 import {
   Button,
   PageSection,
@@ -24,8 +22,7 @@ import {
 } from "@patternfly/react-table";
 
 import {
-  RENDER_DATE_FORMAT,
-  TablePersistenceKeyPrefixes,
+  TablePersistenceKeyPrefixes
 } from "@app/Constants";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -33,6 +30,7 @@ import {
   ConditionalTableBody,
   TableHeaderContentWithControls,
 } from "@app/components/TableControls";
+import { UploadFilesDrawer } from "@app/components/UploadFilesDrawer";
 import {
   getHubRequestParams,
   useTableControlProps,
@@ -41,9 +39,9 @@ import {
 import { useDownload } from "@app/hooks/useDownload";
 import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchSBOMs, useUploadSBOM } from "@app/queries/sboms";
-import { PackagesCount } from "./components/packages-count";
-import { UploadFilesDrawer } from "@app/components/UploadFilesDrawer";
+import { formatDate } from "@app/utils/utils";
 import { AxiosError, AxiosResponse } from "axios";
+import { PackagesCount } from "./components/packages-count";
 
 export const SbomList: React.FC = () => {
   const [showUploadComponent, setShowUploadComponent] = React.useState(false);
@@ -199,7 +197,7 @@ export const SbomList: React.FC = () => {
                         modifier="truncate"
                         {...getTdProps({ columnKey: "published" })}
                       >
-                        {dayjs(item.published).format(RENDER_DATE_FORMAT)}
+                        {formatDate(item.published)}
                       </Td>
                       <Td width={10} {...getTdProps({ columnKey: "packages" })}>
                         <PackagesCount sbomId={item.id} />
