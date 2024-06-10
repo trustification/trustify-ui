@@ -1,7 +1,5 @@
 import React from "react";
 
-import dayjs from "dayjs";
-
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import {
   ExpandableRowContent,
@@ -15,7 +13,6 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { RENDER_DATE_FORMAT } from "@app/Constants";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -25,6 +22,7 @@ import {
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchCVEsBySbomId } from "@app/queries/sboms";
+import { formatDate } from "@app/utils/utils";
 
 interface CVEsProps {
   sbomId: string;
@@ -143,7 +141,7 @@ export const CVEs: React.FC<CVEsProps> = ({ sbomId }) => {
                     modifier="truncate"
                     {...getTdProps({ columnKey: "datePublished" })}
                   >
-                    {dayjs(item.published).format(RENDER_DATE_FORMAT)}
+                    {formatDate(item.published)}
                   </Td>
                   <Td
                     width={10}

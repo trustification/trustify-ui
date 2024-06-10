@@ -10,11 +10,9 @@ import {
   GridItem,
 } from "@patternfly/react-core";
 
-import dayjs from "dayjs";
-
-import { RENDER_DATE_FORMAT } from "@app/Constants";
 import { compareBySeverityFn, severityList } from "@app/api/model-utils";
 import { SBOM, Severity } from "@app/api/models";
+import { formatDate } from "@app/utils/utils";
 
 interface InfoProps {
   sbom: SBOM;
@@ -36,9 +34,7 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
         >
           <DescriptionListGroup>
             <DescriptionListTerm>Name</DescriptionListTerm>
-            <DescriptionListDescription>
-              {sbom.name}
-            </DescriptionListDescription>
+            <DescriptionListDescription>{sbom.name}</DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>
             <DescriptionListTerm>Version</DescriptionListTerm>
@@ -55,7 +51,7 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
           <DescriptionListGroup>
             <DescriptionListTerm>Created</DescriptionListTerm>
             <DescriptionListDescription>
-              {dayjs(sbom.published).format(RENDER_DATE_FORMAT)}
+              {formatDate(sbom.published)}
             </DescriptionListDescription>
           </DescriptionListGroup>
         </DescriptionList>

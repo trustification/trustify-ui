@@ -2,7 +2,6 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 
 import { AxiosError, AxiosResponse } from "axios";
-import dayjs from "dayjs";
 
 import {
   Button,
@@ -46,6 +45,7 @@ import { useFetchAdvisories, useUploadAdvisory } from "@app/queries/advisories";
 
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { VulnerabilitiesGalleryCount } from "./components/VulnerabilitiesGaleryCount";
+import { formatDate } from "@app/utils/utils";
 
 export const AdvisoryList: React.FC = () => {
   const [showUploadComponent, setShowUploadComponent] = React.useState(false);
@@ -211,14 +211,14 @@ export const AdvisoryList: React.FC = () => {
                         modifier="truncate"
                         {...getTdProps({ columnKey: "published" })}
                       >
-                        {dayjs(item.published).format(RENDER_DATE_FORMAT)}
+                        {formatDate(item.published)}
                       </Td>
                       <Td
                         width={10}
                         modifier="truncate"
                         {...getTdProps({ columnKey: "modified" })}
                       >
-                        {dayjs(item.modified).format(RENDER_DATE_FORMAT)}
+                        {formatDate(item.modified)}
                       </Td>
                       <Td
                         width={15}
