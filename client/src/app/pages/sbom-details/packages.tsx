@@ -1,11 +1,6 @@
 import React from "react";
 
-import {
-  Label,
-  Toolbar,
-  ToolbarContent,
-  ToolbarItem,
-} from "@patternfly/react-core";
+import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import {
   ExpandableRowContent,
   Td as PFTd,
@@ -40,7 +35,7 @@ export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
 
   const tableControls = useLocalTableControls({
     tableName: "packages-table",
-    idProperty: "id",
+    idProperty: "uuid",
     items: packages,
     isLoading: isFetching,
     columnNames: {
@@ -63,7 +58,7 @@ export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
         title: "Filter tex",
         type: FilterType.search,
         placeholderText: "Search...",
-        getItemValue: (item) => item.name,
+        getItemValue: (item) => item.purl,
       },
     ],
   });
@@ -121,50 +116,50 @@ export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
         >
           {currentPageItems?.map((item, rowIndex) => {
             return (
-              <Tbody key={item.id}>
+              <Tbody key={item.uuid}>
                 <Tr {...getTrProps({ item })}>
                   <Td
                     width={15}
                     modifier="truncate"
                     {...getTdProps({ columnKey: "name" })}
                   >
-                    {item.name}
+                    {/* {item.name} */}
                   </Td>
                   <Td
                     width={10}
                     modifier="truncate"
                     {...getTdProps({ columnKey: "namespace" })}
                   >
-                    {item.namespace}
+                    {/* {item.namespace} */}
                   </Td>
                   <Td
                     width={10}
                     modifier="truncate"
                     {...getTdProps({ columnKey: "version" })}
                   >
-                    {item.version}
+                    {/* {item.version} */}
                   </Td>
                   <Td
                     width={10}
                     modifier="truncate"
                     {...getTdProps({ columnKey: "type" })}
                   >
-                    {item.type}
+                    {/* {item.type} */}
                   </Td>
                   <Td
                     width={10}
                     modifier="truncate"
                     {...getTdProps({ columnKey: "path" })}
                   >
-                    {item.path}
+                    {/* {item.path} */}
                   </Td>
                   <Td width={25} {...getTdProps({ columnKey: "qualifiers" })}>
-                    {item.qualifiers &&
+                    {/* {item.qualifiers &&
                       Object.entries(item.qualifiers || {}).map(
                         ([k, v], index) => (
                           <Label key={index} isCompact>{`${k}=${v}`}</Label>
                         )
-                      )}
+                      )} */}
                   </Td>
                   <Td
                     width={20}

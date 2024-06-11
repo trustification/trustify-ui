@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { PackageURL } from "packageurl-js";
 
-import { HubRequestParams } from "@app/api/models";
-import { getPackages, getPackageById } from "@app/api/rest";
+import { HubRequestParams, Package } from "@app/api/models";
+import { getPackageById, getPackages } from "@app/api/rest";
 
 export const PackagessQueryKey = "packages";
 
@@ -11,9 +12,31 @@ export const useFetchPackages = (params: HubRequestParams = {}) => {
     queryKey: [PackagessQueryKey, params],
     queryFn: () => getPackages(params),
   });
+
+  const enrichedData = data?.data.map((pkg) => {
+    try {
+      const packageData = PackageURL.fromString(pkg.purl);
+      const result: Package = {
+        ...pkg,
+        package: {
+          type: packageData.type,
+          name: packageData.name,
+          namespace: packageData.namespace ?? undefined,
+          version: packageData.version ?? undefined,
+          qualifiers: packageData.qualifiers ?? undefined,
+          path: packageData.subpath ?? undefined,
+        },
+      };
+      return result;
+    } catch (error) {
+      console.error(error);
+      return pkg;
+    }
+  });
+
   return {
     result: {
-      data: data?.data || [],
+      data: enrichedData || [],
       total: data?.total ?? 0,
       params: data?.params ?? params,
     },

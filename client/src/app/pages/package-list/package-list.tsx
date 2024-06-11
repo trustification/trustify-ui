@@ -2,6 +2,10 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 
 import {
+  DescriptionList,
+  DescriptionListDescription,
+  DescriptionListGroup,
+  DescriptionListTerm,
   Label,
   PageSection,
   PageSectionVariants,
@@ -11,7 +15,15 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core";
-import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
+import {
+  ExpandableRowContent,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@patternfly/react-table";
 
 import { TablePersistenceKeyPrefixes } from "@app/Constants";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
@@ -19,6 +31,7 @@ import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
   TableHeaderContentWithControls,
+  TableRowContentWithControls,
 } from "@app/components/TableControls";
 import {
   getHubRequestParams,
@@ -27,8 +40,6 @@ import {
 } from "@app/hooks/table-controls";
 import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchPackages } from "@app/queries/packages";
-
-import { VulnerabilitiesGalleryCount } from "../advisory-list/components/VulnerabilitiesGaleryCount";
 
 export const PackageList: React.FC = () => {
   const tableControlState = useTableControlState({
@@ -40,7 +51,6 @@ export const PackageList: React.FC = () => {
       version: "Version",
       type: "Type",
       path: "Path",
-      qualifiers: "Qualifiers",
       cve: "CVEs",
     },
     isPaginationEnabled: true,
@@ -49,40 +59,18 @@ export const PackageList: React.FC = () => {
     isFilterEnabled: true,
     filterCategories: [
       {
-        categoryKey: "filterText",
+        categoryKey: "",
         title: "Filter text",
         placeholderText: "Search",
         type: FilterType.search,
       },
-      {
-        categoryKey: "type",
-        title: "Type",
-        placeholderText: "Type",
-        type: FilterType.multiselect,
-        selectOptions: [
-          { label: "maven", value: "Maven" },
-          { label: "rpm", value: "RPM" },
-          { label: "npm", value: "NPM" },
-          { label: "oci", value: "OCI" },
-        ],
-      },
-      {
-        categoryKey: "qualifier:arch",
-        title: "Architecture",
-        placeholderText: "Architecture",
-        type: FilterType.multiselect,
-        selectOptions: [
-          { label: "x86_64", value: "AMD 64Bit" },
-          { label: "aarch64", value: "ARM 64bit" },
-          { label: "ppc64le", value: "PowerPC" },
-          { label: "s390x", value: "S390" },
-        ],
-      },
     ],
+    isExpansionEnabled: true,
+    expandableVariant: "single",
   });
 
   const {
-    result: { data: advisories, total: totalItemCount },
+    result: { data: packages, total: totalItemCount },
     isFetching,
     fetchError,
   } = useFetchPackages(
@@ -93,13 +81,13 @@ export const PackageList: React.FC = () => {
 
   const tableControls = useTableControlProps({
     ...tableControlState,
-    idProperty: "id",
-    currentPageItems: advisories,
+    idProperty: "uuid",
+    currentPageItems: packages,
     totalItemCount,
     isLoading: isFetching,
     selectionState: useSelectionState({
-      items: advisories,
-      isEqual: (a, b) => a.id === b.id,
+      items: packages,
+      isEqual: (a, b) => a.uuid === b.uuid,
     }),
   });
 
@@ -116,15 +104,14 @@ export const PackageList: React.FC = () => {
       getTrProps,
       getTdProps,
     },
+    expansionDerivedState: { isCellExpanded },
   } = tableControls;
 
   return (
     <>
       <PageSection variant={PageSectionVariants.light}>
         <TextContent>
-          <Text component="h1">
-            Packages <span style={{ color: "red" }}>issue-254</span>
-          </Text>
+          <Text component="h1">Packages</Text>
         </TextContent>
       </PageSection>
       <PageSection>
@@ -155,7 +142,6 @@ export const PackageList: React.FC = () => {
                   <Th {...getThProps({ columnKey: "version" })} />
                   <Th {...getThProps({ columnKey: "type" })} />
                   <Th {...getThProps({ columnKey: "path" })} />
-                  <Th {...getThProps({ columnKey: "qualifiers" })} />
                   <Th {...getThProps({ columnKey: "cve" })} />
                 </TableHeaderContentWithControls>
               </Tr>
@@ -166,50 +152,82 @@ export const PackageList: React.FC = () => {
               isNoData={totalItemCount === 0}
               numRenderedColumns={numRenderedColumns}
             >
-              {currentPageItems.map((item) => {
+              {currentPageItems.map((item, rowIndex) => {
                 return (
-                  <Tbody key={item.id}>
+                  <Tbody key={item.uuid}>
                     <Tr {...getTrProps({ item })}>
-                      <Td width={25} {...getTdProps({ columnKey: "name" })}>
-                        <NavLink
-                          to={`/packages/${encodeURIComponent(item.id)}`}
+                      <TableRowContentWithControls
+                        {...tableControls}
+                        item={item}
+                        rowIndex={rowIndex}
+                      >
+                        <Td width={25} {...getTdProps({ columnKey: "name" })}>
+                          <NavLink
+                            to={`/packages/${encodeURIComponent(item.uuid)}`}
+                          >
+                            {item.package?.name}
+                          </NavLink>
+                        </Td>
+                        <Td
+                          width={15}
+                          {...getTdProps({ columnKey: "namespace" })}
                         >
-                          {item.id}
-                        </NavLink>
-                      </Td>
-                      <Td width={15} {...getTdProps({ columnKey: "version" })}>
-                        {item.version}
-                      </Td>
-                      <Td
-                        width={10}
-                        modifier="truncate"
-                        {...getTdProps({ columnKey: "type" })}
-                      >
-                        {item.type}
-                      </Td>
-                      <Td
-                        width={10}
-                        modifier="truncate"
-                        {...getTdProps({ columnKey: "path" })}
-                      >
-                        {item.path}
-                      </Td>
-                      <Td
-                        width={20}
-                        {...getTdProps({ columnKey: "qualifiers" })}
-                      >
-                        {Object.entries(item.qualifiers || {}).map(
-                          ([k, v], index) => (
-                            <Label key={index} isCompact>{`${k}=${v}`}</Label>
-                          )
-                        )}
-                      </Td>
-                      <Td width={10} {...getTdProps({ columnKey: "cve" })}>
-                        <VulnerabilitiesGalleryCount
+                          {item.package?.namespace}
+                        </Td>
+                        <Td
+                          width={15}
+                          {...getTdProps({ columnKey: "version" })}
+                        >
+                          {item.package?.version}
+                        </Td>
+                        <Td
+                          width={10}
+                          modifier="truncate"
+                          {...getTdProps({ columnKey: "type" })}
+                        >
+                          {item.package?.type}
+                        </Td>
+                        <Td
+                          width={10}
+                          modifier="truncate"
+                          {...getTdProps({ columnKey: "path" })}
+                        >
+                          {item.package?.path}
+                        </Td>
+                        <Td width={10} {...getTdProps({ columnKey: "cve" })}>
+                          {/* <VulnerabilitiesGalleryCount
                           vulnerabilities={item.related_cves}
-                        />
-                      </Td>
+                        /> */}
+                        </Td>
+                      </TableRowContentWithControls>
                     </Tr>
+                    {isCellExpanded(item) ? (
+                      <Tr isExpanded>
+                        <Td colSpan={7}>
+                          <ExpandableRowContent>
+                            <div className="pf-v5-u-m-md">
+                              <DescriptionList>
+                                <DescriptionListGroup>
+                                  <DescriptionListTerm>
+                                    Qualifiers
+                                  </DescriptionListTerm>
+                                  <DescriptionListDescription>
+                                    {Object.entries(
+                                      item.package?.qualifiers || {}
+                                    ).map(([k, v], index) => (
+                                      <Label
+                                        key={index}
+                                        isCompact
+                                      >{`${k}=${v}`}</Label>
+                                    ))}
+                                  </DescriptionListDescription>
+                                </DescriptionListGroup>
+                              </DescriptionList>
+                            </div>
+                          </ExpandableRowContent>
+                        </Td>
+                      </Tr>
+                    ) : null}
                   </Tbody>
                 );
               })}
