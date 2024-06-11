@@ -36,13 +36,8 @@ export interface HubPaginatedResult<T> {
 // Base
 
 export interface PackageBase {
-  id: string;
-  namespace: string;
-  name: string;
-  version: string;
-  type: string;
-  path?: string;
-  qualifiers: { [key: string]: string };
+  uuid: string;
+  purl: string;
 }
 
 export interface SBOMBase {
@@ -103,6 +98,15 @@ export interface Vulnerability {
 // Package
 
 export interface Package extends PackageBase {
+  // This field is added by the UI
+  package?: {
+    name: string;
+    type: string;
+    namespace?: string;
+    version?: string;
+    path?: string;
+    qualifiers?: { [key: string]: string };
+  };
   related_cves: { severity: Severity; identifier: string }[];
   related_sboms: SBOMBase[];
 }

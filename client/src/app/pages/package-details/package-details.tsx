@@ -12,9 +12,9 @@ import {
 import DetailsPage from "@patternfly/react-component-groups/dist/dynamic/DetailsPage";
 
 import { PathParam, useRouteParams } from "@app/Routes";
+import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useFetchPackageById } from "@app/queries/packages";
 
-import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { RelatedSBOMs } from "./related-sboms";
 
 export const PackageDetails: React.FC = () => {
@@ -39,15 +39,15 @@ export const PackageDetails: React.FC = () => {
             </Breadcrumb>
           }
           pageHeading={{
-            title: pkg?.name ?? packageId ?? "",
+            title: pkg?.package?.name ?? packageId ?? "",
             iconAfterTitle: pkg ? (
               <TextContent>
-                <Text component="pre">{`version: ${pkg.version}`}</Text>
+                <Text component="pre">{`version: ${pkg.package?.version}`}</Text>
               </TextContent>
             ) : undefined,
             label: pkg
               ? {
-                  children: pkg ? `type=${pkg.type}` : "",
+                  children: pkg ? `type=${pkg.package?.type}` : "",
                   isCompact: true,
                 }
               : undefined,
