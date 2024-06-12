@@ -50,10 +50,6 @@ export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
                         {formatDate(advisory.modified)}
                       </DescriptionListDescription>
                     </DescriptionListGroup>
-
-                    <p style={{ color: "red" }}>
-                      Is this all the metadata we intent to expose? ISSUE-279
-                    </p>
                   </DescriptionList>
                 </CardBody>
               </Card>
