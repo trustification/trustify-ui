@@ -64,7 +64,7 @@ export const AdvisoryList: React.FC = () => {
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
-    sortableColumns: ["identifier", "published", "modified"],
+    sortableColumns: ["identifier", "severity", "published", "modified"],
     isFilterEnabled: true,
     filterCategories: [
       {
@@ -72,6 +72,19 @@ export const AdvisoryList: React.FC = () => {
         title: "Filter text",
         placeholderText: "Search",
         type: FilterType.search,
+      },
+      {
+        categoryKey: "average_severity",
+        title: "Severity",
+        placeholderText: "Severity",
+        type: FilterType.multiselect,
+        selectOptions: [
+          { value: "none", label: "None" },
+          { value: "low", label: "Low" },
+          { value: "moderate", label: "Moderate" },
+          { value: "important", label: "Important" },
+          { value: "critical", label: "Critical" },
+        ],
       },
     ],
   });
@@ -85,6 +98,7 @@ export const AdvisoryList: React.FC = () => {
       ...tableControlState,
       hubSortFieldKeys: {
         identifier: "identifier",
+        severity: "average_score",
         published: "published",
         modified: "modified",
       },

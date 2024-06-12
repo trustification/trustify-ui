@@ -165,7 +165,7 @@ export const serializeFilterForHub = (filter: HubFilter): string => {
       ? value
       : typeof value === "number"
         ? `"${value}"`
-        : `(${value.list.join(value.operator === "OR" ? "|" : ",")})`;
+        : `${value.list.join(value.operator === "OR" ? "|" : ",")}`;
 
   if (!field) {
     return joinedValue;
@@ -190,8 +190,9 @@ export const serializeFilterRequestParamsForHub = (
       "q",
       filters
         .filter((e) => e.value !== null && e.value !== undefined)
+        .sort((a, b) => a.field.localeCompare(b.field))
         .map(serializeFilterForHub)
-        .join(",")
+        .join("&")
     );
   }
 };
