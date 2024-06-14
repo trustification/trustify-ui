@@ -40,8 +40,7 @@ export const AdvisoryDetails: React.FC = () => {
             {
               children: (
                 <>
-                  <DownloadIcon /> Download{" "}
-                  <p style={{ color: "red" }}>issue-394</p>
+                  <DownloadIcon /> Download
                 </>
               ),
               variant: "secondary",

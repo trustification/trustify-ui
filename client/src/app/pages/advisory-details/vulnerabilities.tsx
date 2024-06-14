@@ -5,15 +5,12 @@ import dayjs from "dayjs";
 
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import {
-  ExpandableRowContent,
-  Td as PFTd,
-  Tr as PFTr,
   Table,
   Tbody,
   Td,
   Th,
   Thead,
-  Tr,
+  Tr
 } from "@patternfly/react-table";
 
 import { AdvisoryVulnerability } from "@app/api/models";
@@ -56,8 +53,7 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
       modified: vuln ? dayjs(vuln.non_normative.released).millisecond() : 0,
     }),
     isPaginationEnabled: true,
-    isExpansionEnabled: true,
-    expandableVariant: "single",
+    isExpansionEnabled: false,
     isFilterEnabled: true,
     filterCategories: [
       {
@@ -83,7 +79,6 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
       getTrProps,
       getTdProps,
     },
-    expansionDerivedState: { isCellExpanded },
   } = tableControls;
 
   return (
@@ -159,15 +154,6 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
                     </Td>
                   </TableRowContentWithControls>
                 </Tr>
-                {isCellExpanded(item) ? (
-                  <PFTr isExpanded>
-                    <PFTd colSpan={7}>
-                      <ExpandableRowContent>
-                        Some content here
-                      </ExpandableRowContent>
-                    </PFTd>
-                  </PFTr>
-                ) : null}
               </Tbody>
             );
           })}

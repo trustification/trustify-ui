@@ -54,6 +54,22 @@ export const useFetchPackageById = (id?: number | string) => {
     enabled: id !== undefined,
   });
 
+  if (data) {
+    try {
+      const packageData = PackageURL.fromString(data.purl);
+      data.package = {
+        type: packageData.type,
+        name: packageData.name,
+        namespace: packageData.namespace ?? undefined,
+        version: packageData.version ?? undefined,
+        qualifiers: packageData.qualifiers ?? undefined,
+        path: packageData.subpath ?? undefined,
+      };
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return {
     pkg: data,
     isFetching: isLoading,

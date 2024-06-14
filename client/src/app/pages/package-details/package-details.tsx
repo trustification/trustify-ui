@@ -47,9 +47,9 @@ export const PackageDetails: React.FC = () => {
             ) : undefined,
             label: pkg
               ? {
-                  children: pkg ? `type=${pkg.package?.type}` : "",
-                  isCompact: true,
-                }
+                children: pkg ? `type=${pkg.package?.type}` : "",
+                isCompact: true,
+              }
               : undefined,
           }}
           actionButtons={[]}
@@ -78,7 +78,8 @@ export const PackageDetails: React.FC = () => {
                     isFetching={isFetchingSbom}
                     fetchError={fetchErrorSbom}
                   >
-                    {pkg && <RelatedSBOMs sboms={pkg?.related_sboms} />}
+                    {/* {pkg && <RelatedSBOMs sboms={pkg?.related_sboms} />} */}
+                    related sboms
                   </LoadingWrapper>
                 </div>
               ),
