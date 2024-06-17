@@ -112,7 +112,7 @@ export const getSBOMSourceById = (id: number | string) =>
   axios.get<string>(`${SBOMS}/${id}/source`).then((response) => response.data);
 
 export const downloadSBOMById = (id: number | string) =>
-  axios.get<string>(`${SBOMS}/${id}/source`, {
+  axios.get<string>(`${SBOMS}/${id}/download`, {
     responseType: "arraybuffer",
     headers: { Accept: "text/plain", responseType: "blob" },
   });

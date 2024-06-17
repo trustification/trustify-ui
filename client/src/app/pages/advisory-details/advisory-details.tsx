@@ -11,12 +11,12 @@ import DownloadIcon from "@patternfly/react-icons/dist/esm/icons/download-icon";
 
 import { PathParam, useRouteParams } from "@app/Routes";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
+import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { useDownload } from "@app/hooks/useDownload";
 import { useFetchAdvisoryById } from "@app/queries/advisories";
 
 import { Overview } from "./overview";
 import { Vulnerabilities } from "./vulnerabilities";
-import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 
 export const AdvisoryDetails: React.FC = () => {
   const advisoryId = useRouteParams(PathParam.ADVISORY_ID);
@@ -53,15 +53,14 @@ export const AdvisoryDetails: React.FC = () => {
           ]}
           pageHeading={{
             title: advisory?.identifier ?? "",
-            label: { children: <p style={{ color: "red" }}>issue-393</p> },
-            // label: advisory?.average_severity
-            //   ? {
-            //       children: (
-            //         <SeverityShieldAndText value={advisory.average_severity} />
-            //       ),
-            //       isCompact: true,
-            //     }
-            //   : undefined,
+            label: advisory?.average_severity
+              ? {
+                children: (
+                  <SeverityShieldAndText value={advisory.average_severity} />
+                ),
+                isCompact: true,
+              }
+              : undefined,
           }}
           tabs={[
             {

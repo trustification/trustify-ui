@@ -64,7 +64,7 @@ export const PackageDetails: React.FC = () => {
                     fetchError={fetchErrorSbom}
                   >
                     {/* {pkg && <RelatedCVEs cves={pkg?.related_cves || []} />} */}
-                    related cves
+                    <p style={{ color: "red" }}>issue-412</p>
                   </LoadingWrapper>
                 </div>
               ),
@@ -79,7 +79,7 @@ export const PackageDetails: React.FC = () => {
                     fetchError={fetchErrorSbom}
                   >
                     {/* {pkg && <RelatedSBOMs sboms={pkg?.related_sboms} />} */}
-                    related sboms
+                    <p style={{ color: "red" }}>issue-413</p>
                   </LoadingWrapper>
                 </div>
               ),
