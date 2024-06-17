@@ -189,7 +189,12 @@ export const serializeFilterRequestParamsForHub = (
     serializedParams.append(
       "q",
       filters
-        .filter((e) => e.value !== null && e.value !== undefined)
+        .filter((filter) => {
+          const { value } = filter;
+          return typeof value === "string" || typeof value === "number"
+            ? value !== null && value !== undefined
+            : value.list.length > 0;
+        })
         .sort((a, b) => a.field.localeCompare(b.field))
         .map(serializeFilterForHub)
         .join("&")
