@@ -81,8 +81,8 @@ export const AdvisoryList: React.FC = () => {
         selectOptions: [
           { value: "none", label: "None" },
           { value: "low", label: "Low" },
-          { value: "moderate", label: "Moderate" },
-          { value: "important", label: "Important" },
+          { value: "medium", label: "Medium" },
+          { value: "high", label: "High" },
           { value: "critical", label: "Critical" },
         ],
       },
