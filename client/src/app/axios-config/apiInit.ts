@@ -39,16 +39,14 @@ export const initInterceptors = () => {
         try {
           const refreshedUser = await userManager.signinSilent();
           const access_token = refreshedUser?.access_token;
-          if (access_token) {
-            const retryConfig = {
-              ...error.config,
-              headers: {
-                ...error.config.headers,
-                Authorization: `Bearer ${access_token}`,
-              },
-            };
-            return axios(retryConfig);
-          }
+          const retryConfig = {
+            ...error.config,
+            headers: {
+              ...error.config.headers,
+              Authorization: `Bearer ${access_token}`,
+            },
+          };
+          return axios(retryConfig);
         } catch (refreshError) {
           await userManager.signoutRedirect();
         }
