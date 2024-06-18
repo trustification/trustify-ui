@@ -1,7 +1,7 @@
 import axios from "axios";
-import { User } from "oidc-client-ts";
+import { User, UserManager } from "oidc-client-ts";
 
-import { OIDC_CLIENT_ID, OIDC_SERVER_URL } from "@app/oidc";
+import { OIDC_CLIENT_ID, OIDC_SERVER_URL, oidcClientSettings } from "@app/oidc";
 
 function getUser() {
   const oidcStorage = sessionStorage.getItem(
@@ -25,6 +25,33 @@ export const initInterceptors = () => {
       return config;
     },
     (error) => {
+      return Promise.reject(error);
+    }
+  );
+
+  axios.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    async (error) => {
+      if (error.response && error.response.status === 401) {
+        const userManager = new UserManager(oidcClientSettings);
+        try {
+          const refreshedUser = await userManager.signinSilent();
+          const access_token = refreshedUser?.access_token;
+          const retryConfig = {
+            ...error.config,
+            headers: {
+              ...error.config.headers,
+              Authorization: `Bearer ${access_token}`,
+            },
+          };
+          return axios(retryConfig);
+        } catch (refreshError) {
+          await userManager.signoutRedirect();
+        }
+      }
+
       return Promise.reject(error);
     }
   );
