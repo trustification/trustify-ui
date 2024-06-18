@@ -51,7 +51,6 @@ export interface SBOMBase {
 
 export interface AdvisoryBase {
   identifier: string;
-  average_severity?: Severity;
   published: string;
   modified: string;
   title: string;
@@ -67,6 +66,7 @@ export interface AdvisoryBase {
 export type Severity = "none" | "low" | "medium" | "high" | "critical";
 
 export interface Advisory extends AdvisoryBase {
+  average_severity?: Severity;
   vulnerabilities: AdvisoryVulnerability[];
 }
 
@@ -93,6 +93,10 @@ export interface Vulnerability {
 
   related_sboms: SBOMBase[];
   advisories: AdvisoryBase[];
+}
+
+export interface VulnerabilityAdvisory extends AdvisoryBase {
+  severity?: Severity;
 }
 
 // Package

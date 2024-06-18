@@ -40,17 +40,17 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
       identifier: "Identifier",
       title: "Title",
       severity: "Severity",
-      published: "Published",
-      modified: "Modified",
+      discovered: "Discovered",
+      released: "Released",
       cwe: "CWE",
     },
     hasActionsColumn: true,
     isSortEnabled: true,
-    sortableColumns: ["identifier", "published", "modified"],
+    sortableColumns: ["identifier", "discovered", "released"],
     getSortValues: (vuln) => ({
       identifier: vuln?.identifier || "",
-      published: vuln ? dayjs(vuln.non_normative.discovered).millisecond() : 0,
-      modified: vuln ? dayjs(vuln.non_normative.released).millisecond() : 0,
+      discovered: vuln ? dayjs(vuln.non_normative.discovered).millisecond() : 0,
+      released: vuln ? dayjs(vuln.non_normative.released).millisecond() : 0,
     }),
     isPaginationEnabled: true,
     isExpansionEnabled: false,
@@ -102,8 +102,8 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
             <TableHeaderContentWithControls {...tableControls}>
               <Th {...getThProps({ columnKey: "identifier" })} />
               <Th {...getThProps({ columnKey: "title" })} />
-              <Th {...getThProps({ columnKey: "published" })} />
-              <Th {...getThProps({ columnKey: "modified" })} />
+              <Th {...getThProps({ columnKey: "discovered" })} />
+              <Th {...getThProps({ columnKey: "released" })} />
               <Th {...getThProps({ columnKey: "severity" })} />
               <Th {...getThProps({ columnKey: "cwe" })} />
             </TableHeaderContentWithControls>
@@ -135,15 +135,12 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
                       {...getTdProps({ columnKey: "title" })}
                     >
                       {item.non_normative.title}
-                      <p style={{ color: "orange" }}>issue-280</p>
                     </Td>
-                    <Td width={10} {...getTdProps({ columnKey: "published" })}>
+                    <Td width={10} {...getTdProps({ columnKey: "discovered" })}>
                       {formatDate(item.non_normative.discovered)}
-                      <p style={{ color: "orange" }}>issue-280</p>
                     </Td>
-                    <Td width={10} {...getTdProps({ columnKey: "modified" })}>
+                    <Td width={10} {...getTdProps({ columnKey: "released" })}>
                       {formatDate(item.non_normative.released)}
-                      <p style={{ color: "orange" }}>issue-280</p>
                     </Td>
                     <Td width={15} {...getTdProps({ columnKey: "severity" })}>
                       <SeverityShieldAndText value={item.severity} />
