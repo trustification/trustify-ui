@@ -1,7 +1,10 @@
 import React, { Suspense, lazy } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { useParams, useRoutes } from "react-router-dom";
 
 import { Bullseye, Spinner } from "@patternfly/react-core";
+import { ErrorFallback } from "./components/ErrorFallback";
+
 
 const Home = lazy(() => import("./pages/home"));
 const AdvisoryList = lazy(() => import("./pages/advisory-list"));
@@ -61,7 +64,9 @@ export const AppRoutes = () => {
         </Bullseye>
       }
     >
-      {allRoutes}
+      <ErrorBoundary FallbackComponent={ErrorFallback} key={location.pathname}>
+        {allRoutes}
+      </ErrorBoundary>
     </Suspense>
   );
 };
