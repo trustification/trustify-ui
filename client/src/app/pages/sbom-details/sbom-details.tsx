@@ -16,11 +16,9 @@ import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useDownload } from "@app/hooks/useDownload";
 import { useFetchSBOMById } from "@app/queries/sboms";
 
-import { DependencyAnalytics } from "./dependency-analytics";
+import { CVEs } from "./cves";
 import { Overview } from "./overview";
 import { Packages } from "./packages";
-import { Source } from "./source";
-import { CVEs } from "./cves";
 
 export const SbomDetails: React.FC = () => {
   const sbomId = useRouteParams(PathParam.SBOM_ID);
@@ -32,7 +30,6 @@ export const SbomDetails: React.FC = () => {
   return (
     <>
       <PageSection variant="light">
-        <h1 style={{ color: "red" }}>issue-253</h1>
         <DetailsPage
           breadcrumbs={
             <Breadcrumb>
@@ -46,10 +43,10 @@ export const SbomDetails: React.FC = () => {
             title: sbom?.name ?? sbomId ?? "",
             label: sbom
               ? {
-                  children: sbom.type,
-                  isCompact: true,
-                  color: "blue",
-                }
+                children: sbom.type,
+                isCompact: true,
+                color: "blue",
+              }
               : undefined,
           }}
           actionButtons={[
@@ -97,24 +94,6 @@ export const SbomDetails: React.FC = () => {
               children: (
                 <div className="pf-v5-u-m-md">
                   {sbomId && <Packages sbomId={sbomId} />}
-                </div>
-              ),
-            },
-            {
-              eventKey: "source",
-              title: "Source",
-              children: (
-                <div className="pf-v5-u-m-md">
-                  {sbomId && <Source sbomId={sbomId} />}
-                </div>
-              ),
-            },
-            {
-              eventKey: "dependency-analytics",
-              title: "Dependency analytics",
-              children: (
-                <div className="pf-v5-u-m-md">
-                  {sbomId && <DependencyAnalytics sbomId={sbomId} />}
                 </div>
               ),
             },
