@@ -35,11 +35,6 @@ export interface HubPaginatedResult<T> {
 
 // Base
 
-export interface PackageBase {
-  uuid: string;
-  purl: string;
-}
-
 export interface SBOMBase {
   id: string;
   type: "CycloneDX" | "SPDX";
@@ -101,7 +96,9 @@ export interface VulnerabilityAdvisory extends AdvisoryBase {
 
 // Package
 
-export interface Package extends PackageBase {
+export interface Package {
+  uuid: string;
+  purl: string;
   // This field is added by the UI
   package?: {
     name: string;
@@ -113,6 +110,12 @@ export interface Package extends PackageBase {
   };
   related_cves: { severity: Severity; identifier: string }[];
   related_sboms: SBOMBase[];
+}
+
+export interface SBOMPackage {
+  id: string;
+  name: string;
+  purl: string[];
 }
 
 // SBOM

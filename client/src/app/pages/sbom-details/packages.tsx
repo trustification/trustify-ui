@@ -1,10 +1,9 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import {
   ExpandableRowContent,
-  Td as PFTd,
-  Tr as PFTr,
   Table,
   Tbody,
   Td,
@@ -13,59 +12,74 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
+import { TablePersistenceKeyPrefixes } from "@app/Constants";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
+import { PackageQualifiers } from "@app/components/PackageQualifiers";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
   TableHeaderContentWithControls,
+  TableRowContentWithControls,
 } from "@app/components/TableControls";
-import { useLocalTableControls } from "@app/hooks/table-controls";
+import { getHubRequestParams, useLocalTableControls, useTableControlProps, useTableControlState } from "@app/hooks/table-controls";
+import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchPackagesBySbomId } from "@app/queries/sboms";
+import { decomposePurl } from "@app/utils/utils";
 
 interface PackagesProps {
   sbomId: string;
 }
 
 export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
-  const {
-    result: { data: packages },
-    isFetching,
-    fetchError,
-  } = useFetchPackagesBySbomId(sbomId);
-
-  const tableControls = useLocalTableControls({
+  const tableControlState = useTableControlState({
     tableName: "packages-table",
-    idProperty: "uuid",
-    items: packages,
-    isLoading: isFetching,
+    persistenceKeyPrefix: TablePersistenceKeyPrefixes.packages,
     columnNames: {
+      id: "Id",
       name: "Name",
-      namespace: "Namespace",
-      version: "Version",
-      type: "Type",
-      path: "Path",
-      qualifiers: "Qualifiers",
-      cves: "CVEs",
     },
     isPaginationEnabled: true,
-    initialItemsPerPage: 10,
-    isExpansionEnabled: true,
-    expandableVariant: "single",
+    isSortEnabled: true,
+    sortableColumns: [],
     isFilterEnabled: true,
     filterCategories: [
       {
-        categoryKey: "filterText",
+        categoryKey: "",
         title: "Filter tex",
         type: FilterType.search,
         placeholderText: "Search...",
-        getItemValue: (item) => item.purl,
       },
     ],
+    isExpansionEnabled: true,
+    expandableVariant: "single",
   });
 
   const {
-    currentPageItems,
+    result: { data: packages, total: totalItemCount },
+    isFetching,
+    fetchError,
+  } = useFetchPackagesBySbomId(
+    sbomId,
+    getHubRequestParams({
+      ...tableControlState,
+    })
+  );
+
+  const tableControls = useTableControlProps({
+    ...tableControlState,
+    idProperty: "id",
+    currentPageItems: packages,
+    totalItemCount,
+    isLoading: isFetching,
+    selectionState: useSelectionState({
+      items: packages,
+      isEqual: (a, b) => a.name === b.name,
+    }),
+  });
+
+  const {
     numRenderedColumns,
+    currentPageItems,
     propHelpers: {
       toolbarProps,
       filterToolbarProps,
@@ -86,7 +100,7 @@ export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
           <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
           <ToolbarItem {...paginationToolbarItemProps}>
             <SimplePagination
-              idPrefix="cves-table"
+              idPrefix="package-table"
               isTop
               paginationProps={paginationProps}
             />
@@ -94,17 +108,12 @@ export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
         </ToolbarContent>
       </Toolbar>
 
-      <Table {...tableProps} aria-label="CVEs table">
+      <Table {...tableProps} aria-label="Package table">
         <Thead>
           <Tr>
             <TableHeaderContentWithControls {...tableControls}>
+              <Th {...getThProps({ columnKey: "id" })} />
               <Th {...getThProps({ columnKey: "name" })} />
-              <Th {...getThProps({ columnKey: "namespace" })} />
-              <Th {...getThProps({ columnKey: "version" })} />
-              <Th {...getThProps({ columnKey: "type" })} />
-              <Th {...getThProps({ columnKey: "path" })} />
-              <Th {...getThProps({ columnKey: "qualifiers" })} />
-              <Th {...getThProps({ columnKey: "cves" })} />
             </TableHeaderContentWithControls>
           </Tr>
         </Thead>
@@ -116,69 +125,37 @@ export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
         >
           {currentPageItems?.map((item, rowIndex) => {
             return (
-              <Tbody key={item.uuid}>
+              <Tbody key={item.name}>
                 <Tr {...getTrProps({ item })}>
-                  <Td
-                    width={15}
-                    modifier="truncate"
-                    {...getTdProps({ columnKey: "name" })}
+                  <TableRowContentWithControls
+                    {...tableControls}
+                    item={item}
+                    rowIndex={rowIndex}
                   >
-                    {/* {item.name} */}
-                  </Td>
-                  <Td
-                    width={10}
-                    modifier="truncate"
-                    {...getTdProps({ columnKey: "namespace" })}
-                  >
-                    {/* {item.namespace} */}
-                  </Td>
-                  <Td
-                    width={10}
-                    modifier="truncate"
-                    {...getTdProps({ columnKey: "version" })}
-                  >
-                    {/* {item.version} */}
-                  </Td>
-                  <Td
-                    width={10}
-                    modifier="truncate"
-                    {...getTdProps({ columnKey: "type" })}
-                  >
-                    {/* {item.type} */}
-                  </Td>
-                  <Td
-                    width={10}
-                    modifier="truncate"
-                    {...getTdProps({ columnKey: "path" })}
-                  >
-                    {/* {item.path} */}
-                  </Td>
-                  <Td width={25} {...getTdProps({ columnKey: "qualifiers" })}>
-                    {/* {item.qualifiers &&
-                      Object.entries(item.qualifiers || {}).map(
-                        ([k, v], index) => (
-                          <Label key={index} isCompact>{`${k}=${v}`}</Label>
-                        )
-                      )} */}
-                  </Td>
-                  <Td
-                    width={20}
-                    modifier="truncate"
-                    {...getTdProps({ columnKey: "cves" })}
-                  >
-                    TODO list of CVEs
-                  </Td>
+                    <Td
+                      width={30}
+                      {...getTdProps({ columnKey: "id" })}
+                    >
+                      {item.id}
+                    </Td>
+                    <Td
+                      width={70}
+                      {...getTdProps({ columnKey: "name" })}
+                    >
+                      {item.name}
+                    </Td>
+                  </TableRowContentWithControls>
                 </Tr>
                 {isCellExpanded(item) ? (
-                  <PFTr isExpanded>
-                    <PFTd colSpan={7}>
+                  <Tr isExpanded>
+                    <Td colSpan={7}>
                       <div className="pf-v5-u-m-md">
                         <ExpandableRowContent>
-                          TODO: dependency tree + cve list
+                          <PackageExpandedArea purls={item.purl} />
                         </ExpandableRowContent>
                       </div>
-                    </PFTd>
-                  </PFTr>
+                    </Td>
+                  </Tr>
                 ) : null}
               </Tbody>
             );
@@ -186,11 +163,150 @@ export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
         </ConditionalTableBody>
       </Table>
       <SimplePagination
-        idPrefix="packages-table"
+        idPrefix="package-table"
         isTop={false}
         isCompact
         paginationProps={paginationProps}
       />
+    </>
+  );
+};
+
+interface PackageExpandedAreaProps {
+  purls: string[];
+}
+
+export const PackageExpandedArea: React.FC<PackageExpandedAreaProps> = ({ purls }) => {
+  const packages = React.useMemo(() => {
+    return purls.map(purl => {
+      return { purl, ...decomposePurl(purl) }
+    });
+  }, [purls]);
+
+  const tableControls = useLocalTableControls({
+    variant: "compact",
+    tableName: "purl-table",
+    idProperty: "purl",
+    items: packages,
+    columnNames: {
+      name: "Name",
+      namespace: "Namespace",
+      version: "Version",
+      type: "Type",
+      path: "Path",
+      qualifiers: "qualifiers",
+    },
+    isPaginationEnabled: false,
+    isSortEnabled: true,
+    sortableColumns: [],
+    isFilterEnabled: true,
+    filterCategories: [
+      {
+        categoryKey: "",
+        title: "Filter tex",
+        type: FilterType.search,
+        placeholderText: "Search...",
+        getItemValue: (item) => {
+          return item.purl
+        },
+      },
+    ],
+    isExpansionEnabled: false,
+  });
+
+  const {
+    currentPageItems,
+    numRenderedColumns,
+    propHelpers: {
+      tableProps,
+      getThProps,
+      getTrProps,
+      getTdProps,
+    },
+  } = tableControls;
+
+  return (
+    <>
+      <Table {...tableProps} aria-label="Purl table">
+        <Thead>
+          <Tr>
+            <TableHeaderContentWithControls {...tableControls}>
+              <Th {...getThProps({ columnKey: "name" })} />
+              <Th {...getThProps({ columnKey: "namespace" })} />
+              <Th {...getThProps({ columnKey: "version" })} />
+              <Th {...getThProps({ columnKey: "type" })} />
+              <Th {...getThProps({ columnKey: "path" })} />
+              <Th {...getThProps({ columnKey: "qualifiers" })} />
+            </TableHeaderContentWithControls>
+          </Tr>
+        </Thead>
+        <ConditionalTableBody
+          isLoading={false}
+          isError={undefined}
+          isNoData={packages?.length === 0}
+          numRenderedColumns={numRenderedColumns}
+        >
+          {currentPageItems?.map((item, rowIndex) => {
+            return (
+              <Tbody key={item.purl}>
+                <Tr {...getTrProps({ item })}>
+                  <TableRowContentWithControls
+                    {...tableControls}
+                    item={item}
+                    rowIndex={rowIndex}
+                  >
+                    <Td
+                      width={20}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "name" })}>
+                      <NavLink
+                        to={`/packages/${encodeURIComponent(item.purl)}`}
+                      >
+                        {item.name}
+                      </NavLink>
+                    </Td>
+                    <Td
+                      width={15}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "namespace" })}
+                    >
+                      {item.namespace}
+                    </Td>
+                    <Td
+                      width={15}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "version" })}
+                    >
+                      {item.version}
+                    </Td>
+                    <Td
+                      width={10}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "type" })}
+                    >
+                      {item.type}
+                    </Td>
+                    <Td
+                      width={10}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "path" })}
+                    >
+                      {item.path}
+                    </Td>
+                    <Td
+                      width={30}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "qualifiers" })}
+                    >
+                      {item.qualifiers && <PackageQualifiers value={item.qualifiers} />}
+                    </Td>
+                  </TableRowContentWithControls>
+                </Tr>
+              </Tbody>
+            );
+          })}
+        </ConditionalTableBody>
+      </Table>
     </>
   );
 };

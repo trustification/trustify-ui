@@ -2,6 +2,7 @@ import { RENDER_DATE_FORMAT } from "@app/Constants";
 import { ToolbarChip } from "@patternfly/react-core";
 import { AxiosError } from "axios";
 import dayjs from "dayjs";
+import { PackageURL } from "packageurl-js";
 
 // Axios error
 
@@ -82,4 +83,22 @@ export const getValidatedFromErrors = (
 
 export const getValidatedFromError = (error: unknown | undefined) => {
   return error ? "error" : "default";
+};
+
+export const decomposePurl = (purl: string) => {
+  try {
+    const packageData = PackageURL.fromString(purl);
+    const result = {
+      type: packageData.type,
+      name: packageData.name,
+      namespace: packageData.namespace ?? undefined,
+      version: packageData.version ?? undefined,
+      qualifiers: packageData.qualifiers ?? undefined,
+      path: packageData.subpath ?? undefined,
+    };
+    return result;
+  } catch (error) {
+    console.error(error);
+    return undefined;
+  }
 };
