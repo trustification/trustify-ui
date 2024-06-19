@@ -125,7 +125,7 @@ export const useFetchSbomsByPackageId = (
   params: HubRequestParams = {}
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: [SBOMsQueryKey, "by-package", packageId],
+    queryKey: [SBOMsQueryKey, "by-package", packageId, params],
     queryFn: () => getSBOMsByPackageId(packageId, params),
   });
   return {

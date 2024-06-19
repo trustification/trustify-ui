@@ -8,8 +8,8 @@ import { TablePersistenceKeyPrefixes } from "@app/Constants";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
-    ConditionalTableBody,
-    TableHeaderContentWithControls,
+  ConditionalTableBody,
+  TableHeaderContentWithControls,
 } from "@app/components/TableControls";
 import { getHubRequestParams, useTableControlProps, useTableControlState } from "@app/hooks/table-controls";
 import { useSelectionState } from "@app/hooks/useSelectionState";
@@ -85,7 +85,6 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ packageId }) => 
 
   return (
     <>
-      <p style={{ color: "red" }}>issue-438</p>
       <Toolbar {...toolbarProps}>
         <ToolbarContent>
           <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
