@@ -29,17 +29,24 @@ export interface PaginatedResponse<T> {
 
 export const getHubPaginatedResult = <T>(
   url: string,
-  params: HubRequestParams = {}
-): Promise<HubPaginatedResult<T>> =>
-  axios
+  params: HubRequestParams = {},
+  extraQueryParams: { key: string; value: string }[] = []
+): Promise<HubPaginatedResult<T>> => {
+  const requestParams = serializeRequestParamsForHub(params);
+  extraQueryParams.forEach((param) =>
+    requestParams.append(param.key, param.value)
+  );
+
+  return axios
     .get<PaginatedResponse<T>>(url, {
-      params: serializeRequestParamsForHub(params),
+      params: requestParams,
     })
     .then(({ data }) => ({
       data: data.items,
       total: data.total,
       params,
     }));
+};
 
 //
 
@@ -134,6 +141,14 @@ export const uploadSbom = (formData: FormData, config?: AxiosRequestConfig) => {
     return axios.post<SBOM>(`${SBOMS}`, json, config);
   });
 };
+
+export const getSBOMsByPackageId = (
+  packageId: string,
+  params: HubRequestParams = {}
+) =>
+  getHubPaginatedResult<SBOM>(`${SBOMS}/by-package`, params, [
+    { key: "id", value: packageId },
+  ]);
 
 //
 

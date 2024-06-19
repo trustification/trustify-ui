@@ -111,8 +111,6 @@ export interface Package extends PackageBase {
     path?: string;
     qualifiers?: { [key: string]: string };
   };
-  related_cves: { severity: Severity; identifier: string }[];
-  related_sboms: SBOMBase[];
 }
 
 // SBOM

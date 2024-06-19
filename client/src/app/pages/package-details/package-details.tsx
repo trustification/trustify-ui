@@ -15,7 +15,7 @@ import { PathParam, useRouteParams } from "@app/Routes";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useFetchPackageById } from "@app/queries/packages";
 
-import { RelatedSBOMs } from "./related-sboms";
+import { SbomsByPackage } from "./sboms-by-package";
 
 export const PackageDetails: React.FC = () => {
   const packageId = useRouteParams(PathParam.PACKAGE_ID);
@@ -78,8 +78,7 @@ export const PackageDetails: React.FC = () => {
                     isFetching={isFetchingSbom}
                     fetchError={fetchErrorSbom}
                   >
-                    {/* {pkg && <RelatedSBOMs sboms={pkg?.related_sboms} />} */}
-                    <p style={{ color: "red" }}>issue-413</p>
+                    {packageId && <SbomsByPackage packageId={packageId} />}
                   </LoadingWrapper>
                 </div>
               ),

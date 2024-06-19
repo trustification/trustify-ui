@@ -9,6 +9,7 @@ import {
   getPackagesBySbomId,
   getVulnerabilitiesBySbomId,
   uploadSbom,
+  getSBOMsByPackageId,
 } from "@app/api/rest";
 import { useUpload } from "@app/hooks/useUpload";
 
@@ -117,4 +118,24 @@ export const useUploadSBOM = () => {
       });
     },
   });
+};
+
+export const useFetchSbomsByPackageId = (
+  packageId: string,
+  params: HubRequestParams = {}
+) => {
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: [SBOMsQueryKey, "by-package", packageId],
+    queryFn: () => getSBOMsByPackageId(packageId, params),
+  });
+  return {
+    result: {
+      data: data?.data || [],
+      total: data?.total ?? 0,
+      params: data?.params ?? params,
+    },
+    isFetching: isLoading,
+    fetchError: error,
+    refetch,
+  };
 };
