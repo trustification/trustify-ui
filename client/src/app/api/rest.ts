@@ -11,6 +11,7 @@ import {
   ImporterReport,
   Package,
   SBOM,
+  SBOMPackage,
   Vulnerability,
 } from "./models";
 
@@ -120,7 +121,7 @@ export const downloadSBOMById = (id: number | string) =>
 export const getPackagesBySbomId = (
   id: number | string,
   params: HubRequestParams = {}
-) => getHubPaginatedResult<Package>(`${SBOMS}/${id}/packages`, params);
+) => getHubPaginatedResult<SBOMPackage>(`${SBOMS}/${id}/packages`, params);
 
 export const getVulnerabilitiesBySbomId = (id: string | number) =>
   axios

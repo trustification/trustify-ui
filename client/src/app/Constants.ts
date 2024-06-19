@@ -9,6 +9,7 @@ export const TablePersistenceKeyPrefixes = {
   vulnerabilities: "vn",
   sboms: "sb",
   packages: "pk",
+  sbom_packages: "spk",
 };
 
 // URL param prefixes: should be short, must be unique for each table that uses one
