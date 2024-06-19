@@ -108,8 +108,6 @@ export interface Package {
     path?: string;
     qualifiers?: { [key: string]: string };
   };
-  related_cves: { severity: Severity; identifier: string }[];
-  related_sboms: SBOMBase[];
 }
 
 export interface SBOMPackage {

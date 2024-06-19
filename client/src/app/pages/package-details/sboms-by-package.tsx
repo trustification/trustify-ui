@@ -4,51 +4,73 @@ import { NavLink } from "react-router-dom";
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
-import { SBOMBase } from "@app/api/models";
+import { TablePersistenceKeyPrefixes } from "@app/Constants";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
   TableHeaderContentWithControls,
 } from "@app/components/TableControls";
-import { useLocalTableControls } from "@app/hooks/table-controls";
+import { getHubRequestParams, useTableControlProps, useTableControlState } from "@app/hooks/table-controls";
+import { useSelectionState } from "@app/hooks/useSelectionState";
+import { useFetchSbomsByPackageId } from "@app/queries/sboms";
+import { formatDate } from "@app/utils/utils";
 
-interface RelatedSBOMsProps {
-  sboms: SBOMBase[];
+interface SbomsByPackageProps {
+  packageId: string;
 }
 
-export const RelatedSBOMs: React.FC<RelatedSBOMsProps> = ({ sboms }) => {
-  const tableControls = useLocalTableControls({
-    tableName: "sboms-table",
-    idProperty: "id",
-    items: sboms,
-    isLoading: false,
+export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ packageId }) => {
+  const tableControlState = useTableControlState({
+    tableName: "sboms",
+    persistenceKeyPrefix: TablePersistenceKeyPrefixes.sboms_by_package,
     columnNames: {
       name: "Name",
       version: "Version",
       supplier: "Supplier",
-      packageTree: "Package tree",
+      published: "Published",
     },
-    hasActionsColumn: true,
-    isSortEnabled: false,
     isPaginationEnabled: true,
-    initialItemsPerPage: 10,
-    isExpansionEnabled: false,
+    isSortEnabled: true,
+    sortableColumns: [],
     isFilterEnabled: true,
     filterCategories: [
       {
-        categoryKey: "filterText",
+        categoryKey: "",
         title: "Filter text",
         placeholderText: "Search",
         type: FilterType.search,
-        getItemValue: (item) => item.name,
       },
     ],
   });
 
   const {
-    currentPageItems,
+    result: { data: sboms, total: totalItemCount },
+    isFetching,
+    fetchError,
+  } = useFetchSbomsByPackageId(
+    packageId,
+    getHubRequestParams({
+      ...tableControlState,
+      hubSortFieldKeys: {},
+    })
+  );
+
+  const tableControls = useTableControlProps({
+    ...tableControlState,
+    idProperty: "id",
+    currentPageItems: sboms,
+    totalItemCount,
+    isLoading: isFetching,
+    selectionState: useSelectionState({
+      items: sboms,
+      isEqual: (a, b) => a.id === b.id,
+    }),
+  });
+
+  const {
     numRenderedColumns,
+    currentPageItems,
     propHelpers: {
       toolbarProps,
       filterToolbarProps,
@@ -68,7 +90,7 @@ export const RelatedSBOMs: React.FC<RelatedSBOMsProps> = ({ sboms }) => {
           <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
           <ToolbarItem {...paginationToolbarItemProps}>
             <SimplePagination
-              idPrefix="sboms-table"
+              idPrefix="sbom-table"
               isTop
               paginationProps={paginationProps}
             />
@@ -76,50 +98,50 @@ export const RelatedSBOMs: React.FC<RelatedSBOMsProps> = ({ sboms }) => {
         </ToolbarContent>
       </Toolbar>
 
-      <Table {...tableProps} aria-label="SBOMs table">
+      <Table {...tableProps} aria-label="SBOM table">
         <Thead>
           <Tr>
             <TableHeaderContentWithControls {...tableControls}>
               <Th {...getThProps({ columnKey: "name" })} />
               <Th {...getThProps({ columnKey: "version" })} />
               <Th {...getThProps({ columnKey: "supplier" })} />
-              <Th {...getThProps({ columnKey: "packageTree" })} />
+              <Th {...getThProps({ columnKey: "published" })} />
             </TableHeaderContentWithControls>
           </Tr>
         </Thead>
         <ConditionalTableBody
-          isLoading={false}
-          isError={undefined}
-          isNoData={sboms.length === 0}
+          isLoading={isFetching}
+          isError={!!fetchError}
+          isNoData={totalItemCount === 0}
           numRenderedColumns={numRenderedColumns}
         >
           {currentPageItems?.map((item) => {
             return (
               <Tbody key={item.id}>
                 <Tr {...getTrProps({ item })}>
-                  <Td width={45} {...getTdProps({ columnKey: "name" })}>
-                    <NavLink to={`/sboms/${item?.id}`}>{item?.name}</NavLink>
+                  <Td width={35} {...getTdProps({ columnKey: "name" })}>
+                    <NavLink to={`/sboms/${item.id}`}>{item.name}</NavLink>
                   </Td>
                   <Td
-                    width={15}
+                    width={10}
                     modifier="truncate"
                     {...getTdProps({ columnKey: "version" })}
                   >
-                    {item?.version}
+                    <p style={{ color: "red" }}>issue-284</p>
                   </Td>
                   <Td
-                    width={25}
+                    width={30}
                     modifier="truncate"
                     {...getTdProps({ columnKey: "supplier" })}
                   >
-                    {item?.authors}
+                    {item.authors}
                   </Td>
                   <Td
-                    width={15}
+                    width={10}
                     modifier="truncate"
-                    {...getTdProps({ columnKey: "packageTree" })}
+                    {...getTdProps({ columnKey: "published" })}
                   >
-                    TODO: Package Tree
+                    {formatDate(item.published)}
                   </Td>
                 </Tr>
               </Tbody>
