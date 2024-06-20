@@ -35,15 +35,6 @@ export interface HubPaginatedResult<T> {
 
 // Base
 
-export interface SBOMBase {
-  id: string;
-  type: "CycloneDX" | "SPDX";
-  name: string;
-  version: string;
-  authors: string[];
-  published: string;
-}
-
 export interface AdvisoryBase {
   identifier: string;
   published: string;
@@ -62,18 +53,11 @@ export type Severity = "none" | "low" | "medium" | "high" | "critical";
 
 export interface Advisory extends AdvisoryBase {
   average_severity?: Severity;
-  vulnerabilities: AdvisoryVulnerability[];
+  vulnerabilities: VulnerabilityWithinAdvisory[];
 }
 
-export interface AdvisoryVulnerability {
-  identifier: string;
-  severity: Severity;
-  non_normative: {
-    title: string;
-    discovered?: string;
-    released?: string;
-  };
-  cwe: string;
+export interface AdvisoryWithinVulnerability extends AdvisoryBase {
+  severity?: Severity;
 }
 
 // Vulnerability
@@ -86,12 +70,18 @@ export interface Vulnerability {
   published: string;
   modified: string;
 
-  related_sboms: SBOMBase[];
   advisories: AdvisoryBase[];
 }
 
-export interface VulnerabilityAdvisory extends AdvisoryBase {
-  severity?: Severity;
+export interface VulnerabilityWithinAdvisory {
+  identifier: string;
+  severity: Severity;
+  non_normative: {
+    title: string;
+    discovered?: string;
+    released?: string;
+  };
+  cwe: string;
 }
 
 // Package
@@ -99,18 +89,9 @@ export interface VulnerabilityAdvisory extends AdvisoryBase {
 export interface Package {
   uuid: string;
   purl: string;
-  // This field is added by the UI
-  package?: {
-    name: string;
-    type: string;
-    namespace?: string;
-    version?: string;
-    path?: string;
-    qualifiers?: { [key: string]: string };
-  };
 }
 
-export interface SBOMPackage {
+export interface PackageWithinSBOM {
   id: string;
   name: string;
   purl: string[];
@@ -118,11 +99,13 @@ export interface SBOMPackage {
 
 // SBOM
 
-export interface SBOM extends SBOMBase {
-  related_packages: {
-    count: number;
-  };
-  related_cves: { [key in Severity]: number };
+export interface SBOM {
+  id: string;
+  type: "CycloneDX" | "SPDX";
+  name: string;
+  version: string;
+  authors: string[];
+  published: string;
 }
 
 // Importer
@@ -166,4 +149,15 @@ export interface ImporterReportDetails {
   startDate: string;
   endDate: string;
   numerOfItems: string;
+}
+
+// Purl
+
+export interface DecomposedPurl {
+  type: string;
+  name: string;
+  namespace?: string;
+  version?: string;
+  qualifiers?: { [key in string]: string };
+  path?: string;
 }

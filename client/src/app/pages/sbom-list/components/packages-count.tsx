@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useFetchPackagesBySbomId } from "@app/queries/sboms";
+import { useFetchPackagesBySbomId } from "@app/queries/packages";
 
 export interface IPackagesCountProps {
   sbomId: string | number;

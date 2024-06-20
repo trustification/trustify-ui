@@ -13,7 +13,7 @@ import {
   Tr
 } from "@patternfly/react-table";
 
-import { AdvisoryVulnerability } from "@app/api/models";
+import { VulnerabilityWithinAdvisory } from "@app/api/models";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -26,7 +26,7 @@ import { useLocalTableControls } from "@app/hooks/table-controls";
 import { formatDate } from "@app/utils/utils";
 
 interface VulnerabilitiesProps {
-  vulnerabilities: AdvisoryVulnerability[];
+  vulnerabilities: VulnerabilityWithinAdvisory[];
 }
 
 export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({

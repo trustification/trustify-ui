@@ -6,14 +6,13 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
-  Label,
   PageSection,
   PageSectionVariants,
   Text,
   TextContent,
   Toolbar,
   ToolbarContent,
-  ToolbarItem,
+  ToolbarItem
 } from "@patternfly/react-core";
 import {
   ExpandableRowContent,
@@ -26,7 +25,9 @@ import {
 } from "@patternfly/react-table";
 
 import { TablePersistenceKeyPrefixes } from "@app/Constants";
+import { DecomposedPurl, Package } from "@app/api/models";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
+import { PackageQualifiers } from "@app/components/PackageQualifiers";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -40,6 +41,11 @@ import {
 } from "@app/hooks/table-controls";
 import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchPackages } from "@app/queries/packages";
+import { decomposePurl } from "@app/utils/utils";
+
+interface TableData extends Package {
+  decomposedPurl?: DecomposedPurl
+}
 
 export const PackageList: React.FC = () => {
   const tableControlState = useTableControlState({
@@ -79,14 +85,24 @@ export const PackageList: React.FC = () => {
     })
   );
 
+  const enrichedPackages = React.useMemo(() => {
+    return packages.map(item => {
+      const result: TableData = {
+        ...item,
+        decomposedPurl: decomposePurl(item.purl)
+      };
+      return result
+    });
+  }, [packages]);
+
   const tableControls = useTableControlProps({
     ...tableControlState,
     idProperty: "uuid",
-    currentPageItems: packages,
+    currentPageItems: enrichedPackages,
     totalItemCount,
     isLoading: isFetching,
     selectionState: useSelectionState({
-      items: packages,
+      items: enrichedPackages,
       isEqual: (a, b) => a.uuid === b.uuid,
     }),
   });
@@ -165,34 +181,34 @@ export const PackageList: React.FC = () => {
                           <NavLink
                             to={`/packages/${encodeURIComponent(item.uuid)}`}
                           >
-                            {item.package?.name}
+                            {item.decomposedPurl?.name}
                           </NavLink>
                         </Td>
                         <Td
                           width={15}
                           {...getTdProps({ columnKey: "namespace" })}
                         >
-                          {item.package?.namespace}
+                          {item.decomposedPurl?.namespace}
                         </Td>
                         <Td
                           width={15}
                           {...getTdProps({ columnKey: "version" })}
                         >
-                          {item.package?.version}
+                          {item.decomposedPurl?.version}
                         </Td>
                         <Td
                           width={10}
                           modifier="truncate"
                           {...getTdProps({ columnKey: "type" })}
                         >
-                          {item.package?.type}
+                          {item.decomposedPurl?.type}
                         </Td>
                         <Td
                           width={10}
                           modifier="truncate"
                           {...getTdProps({ columnKey: "path" })}
                         >
-                          {item.package?.path}
+                          {item.decomposedPurl?.path}
                         </Td>
                         <Td width={10} {...getTdProps({ columnKey: "cve" })}>
                           {/* <VulnerabilitiesGalleryCount
@@ -212,14 +228,7 @@ export const PackageList: React.FC = () => {
                                     Qualifiers
                                   </DescriptionListTerm>
                                   <DescriptionListDescription>
-                                    {Object.entries(
-                                      item.package?.qualifiers || {}
-                                    ).map(([k, v], index) => (
-                                      <Label
-                                        key={index}
-                                        isCompact
-                                      >{`${k}=${v}`}</Label>
-                                    ))}
+                                    {item.decomposedPurl?.qualifiers && <PackageQualifiers value={item.decomposedPurl?.qualifiers} />}
                                   </DescriptionListDescription>
                                 </DescriptionListGroup>
                               </DescriptionList>
