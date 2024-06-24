@@ -30,6 +30,7 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
+import dayjs from "dayjs";
 
 import { Importer, ImporterType } from "@app/api/models";
 import { ConfirmDialog } from "@app/components/ConfirmDialog";
@@ -250,14 +251,21 @@ export const ImporterList: React.FC = () => {
                           modifier="truncate"
                           {...getTdProps({ columnKey: "start" })}
                         >
-                          {formatDate(item.report?.startDate)}
+                          {item.state &&
+                            configValues?.disabled == false &&
+                            dayjs(item.report?.startDate)
+                              .utc()
+                              .format("YYYY-MM-DD HH:mm:ss")}
                         </Td>
                         <Td
                           width={15}
                           modifier="truncate"
                           {...getTdProps({ columnKey: "end" })}
                         >
-                          {formatDate(item.report?.endDate)}
+                          {configValues?.disabled == false &&
+                            dayjs(item.report?.endDate)
+                              .utc()
+                              .format("YYYY-MM-DD HH:mm:ss")}
                         </Td>
                         <Td
                           width={10}
