@@ -10,8 +10,8 @@ import {
   ImporterConfiguration,
   ImporterReport,
   Package,
+  PackageWithinSBOM,
   SBOM,
-  SBOMPackage,
   Vulnerability,
 } from "./models";
 
@@ -49,7 +49,7 @@ export const getHubPaginatedResult = <T>(
     }));
 };
 
-//
+// Advisory
 
 export const getAdvisories = (params: HubRequestParams = {}) =>
   getHubPaginatedResult<Advisory>(ADVISORIES, params);
@@ -79,7 +79,7 @@ export const uploadAdvisory = (
   });
 };
 
-//
+// Vulnerability
 
 export const getVulnerabilities = (params: HubRequestParams = {}) =>
   getHubPaginatedResult<Vulnerability>(VULNERABILITIES, params);
@@ -100,7 +100,12 @@ export const downloadVulnerabilityById = (id: number | string) =>
     headers: { Accept: "text/plain", responseType: "blob" },
   });
 
-//
+export const getVulnerabilitiesBySbomId = (id: string | number) =>
+  axios
+    .get<Vulnerability[]>(`${SBOMS}/${id}/vulnerabilities`)
+    .then((response) => response.data);
+
+// Package
 
 export const getPackages = (params: HubRequestParams = {}) =>
   getHubPaginatedResult<Package>(PACKAGES, params);
@@ -108,7 +113,13 @@ export const getPackages = (params: HubRequestParams = {}) =>
 export const getPackageById = (id: number | string) =>
   axios.get<Package>(`${PACKAGES}/${id}`).then((response) => response.data);
 
-//
+export const getPackagesBySbomId = (
+  id: number | string,
+  params: HubRequestParams = {}
+) =>
+  getHubPaginatedResult<PackageWithinSBOM>(`${SBOMS}/${id}/packages`, params);
+
+// SBOM
 
 export const getSBOMs = (params: HubRequestParams = {}) =>
   getHubPaginatedResult<SBOM>(SBOMS, params);
@@ -124,16 +135,6 @@ export const downloadSBOMById = (id: number | string) =>
     responseType: "arraybuffer",
     headers: { Accept: "text/plain", responseType: "blob" },
   });
-
-export const getPackagesBySbomId = (
-  id: number | string,
-  params: HubRequestParams = {}
-) => getHubPaginatedResult<SBOMPackage>(`${SBOMS}/${id}/packages`, params);
-
-export const getVulnerabilitiesBySbomId = (id: string | number) =>
-  axios
-    .get<Vulnerability[]>(`${SBOMS}/${id}/vulnerabilities`)
-    .then((response) => response.data);
 
 export const uploadSbom = (formData: FormData, config?: AxiosRequestConfig) => {
   const file = formData.get(FORM_DATA_FILE_KEY) as File;
@@ -151,7 +152,7 @@ export const getSBOMsByPackageId = (
     { key: "id", value: packageId },
   ]);
 
-//
+// Importer
 
 export const getImporters = () =>
   axios.get<Importer[]>(IMPORTERS).then((response) =>

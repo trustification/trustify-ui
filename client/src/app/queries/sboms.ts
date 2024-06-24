@@ -3,13 +3,11 @@ import { AxiosError } from "axios";
 
 import { HubRequestParams, SBOM } from "@app/api/models";
 import {
-  getSBOMs,
   getSBOMById,
   getSBOMSourceById,
-  getPackagesBySbomId,
-  getVulnerabilitiesBySbomId,
-  uploadSbom,
+  getSBOMs,
   getSBOMsByPackageId,
+  uploadSbom,
 } from "@app/api/rest";
 import { useUpload } from "@app/hooks/useUpload";
 
@@ -61,45 +59,6 @@ export const useFetchSBOMSourceById = (id?: number | string) => {
 
   return {
     source: data,
-    isFetching: isLoading,
-    fetchError: error as AxiosError,
-  };
-};
-
-export const useFetchPackagesBySbomId = (
-  sbomId: string | number,
-  params: HubRequestParams = {}
-) => {
-  const { data, isLoading, error, refetch } = useQuery({
-    queryKey: [SBOMsQueryKey, sbomId, "packages", params],
-    queryFn: () => getPackagesBySbomId(sbomId, params),
-    enabled: sbomId !== undefined,
-  });
-
-  return {
-    result: {
-      data: data?.data || [],
-      total: data?.total ?? 0,
-      params: data?.params ?? params,
-    },
-    isFetching: isLoading,
-    fetchError: error as AxiosError,
-    refetch,
-  };
-};
-
-export const useFetchCVEsBySbomId = (sbomId: string | number) => {
-  const { data, isLoading, error } = useQuery({
-    queryKey: [SBOMsQueryKey, sbomId, "cves"],
-    queryFn: () =>
-      sbomId === undefined
-        ? Promise.resolve(undefined)
-        : getVulnerabilitiesBySbomId(sbomId),
-    enabled: sbomId !== undefined,
-  });
-
-  return {
-    cves: data || [],
     isFetching: isLoading,
     fetchError: error as AxiosError,
   };

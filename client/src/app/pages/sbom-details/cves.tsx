@@ -21,7 +21,7 @@ import {
   TableHeaderContentWithControls,
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
-import { useFetchCVEsBySbomId } from "@app/queries/sboms";
+import { useFetchVulnerabilitiesBySbomId } from "@app/queries/vulnerabilities";
 import { formatDate } from "@app/utils/utils";
 
 interface CVEsProps {
@@ -29,7 +29,7 @@ interface CVEsProps {
 }
 
 export const CVEs: React.FC<CVEsProps> = ({ sbomId }) => {
-  const { cves, isFetching, fetchError } = useFetchCVEsBySbomId(sbomId);
+  const { cves, isFetching, fetchError } = useFetchVulnerabilitiesBySbomId(sbomId);
 
   const tableControls = useLocalTableControls({
     tableName: "cves-table",

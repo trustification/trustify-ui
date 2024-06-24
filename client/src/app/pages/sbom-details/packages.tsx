@@ -23,7 +23,7 @@ import {
 } from "@app/components/TableControls";
 import { getHubRequestParams, useLocalTableControls, useTableControlProps, useTableControlState } from "@app/hooks/table-controls";
 import { useSelectionState } from "@app/hooks/useSelectionState";
-import { useFetchPackagesBySbomId } from "@app/queries/sboms";
+import { useFetchPackagesBySbomId } from "@app/queries/packages";
 import { decomposePurl } from "@app/utils/utils";
 
 interface PackagesProps {

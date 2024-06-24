@@ -14,6 +14,7 @@ import DetailsPage from "@patternfly/react-component-groups/dist/dynamic/Details
 import { PathParam, useRouteParams } from "@app/Routes";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useFetchPackageById } from "@app/queries/packages";
+import { decomposePurl } from "@app/utils/utils";
 
 import { SbomsByPackage } from "./sboms-by-package";
 
@@ -25,6 +26,10 @@ export const PackageDetails: React.FC = () => {
     isFetching: isFetchingSbom,
     fetchError: fetchErrorSbom,
   } = useFetchPackageById(packageId);
+
+  const decomposedPurl = React.useMemo(() => {
+    return pkg ? decomposePurl(pkg.purl) : undefined;
+  }, [pkg]);
 
   return (
     <>
@@ -39,15 +44,15 @@ export const PackageDetails: React.FC = () => {
             </Breadcrumb>
           }
           pageHeading={{
-            title: pkg?.package?.name ?? packageId ?? "",
+            title: decomposedPurl?.name ?? packageId ?? "",
             iconAfterTitle: pkg ? (
               <TextContent>
-                <Text component="pre">{`version: ${pkg.package?.version}`}</Text>
+                <Text component="pre">{`version: ${decomposedPurl?.version}`}</Text>
               </TextContent>
             ) : undefined,
             label: pkg
               ? {
-                children: pkg ? `type=${pkg.package?.type}` : "",
+                children: pkg ? `type=${decomposedPurl?.type}` : "",
                 isCompact: true,
               }
               : undefined,

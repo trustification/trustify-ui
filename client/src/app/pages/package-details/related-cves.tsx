@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
-import { AdvisoryVulnerability } from "@app/api/models";
+import { VulnerabilityWithinAdvisory } from "@app/api/models";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -15,7 +15,7 @@ import {
 import { useLocalTableControls } from "@app/hooks/table-controls";
 
 interface RelatedCVEsProps {
-  cves: AdvisoryVulnerability[];
+  cves: VulnerabilityWithinAdvisory[];
 }
 
 export const RelatedCVEs: React.FC<RelatedCVEsProps> = ({ cves }) => {

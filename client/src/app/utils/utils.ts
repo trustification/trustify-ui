@@ -1,8 +1,10 @@
-import { RENDER_DATE_FORMAT } from "@app/Constants";
-import { ToolbarChip } from "@patternfly/react-core";
 import { AxiosError } from "axios";
 import dayjs from "dayjs";
 import { PackageURL } from "packageurl-js";
+
+import { RENDER_DATE_FORMAT } from "@app/Constants";
+import { DecomposedPurl } from "@app/api/models";
+import { ToolbarChip } from "@patternfly/react-core";
 
 // Axios error
 
@@ -88,7 +90,7 @@ export const getValidatedFromError = (error: unknown | undefined) => {
 export const decomposePurl = (purl: string) => {
   try {
     const packageData = PackageURL.fromString(purl);
-    const result = {
+    const result: DecomposedPurl = {
       type: packageData.type,
       name: packageData.name,
       namespace: packageData.namespace ?? undefined,
