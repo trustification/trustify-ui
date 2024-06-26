@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   image-build:
-    uses: ./.github/workflows/build-push-images.yaml
+    uses: trustification/release-tools/.github/workflows/build-push-images.yaml@main
     with:
       registry: "ghcr.io"
       image_name: "${{ github.repository_owner }}/trustify-ui"
