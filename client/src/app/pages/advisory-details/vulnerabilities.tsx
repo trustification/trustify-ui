@@ -130,14 +130,10 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
                       {item.non_normative.title}
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "discovered" })}>
-                      {!!item.non_normative.discovered
-                        ? formatDate(item.non_normative.discovered)
-                        : null}
+                      {formatDate(item.non_normative.discovered)}
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "released" })}>
-                      {!!item.non_normative.released
-                        ? formatDate(item.non_normative.released)
-                        : null}
+                      {formatDate(item.non_normative.released)}
                     </Td>
                     <Td width={15} {...getTdProps({ columnKey: "severity" })}>
                       <SeverityShieldAndText value={item.severity} />
