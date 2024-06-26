@@ -39,7 +39,11 @@ import {
   useDeleteiIporterMutation as useDeleteIporterMutation,
   useFetchImporters,
 } from "@app/queries/importers";
-import { formatDate, getAxiosErrorMessage } from "@app/utils/utils";
+import {
+  formatDate,
+  formatDateTime,
+  getAxiosErrorMessage,
+} from "@app/utils/utils";
 
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -251,10 +255,8 @@ export const ImporterList: React.FC = () => {
                           modifier="truncate"
                           {...getTdProps({ columnKey: "start" })}
                         >
-                          {!configValues?.disabled
-                            ? dayjs(item.report?.startDate)
-                                .utc()
-                                .format("YYYY-MM-DD HH:mm:ss")
+                          {!configValues?.disabled && item.report?.startDate
+                            ? formatDateTime(item.report?.startDate)
                             : null}
                         </Td>
                         <Td
@@ -262,10 +264,8 @@ export const ImporterList: React.FC = () => {
                           modifier="truncate"
                           {...getTdProps({ columnKey: "end" })}
                         >
-                          {!configValues?.disabled
-                            ? dayjs(item.report?.endDate)
-                                .utc()
-                                .format("YYYY-MM-DD HH:mm:ss")
+                          {!configValues?.disabled && item.report?.endDate
+                            ? formatDateTime(item.report?.endDate)
                             : null}
                         </Td>
                         <Td
