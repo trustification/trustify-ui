@@ -4,14 +4,7 @@ import { NavLink } from "react-router-dom";
 import dayjs from "dayjs";
 
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
-import {
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr
-} from "@patternfly/react-table";
+import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
 import { VulnerabilityWithinAdvisory } from "@app/api/models";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
@@ -137,10 +130,14 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
                       {item.non_normative.title}
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "discovered" })}>
-                      {formatDate(item.non_normative.discovered)}
+                      {!!item.non_normative.discovered
+                        ? formatDate(item.non_normative.discovered)
+                        : null}
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "released" })}>
-                      {formatDate(item.non_normative.released)}
+                      {!!item.non_normative.released
+                        ? formatDate(item.non_normative.released)
+                        : null}
                     </Td>
                     <Td width={15} {...getTdProps({ columnKey: "severity" })}>
                       <SeverityShieldAndText value={item.severity} />

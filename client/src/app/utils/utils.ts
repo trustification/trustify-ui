@@ -34,7 +34,7 @@ export const getToolbarChipKey = (value: string | ToolbarChip) => {
 
 // Dates
 
-export const formatDate = (value?: string) =>
+export const formatDate = (value: string) =>
   dayjs(value).utc().format(RENDER_DATE_FORMAT);
 
 export const formatDateTime = (value: string) =>
