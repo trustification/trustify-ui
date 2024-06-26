@@ -186,12 +186,14 @@ export const PackageList: React.FC = () => {
                         </Td>
                         <Td
                           width={10}
+                          modifier="truncate"
                           {...getTdProps({ columnKey: "namespace" })}
                         >
                           {item.decomposedPurl?.namespace}
                         </Td>
                         <Td
                           width={15}
+                          modifier="truncate"
                           {...getTdProps({ columnKey: "version" })}
                         >
                           {item.decomposedPurl?.version}
