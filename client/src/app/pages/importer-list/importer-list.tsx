@@ -251,21 +251,22 @@ export const ImporterList: React.FC = () => {
                           modifier="truncate"
                           {...getTdProps({ columnKey: "start" })}
                         >
-                          {item.state &&
-                            configValues?.disabled == false &&
-                            dayjs(item.report?.startDate)
-                              .utc()
-                              .format("YYYY-MM-DD HH:mm:ss")}
+                          {!configValues?.disabled
+                            ? dayjs(item.report?.startDate)
+                                .utc()
+                                .format("YYYY-MM-DD HH:mm:ss")
+                            : null}
                         </Td>
                         <Td
                           width={15}
                           modifier="truncate"
                           {...getTdProps({ columnKey: "end" })}
                         >
-                          {configValues?.disabled == false &&
-                            dayjs(item.report?.endDate)
-                              .utc()
-                              .format("YYYY-MM-DD HH:mm:ss")}
+                          {!configValues?.disabled
+                            ? dayjs(item.report?.endDate)
+                                .utc()
+                                .format("YYYY-MM-DD HH:mm:ss")
+                            : null}
                         </Td>
                         <Td
                           width={10}
