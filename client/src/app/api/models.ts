@@ -94,6 +94,7 @@ export interface Package {
 export interface PackageWithinSBOM {
   id: string;
   name: string;
+  version: string;
   purl: string[];
 }
 

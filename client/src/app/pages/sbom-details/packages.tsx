@@ -35,8 +35,8 @@ export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
     tableName: "packages-table",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.packages,
     columnNames: {
-      id: "Id",
       name: "Name",
+      version: "Version",
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
@@ -112,8 +112,8 @@ export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
         <Thead>
           <Tr>
             <TableHeaderContentWithControls {...tableControls}>
-              <Th {...getThProps({ columnKey: "id" })} />
               <Th {...getThProps({ columnKey: "name" })} />
+              <Th {...getThProps({ columnKey: "version" })} />
             </TableHeaderContentWithControls>
           </Tr>
         </Thead>
@@ -125,7 +125,7 @@ export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
         >
           {currentPageItems?.map((item, rowIndex) => {
             return (
-              <Tbody key={item.name}>
+              <Tbody key={item.id}>
                 <Tr {...getTrProps({ item })}>
                   <TableRowContentWithControls
                     {...tableControls}
@@ -133,16 +133,16 @@ export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
                     rowIndex={rowIndex}
                   >
                     <Td
-                      width={30}
-                      {...getTdProps({ columnKey: "id" })}
-                    >
-                      {item.id}
-                    </Td>
-                    <Td
-                      width={70}
+                      width={60}
                       {...getTdProps({ columnKey: "name" })}
                     >
                       {item.name}
+                    </Td>
+                    <Td
+                      width={40}
+                      {...getTdProps({ columnKey: "version" })}
+                    >
+                      {item.version}
                     </Td>
                   </TableRowContentWithControls>
                 </Tr>
