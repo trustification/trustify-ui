@@ -125,7 +125,7 @@ export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
         >
           {currentPageItems?.map((item, rowIndex) => {
             return (
-              <Tbody key={item.name}>
+              <Tbody key={item.id}>
                 <Tr {...getTrProps({ item })}>
                   <TableRowContentWithControls
                     {...tableControls}
