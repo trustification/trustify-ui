@@ -255,7 +255,7 @@ export const ImporterList: React.FC = () => {
                           modifier="truncate"
                           {...getTdProps({ columnKey: "start" })}
                         >
-                          {!configValues?.disabled && !!item.report?.startDate
+                          {!configValues?.disabled
                             ? formatDateTime(item.report?.startDate)
                             : null}
                         </Td>
@@ -264,7 +264,7 @@ export const ImporterList: React.FC = () => {
                           modifier="truncate"
                           {...getTdProps({ columnKey: "end" })}
                         >
-                          {!configValues?.disabled && !!item.report?.endDate
+                          {!configValues?.disabled
                             ? formatDateTime(item.report?.endDate)
                             : null}
                         </Td>
