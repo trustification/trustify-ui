@@ -193,7 +193,7 @@ export const serializeFilterRequestParamsForHub = (
           const { value } = filter;
           return typeof value === "string" || typeof value === "number"
             ? value !== null && value !== undefined
-            : value.list.length > 0;
+            : value && value.list.length > 0;
         })
         .sort((a, b) => a.field.localeCompare(b.field))
         .map(serializeFilterForHub)
