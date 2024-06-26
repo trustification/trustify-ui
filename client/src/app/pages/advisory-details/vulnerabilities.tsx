@@ -4,14 +4,7 @@ import { NavLink } from "react-router-dom";
 import dayjs from "dayjs";
 
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
-import {
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr
-} from "@patternfly/react-table";
+import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
 import { VulnerabilityWithinAdvisory } from "@app/api/models";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";

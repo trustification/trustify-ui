@@ -1,32 +1,19 @@
 import React from "react";
 
-import { createRoot } from 'react-dom/client';
+import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import ENV from "@app/env";
 import App from "@app/App";
 import reportWebVitals from "@app/reportWebVitals";
-
-import dayjs from "dayjs";
-import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-import customParseFormat from "dayjs/plugin/customParseFormat";
-import arraySupport from "dayjs/plugin/arraySupport";
-
+import "@app/dayjs";
 import { OidcProvider } from "@app/components/OidcProvider";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.extend(customParseFormat);
-dayjs.extend(isSameOrBefore);
-dayjs.extend(arraySupport);
 
 const queryClient = new QueryClient();
 
-const container = document.getElementById('root');
-const root = createRoot(container!)
+const container = document.getElementById("root");
+const root = createRoot(container!);
 
 const renderApp = () => {
   return root.render(

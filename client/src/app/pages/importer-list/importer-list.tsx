@@ -30,6 +30,7 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
+import dayjs from "dayjs";
 
 import { Importer, ImporterType } from "@app/api/models";
 import { ConfirmDialog } from "@app/components/ConfirmDialog";
@@ -38,7 +39,11 @@ import {
   useDeleteiIporterMutation as useDeleteIporterMutation,
   useFetchImporters,
 } from "@app/queries/importers";
-import { formatDate, getAxiosErrorMessage } from "@app/utils/utils";
+import {
+  formatDate,
+  formatDateTime,
+  getAxiosErrorMessage,
+} from "@app/utils/utils";
 
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -250,14 +255,18 @@ export const ImporterList: React.FC = () => {
                           modifier="truncate"
                           {...getTdProps({ columnKey: "start" })}
                         >
-                          {formatDate(item.report?.startDate)}
+                          {!configValues?.disabled
+                            ? formatDateTime(item.report?.startDate)
+                            : null}
                         </Td>
                         <Td
                           width={15}
                           modifier="truncate"
                           {...getTdProps({ columnKey: "end" })}
                         >
-                          {formatDate(item.report?.endDate)}
+                          {!configValues?.disabled
+                            ? formatDateTime(item.report?.endDate)
+                            : null}
                         </Td>
                         <Td
                           width={10}

@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 import dayjs from "dayjs";
 import { PackageURL } from "packageurl-js";
 
-import { RENDER_DATE_FORMAT } from "@app/Constants";
+import { RENDER_DATETIME_FORMAT, RENDER_DATE_FORMAT } from "@app/Constants";
 import { DecomposedPurl } from "@app/api/models";
 import { ToolbarChip } from "@patternfly/react-core";
 
@@ -35,7 +35,11 @@ export const getToolbarChipKey = (value: string | ToolbarChip) => {
 // Dates
 
 export const formatDate = (value?: string) => {
-  return value ? dayjs(value).format(RENDER_DATE_FORMAT) : undefined;
+  return value ? dayjs(value).utc().format(RENDER_DATE_FORMAT) : null;
+};
+
+export const formatDateTime = (value?: string) => {
+  return value ? dayjs(value).utc().format(RENDER_DATETIME_FORMAT) : null;
 };
 
 export const duplicateFieldCheck = <T>(
