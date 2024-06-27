@@ -155,16 +155,7 @@ export const getSBOMsByPackageId = (
 // Importer
 
 export const getImporters = () =>
-  axios.get<Importer[]>(IMPORTERS).then((response) =>
-    Promise.all(
-      response.data.map((importer) =>
-        getLastImporterReport(importer.name).then((report) => {
-          const result: Importer = { ...importer, report: report?.report };
-          return result;
-        })
-      )
-    )
-  );
+  axios.get<Importer[]>(IMPORTERS).then((response) => response.data);
 
 export const getImporterById = (id: number | string) =>
   axios.get<Importer>(`${IMPORTERS}/${id}`).then((response) => response.data);
@@ -186,6 +177,8 @@ export const deleteImporter = (id: number | string) =>
   axios
     .delete<Importer>(`${IMPORTERS}/${id}`)
     .then((response) => response.data);
+
+export const getImporterReports = (id: string) => getHubPaginatedResult<ImporterReport>(`${IMPORTERS}/${id}/report`, {});
 
 export const getLastImporterReport = (id: string) => {
   const params: HubRequestParams = {
