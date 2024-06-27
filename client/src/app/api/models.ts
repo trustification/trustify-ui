@@ -102,11 +102,13 @@ export interface PackageWithinSBOM {
 
 export interface SBOM {
   id: string;
-  type: "CycloneDX" | "SPDX";
   name: string;
-  version: string;
   authors: string[];
   published: string;
+  described_by?: {
+    name: string
+    version: string
+  }[];
 }
 
 // Importer

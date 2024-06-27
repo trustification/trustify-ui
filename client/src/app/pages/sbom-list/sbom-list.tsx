@@ -9,10 +9,11 @@ import {
   TextContent,
   Toolbar,
   ToolbarContent,
-  ToolbarItem,
+  ToolbarItem
 } from "@patternfly/react-core";
 import {
   ActionsColumn,
+  ExpandableRowContent,
   Table,
   Tbody,
   Td,
@@ -29,10 +30,12 @@ import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
   TableHeaderContentWithControls,
+  TableRowContentWithControls,
 } from "@app/components/TableControls";
 import { UploadFilesDrawer } from "@app/components/UploadFilesDrawer";
 import {
   getHubRequestParams,
+  useLocalTableControls,
   useTableControlProps,
   useTableControlState,
 } from "@app/hooks/table-controls";
@@ -52,7 +55,6 @@ export const SbomList: React.FC = () => {
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.sboms,
     columnNames: {
       name: "Name",
-      version: "Version",
       supplier: "Supplier",
       published: "Published",
       packages: "Packages",
@@ -70,6 +72,8 @@ export const SbomList: React.FC = () => {
         type: FilterType.search,
       },
     ],
+    isExpansionEnabled: true,
+    expandableVariant: "single",
   });
 
   const {
@@ -110,6 +114,7 @@ export const SbomList: React.FC = () => {
       getTrProps,
       getTdProps,
     },
+    expansionDerivedState: { isCellExpanded },
   } = tableControls;
 
   const { downloadSBOM } = useDownload();
@@ -156,7 +161,6 @@ export const SbomList: React.FC = () => {
               <Tr>
                 <TableHeaderContentWithControls {...tableControls}>
                   <Th {...getThProps({ columnKey: "name" })} />
-                  <Th {...getThProps({ columnKey: "version" })} />
                   <Th {...getThProps({ columnKey: "supplier" })} />
                   <Th {...getThProps({ columnKey: "published" })} />
                   <Th {...getThProps({ columnKey: "packages" })} />
@@ -170,58 +174,67 @@ export const SbomList: React.FC = () => {
               isNoData={totalItemCount === 0}
               numRenderedColumns={numRenderedColumns}
             >
-              {currentPageItems.map((item) => {
+              {currentPageItems.map((item, rowIndex) => {
                 return (
                   <Tbody key={item.id}>
                     <Tr {...getTrProps({ item })}>
-                      <Td width={20} {...getTdProps({ columnKey: "name" })}>
-                        <NavLink to={`/sboms/${item.id}`}>{item.name}</NavLink>
-                      </Td>
-                      <Td
-                        width={10}
-                        modifier="truncate"
-                        {...getTdProps({ columnKey: "version" })}
+                      <TableRowContentWithControls
+                        {...tableControls}
+                        item={item}
+                        rowIndex={rowIndex}
                       >
-                        {/* {item.version} */}
-                        <p style={{ color: "red" }}>issue-284</p>
-                      </Td>
-                      <Td
-                        width={30}
-                        modifier="truncate"
-                        {...getTdProps({ columnKey: "supplier" })}
-                      >
-                        {item.authors}
-                      </Td>
-                      <Td
-                        width={10}
-                        modifier="truncate"
-                        {...getTdProps({ columnKey: "published" })}
-                      >
-                        {formatDate(item.published)}
-                      </Td>
-                      <Td width={10} {...getTdProps({ columnKey: "packages" })}>
-                        <PackagesCount sbomId={item.id} />
-                      </Td>
-                      <Td
-                        width={20}
-                        {...getTdProps({ columnKey: "vulnerabilities" })}
-                      >
-                        {/* <VulnerabilityGallery severities={item.related_cves} /> */}
-                        <p style={{ color: "red" }}>issue-285</p>
-                      </Td>
-                      <Td isActionCell>
-                        <ActionsColumn
-                          items={[
-                            {
-                              title: "Download",
-                              onClick: () => {
-                                downloadSBOM(item.id, `${item.name}.json`);
+                        <Td width={20} {...getTdProps({ columnKey: "name" })}>
+                          <NavLink to={`/sboms/${item.id}`}>{item.name}</NavLink>
+                        </Td>
+                        <Td
+                          width={40}
+                          modifier="truncate"
+                          {...getTdProps({ columnKey: "supplier" })}
+                        >
+                          {item.authors}
+                        </Td>
+                        <Td
+                          width={10}
+                          modifier="truncate"
+                          {...getTdProps({ columnKey: "published" })}
+                        >
+                          {formatDate(item.published)}
+                        </Td>
+                        <Td width={10} {...getTdProps({ columnKey: "packages" })}>
+                          <PackagesCount sbomId={item.id} />
+                        </Td>
+                        <Td
+                          width={20}
+                          {...getTdProps({ columnKey: "vulnerabilities" })}
+                        >
+                          {/* <VulnerabilityGallery severities={item.related_cves} /> */}
+                          <p style={{ color: "red" }}>issue-285</p>
+                        </Td>
+                        <Td isActionCell>
+                          <ActionsColumn
+                            items={[
+                              {
+                                title: "Download",
+                                onClick: () => {
+                                  downloadSBOM(item.id, `${item.name}.json`);
+                                },
                               },
-                            },
-                          ]}
-                        />
-                      </Td>
+                            ]}
+                          />
+                        </Td>
+                      </TableRowContentWithControls>
                     </Tr>
+                    {isCellExpanded(item) ? (
+                      <Tr isExpanded>
+                        <Td colSpan={7}>
+                          <ExpandableRowContent>
+                            <div className="pf-v5-u-m-md">
+                              {item.described_by && <SbomExpandedArea described_by={item.described_by} />}
+                            </div>
+                          </ExpandableRowContent>
+                        </Td>
+                      </Tr>
+                    ) : null}
                   </Tbody>
                 );
               })}
@@ -249,6 +262,103 @@ export const SbomList: React.FC = () => {
         }}
         onCloseClick={() => setShowUploadComponent(false)}
       />
+    </>
+  );
+};
+
+interface SbomExpandedAreaProps {
+  described_by: {
+    name: string;
+    version: string;
+  }[];
+}
+
+export const SbomExpandedArea: React.FC<SbomExpandedAreaProps> = ({ described_by }) => {
+  const tableControls = useLocalTableControls({
+    variant: "compact",
+    tableName: "version-table",
+    idProperty: "name",
+    items: described_by,
+    columnNames: {
+      name: "Name",
+      version: "Version",
+    },
+    isPaginationEnabled: false,
+    isSortEnabled: true,
+    sortableColumns: [],
+    isFilterEnabled: true,
+    filterCategories: [
+      {
+        categoryKey: "",
+        title: "Filter tex",
+        type: FilterType.search,
+        placeholderText: "Search...",
+        getItemValue: (item) => {
+          return item.name
+        },
+      },
+    ],
+    isExpansionEnabled: false,
+  });
+
+  const {
+    currentPageItems,
+    numRenderedColumns,
+    propHelpers: {
+      tableProps,
+      getThProps,
+      getTrProps,
+      getTdProps,
+    },
+  } = tableControls;
+
+  return (
+    <>
+      <Table {...tableProps} aria-label="Version table">
+        <Thead>
+          <Tr>
+            <TableHeaderContentWithControls {...tableControls}>
+              <Th {...getThProps({ columnKey: "name" })} />
+              <Th {...getThProps({ columnKey: "version" })} />
+            </TableHeaderContentWithControls>
+          </Tr>
+        </Thead>
+        <ConditionalTableBody
+          isLoading={false}
+          isError={undefined}
+          isNoData={described_by?.length === 0}
+          numRenderedColumns={numRenderedColumns}
+        >
+          {currentPageItems?.map((item, rowIndex) => {
+            return (
+              <Tbody key={item.name}>
+                <Tr {...getTrProps({ item })}>
+                  <TableRowContentWithControls
+                    {...tableControls}
+                    item={item}
+                    rowIndex={rowIndex}
+                  >
+                    <Td
+                      width={20}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "name" })}
+                    >
+                      {item.name}
+                    </Td>
+                    <Td
+                      width={15}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "version" })}
+                    >
+                      {item.version}
+                    </Td>
+                  </TableRowContentWithControls>
+                </Tr>
+              </Tbody>
+            );
+          })}
+        </ConditionalTableBody>
+      </Table>
     </>
   );
 };
