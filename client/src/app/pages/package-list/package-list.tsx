@@ -56,7 +56,7 @@ export const PackageList: React.FC = () => {
       namespace: "Namespace",
       version: "Version",
       type: "Type",
-      path: "Path",
+      qualifiers: "Qualifiers",
       cve: "CVEs",
     },
     isPaginationEnabled: true,
@@ -157,7 +157,7 @@ export const PackageList: React.FC = () => {
                   <Th {...getThProps({ columnKey: "namespace" })} />
                   <Th {...getThProps({ columnKey: "version" })} />
                   <Th {...getThProps({ columnKey: "type" })} />
-                  <Th {...getThProps({ columnKey: "path" })} />
+                  <Th {...getThProps({ columnKey: "qualifiers" })} />
                   <Th {...getThProps({ columnKey: "cve" })} />
                 </TableHeaderContentWithControls>
               </Tr>
@@ -177,21 +177,23 @@ export const PackageList: React.FC = () => {
                         item={item}
                         rowIndex={rowIndex}
                       >
-                        <Td width={25} {...getTdProps({ columnKey: "name" })}>
+                        <Td width={20} {...getTdProps({ columnKey: "name" })}>
                           <NavLink
                             to={`/packages/${encodeURIComponent(item.uuid)}`}
                           >
-                            {item.decomposedPurl?.name}
+                            {item.decomposedPurl ? item.decomposedPurl?.name : item.purl}
                           </NavLink>
                         </Td>
                         <Td
-                          width={15}
+                          width={10}
+                          modifier="truncate"
                           {...getTdProps({ columnKey: "namespace" })}
                         >
                           {item.decomposedPurl?.namespace}
                         </Td>
                         <Td
                           width={15}
+                          modifier="truncate"
                           {...getTdProps({ columnKey: "version" })}
                         >
                           {item.decomposedPurl?.version}
@@ -204,13 +206,12 @@ export const PackageList: React.FC = () => {
                           {item.decomposedPurl?.type}
                         </Td>
                         <Td
-                          width={10}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "path" })}
+                          width={30}
+                          {...getTdProps({ columnKey: "qualifiers" })}
                         >
-                          {item.decomposedPurl?.path}
+                          {item.decomposedPurl?.qualifiers && <PackageQualifiers value={item.decomposedPurl?.qualifiers} />}
                         </Td>
-                        <Td width={10} {...getTdProps({ columnKey: "cve" })}>
+                        <Td width={15} {...getTdProps({ columnKey: "cve" })}>
                           {/* <VulnerabilitiesGalleryCount
                           vulnerabilities={item.related_cves}
                         /> */}
@@ -225,10 +226,18 @@ export const PackageList: React.FC = () => {
                               <DescriptionList>
                                 <DescriptionListGroup>
                                   <DescriptionListTerm>
-                                    Qualifiers
+                                    Purl
                                   </DescriptionListTerm>
                                   <DescriptionListDescription>
-                                    {item.decomposedPurl?.qualifiers && <PackageQualifiers value={item.decomposedPurl?.qualifiers} />}
+                                    {item.purl}
+                                  </DescriptionListDescription>
+                                </DescriptionListGroup>
+                                <DescriptionListGroup>
+                                  <DescriptionListTerm>
+                                    Path
+                                  </DescriptionListTerm>
+                                  <DescriptionListDescription>
+                                    {item.decomposedPurl?.path}
                                   </DescriptionListDescription>
                                 </DescriptionListGroup>
                               </DescriptionList>
