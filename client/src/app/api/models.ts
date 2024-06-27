@@ -60,6 +60,15 @@ export interface AdvisoryWithinVulnerability extends AdvisoryBase {
   severity?: Severity;
 }
 
+export interface AdvisoryWithinPackage {
+  status: {
+    status: string,
+    vulnerability: {
+      identifier: string
+    }
+  }[]
+}
+
 // Vulnerability
 
 export interface Vulnerability {
@@ -89,6 +98,7 @@ export interface VulnerabilityWithinAdvisory {
 export interface Package {
   uuid: string;
   purl: string;
+  advisories?: AdvisoryWithinPackage[]
 }
 
 export interface PackageWithinSBOM {

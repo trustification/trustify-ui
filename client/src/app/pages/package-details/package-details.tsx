@@ -17,6 +17,7 @@ import { useFetchPackageById } from "@app/queries/packages";
 import { decomposePurl } from "@app/utils/utils";
 
 import { SbomsByPackage } from "./sboms-by-package";
+import { VulnerabilitiesByPackage } from "./vulnerabilities-by-package";
 
 export const PackageDetails: React.FC = () => {
   const packageId = useRouteParams(PathParam.PACKAGE_ID);
@@ -60,16 +61,15 @@ export const PackageDetails: React.FC = () => {
           actionButtons={[]}
           tabs={[
             {
-              eventKey: "cves",
-              title: "CVEs",
+              eventKey: "vulnerabilities",
+              title: "Vulnerabilities",
               children: (
                 <div className="pf-v5-u-m-md">
                   <LoadingWrapper
                     isFetching={isFetchingSbom}
                     fetchError={fetchErrorSbom}
                   >
-                    {/* {pkg && <RelatedCVEs cves={pkg?.related_cves || []} />} */}
-                    <p style={{ color: "red" }}>issue-412</p>
+                    {packageId && <VulnerabilitiesByPackage packageId={packageId} />}
                   </LoadingWrapper>
                 </div>
               ),
