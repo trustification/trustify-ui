@@ -12,7 +12,6 @@ import {
 import DetailsPage from "@patternfly/react-component-groups/dist/dynamic/DetailsPage";
 
 import { PathParam, useRouteParams } from "@app/Routes";
-import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useFetchPackageById } from "@app/queries/packages";
 import { decomposePurl } from "@app/utils/utils";
 
@@ -65,12 +64,7 @@ export const PackageDetails: React.FC = () => {
               title: "Vulnerabilities",
               children: (
                 <div className="pf-v5-u-m-md">
-                  <LoadingWrapper
-                    isFetching={isFetchingSbom}
-                    fetchError={fetchErrorSbom}
-                  >
-                    {packageId && <VulnerabilitiesByPackage packageId={packageId} />}
-                  </LoadingWrapper>
+                  {packageId && <VulnerabilitiesByPackage packageId={packageId} />}
                 </div>
               ),
             },
@@ -79,12 +73,7 @@ export const PackageDetails: React.FC = () => {
               title: "SBOMs",
               children: (
                 <div className="pf-v5-u-m-md">
-                  <LoadingWrapper
-                    isFetching={isFetchingSbom}
-                    fetchError={fetchErrorSbom}
-                  >
-                    {packageId && <SbomsByPackage packageId={packageId} />}
-                  </LoadingWrapper>
+                  {packageId && <SbomsByPackage packageId={packageId} />}
                 </div>
               ),
             },

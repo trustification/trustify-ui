@@ -1,6 +1,8 @@
 import React from "react";
-import ErrorState from "@patternfly/react-component-groups/dist/esm/ErrorState";
+
 import { Bullseye, Spinner } from "@patternfly/react-core";
+
+import { StateError } from "./StateError";
 
 export const LoadingWrapper = (props: {
   isFetching: boolean;
@@ -14,7 +16,7 @@ export const LoadingWrapper = (props: {
       </Bullseye>
     );
   } else if (props.fetchError) {
-    return <ErrorState errorTitle="Error" />;
+    return <StateError />;
   } else {
     return props.children;
   }
