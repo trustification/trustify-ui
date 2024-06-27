@@ -80,6 +80,7 @@ export interface VulnerabilityWithinAdvisory {
     title: string;
     discovered?: string;
     released?: string;
+    cwe?: string;
   };
   cwe: string;
 }

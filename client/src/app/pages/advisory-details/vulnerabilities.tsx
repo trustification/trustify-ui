@@ -139,8 +139,7 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
                       <SeverityShieldAndText value={item.severity} />
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "cwe" })}>
-                      {/* {item.cwe} */}
-                      <p style={{ color: "red" }}>issue-281</p>
+                      {item.non_normative.cwe}
                     </Td>
                   </TableRowContentWithControls>
                 </Tr>
