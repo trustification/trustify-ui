@@ -41,13 +41,6 @@ export const SbomDetails: React.FC = () => {
           }
           pageHeading={{
             title: sbom?.name ?? sbomId ?? "",
-            label: sbom
-              ? {
-                children: sbom.type,
-                isCompact: true,
-                color: "blue",
-              }
-              : undefined,
           }}
           actionButtons={[
             {
@@ -84,7 +77,7 @@ export const SbomDetails: React.FC = () => {
               title: "CVEs",
               children: (
                 <div className="pf-v5-u-m-md">
-                  {sbomId && <CVEs sbomId={sbomId} />}
+                  <p style={{ color: "red" }}>issue-285 we should have a list of vulnerabilities here</p>
                 </div>
               ),
             },
