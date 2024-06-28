@@ -137,7 +137,6 @@ export interface Importer {
   name: string;
   configuration: ImporterConfiguration;
   state?: ImporterStatus;
-  report?: ImporterReportDetails; // This field is added in the rest fetch process
 }
 
 export type ImporterConfiguration = {
@@ -156,6 +155,7 @@ export interface ImporterConfigurationValues {
 
 export interface ImporterReport {
   id: string;
+  error?: string;
   report: {
     startDate: string;
     endDate: string;

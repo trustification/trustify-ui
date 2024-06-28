@@ -22,6 +22,7 @@ import {
 } from "@patternfly/react-core";
 import {
   ActionsColumn,
+  Caption,
   ExpandableRowContent,
   Table,
   Tbody,
@@ -37,6 +38,7 @@ import { ConfirmDialog } from "@app/components/ConfirmDialog";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import {
   useDeleteiIporterMutation as useDeleteIporterMutation,
+  useFetchImporterReports,
   useFetchImporters,
 } from "@app/queries/importers";
 import {
@@ -108,10 +110,9 @@ export const ImporterList: React.FC = () => {
       name: "Name",
       type: "Type",
       description: "Description",
+      source: "Source",
+      period: "Period",
       state: "State",
-      start: "Start",
-      end: "End",
-      itemsImported: "Items imported",
     },
     hasActionsColumn: true,
     isSortEnabled: true,
@@ -199,10 +200,9 @@ export const ImporterList: React.FC = () => {
                   <Th {...getThProps({ columnKey: "name" })} />
                   <Th {...getThProps({ columnKey: "type" })} />
                   <Th {...getThProps({ columnKey: "description" })} />
+                  <Th {...getThProps({ columnKey: "source" })} />
+                  <Th {...getThProps({ columnKey: "period" })} />
                   <Th {...getThProps({ columnKey: "state" })} />
-                  <Th {...getThProps({ columnKey: "start" })} />
-                  <Th {...getThProps({ columnKey: "end" })} />
-                  <Th {...getThProps({ columnKey: "itemsImported" })} />
                 </TableHeaderContentWithControls>
               </Tr>
             </Thead>
@@ -226,18 +226,40 @@ export const ImporterList: React.FC = () => {
                         item={item}
                         rowIndex={rowIndex}
                       >
-                        <Td width={15} {...getTdProps({ columnKey: "name" })}>
+                        <Td
+                          width={15}
+                          modifier="truncate"
+                          {...getTdProps({ columnKey: "name" })}
+                        >
                           {item.name}
                         </Td>
-                        <Td width={10} {...getTdProps({ columnKey: "type" })}>
+                        <Td
+                          width={10}
+                          modifier="truncate"
+                          {...getTdProps({ columnKey: "type" })}
+                        >
                           {importerType}
                         </Td>
                         <Td
                           width={25}
-                          {...getTdProps({ columnKey: "description" })}
                           modifier="truncate"
+                          {...getTdProps({ columnKey: "description" })}
                         >
                           {configValues?.description}
+                        </Td>
+                        <Td
+                          width={30}
+                          modifier="truncate"
+                          {...getTdProps({ columnKey: "source" })}
+                        >
+                          {configValues?.source}
+                        </Td>
+                        <Td
+                          width={10}
+                          modifier="truncate"
+                          {...getTdProps({ columnKey: "period" })}
+                        >
+                          {configValues?.period}
                         </Td>
                         <Td
                           width={10}
@@ -249,31 +271,6 @@ export const ImporterList: React.FC = () => {
                           ) : (
                             <Label color="orange">Disabled</Label>
                           )}
-                        </Td>
-                        <Td
-                          width={15}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "start" })}
-                        >
-                          {!configValues?.disabled
-                            ? formatDateTime(item.report?.startDate)
-                            : null}
-                        </Td>
-                        <Td
-                          width={15}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "end" })}
-                        >
-                          {!configValues?.disabled
-                            ? formatDateTime(item.report?.endDate)
-                            : null}
-                        </Td>
-                        <Td
-                          width={10}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "itemsImported" })}
-                        >
-                          {item.report?.numerOfItems}
                         </Td>
                         <Td isActionCell>
                           <ActionsColumn
@@ -294,28 +291,11 @@ export const ImporterList: React.FC = () => {
                     {isCellExpanded(item) ? (
                       <Tr isExpanded>
                         <Td colSpan={7}>
-                          <ExpandableRowContent>
-                            <div className="pf-v5-u-m-md">
-                              <DescriptionList>
-                                <DescriptionListGroup>
-                                  <DescriptionListTerm>
-                                    Source
-                                  </DescriptionListTerm>
-                                  <DescriptionListDescription>
-                                    {configValues?.source}
-                                  </DescriptionListDescription>
-                                </DescriptionListGroup>
-                                <DescriptionListGroup>
-                                  <DescriptionListTerm>
-                                    Period
-                                  </DescriptionListTerm>
-                                  <DescriptionListDescription>
-                                    {configValues?.period}
-                                  </DescriptionListDescription>
-                                </DescriptionListGroup>
-                              </DescriptionList>
-                            </div>
-                          </ExpandableRowContent>
+                          <div className="pf-v5-u-m-md">
+                            <ExpandableRowContent>
+                              <ImporterExpandedArea importerId={item.name} />
+                            </ExpandableRowContent>
+                          </div>
                         </Td>
                       </Tr>
                     ) : null}
@@ -366,6 +346,133 @@ export const ImporterList: React.FC = () => {
           }}
         />
       )}
+    </>
+  );
+};
+
+
+interface ImporterExpandedAreaProps {
+  importerId: string;
+}
+
+export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({ importerId }) => {
+  const { importers, isFetching, fetchError } = useFetchImporterReports(importerId);
+
+  const tableControls = useLocalTableControls({
+    variant: "compact",
+    tableName: "report-table",
+    idProperty: "id",
+    items: importers,
+    columnNames: {
+      startDate: "Start date",
+      endDate: "End date",
+      numberOfItems: "Number of items",
+      error: "Error",
+    },
+    isPaginationEnabled: true,
+    initialItemsPerPage: 5,
+    isSortEnabled: true,
+    sortableColumns: ["startDate", "endDate"],
+    getSortValues: (report) => ({
+      startDate: dayjs(report.report.startDate).millisecond(),
+      endDate: dayjs(report.report.startDate).millisecond(),
+    }),
+    isFilterEnabled: false,
+    isExpansionEnabled: false,
+  });
+
+  const {
+    currentPageItems,
+    numRenderedColumns,
+    propHelpers: {
+      toolbarProps,
+      tableProps,
+      paginationToolbarItemProps,
+      paginationProps,
+      getThProps,
+      getTrProps,
+      getTdProps,
+    },
+  } = tableControls;
+
+  return (
+    <>
+      <Toolbar {...toolbarProps}>
+        <ToolbarContent>
+          <ToolbarItem {...paginationToolbarItemProps}>
+            <SimplePagination
+              idPrefix="report-table"
+              isTop
+              paginationProps={paginationProps}
+            />
+          </ToolbarItem>
+        </ToolbarContent>
+      </Toolbar>
+
+      <Table {...tableProps} aria-label="Report table">
+        <Caption>Importer reports</Caption>
+        <Thead>
+          <Tr>
+            <TableHeaderContentWithControls {...tableControls}>
+              <Th {...getThProps({ columnKey: "startDate" })} />
+              <Th {...getThProps({ columnKey: "endDate" })} />
+              <Th {...getThProps({ columnKey: "numberOfItems" })} />
+              <Th {...getThProps({ columnKey: "error" })} />
+            </TableHeaderContentWithControls>
+          </Tr>
+        </Thead>
+        <ConditionalTableBody
+          isLoading={isFetching}
+          isError={!!fetchError}
+          isNoData={importers?.length === 0}
+          numRenderedColumns={numRenderedColumns}
+        >
+          {currentPageItems?.map((item, rowIndex) => {
+            return (
+              <Tbody key={item.id}>
+                <Tr {...getTrProps({ item })}>
+                  <TableRowContentWithControls
+                    {...tableControls}
+                    item={item}
+                    rowIndex={rowIndex}
+                  >
+                    <Td
+                      width={15}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "startDate" })}>
+                      {formatDateTime(item.report.startDate)}
+                    </Td>
+                    <Td
+                      width={15}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "endDate" })}>
+                      {formatDateTime(item.report.endDate)}
+                    </Td>
+                    <Td
+                      width={10}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "numberOfItems" })}>
+                      {item.report.numerOfItems}
+                    </Td>
+                    <Td
+                      width={50}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "error" })}>
+                      {item.error}
+                    </Td>
+                  </TableRowContentWithControls>
+                </Tr>
+              </Tbody>
+            );
+          })}
+        </ConditionalTableBody>
+      </Table>
+      <SimplePagination
+        idPrefix="report-table"
+        isTop={false}
+        isCompact
+        paginationProps={paginationProps}
+      />
     </>
   );
 };
