@@ -34,7 +34,7 @@ export const useFetchPackages = (
 
 export const useFetchPackageById = (id?: number | string) => {
   const { data, isLoading, error } = useQuery({
-    queryKey: [, id],
+    queryKey: [PackagesQueryKey, id],
     queryFn: () =>
       id === undefined ? Promise.resolve(undefined) : getPackageById(id),
   });

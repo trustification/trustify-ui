@@ -4,31 +4,46 @@ import { NavLink } from "react-router-dom";
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
-import { VulnerabilityWithinAdvisory } from "@app/api/models";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
-import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
-  ConditionalTableBody,
-  TableHeaderContentWithControls,
+    ConditionalTableBody,
+    TableHeaderContentWithControls,
+    TableRowContentWithControls,
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
+import { useFetchPackageById } from "@app/queries/packages";
+import { useWithUiId } from "@app/utils/query-utils";
 
-interface RelatedCVEsProps {
-  cves: VulnerabilityWithinAdvisory[];
+interface VulnerabilitiesByPackageProps {
+  packageId: string;
 }
 
-export const RelatedCVEs: React.FC<RelatedCVEsProps> = ({ cves }) => {
+export const VulnerabilitiesByPackage: React.FC<VulnerabilitiesByPackageProps> = ({ packageId }) => {
+  const {
+    pkg,
+    isFetching: isFetching,
+    fetchError: fetchError,
+  } = useFetchPackageById(packageId);
+
+  const tableData = React.useMemo(() => {
+    return (pkg?.advisories ?? []).flatMap(advisory => {
+      return advisory.status.map(status => ({ identifier: status.vulnerability.identifier }))
+    })
+  }, [pkg]);
+
+  const tableDataWithUiId = useWithUiId(
+    tableData,
+    (d) => `${d.identifier}-${Math.floor(Math.random() * 10000)}`
+  );
+
   const tableControls = useLocalTableControls({
-    tableName: "cves-table",
-    idProperty: "identifier",
-    items: cves,
+    tableName: "vulnerability-table",
+    idProperty: "_ui_unique_id",
+    items: tableDataWithUiId,
     isLoading: false,
     columnNames: {
       id: "ID",
-      description: "Description",
-      severity: "Severity",
-      datePublished: "Date published",
     },
     hasActionsColumn: true,
     isSortEnabled: false,
@@ -69,7 +84,7 @@ export const RelatedCVEs: React.FC<RelatedCVEsProps> = ({ cves }) => {
           <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
           <ToolbarItem {...paginationToolbarItemProps}>
             <SimplePagination
-              idPrefix="cves-table"
+              idPrefix="vulnerability-table"
               isTop
               paginationProps={paginationProps}
             />
@@ -77,54 +92,35 @@ export const RelatedCVEs: React.FC<RelatedCVEsProps> = ({ cves }) => {
         </ToolbarContent>
       </Toolbar>
 
-      <Table {...tableProps} aria-label="CVEs table">
+      <Table {...tableProps} aria-label="vulnerability table">
         <Thead>
           <Tr>
             <TableHeaderContentWithControls {...tableControls}>
               <Th {...getThProps({ columnKey: "id" })} />
-              <Th {...getThProps({ columnKey: "description" })} />
-              <Th {...getThProps({ columnKey: "severity" })} />
-              <Th {...getThProps({ columnKey: "datePublished" })} />
             </TableHeaderContentWithControls>
           </Tr>
         </Thead>
         <ConditionalTableBody
-          isLoading={false}
-          isError={undefined}
-          isNoData={cves.length === 0}
+          isLoading={isFetching}
+          isError={!!fetchError}
+          isNoData={tableDataWithUiId.length === 0}
           numRenderedColumns={numRenderedColumns}
         >
-          {currentPageItems?.map((item) => {
+          {currentPageItems?.map((item, rowIndex) => {
             return (
-              <Tbody key={item.identifier}>
+              <Tbody key={item._ui_unique_id}>
                 <Tr {...getTrProps({ item })}>
-                  <Td width={15} {...getTdProps({ columnKey: "id" })}>
-                    <NavLink to={`/cves/${item.identifier}`}>
-                      {item.identifier}
-                    </NavLink>
-                  </Td>
-                  <Td
-                    width={50}
-                    modifier="truncate"
-                    {...getTdProps({ columnKey: "description" })}
+                  <TableRowContentWithControls
+                    {...tableControls}
+                    item={item}
+                    rowIndex={rowIndex}
                   >
-                    {/* {item.description} */}
-                  </Td>
-                  <Td
-                    width={15}
-                    modifier="truncate"
-                    {...getTdProps({ columnKey: "severity" })}
-                  >
-                    <SeverityShieldAndText value={item.severity} />
-                  </Td>
-                  <Td
-                    width={15}
-                    modifier="truncate"
-                    {...getTdProps({ columnKey: "datePublished" })}
-                  >
-                    {/* {formatDate(item.published)} */}
-                    missing
-                  </Td>
+                    <Td width={15} {...getTdProps({ columnKey: "id" })}>
+                      <NavLink to={`/vulnerabilities/${item.identifier}`}>
+                        {item.identifier}
+                      </NavLink>
+                    </Td>
+                  </TableRowContentWithControls>
                 </Tr>
               </Tbody>
             );
@@ -132,7 +128,7 @@ export const RelatedCVEs: React.FC<RelatedCVEsProps> = ({ cves }) => {
         </ConditionalTableBody>
       </Table>
       <SimplePagination
-        idPrefix="cves-table"
+        idPrefix="vulnerability-table"
         isTop={false}
         isCompact
         paginationProps={paginationProps}

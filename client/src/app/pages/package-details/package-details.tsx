@@ -12,11 +12,11 @@ import {
 import DetailsPage from "@patternfly/react-component-groups/dist/dynamic/DetailsPage";
 
 import { PathParam, useRouteParams } from "@app/Routes";
-import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useFetchPackageById } from "@app/queries/packages";
 import { decomposePurl } from "@app/utils/utils";
 
 import { SbomsByPackage } from "./sboms-by-package";
+import { VulnerabilitiesByPackage } from "./vulnerabilities-by-package";
 
 export const PackageDetails: React.FC = () => {
   const packageId = useRouteParams(PathParam.PACKAGE_ID);
@@ -60,17 +60,11 @@ export const PackageDetails: React.FC = () => {
           actionButtons={[]}
           tabs={[
             {
-              eventKey: "cves",
-              title: "CVEs",
+              eventKey: "vulnerabilities",
+              title: "Vulnerabilities",
               children: (
                 <div className="pf-v5-u-m-md">
-                  <LoadingWrapper
-                    isFetching={isFetchingSbom}
-                    fetchError={fetchErrorSbom}
-                  >
-                    {/* {pkg && <RelatedCVEs cves={pkg?.related_cves || []} />} */}
-                    <p style={{ color: "red" }}>issue-412</p>
-                  </LoadingWrapper>
+                  {packageId && <VulnerabilitiesByPackage packageId={packageId} />}
                 </div>
               ),
             },
@@ -79,12 +73,7 @@ export const PackageDetails: React.FC = () => {
               title: "SBOMs",
               children: (
                 <div className="pf-v5-u-m-md">
-                  <LoadingWrapper
-                    isFetching={isFetchingSbom}
-                    fetchError={fetchErrorSbom}
-                  >
-                    {packageId && <SbomsByPackage packageId={packageId} />}
-                  </LoadingWrapper>
+                  {packageId && <SbomsByPackage packageId={packageId} />}
                 </div>
               ),
             },
