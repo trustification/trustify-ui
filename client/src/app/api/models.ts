@@ -33,9 +33,11 @@ export interface HubPaginatedResult<T> {
   params: HubRequestParams;
 }
 
-// Base
+// Advisories
 
-export interface AdvisoryBase {
+export type Severity = "none" | "low" | "medium" | "high" | "critical";
+
+export interface Advisory {
   identifier: string;
   published: string;
   modified: string;
@@ -45,32 +47,55 @@ export interface AdvisoryBase {
     name?: string;
     website?: string;
   };
-}
 
-// Advisories
-
-export type Severity = "none" | "low" | "medium" | "high" | "critical";
-
-export interface Advisory extends AdvisoryBase {
   average_severity?: Severity;
   vulnerabilities: VulnerabilityWithinAdvisory[];
 }
 
-export interface AdvisoryWithinVulnerability extends AdvisoryBase {
+export type StatusType = "fixed" | "not_affected" | "known_not_affected" | "affected";
+
+export interface AdvisoryWithinVulnerability {
+  identifier: string;
+  published: string;
+  modified: string;
+  title: string;
+  uuid: string;
+  issuer?: {
+    name?: string;
+    website?: string;
+  };
+
   severity?: Severity;
+  statuses?: {
+    [key in StatusType]?: {
+      version: string;
+      package: {
+        purl: string;
+      }
+    }[]
+  }
+}
+
+export interface AdvisoryWithinPackage {
+  status: {
+    status: string,
+    vulnerability: {
+      identifier: string
+    }
+  }[]
 }
 
 // Vulnerability
 
 export interface Vulnerability {
   identifier: string;
-  title: string;
+  title?: string;
   average_severity?: Severity;
   cwe: string;
   published: string;
   modified: string;
 
-  advisories: AdvisoryBase[];
+  advisories: AdvisoryWithinVulnerability[];
 }
 
 export interface VulnerabilityWithinAdvisory {
@@ -80,6 +105,7 @@ export interface VulnerabilityWithinAdvisory {
     title: string;
     discovered?: string;
     released?: string;
+    cwe?: string;
   };
   cwe: string;
 }
@@ -89,6 +115,7 @@ export interface VulnerabilityWithinAdvisory {
 export interface Package {
   uuid: string;
   purl: string;
+  advisories?: AdvisoryWithinPackage[]
 }
 
 export interface PackageWithinSBOM {
@@ -122,7 +149,6 @@ export interface Importer {
   name: string;
   configuration: ImporterConfiguration;
   state?: ImporterStatus;
-  report?: ImporterReportDetails; // This field is added in the rest fetch process
 }
 
 export type ImporterConfiguration = {
@@ -141,6 +167,7 @@ export interface ImporterConfigurationValues {
 
 export interface ImporterReport {
   id: string;
+  error?: string;
   report: {
     startDate: string;
     endDate: string;

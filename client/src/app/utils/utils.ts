@@ -35,11 +35,11 @@ export const getToolbarChipKey = (value: string | ToolbarChip) => {
 // Dates
 
 export const formatDate = (value?: string) => {
-  return value ? dayjs(value).utc().format(RENDER_DATE_FORMAT) : null;
+  return value ? dayjs(value).format(RENDER_DATE_FORMAT) : null;
 };
 
 export const formatDateTime = (value?: string) => {
-  return value ? dayjs(value).utc().format(RENDER_DATETIME_FORMAT) : null;
+  return value ? dayjs(value).format(RENDER_DATETIME_FORMAT) : null;
 };
 
 export const duplicateFieldCheck = <T>(

@@ -5,6 +5,7 @@ import { Flex, FlexItem, Icon, Tooltip } from "@patternfly/react-core";
 import CheckCircleIcon from "@patternfly/react-icons/dist/esm/icons/check-circle-icon";
 import ExclamationCircleIcon from "@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon";
 import InProgressIcon from "@patternfly/react-icons/dist/esm/icons/in-progress-icon";
+import PendingIcon from "@patternfly/react-icons/dist/esm/icons/pending-icon";
 import TimesCircleIcon from "@patternfly/react-icons/dist/esm/icons/times-circle-icon";
 import UnknownIcon from "@patternfly/react-icons/dist/esm/icons/unknown-icon";
 
@@ -83,7 +84,7 @@ export const IconedStatus: React.FC<IIconedStatusProps> = ({
       status: "success",
     },
     Scheduled: {
-      icon: <InProgressIcon />,
+      icon: <PendingIcon />,
       status: "info",
       label: "Scheduled",
     },

@@ -6,8 +6,9 @@ import {
   createImporter,
   deleteImporter,
   getImporterById,
+  getImporterReports,
   getImporters,
-  updateImporter,
+  updateImporter
 } from "@app/api/rest";
 
 export const ImportersQueryKey = "importers";
@@ -95,5 +96,20 @@ export const useDeleteiIporterMutation = (
     mutate,
     isPending,
     error,
+  };
+};
+
+export const useFetchImporterReports = (id: string, refetchDisabled: boolean = false) => {
+  const { data, isLoading, refetch, error } = useQuery({
+    queryKey: [ImportersQueryKey, id, "reports"],
+    queryFn: () => getImporterReports(id),
+    refetchInterval: !refetchDisabled ? 5000 : false,
+  });
+
+  return {
+    importers: data?.data || [],
+    isFetching: isLoading,
+    fetchError: error,
+    refetch,
   };
 };
