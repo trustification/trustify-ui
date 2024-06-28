@@ -207,7 +207,6 @@ export const SbomList: React.FC = () => {
                           width={20}
                           {...getTdProps({ columnKey: "vulnerabilities" })}
                         >
-                          {/* <VulnerabilityGallery severities={item.related_cves} /> */}
                           <p style={{ color: "red" }}>issue-285</p>
                         </Td>
                         <Td isActionCell>
