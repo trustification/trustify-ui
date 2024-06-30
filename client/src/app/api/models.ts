@@ -52,7 +52,11 @@ export interface Advisory {
   vulnerabilities: VulnerabilityWithinAdvisory[];
 }
 
-export type StatusType = "fixed" | "not_affected" | "known_not_affected" | "affected";
+export type StatusType =
+  | "fixed"
+  | "not_affected"
+  | "known_not_affected"
+  | "affected";
 
 export interface AdvisoryWithinVulnerability {
   identifier: string;
@@ -71,18 +75,28 @@ export interface AdvisoryWithinVulnerability {
       version: string;
       package: {
         purl: string;
-      }
-    }[]
-  }
+      };
+    }[];
+  };
 }
 
 export interface AdvisoryWithinPackage {
+  identifier: string;
+  published: string;
+  modified: string;
+  title: string;
+  uuid: string;
+  issuer?: {
+    name?: string;
+    website?: string;
+  };
+
   status: {
-    status: string,
+    status: StatusType;
     vulnerability: {
-      identifier: string
-    }
-  }[]
+      identifier: string;
+    };
+  }[];
 }
 
 // Vulnerability
@@ -115,7 +129,7 @@ export interface VulnerabilityWithinAdvisory {
 export interface Package {
   uuid: string;
   purl: string;
-  advisories?: AdvisoryWithinPackage[]
+  advisories?: AdvisoryWithinPackage[];
 }
 
 export interface PackageWithinSBOM {

@@ -11,7 +11,11 @@ import {
   ConditionalTableBody,
   TableHeaderContentWithControls,
 } from "@app/components/TableControls";
-import { getHubRequestParams, useTableControlProps, useTableControlState } from "@app/hooks/table-controls";
+import {
+  getHubRequestParams,
+  useTableControlProps,
+  useTableControlState,
+} from "@app/hooks/table-controls";
 import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchSbomsByPackageId } from "@app/queries/sboms";
 import { formatDate } from "@app/utils/utils";
@@ -20,7 +24,9 @@ interface SbomsByPackageProps {
   packageId: string;
 }
 
-export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ packageId }) => {
+export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({
+  packageId,
+}) => {
   const tableControlState = useTableControlState({
     tableName: "sboms",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.sboms_by_package,

@@ -5,9 +5,12 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   PageSection,
+  Popover,
+  TabAction,
   Text,
   TextContent,
 } from "@patternfly/react-core";
+import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
 import DetailsPage from "@patternfly/react-component-groups/dist/dynamic/DetailsPage";
 
@@ -20,12 +23,7 @@ import { VulnerabilitiesByPackage } from "./vulnerabilities-by-package";
 
 export const PackageDetails: React.FC = () => {
   const packageId = useRouteParams(PathParam.PACKAGE_ID);
-
-  const {
-    pkg,
-    isFetching: isFetchingSbom,
-    fetchError: fetchErrorSbom,
-  } = useFetchPackageById(packageId);
+  const { pkg } = useFetchPackageById(packageId);
 
   const decomposedPurl = React.useMemo(() => {
     return pkg ? decomposePurl(pkg.purl) : undefined;
@@ -52,9 +50,9 @@ export const PackageDetails: React.FC = () => {
             ) : undefined,
             label: pkg
               ? {
-                children: pkg ? `type=${decomposedPurl?.type}` : "",
-                isCompact: true,
-              }
+                  children: pkg ? `type=${decomposedPurl?.type}` : "",
+                  isCompact: true,
+                }
               : undefined,
           }}
           actionButtons={[]}
@@ -64,8 +62,27 @@ export const PackageDetails: React.FC = () => {
               title: "Vulnerabilities",
               children: (
                 <div className="pf-v5-u-m-md">
-                  {packageId && <VulnerabilitiesByPackage packageId={packageId} />}
+                  {packageId && (
+                    <VulnerabilitiesByPackage packageId={packageId} />
+                  )}
                 </div>
+              ),
+              actions: (
+                <>
+                  <Popover
+                    bodyContent={
+                      <div>
+                        Vulnerabilities <strong>associated</strong> to the
+                        current package.
+                      </div>
+                    }
+                    position="top"
+                  >
+                    <TabAction>
+                      <HelpIcon />
+                    </TabAction>
+                  </Popover>
+                </>
               ),
             },
             {
@@ -75,6 +92,22 @@ export const PackageDetails: React.FC = () => {
                 <div className="pf-v5-u-m-md">
                   {packageId && <SbomsByPackage packageId={packageId} />}
                 </div>
+              ),
+              actions: (
+                <>
+                  <Popover
+                    bodyContent={
+                      <div>
+                        SBOMs that <strong>contain</strong> the current package.
+                      </div>
+                    }
+                    position="top"
+                  >
+                    <TabAction>
+                      <HelpIcon />
+                    </TabAction>
+                  </Popover>
+                </>
               ),
             },
           ]}
