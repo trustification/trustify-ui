@@ -1,6 +1,8 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
+import { AxiosError, AxiosResponse } from "axios";
+
 import {
   Button,
   PageSection,
@@ -9,7 +11,7 @@ import {
   TextContent,
   Toolbar,
   ToolbarContent,
-  ToolbarItem
+  ToolbarItem,
 } from "@patternfly/react-core";
 import {
   ActionsColumn,
@@ -22,10 +24,9 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import {
-  TablePersistenceKeyPrefixes
-} from "@app/Constants";
+import { TablePersistenceKeyPrefixes } from "@app/Constants";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
+import { PackagesCount } from "@app/components/PackagesCount";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -43,8 +44,6 @@ import { useDownload } from "@app/hooks/useDownload";
 import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchSBOMs, useUploadSBOM } from "@app/queries/sboms";
 import { formatDate } from "@app/utils/utils";
-import { AxiosError, AxiosResponse } from "axios";
-import { PackagesCount } from "./components/packages-count";
 
 export const SbomList: React.FC = () => {
   const [showUploadComponent, setShowUploadComponent] = React.useState(false);
@@ -184,7 +183,9 @@ export const SbomList: React.FC = () => {
                         rowIndex={rowIndex}
                       >
                         <Td width={20} {...getTdProps({ columnKey: "name" })}>
-                          <NavLink to={`/sboms/${item.id}`}>{item.name}</NavLink>
+                          <NavLink to={`/sboms/${item.id}`}>
+                            {item.name}
+                          </NavLink>
                         </Td>
                         <Td
                           width={40}
@@ -200,7 +201,10 @@ export const SbomList: React.FC = () => {
                         >
                           {formatDate(item.published)}
                         </Td>
-                        <Td width={10} {...getTdProps({ columnKey: "packages" })}>
+                        <Td
+                          width={10}
+                          {...getTdProps({ columnKey: "packages" })}
+                        >
                           <PackagesCount sbomId={item.id} />
                         </Td>
                         <Td
@@ -228,7 +232,11 @@ export const SbomList: React.FC = () => {
                         <Td colSpan={7}>
                           <ExpandableRowContent>
                             <div className="pf-v5-u-m-md">
-                              {item.described_by && <SbomExpandedArea described_by={item.described_by} />}
+                              {item.described_by && (
+                                <SbomExpandedArea
+                                  described_by={item.described_by}
+                                />
+                              )}
                             </div>
                           </ExpandableRowContent>
                         </Td>
@@ -272,7 +280,9 @@ interface SbomExpandedAreaProps {
   }[];
 }
 
-export const SbomExpandedArea: React.FC<SbomExpandedAreaProps> = ({ described_by }) => {
+export const SbomExpandedArea: React.FC<SbomExpandedAreaProps> = ({
+  described_by,
+}) => {
   const tableControls = useLocalTableControls({
     variant: "compact",
     tableName: "version-table",
@@ -293,7 +303,7 @@ export const SbomExpandedArea: React.FC<SbomExpandedAreaProps> = ({ described_by
         type: FilterType.search,
         placeholderText: "Search...",
         getItemValue: (item) => {
-          return item.name
+          return item.name;
         },
       },
     ],
@@ -303,12 +313,7 @@ export const SbomExpandedArea: React.FC<SbomExpandedAreaProps> = ({ described_by
   const {
     currentPageItems,
     numRenderedColumns,
-    propHelpers: {
-      tableProps,
-      getThProps,
-      getTrProps,
-      getTdProps,
-    },
+    propHelpers: { tableProps, getThProps, getTrProps, getTdProps },
   } = tableControls;
 
   return (
