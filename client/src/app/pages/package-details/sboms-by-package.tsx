@@ -6,12 +6,17 @@ import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
 import { TablePersistenceKeyPrefixes } from "@app/Constants";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
+import { PackagesCount } from "@app/components/PackagesCount";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
   TableHeaderContentWithControls,
 } from "@app/components/TableControls";
-import { getHubRequestParams, useTableControlProps, useTableControlState } from "@app/hooks/table-controls";
+import {
+  getHubRequestParams,
+  useTableControlProps,
+  useTableControlState,
+} from "@app/hooks/table-controls";
 import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchSbomsByPackageId } from "@app/queries/sboms";
 import { formatDate } from "@app/utils/utils";
@@ -20,7 +25,9 @@ interface SbomsByPackageProps {
   packageId: string;
 }
 
-export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ packageId }) => {
+export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({
+  packageId,
+}) => {
   const tableControlState = useTableControlState({
     tableName: "sboms",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.sboms_by_package,
@@ -29,6 +36,7 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ packageId }) => 
       version: "Version",
       supplier: "Supplier",
       published: "Published",
+      packages: "Packages",
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
@@ -103,9 +111,9 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ packageId }) => 
           <Tr>
             <TableHeaderContentWithControls {...tableControls}>
               <Th {...getThProps({ columnKey: "name" })} />
-              <Th {...getThProps({ columnKey: "version" })} />
               <Th {...getThProps({ columnKey: "supplier" })} />
               <Th {...getThProps({ columnKey: "published" })} />
+              <Th {...getThProps({ columnKey: "packages" })} />
             </TableHeaderContentWithControls>
           </Tr>
         </Thead>
@@ -123,13 +131,6 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ packageId }) => 
                     <NavLink to={`/sboms/${item.id}`}>{item.name}</NavLink>
                   </Td>
                   <Td
-                    width={10}
-                    modifier="truncate"
-                    {...getTdProps({ columnKey: "version" })}
-                  >
-                    <p style={{ color: "red" }}>issue-284</p>
-                  </Td>
-                  <Td
                     width={30}
                     modifier="truncate"
                     {...getTdProps({ columnKey: "supplier" })}
@@ -142,6 +143,13 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ packageId }) => 
                     {...getTdProps({ columnKey: "published" })}
                   >
                     {formatDate(item.published)}
+                  </Td>
+                  <Td
+                    width={10}
+                    modifier="truncate"
+                    {...getTdProps({ columnKey: "packages" })}
+                  >
+                    <PackagesCount sbomId={item.id} />
                   </Td>
                 </Tr>
               </Tbody>
