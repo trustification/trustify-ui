@@ -20,7 +20,7 @@ const API = "/api";
 export const ADVISORIES = API + "/v1/advisory";
 export const VULNERABILITIES = API + "/v1/vulnerability";
 export const SBOMS = API + "/v1/sbom";
-export const PACKAGES = API + "/v1/package";
+export const PACKAGES = API + "/v1/package/by-purl";
 export const IMPORTERS = API + "/v1/importer";
 
 export interface PaginatedResponse<T> {
