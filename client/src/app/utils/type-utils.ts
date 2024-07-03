@@ -10,5 +10,3 @@ export type DisallowCharacters<
 export type DiscriminatedArgs<TBoolDiscriminatorKey extends string, TArgs> =
   | ({ [key in TBoolDiscriminatorKey]: true } & TArgs)
   | { [key in TBoolDiscriminatorKey]?: false };
-
-interface ProgressEvent {}
