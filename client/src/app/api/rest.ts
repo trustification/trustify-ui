@@ -20,7 +20,7 @@ const API = "/api";
 export const ADVISORIES = API + "/v1/advisory";
 export const VULNERABILITIES = API + "/v1/vulnerability";
 export const SBOMS = API + "/v1/sbom";
-export const PACKAGES = API + "/v1/package";
+export const PACKAGES = API + "/v1/purl";
 export const IMPORTERS = API + "/v1/importer";
 
 export interface PaginatedResponse<T> {
@@ -178,7 +178,8 @@ export const deleteImporter = (id: number | string) =>
     .delete<Importer>(`${IMPORTERS}/${id}`)
     .then((response) => response.data);
 
-export const getImporterReports = (id: string) => getHubPaginatedResult<ImporterReport>(`${IMPORTERS}/${id}/report`, {});
+export const getImporterReports = (id: string) =>
+  getHubPaginatedResult<ImporterReport>(`${IMPORTERS}/${id}/report`, {});
 
 export const getLastImporterReport = (id: string) => {
   const params: HubRequestParams = {
