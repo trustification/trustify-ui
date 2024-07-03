@@ -264,9 +264,9 @@ export const SbomList: React.FC = () => {
         extractSuccessMessage={(response: AxiosResponse<string>) => {
           return `${response.data} uploaded`;
         }}
-        extractErrorMessage={(error: AxiosError<{ message: string }>) => {
-          return error.response?.data.message ?? "Error while uploading file";
-        }}
+        extractErrorMessage={(error: AxiosError) =>
+          error.response?.data ? error.message : "Error while uploading file"
+        }
         onCloseClick={() => setShowUploadComponent(false)}
       />
     </>
