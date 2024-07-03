@@ -49,7 +49,7 @@ export interface Advisory {
   };
 
   average_severity?: Severity;
-  vulnerabilities: VulnerabilityWithinAdvisory[];
+  vulnerabilities?: VulnerabilityWithinAdvisory[];
 }
 
 export type StatusType =

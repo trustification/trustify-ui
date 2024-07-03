@@ -239,9 +239,11 @@ export const AdvisoryList: React.FC = () => {
                         modifier="truncate"
                         {...getTdProps({ columnKey: "vulnerabilities" })}
                       >
-                        <VulnerabilitiesGalleryCount
-                          vulnerabilities={item.vulnerabilities}
-                        />
+                        {item.vulnerabilities && (
+                          <VulnerabilitiesGalleryCount
+                            vulnerabilities={item.vulnerabilities}
+                          />
+                        )}
                       </Td>
                       <Td isActionCell>
                         <ActionsColumn
