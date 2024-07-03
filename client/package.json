@@ -30,7 +30,7 @@
     "@segment/analytics-next": "^1.64.0",
     "@tanstack/react-query": "^5.22.2",
     "@tanstack/react-query-devtools": "^5.24.0",
-    "axios": "^0.21.2",
+    "axios": "^1.7.2",
     "dayjs": "^1.11.7",
     "ejs": "^3.1.7",
     "file-saver": "^2.0.5",
