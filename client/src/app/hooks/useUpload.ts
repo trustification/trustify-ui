@@ -172,8 +172,9 @@ export const useUpload = <T, E>({
         headers: {
           "X-Requested-With": "XMLHttpRequest",
         },
-        onUploadProgress: (progressEvent: ProgressEvent) => {
-          const progress = (progressEvent.loaded / progressEvent.total) * 100;
+        onUploadProgress: (progressEvent) => {
+          const total = progressEvent.total ?? 1;
+          const progress = (progressEvent.loaded / total) * 100;
           dispatch({
             type: "updateUploadProgress",
             payload: { file, progress: Math.round(progress) },
