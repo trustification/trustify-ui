@@ -185,14 +185,14 @@ export interface ImporterReport {
   report: {
     startDate: string;
     endDate: string;
-    numerOfItems: string;
+    numberOfItems: string;
   };
 }
 
 export interface ImporterReportDetails {
   startDate: string;
   endDate: string;
-  numerOfItems: string;
+  numberOfItems: string;
 }
 
 // Purl
