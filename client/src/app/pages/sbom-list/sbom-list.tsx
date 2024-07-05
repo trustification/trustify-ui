@@ -159,11 +159,26 @@ export const SbomList: React.FC = () => {
             <Thead>
               <Tr>
                 <TableHeaderContentWithControls {...tableControls}>
-                  <Th {...getThProps({ columnKey: "name" })} />
-                  <Th {...getThProps({ columnKey: "supplier" })} />
-                  <Th {...getThProps({ columnKey: "published" })} />
-                  <Th {...getThProps({ columnKey: "packages" })} />
-                  <Th {...getThProps({ columnKey: "vulnerabilities" })} />
+                  <Th
+                    aria-label="name"
+                    {...getThProps({ columnKey: "name" })}
+                  />
+                  <Th
+                    aria-label="supplier"
+                    {...getThProps({ columnKey: "supplier" })}
+                  />
+                  <Th
+                    aria-label="published"
+                    {...getThProps({ columnKey: "published" })}
+                  />
+                  <Th
+                    aria-label="packages"
+                    {...getThProps({ columnKey: "packages" })}
+                  />
+                  <Th
+                    aria-label="vulnerabilities"
+                    {...getThProps({ columnKey: "vulnerabilities" })}
+                  />
                 </TableHeaderContentWithControls>
               </Tr>
             </Thead>
@@ -322,8 +337,11 @@ export const SbomExpandedArea: React.FC<SbomExpandedAreaProps> = ({
         <Thead>
           <Tr>
             <TableHeaderContentWithControls {...tableControls}>
-              <Th {...getThProps({ columnKey: "name" })} />
-              <Th {...getThProps({ columnKey: "version" })} />
+              <Th aria-label="name" {...getThProps({ columnKey: "name" })} />
+              <Th
+                aria-label="version"
+                {...getThProps({ columnKey: "version" })}
+              />
             </TableHeaderContentWithControls>
           </Tr>
         </Thead>

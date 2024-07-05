@@ -14,13 +14,13 @@ export const TableHeaderContentWithControls: React.FC<
     {Array(numColumnsBeforeData)
       .fill(null)
       .map((_, i) => (
-        <Th key={i} />
+        <Th aria-label="before-data-{i}" key={i} />
       ))}
     {children}
     {Array(numColumnsAfterData)
       .fill(null)
       .map((_, i) => (
-        <Th key={i} />
+        <Th aria-label="after-data-{i}" key={i} />
       ))}
   </>
 );
