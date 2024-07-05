@@ -28,7 +28,6 @@
     "*.{css,json,md,yaml,yml}": "prettier --write"
   },
   "dependencies": {
-    "@rollup/plugin-commonjs": "^26.0.1",
     "ejs": "^3.1.10",
     "http-proxy-middleware": "^3.0.0"
   }
