@@ -452,7 +452,7 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({ impo
                       width={10}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "numberOfItems" })}>
-                      {item.report.numerOfItems}
+                      {item.report.numberOfItems}
                     </Td>
                     <Td
                       width={50}
