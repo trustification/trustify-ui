@@ -225,7 +225,11 @@ export const AdvisoryList: React.FC = () => {
             </ToolbarContent>
           </Toolbar>
 
-          <Table {...tableProps} aria-label="Advisory table">
+          <Table
+            {...tableProps}
+            aria-label="Advisory table"
+            className="vertical-middle-aligned-table"
+          >
             <Thead>
               <Tr>
                 <TableHeaderContentWithControls {...tableControls}>
@@ -270,7 +274,7 @@ export const AdvisoryList: React.FC = () => {
                         </Td>
                         <Td
                           width={40}
-                          modifier="truncate"
+                          modifier="breakWord"
                           {...getTdProps({ columnKey: "title" })}
                         >
                           {item.title}
