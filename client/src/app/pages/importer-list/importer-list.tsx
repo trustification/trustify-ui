@@ -40,7 +40,7 @@ import {
 } from "@app/components/ConfirmDialog";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import {
-  useDeleteiIporterMutation as useDeleteIporterMutation,
+  useDeleteIporterMutation,
   useFetchImporterReports,
   useFetchImporters,
   useUpdateImporterMutation,
@@ -68,6 +68,11 @@ export const ImporterList: React.FC = () => {
   const [selectedRowAction, setSelectedRowAction] =
     React.useState<RowAction | null>(null);
   const [selectedRow, setSelectedRow] = React.useState<Importer | null>(null);
+
+  const prepareActionOnRow = (action: RowAction, row: Importer) => {
+    setSelectedRowAction(action);
+    setSelectedRow(row);
+  };
 
   // Create/Update mangement
   const [createUpdateModalState, setCreateUpdateModalState] = React.useState<
@@ -270,13 +275,6 @@ export const ImporterList: React.FC = () => {
       break;
   }
 
-  // Actions
-
-  const prepareActionOnImporter = (action: RowAction, row: Importer) => {
-    setSelectedRowAction(action);
-    setSelectedRow(row);
-  };
-
   return (
     <>
       <PageSection variant={PageSectionVariants.light}>
@@ -403,7 +401,7 @@ export const ImporterList: React.FC = () => {
                                     {
                                       title: "Run",
                                       onClick: () => {
-                                        prepareActionOnImporter("run", item);
+                                        prepareActionOnRow("run", item);
                                       },
                                     },
                                   ]
@@ -413,7 +411,7 @@ export const ImporterList: React.FC = () => {
                                     {
                                       title: "Enable",
                                       onClick: () => {
-                                        prepareActionOnImporter("enable", item);
+                                        prepareActionOnRow("enable", item);
                                       },
                                     },
                                   ]
@@ -421,10 +419,7 @@ export const ImporterList: React.FC = () => {
                                     {
                                       title: "Disable",
                                       onClick: () => {
-                                        prepareActionOnImporter(
-                                          "disable",
-                                          item
-                                        );
+                                        prepareActionOnRow("disable", item);
                                       },
                                     },
                                   ]),
@@ -438,7 +433,7 @@ export const ImporterList: React.FC = () => {
                               {
                                 title: "Delete",
                                 onClick: () => {
-                                  prepareActionOnImporter("delete", item);
+                                  prepareActionOnRow("delete", item);
                                 },
                               },
                             ]}
