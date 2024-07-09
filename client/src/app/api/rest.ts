@@ -173,6 +173,11 @@ export const updateImporter = (
     .put<Importer>(`${IMPORTERS}/${id}`, body)
     .then((response) => response.data);
 
+export const runImporter = (id: number | string) =>
+  axios
+    .post<Importer>(`${IMPORTERS}/${id}/force`)
+    .then((response) => response.data);
+
 export const deleteImporter = (id: number | string) =>
   axios
     .delete<Importer>(`${IMPORTERS}/${id}`)

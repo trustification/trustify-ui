@@ -5,10 +5,6 @@ import { AxiosError } from "axios";
 import {
   Button,
   ButtonVariant,
-  DescriptionList,
-  DescriptionListDescription,
-  DescriptionListGroup,
-  DescriptionListTerm,
   Label,
   Modal,
   ModalVariant,
@@ -33,19 +29,23 @@ import {
 } from "@patternfly/react-table";
 import dayjs from "dayjs";
 
-import { Importer, ImporterType } from "@app/api/models";
-import { ConfirmDialog } from "@app/components/ConfirmDialog";
+import {
+  Importer,
+  ImporterConfigurationValues,
+  ImporterType,
+} from "@app/api/models";
+import {
+  ConfirmDialog,
+  ConfirmDialogProps,
+} from "@app/components/ConfirmDialog";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import {
   useDeleteiIporterMutation as useDeleteIporterMutation,
   useFetchImporterReports,
   useFetchImporters,
+  useUpdateImporterMutation,
 } from "@app/queries/importers";
-import {
-  formatDate,
-  formatDateTime,
-  getAxiosErrorMessage,
-} from "@app/utils/utils";
+import { formatDateTime, getAxiosErrorMessage } from "@app/utils/utils";
 
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -56,22 +56,94 @@ import {
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 
+import { runImporter } from "@app/api/rest";
 import { ImporterForm } from "./components/importer-form";
 import { ImporterStatusIcon } from "./components/importer-status-icon";
 
 export const ImporterList: React.FC = () => {
   const { pushNotification } = React.useContext(NotificationsContext);
 
-  const [isDeleteConfirmDialogOpen, setIsDeleteConfirmDialogOpen] =
-    React.useState<boolean>(false);
-  const [importerToDelete, setImporterToDelete] = React.useState<Importer>();
+  // Actions that each row can trigger
+  type RowAction = "enable" | "disable" | "run" | "delete";
+  const [selectedRowAction, setSelectedRowAction] =
+    React.useState<RowAction | null>(null);
+  const [selectedRow, setSelectedRow] = React.useState<Importer | null>(null);
 
+  // Create/Update mangement
   const [createUpdateModalState, setCreateUpdateModalState] = React.useState<
     "create" | Importer | null
   >(null);
   const isCreateUpdateModalOpen = createUpdateModalState !== null;
   const entityToUpdate =
     createUpdateModalState !== "create" ? createUpdateModalState : null;
+
+  const { importers, isFetching, fetchError, refetch } = useFetchImporters(
+    selectedRowAction == "delete" || createUpdateModalState !== null
+  );
+
+  const closeCreateUpdateModal = () => {
+    setCreateUpdateModalState(null);
+    refetch;
+  };
+
+  // Enable/Disable Importer
+
+  const onEnableDisableError = (_error: AxiosError) => {
+    pushNotification({
+      title: "Error while enabling/disabling the Importer",
+      variant: "danger",
+    });
+  };
+
+  const { mutate: updateImporter } = useUpdateImporterMutation(
+    () => {},
+    onEnableDisableError
+  );
+
+  const execEnableDisableImporter = (row: Importer, enable: boolean) => {
+    const importerType = Object.keys(
+      row.configuration ?? {}
+    )[0] as ImporterType;
+    const currentConfigValues = row.configuration[
+      importerType
+    ] as ImporterConfigurationValues;
+
+    const newConfigValues: ImporterConfigurationValues = {
+      ...currentConfigValues,
+      disabled: !enable,
+    };
+
+    const payload: Importer = {
+      ...row,
+      configuration: {
+        [importerType]: newConfigValues,
+      },
+    };
+
+    updateImporter(payload);
+  };
+
+  // Run Importer
+
+  const onRunImporterSuccess = () => {
+    pushNotification({
+      title: "Importer scheduled to run as soon as possible",
+      variant: "success",
+    });
+  };
+
+  const onRunImporterError = (error: AxiosError) => {
+    pushNotification({
+      title: getAxiosErrorMessage(error),
+      variant: "danger",
+    });
+  };
+
+  const execRunImporter = (id: string | number) => {
+    runImporter(id).then(onRunImporterSuccess).catch(onRunImporterError);
+  };
+
+  // Delete importer
 
   const onDeleteImporterSuccess = () => {
     pushNotification({
@@ -87,19 +159,10 @@ export const ImporterList: React.FC = () => {
     });
   };
 
-  const { importers, isFetching, fetchError, refetch } = useFetchImporters(
-    isDeleteConfirmDialogOpen || createUpdateModalState !== null
-  );
-
-  const { mutate: deleteImporter } = useDeleteIporterMutation(
+  const { mutate: execDeleteImporter } = useDeleteIporterMutation(
     onDeleteImporterSuccess,
     onDeleteImporterError
   );
-
-  const closeCreateUpdateModal = () => {
-    setCreateUpdateModalState(null);
-    refetch;
-  };
 
   // Table config
   const tableControls = useLocalTableControls({
@@ -151,9 +214,67 @@ export const ImporterList: React.FC = () => {
     expansionDerivedState: { isCellExpanded },
   } = tableControls;
 
-  const deleteRow = (row: Importer) => {
-    setImporterToDelete(row);
-    setIsDeleteConfirmDialogOpen(true);
+  // Dialog confirm config
+  let confirmDialogProps: Pick<
+    ConfirmDialogProps,
+    | "title"
+    | "titleIconVariant"
+    | "message"
+    | "confirmBtnVariant"
+    | "confirmBtnLabel"
+    | "cancelBtnLabel"
+  > | null;
+  switch (selectedRowAction) {
+    case "enable":
+      confirmDialogProps = {
+        title: "Enable Importer",
+        titleIconVariant: "info",
+        message: `Are you sure you want to enable the Importer ${selectedRow?.name}?`,
+        confirmBtnVariant: ButtonVariant.primary,
+        confirmBtnLabel: "Enable",
+        cancelBtnLabel: "Cancel",
+      };
+      break;
+    case "disable":
+      confirmDialogProps = {
+        title: "Disable Importer",
+        titleIconVariant: "info",
+        message: `Are you sure you want to disable the Importer ${selectedRow?.name}?`,
+        confirmBtnVariant: ButtonVariant.primary,
+        confirmBtnLabel: "Disable",
+        cancelBtnLabel: "Cancel",
+      };
+      break;
+    case "run":
+      confirmDialogProps = {
+        title: "Run Importer",
+        titleIconVariant: "info",
+        message: `Are you sure you want to run the Importer ${selectedRow?.name}?`,
+        confirmBtnVariant: ButtonVariant.primary,
+        confirmBtnLabel: "Run",
+        cancelBtnLabel: "Cancel",
+      };
+      break;
+    case "delete":
+      confirmDialogProps = {
+        title: "Delete Importer",
+        titleIconVariant: "warning",
+        message: `Are you sure you want to delete the Importer ${selectedRow?.name}?`,
+        confirmBtnVariant: ButtonVariant.danger,
+        confirmBtnLabel: "Delete",
+        cancelBtnLabel: "Cancel",
+      };
+      break;
+    default:
+      confirmDialogProps = null;
+      break;
+  }
+
+  // Actions
+
+  const prepareActionOnImporter = (action: RowAction, row: Importer) => {
+    setSelectedRowAction(action);
+    setSelectedRow(row);
   };
 
   return (
@@ -218,6 +339,8 @@ export const ImporterList: React.FC = () => {
                 )[0] as ImporterType;
                 const configValues = item.configuration[importerType];
 
+                const isImporterEnabled = configValues?.disabled === false;
+
                 return (
                   <Tbody key={item.name}>
                     <Tr {...getTrProps({ item })}>
@@ -266,7 +389,7 @@ export const ImporterList: React.FC = () => {
                           modifier="truncate"
                           {...getTdProps({ columnKey: "state" })}
                         >
-                          {item.state && configValues?.disabled == false ? (
+                          {item.state && isImporterEnabled ? (
                             <ImporterStatusIcon state={item.state} />
                           ) : (
                             <Label color="orange">Disabled</Label>
@@ -275,13 +398,48 @@ export const ImporterList: React.FC = () => {
                         <Td isActionCell>
                           <ActionsColumn
                             items={[
+                              ...(isImporterEnabled
+                                ? [
+                                    {
+                                      title: "Run",
+                                      onClick: () => {
+                                        prepareActionOnImporter("run", item);
+                                      },
+                                    },
+                                  ]
+                                : []),
+                              ...(configValues?.disabled
+                                ? [
+                                    {
+                                      title: "Enable",
+                                      onClick: () => {
+                                        prepareActionOnImporter("enable", item);
+                                      },
+                                    },
+                                  ]
+                                : [
+                                    {
+                                      title: "Disable",
+                                      onClick: () => {
+                                        prepareActionOnImporter(
+                                          "disable",
+                                          item
+                                        );
+                                      },
+                                    },
+                                  ]),
+                              {
+                                isSeparator: true,
+                              },
                               {
                                 title: "Edit",
                                 onClick: () => setCreateUpdateModalState(item),
                               },
                               {
                                 title: "Delete",
-                                onClick: () => deleteRow(item),
+                                onClick: () => {
+                                  prepareActionOnImporter("delete", item);
+                                },
                               },
                             ]}
                           />
@@ -326,23 +484,34 @@ export const ImporterList: React.FC = () => {
         />
       </Modal>
 
-      {isDeleteConfirmDialogOpen && (
+      {selectedRowAction && confirmDialogProps && (
         <ConfirmDialog
-          title="Delete Importer"
+          {...confirmDialogProps}
           isOpen={true}
-          titleIconVariant={"warning"}
-          message={`Are you sure you want to delete the Importer ${importerToDelete?.name}?`}
-          confirmBtnVariant={ButtonVariant.danger}
-          confirmBtnLabel="Delete"
-          cancelBtnLabel="Cancel"
-          onCancel={() => setIsDeleteConfirmDialogOpen(false)}
-          onClose={() => setIsDeleteConfirmDialogOpen(false)}
+          onCancel={() => setSelectedRowAction(null)}
+          onClose={() => setSelectedRowAction(null)}
           onConfirm={() => {
-            if (importerToDelete) {
-              deleteImporter(importerToDelete.name);
-              setImporterToDelete(undefined);
+            if (selectedRow) {
+              switch (selectedRowAction) {
+                case "enable":
+                  execEnableDisableImporter(selectedRow, true);
+                  break;
+                case "disable":
+                  execEnableDisableImporter(selectedRow, false);
+                  break;
+                case "run":
+                  execRunImporter(selectedRow.name);
+                  break;
+                case "delete":
+                  execDeleteImporter(selectedRow.name);
+                  break;
+                default:
+                  break;
+              }
             }
-            setIsDeleteConfirmDialogOpen(false);
+
+            setSelectedRow(null);
+            setSelectedRowAction(null);
           }}
         />
       )}
@@ -350,13 +519,15 @@ export const ImporterList: React.FC = () => {
   );
 };
 
-
 interface ImporterExpandedAreaProps {
   importerId: string;
 }
 
-export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({ importerId }) => {
-  const { importers, isFetching, fetchError } = useFetchImporterReports(importerId);
+export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
+  importerId,
+}) => {
+  const { importers, isFetching, fetchError } =
+    useFetchImporterReports(importerId);
 
   const tableControls = useLocalTableControls({
     variant: "compact",
@@ -439,25 +610,29 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({ impo
                     <Td
                       width={15}
                       modifier="truncate"
-                      {...getTdProps({ columnKey: "startDate" })}>
+                      {...getTdProps({ columnKey: "startDate" })}
+                    >
                       {formatDateTime(item.report.startDate)}
                     </Td>
                     <Td
                       width={15}
                       modifier="truncate"
-                      {...getTdProps({ columnKey: "endDate" })}>
+                      {...getTdProps({ columnKey: "endDate" })}
+                    >
                       {formatDateTime(item.report.endDate)}
                     </Td>
                     <Td
                       width={10}
                       modifier="truncate"
-                      {...getTdProps({ columnKey: "numberOfItems" })}>
+                      {...getTdProps({ columnKey: "numberOfItems" })}
+                    >
                       {item.report.numerOfItems}
                     </Td>
                     <Td
                       width={50}
                       modifier="truncate"
-                      {...getTdProps({ columnKey: "error" })}>
+                      {...getTdProps({ columnKey: "error" })}
+                    >
                       {item.error}
                     </Td>
                   </TableRowContentWithControls>
