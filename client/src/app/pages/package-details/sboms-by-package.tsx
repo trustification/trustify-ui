@@ -6,6 +6,7 @@ import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
 import { TablePersistenceKeyPrefixes } from "@app/Constants";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
+import { LabelsAsList } from "@app/components/LabelsAsList";
 import { PackagesCount } from "@app/components/PackagesCount";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
@@ -33,9 +34,8 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.sboms_by_package,
     columnNames: {
       name: "Name",
-      version: "Version",
-      supplier: "Supplier",
       published: "Published",
+      labels: "Labels",
       packages: "Packages",
     },
     isPaginationEnabled: true,
@@ -111,8 +111,8 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({
           <Tr>
             <TableHeaderContentWithControls {...tableControls}>
               <Th {...getThProps({ columnKey: "name" })} />
-              <Th {...getThProps({ columnKey: "supplier" })} />
               <Th {...getThProps({ columnKey: "published" })} />
+              <Th {...getThProps({ columnKey: "labels" })} />
               <Th {...getThProps({ columnKey: "packages" })} />
             </TableHeaderContentWithControls>
           </Tr>
@@ -131,18 +131,18 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({
                     <NavLink to={`/sboms/${item.id}`}>{item.name}</NavLink>
                   </Td>
                   <Td
-                    width={30}
-                    modifier="truncate"
-                    {...getTdProps({ columnKey: "supplier" })}
-                  >
-                    {item.authors}
-                  </Td>
-                  <Td
                     width={10}
                     modifier="truncate"
                     {...getTdProps({ columnKey: "published" })}
                   >
                     {formatDate(item.published)}
+                  </Td>
+                  <Td
+                    width={25}
+                    modifier="truncate"
+                    {...getTdProps({ columnKey: "labels" })}
+                  >
+                    {item.labels && <LabelsAsList value={item.labels} />}
                   </Td>
                   <Td
                     width={10}

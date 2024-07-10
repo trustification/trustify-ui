@@ -16,9 +16,8 @@ import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useDownload } from "@app/hooks/useDownload";
 import { useFetchSBOMById } from "@app/queries/sboms";
 
-import { CVEs } from "./cves";
 import { Overview } from "./overview";
-import { Packages } from "./packages";
+import { PackagesBySbom } from "./packages-by-sbom";
 
 export const SbomDetails: React.FC = () => {
   const sbomId = useRouteParams(PathParam.SBOM_ID);
@@ -73,11 +72,13 @@ export const SbomDetails: React.FC = () => {
               ),
             },
             {
-              eventKey: "cves",
-              title: "CVEs",
+              eventKey: "vulnerabilities",
+              title: "Vulnerabilities",
               children: (
                 <div className="pf-v5-u-m-md">
-                  <p style={{ color: "red" }}>issue-285 we should have a list of vulnerabilities here</p>
+                  <p style={{ color: "red" }}>
+                    issue-285 we should have a list of vulnerabilities here
+                  </p>
                 </div>
               ),
             },
@@ -86,7 +87,7 @@ export const SbomDetails: React.FC = () => {
               title: "Packages",
               children: (
                 <div className="pf-v5-u-m-md">
-                  {sbomId && <Packages sbomId={sbomId} />}
+                  {sbomId && <PackagesBySbom sbomId={sbomId} />}
                 </div>
               ),
             },

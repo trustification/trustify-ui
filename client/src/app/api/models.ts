@@ -107,10 +107,14 @@ export interface AdvisoryWithinPackage {
 export interface Vulnerability {
   identifier: string;
   title?: string;
+  description?: string;
   average_severity?: Severity;
   cwe: string;
   published: string;
   modified: string;
+  withdrawn: string;
+  released: string;
+  non_normative: boolean;
 
   advisories: AdvisoryWithinVulnerability[];
 }
@@ -153,6 +157,9 @@ export interface SBOM {
     name: string;
     version: string;
   }[];
+
+  hashes?: string[];
+  labels?: { [key in string]: string };
 }
 
 // Importer

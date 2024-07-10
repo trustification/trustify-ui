@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 import { HubRequestParams, SBOM } from "@app/api/models";
@@ -7,6 +7,7 @@ import {
   getSBOMSourceById,
   getSBOMs,
   getSBOMsByPackageId,
+  updateSbomLabels,
   uploadSbom,
 } from "@app/api/rest";
 import { useUpload } from "@app/hooks/useUpload";
@@ -76,6 +77,21 @@ export const useUploadSBOM = () => {
         queryKey: [SBOMsQueryKey],
       });
     },
+  });
+};
+
+export const useUpdateSbomLabelsMutation = (
+  onSuccess: () => void,
+  onError: (err: AxiosError, payload: SBOM) => void
+) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (obj) => updateSbomLabels(obj.id, obj.labels ?? {}),
+    onSuccess: (_res, _payload) => {
+      onSuccess();
+      queryClient.invalidateQueries({ queryKey: [SBOMsQueryKey] });
+    },
+    onError: onError,
   });
 };
 
