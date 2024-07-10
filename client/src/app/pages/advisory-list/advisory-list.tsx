@@ -5,8 +5,20 @@ import { AxiosError, AxiosResponse } from "axios";
 
 import {
   Button,
+  Card,
+  CardBody,
+  CardTitle,
+  DescriptionList,
+  DescriptionListDescription,
+  DescriptionListGroup,
+  DescriptionListTerm,
+  Grid,
+  GridItem,
+  Modal,
   PageSection,
   PageSectionVariants,
+  Stack,
+  StackItem,
   Text,
   TextContent,
   Toolbar,
@@ -15,6 +27,7 @@ import {
 } from "@patternfly/react-core";
 import {
   ActionsColumn,
+  ExpandableRowContent,
   Table,
   Tbody,
   Td,
@@ -23,15 +36,13 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import {
-  RENDER_DATE_FORMAT,
-  TablePersistenceKeyPrefixes,
-} from "@app/Constants";
+import { TablePersistenceKeyPrefixes } from "@app/Constants";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
   TableHeaderContentWithControls,
+  TableRowContentWithControls,
 } from "@app/components/TableControls";
 import { UploadFilesDrawer } from "@app/components/UploadFilesDrawer";
 import {
@@ -41,16 +52,58 @@ import {
 } from "@app/hooks/table-controls";
 import { useDownload } from "@app/hooks/useDownload";
 import { useSelectionState } from "@app/hooks/useSelectionState";
-import { useFetchAdvisories, useUploadAdvisory } from "@app/queries/advisories";
+import {
+  useFetchAdvisories,
+  useUpdateAdvisoryLabelsMutation,
+  useUploadAdvisory,
+} from "@app/queries/advisories";
 
+import { HashesAsList } from "@app/components/HashesAsList";
+import { LabelsAsList } from "@app/components/LabelsAsList";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
-import { VulnerabilitiesGalleryCount } from "./components/VulnerabilitiesGaleryCount";
 import { formatDate } from "@app/utils/utils";
 
+import { Advisory } from "@app/api/models";
+import { AdvisorySourceViewer } from "@app/components/AdvisorySourceViewer";
+import { EditLabelsModal } from "@app/components/EditLabelsModal";
+import { NotificationsContext } from "@app/components/NotificationsContext";
+import { Vulnerabilities } from "../advisory-details/vulnerabilities";
+import { VulnerabilitiesGalleryCount } from "./components/VulnerabilitiesGaleryCount";
+
 export const AdvisoryList: React.FC = () => {
+  const { pushNotification } = React.useContext(NotificationsContext);
+
   const [showUploadComponent, setShowUploadComponent] = React.useState(false);
   const { uploads, handleUpload, handleRemoveUpload } = useUploadAdvisory();
 
+  // Actions that each row can trigger
+  type RowAction = "editLabels" | "viewSource";
+  const [selectedRowAction, setSelectedRowAction] =
+    React.useState<RowAction | null>(null);
+  const [selectedRow, setSelectedRow] = React.useState<Advisory | null>(null);
+
+  const prepareActionOnRow = (action: RowAction, row: Advisory) => {
+    setSelectedRowAction(action);
+    setSelectedRow(row);
+  };
+
+  const onUpdateLabelsError = (_error: AxiosError) => {
+    pushNotification({
+      title: "Error while updating labels",
+      variant: "danger",
+    });
+  };
+
+  const { mutate: updateAdvisoryLabels } = useUpdateAdvisoryLabelsMutation(
+    () => {},
+    onUpdateLabelsError
+  );
+
+  const execSaveLabels = (row: Advisory, labels: { [key: string]: string }) => {
+    updateAdvisoryLabels({ ...row, labels });
+  };
+
+  // Table config
   const tableControlState = useTableControlState({
     tableName: "advisories",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.advisories,
@@ -58,13 +111,12 @@ export const AdvisoryList: React.FC = () => {
       identifier: "Identifier",
       title: "Title",
       severity: "Severity",
-      published: "Published",
-      modified: "Modified",
+      labels: "Labels",
       vulnerabilities: "Vulnerabilities",
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
-    sortableColumns: ["identifier", "severity", "published", "modified"],
+    sortableColumns: ["identifier", "severity"],
     isFilterEnabled: true,
     filterCategories: [
       {
@@ -87,6 +139,8 @@ export const AdvisoryList: React.FC = () => {
         ],
       },
     ],
+    isExpansionEnabled: true,
+    expandableVariant: "compound",
   });
 
   const {
@@ -99,8 +153,6 @@ export const AdvisoryList: React.FC = () => {
       hubSortFieldKeys: {
         identifier: "identifier",
         severity: "average_score",
-        published: "published",
-        modified: "modified",
       },
     })
   );
@@ -129,7 +181,9 @@ export const AdvisoryList: React.FC = () => {
       getThProps,
       getTrProps,
       getTdProps,
+      getExpandedContentTdProps,
     },
+    expansionDerivedState: { isCellExpanded },
   } = tableControls;
 
   const { downloadAdvisory } = useDownload();
@@ -163,7 +217,7 @@ export const AdvisoryList: React.FC = () => {
               </ToolbarItem>
               <ToolbarItem {...paginationToolbarItemProps}>
                 <SimplePagination
-                  idPrefix="advisories-table"
+                  idPrefix="advisory-table"
                   isTop
                   paginationProps={paginationProps}
                 />
@@ -171,15 +225,18 @@ export const AdvisoryList: React.FC = () => {
             </ToolbarContent>
           </Toolbar>
 
-          <Table {...tableProps} aria-label="Advisories table">
+          <Table
+            {...tableProps}
+            aria-label="Advisory table"
+            className="vertical-middle-aligned-table"
+          >
             <Thead>
               <Tr>
                 <TableHeaderContentWithControls {...tableControls}>
                   <Th {...getThProps({ columnKey: "identifier" })} />
                   <Th {...getThProps({ columnKey: "title" })} />
                   <Th {...getThProps({ columnKey: "severity" })} />
-                  <Th {...getThProps({ columnKey: "published" })} />
-                  <Th {...getThProps({ columnKey: "modified" })} />
+                  <Th {...getThProps({ columnKey: "labels" })} />
                   <Th {...getThProps({ columnKey: "vulnerabilities" })} />
                 </TableHeaderContentWithControls>
               </Tr>
@@ -190,77 +247,204 @@ export const AdvisoryList: React.FC = () => {
               isNoData={totalItemCount === 0}
               numRenderedColumns={numRenderedColumns}
             >
-              {currentPageItems.map((item) => {
+              {currentPageItems.map((item, rowIndex) => {
                 return (
-                  <Tbody key={item.identifier}>
+                  <Tbody
+                    key={item.identifier}
+                    isExpanded={isCellExpanded(item)}
+                  >
                     <Tr {...getTrProps({ item })}>
-                      <Td
-                        width={15}
-                        {...getTdProps({ columnKey: "identifier" })}
+                      <TableRowContentWithControls
+                        {...tableControls}
+                        item={item}
+                        rowIndex={rowIndex}
                       >
-                        <NavLink to={`/advisories/${item.uuid}`}>
-                          {item.identifier}
-                        </NavLink>
-                      </Td>
-                      <Td
-                        width={40}
-                        modifier="truncate"
-                        {...getTdProps({ columnKey: "title" })}
-                      >
-                        {item.title}
-                      </Td>
-                      <Td
-                        width={10}
-                        modifier="truncate"
-                        {...getTdProps({ columnKey: "severity" })}
-                      >
-                        {item.average_severity && (
-                          <SeverityShieldAndText
-                            value={item.average_severity}
-                          />
-                        )}
-                      </Td>
-                      <Td
-                        width={10}
-                        modifier="truncate"
-                        {...getTdProps({ columnKey: "published" })}
-                      >
-                        {formatDate(item.published)}
-                      </Td>
-                      <Td
-                        width={10}
-                        modifier="truncate"
-                        {...getTdProps({ columnKey: "modified" })}
-                      >
-                        {formatDate(item.modified)}
-                      </Td>
-                      <Td
-                        width={15}
-                        modifier="truncate"
-                        {...getTdProps({ columnKey: "vulnerabilities" })}
-                      >
-                        {item.vulnerabilities && (
-                          <VulnerabilitiesGalleryCount
-                            vulnerabilities={item.vulnerabilities}
-                          />
-                        )}
-                      </Td>
-                      <Td isActionCell>
-                        <ActionsColumn
-                          items={[
-                            {
-                              title: "Download",
-                              onClick: () => {
-                                downloadAdvisory(
-                                  item.uuid,
-                                  `${item.identifier}.json`
-                                );
+                        <Td
+                          width={15}
+                          {...getTdProps({
+                            columnKey: "identifier",
+                            isCompoundExpandToggle: true,
+                            item: item,
+                            rowIndex,
+                          })}
+                        >
+                          <NavLink to={`/advisories/${item.uuid}`}>
+                            {item.identifier}
+                          </NavLink>
+                        </Td>
+                        <Td
+                          width={40}
+                          modifier="breakWord"
+                          {...getTdProps({ columnKey: "title" })}
+                        >
+                          {item.title}
+                        </Td>
+                        <Td
+                          width={10}
+                          modifier="truncate"
+                          {...getTdProps({ columnKey: "severity" })}
+                        >
+                          {item.average_severity && (
+                            <SeverityShieldAndText
+                              value={item.average_severity}
+                            />
+                          )}
+                        </Td>
+                        <Td
+                          width={25}
+                          modifier="truncate"
+                          {...getTdProps({ columnKey: "labels" })}
+                        >
+                          {item.labels && <LabelsAsList value={item.labels} />}
+                        </Td>
+                        <Td
+                          width={10}
+                          modifier="truncate"
+                          {...getTdProps({
+                            columnKey: "vulnerabilities",
+                            isCompoundExpandToggle: true,
+                            item: item,
+                            rowIndex,
+                          })}
+                        >
+                          {item.vulnerabilities && (
+                            <VulnerabilitiesGalleryCount
+                              vulnerabilities={item.vulnerabilities}
+                            />
+                          )}
+                        </Td>
+                        <Td isActionCell>
+                          <ActionsColumn
+                            items={[
+                              {
+                                title: "Edit labels",
+                                onClick: () => {
+                                  prepareActionOnRow("editLabels", item);
+                                },
                               },
-                            },
-                          ]}
-                        />
-                      </Td>
+                              {
+                                title: "View source",
+                                onClick: () => {
+                                  prepareActionOnRow("viewSource", item);
+                                },
+                              },
+                              {
+                                title: "Download",
+                                onClick: () => {
+                                  downloadAdvisory(
+                                    item.uuid,
+                                    `${item.identifier}.json`
+                                  );
+                                },
+                              },
+                            ]}
+                          />
+                        </Td>
+                      </TableRowContentWithControls>
                     </Tr>
+                    {isCellExpanded(item) ? (
+                      <Tr isExpanded>
+                        <Td
+                          {...getExpandedContentTdProps({
+                            item,
+                          })}
+                        >
+                          <ExpandableRowContent>
+                            {isCellExpanded(item, "identifier") ? (
+                              <div className="pf-v5-u-m-md">
+                                <Stack hasGutter>
+                                  <StackItem>
+                                    <Grid hasGutter>
+                                      <GridItem md={4}>
+                                        <Card isFullHeight isCompact>
+                                          <CardTitle>General view</CardTitle>
+                                          <CardBody>
+                                            <DescriptionList>
+                                              <DescriptionListGroup>
+                                                <DescriptionListTerm>
+                                                  Published
+                                                </DescriptionListTerm>
+                                                <DescriptionListDescription>
+                                                  {formatDate(item.published)}
+                                                </DescriptionListDescription>
+                                              </DescriptionListGroup>
+                                              <DescriptionListGroup>
+                                                <DescriptionListTerm>
+                                                  Modified
+                                                </DescriptionListTerm>
+                                                <DescriptionListDescription>
+                                                  {formatDate(item.modified)}
+                                                </DescriptionListDescription>
+                                              </DescriptionListGroup>
+                                            </DescriptionList>
+                                          </CardBody>
+                                        </Card>
+                                      </GridItem>
+                                      <GridItem md={4}>
+                                        <Card isFullHeight isCompact>
+                                          <CardTitle>Issuer</CardTitle>
+                                          <CardBody>
+                                            <DescriptionList>
+                                              <DescriptionListGroup>
+                                                <DescriptionListTerm>
+                                                  Name
+                                                </DescriptionListTerm>
+                                                <DescriptionListDescription>
+                                                  {item.issuer?.name}
+                                                </DescriptionListDescription>
+                                              </DescriptionListGroup>
+                                              <DescriptionListGroup>
+                                                <DescriptionListTerm>
+                                                  Website
+                                                </DescriptionListTerm>
+                                                <DescriptionListDescription>
+                                                  {item.issuer?.website}
+                                                </DescriptionListDescription>
+                                              </DescriptionListGroup>
+                                            </DescriptionList>
+                                          </CardBody>
+                                        </Card>
+                                      </GridItem>
+                                      <GridItem md={4}>
+                                        <Card isFullHeight isCompact>
+                                          <CardTitle>System</CardTitle>
+                                          <CardBody>
+                                            <DescriptionList>
+                                              <DescriptionListGroup>
+                                                <DescriptionListTerm>
+                                                  Hashes
+                                                </DescriptionListTerm>
+                                                <DescriptionListDescription>
+                                                  {item.hashes && (
+                                                    <HashesAsList
+                                                      value={item.hashes}
+                                                    />
+                                                  )}
+                                                </DescriptionListDescription>
+                                              </DescriptionListGroup>
+                                            </DescriptionList>
+                                          </CardBody>
+                                        </Card>
+                                      </GridItem>
+                                    </Grid>
+                                  </StackItem>
+                                </Stack>
+                              </div>
+                            ) : null}
+                            {isCellExpanded(item, "vulnerabilities") ? (
+                              <div className="pf-v5-u-m-md">
+                                {item.vulnerabilities && (
+                                  <Vulnerabilities
+                                    variant="compact"
+                                    vulnerabilities={item.vulnerabilities}
+                                  />
+                                )}
+                              </div>
+                            ) : null}
+                          </ExpandableRowContent>
+                        </Td>
+                      </Tr>
+                    ) : null}
                   </Tbody>
                 );
               })}
@@ -280,14 +464,51 @@ export const AdvisoryList: React.FC = () => {
         uploads={uploads}
         handleUpload={handleUpload}
         handleRemoveUpload={handleRemoveUpload}
-        extractSuccessMessage={(response: AxiosResponse<string>) => {
-          return `${response.data} uploaded`;
+        extractSuccessMessage={(
+          response: AxiosResponse<{ document_id: string }>
+        ) => {
+          return `${response.data.document_id} uploaded`;
         }}
         extractErrorMessage={(error: AxiosError) =>
           error.response?.data ? error.message : "Error while uploading file"
         }
         onCloseClick={() => setShowUploadComponent(false)}
       />
+
+      {selectedRowAction === "editLabels" && selectedRow && (
+        <EditLabelsModal
+          resourceName={selectedRow.identifier}
+          value={selectedRow.labels ?? {}}
+          onSave={(labels) => {
+            execSaveLabels(selectedRow, labels);
+
+            setSelectedRow(null);
+            setSelectedRowAction(null);
+          }}
+          onClose={() => setSelectedRowAction(null)}
+        />
+      )}
+
+      {selectedRowAction === "viewSource" && selectedRow && (
+        <Modal
+          title={selectedRow?.identifier}
+          isOpen
+          onClose={() => setSelectedRowAction(null)}
+          actions={[
+            <Button
+              key="cancel"
+              variant="link"
+              onClick={() => setSelectedRowAction(null)}
+            >
+              Close
+            </Button>,
+          ]}
+        >
+          {selectedRow && (
+            <AdvisorySourceViewer advisoryId={selectedRow.uuid} />
+          )}
+        </Modal>
+      )}
     </>
   );
 };

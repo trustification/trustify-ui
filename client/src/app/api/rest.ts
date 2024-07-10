@@ -59,7 +59,7 @@ export const getAdvisoryById = (id: number | string) =>
 
 export const getAdvisorySourceById = (id: number | string) =>
   axios
-    .get<string>(`${ADVISORIES}/${id}/source`)
+    .get<string>(`${ADVISORIES}/${id}/download`)
     .then((response) => response.data);
 
 export const downloadAdvisoryById = (id: number | string) =>
@@ -78,6 +78,14 @@ export const uploadAdvisory = (
     return axios.post<Advisory>(`${ADVISORIES}`, json, config);
   });
 };
+
+export const updateAdvisoryLabels = (
+  id: number | string,
+  labels: { [key: string]: string }
+) =>
+  axios
+    .put<void>(`${ADVISORIES}/${id}/label`, labels)
+    .then((response) => response.data);
 
 // Vulnerability
 

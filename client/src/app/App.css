@@ -8,3 +8,7 @@
   border-left: var(--pf-c-select__toggle--before--BorderLeftWidth) solid
     var(--pf-c-select__toggle--before--BorderLeftColor) !important;
 }
+
+table.vertical-middle-aligned-table tr td {
+  vertical-align: middle;
+}

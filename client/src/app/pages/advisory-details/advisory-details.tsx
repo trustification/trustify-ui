@@ -10,6 +10,7 @@ import {
 import DownloadIcon from "@patternfly/react-icons/dist/esm/icons/download-icon";
 
 import { PathParam, useRouteParams } from "@app/Routes";
+import { AdvisorySourceViewer } from "@app/components/AdvisorySourceViewer";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { useDownload } from "@app/hooks/useDownload";
@@ -55,11 +56,11 @@ export const AdvisoryDetails: React.FC = () => {
             title: advisory?.identifier ?? "",
             label: advisory?.average_severity
               ? {
-                children: (
-                  <SeverityShieldAndText value={advisory.average_severity} />
-                ),
-                isCompact: true,
-              }
+                  children: (
+                    <SeverityShieldAndText value={advisory.average_severity} />
+                  ),
+                  isCompact: true,
+                }
               : undefined,
           }}
           tabs={[
@@ -87,9 +88,24 @@ export const AdvisoryDetails: React.FC = () => {
                     fetchError={fetchError}
                   >
                     <Vulnerabilities
+                      enableToolbar
                       vulnerabilities={advisory?.vulnerabilities || []}
                     />
                   </LoadingWrapper>
+                </div>
+              ),
+            },
+            {
+              eventKey: "source",
+              title: "Source",
+              children: (
+                <div className="pf-v5-u-m-md">
+                  {advisoryId && (
+                    <AdvisorySourceViewer
+                      advisoryId={advisoryId}
+                      height="645px"
+                    />
+                  )}
                 </div>
               ),
             },

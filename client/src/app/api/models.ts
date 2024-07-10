@@ -48,6 +48,9 @@ export interface Advisory {
     website?: string;
   };
 
+  hashes?: string[];
+  labels?: { [key in string]: string };
+
   average_severity?: Severity;
   vulnerabilities?: VulnerabilityWithinAdvisory[];
 }
@@ -147,8 +150,8 @@ export interface SBOM {
   authors: string[];
   published: string;
   described_by?: {
-    name: string
-    version: string
+    name: string;
+    version: string;
   }[];
 }
 

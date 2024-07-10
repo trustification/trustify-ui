@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 import { Advisory, HubRequestParams } from "@app/api/models";
@@ -6,6 +6,7 @@ import {
   getAdvisories,
   getAdvisoryById,
   getAdvisorySourceById,
+  updateAdvisoryLabels,
   uploadAdvisory,
 } from "@app/api/rest";
 import { useUpload } from "@app/hooks/useUpload";
@@ -82,5 +83,20 @@ export const useUploadAdvisory = () => {
         queryKey: [AdvisoriesQueryKey],
       });
     },
+  });
+};
+
+export const useUpdateAdvisoryLabelsMutation = (
+  onSuccess: () => void,
+  onError: (err: AxiosError, payload: Advisory) => void
+) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (obj) => updateAdvisoryLabels(obj.uuid, obj.labels ?? {}),
+    onSuccess: (_res, _payload) => {
+      onSuccess();
+      queryClient.invalidateQueries({ queryKey: [AdvisoriesQueryKey] });
+    },
+    onError: onError,
   });
 };

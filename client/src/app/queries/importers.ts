@@ -8,7 +8,7 @@ import {
   getImporterById,
   getImporterReports,
   getImporters,
-  updateImporter
+  updateImporter,
 } from "@app/api/rest";
 
 export const ImportersQueryKey = "importers";
@@ -74,7 +74,7 @@ export const useUpdateImporterMutation = (
   });
 };
 
-export const useDeleteiIporterMutation = (
+export const useDeleteIporterMutation = (
   onSuccess: (id: number | string) => void,
   onError: (err: AxiosError, id: number | string) => void
 ) => {
@@ -99,7 +99,10 @@ export const useDeleteiIporterMutation = (
   };
 };
 
-export const useFetchImporterReports = (id: string, refetchDisabled: boolean = false) => {
+export const useFetchImporterReports = (
+  id: string,
+  refetchDisabled: boolean = false
+) => {
   const { data, isLoading, refetch, error } = useQuery({
     queryKey: [ImportersQueryKey, id, "reports"],
     queryFn: () => getImporterReports(id),

@@ -1,6 +1,10 @@
 import React from "react";
 
+import { AxiosError } from "axios";
+
 import {
+  Button,
+  ButtonVariant,
   Card,
   CardBody,
   CardTitle,
@@ -8,13 +12,20 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
+  FormGroup,
   Grid,
   GridItem,
   Stack,
-  StackItem,
+  StackItem
 } from "@patternfly/react-core";
+import PenIcon from "@patternfly/react-icons/dist/esm/icons/pen-icon";
 
 import { Advisory } from "@app/api/models";
+import { EditLabelsModal } from "@app/components/EditLabelsModal";
+import { HashesAsList } from "@app/components/HashesAsList";
+import { LabelsAsList } from "@app/components/LabelsAsList";
+import { NotificationsContext } from "@app/components/NotificationsContext";
+import { useUpdateAdvisoryLabelsMutation } from "@app/queries/advisories";
 import { formatDate } from "@app/utils/utils";
 
 interface OverviewProps {
@@ -22,6 +33,26 @@ interface OverviewProps {
 }
 
 export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
+  const { pushNotification } = React.useContext(NotificationsContext);
+
+  const [showEditLabels, setShowEditLabels] = React.useState(false);
+
+  const onUpdateLabelsError = (_error: AxiosError) => {
+    pushNotification({
+      title: "Error while updating labels",
+      variant: "danger",
+    });
+  };
+
+  const { mutate: updateAdvisoryLabels } = useUpdateAdvisoryLabelsMutation(
+    () => {},
+    onUpdateLabelsError
+  );
+
+  const execSaveLabels = (labels: { [key: string]: string }) => {
+    updateAdvisoryLabels({ ...advisory, labels });
+  };
+
   return (
     <>
       <Stack hasGutter>
@@ -75,70 +106,70 @@ export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
                 </CardBody>
               </Card>
             </GridItem>
-            {/* <GridItem md={4}>
+            <GridItem md={4}>
               <Card isFullHeight>
-                <CardTitle>Tracking</CardTitle>
+                <CardTitle>System</CardTitle>
                 <CardBody>
                   <DescriptionList>
                     <DescriptionListGroup>
-                      <DescriptionListTerm>Status</DescriptionListTerm>
+                      <DescriptionListTerm>Hashes</DescriptionListTerm>
                       <DescriptionListDescription>
-                        {advisory.metadata.tracking.status}
-                      </DescriptionListDescription>
-                    </DescriptionListGroup>
-                    <DescriptionListGroup>
-                      <DescriptionListTerm>
-                        Initial release date
-                      </DescriptionListTerm>
-                      <DescriptionListDescription>
-                        {formatDate(
-                          advisory.metadata.tracking.initial_release_date
+                        {advisory.hashes && (
+                          <HashesAsList value={advisory.hashes} />
                         )}
                       </DescriptionListDescription>
                     </DescriptionListGroup>
                     <DescriptionListGroup>
                       <DescriptionListTerm>
-                        Current release date
+                        Labels {""}
+                        <Button
+                          variant={ButtonVariant.link}
+                          size="sm"
+                          icon={<PenIcon />}
+                          iconPosition="end"
+                          onClick={() => setShowEditLabels(true)}
+                        >
+                          Edit
+                        </Button>
                       </DescriptionListTerm>
                       <DescriptionListDescription>
-                        {formatDate(
-                          advisory.metadata.tracking.current_release_date
-                        )}
+                        <div className="pf-v5-c-form">
+                          <FormGroup>
+                            <div
+                              className="pf-v5-c-form-control"
+                              style={{ padding: 10 }}
+                            >
+                              {advisory.labels && (
+                                <LabelsAsList
+                                  defaultIsOpen
+                                  value={advisory.labels}
+                                />
+                              )}
+                            </div>
+                          </FormGroup>
+                        </div>
                       </DescriptionListDescription>
                     </DescriptionListGroup>
                   </DescriptionList>
                 </CardBody>
               </Card>
-            </GridItem> */}
+            </GridItem>
           </Grid>
         </StackItem>
-        {/* <StackItem>
-          <Grid hasGutter>
-            <GridItem md={4}>
-              <Card isFullHeight>
-                <CardTitle>References</CardTitle>
-                <CardBody>
-                  <List>
-                    {advisory.metadata.references.map((e, index) => (
-                      <ListItem key={index}>
-                        <a href={e.url} target="_blank" rel="noreferrer">
-                          {e.label || e.url} <ExternalLinkAltIcon />
-                        </a>{" "}
-                      </ListItem>
-                    ))}
-                  </List>
-                </CardBody>
-              </Card>
-            </GridItem>
-            <GridItem md={8}>
-              <Card isFullHeight>
-                <CardTitle>Product info</CardTitle>
-                <CardBody>Remaining to be defined</CardBody>
-              </Card>
-            </GridItem>
-          </Grid>
-        </StackItem> */}
       </Stack>
+
+      {showEditLabels && (
+        <EditLabelsModal
+          resourceName={advisory.identifier}
+          value={advisory.labels ?? {}}
+          onSave={(labels) => {
+            execSaveLabels(labels);
+
+            setShowEditLabels(false);
+          }}
+          onClose={() => setShowEditLabels(false)}
+        />
+      )}
     </>
   );
 };

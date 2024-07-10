@@ -4,7 +4,15 @@ import { NavLink } from "react-router-dom";
 import dayjs from "dayjs";
 
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
-import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
+import {
+  Table,
+  TableProps,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@patternfly/react-table";
 
 import { VulnerabilityWithinAdvisory } from "@app/api/models";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
@@ -19,13 +27,18 @@ import { useLocalTableControls } from "@app/hooks/table-controls";
 import { formatDate } from "@app/utils/utils";
 
 interface VulnerabilitiesProps {
+  enableToolbar?: boolean;
+  variant?: TableProps["variant"];
   vulnerabilities: VulnerabilityWithinAdvisory[];
 }
 
 export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
+  enableToolbar,
+  variant,
   vulnerabilities,
 }) => {
   const tableControls = useLocalTableControls({
+    variant: variant,
     tableName: "vulnerability-table",
     idProperty: "identifier",
     items: vulnerabilities,
@@ -76,18 +89,20 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
 
   return (
     <>
-      <Toolbar {...toolbarProps}>
-        <ToolbarContent>
-          <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
-          <ToolbarItem {...paginationToolbarItemProps}>
-            <SimplePagination
-              idPrefix="vulnerability-table"
-              isTop
-              paginationProps={paginationProps}
-            />
-          </ToolbarItem>
-        </ToolbarContent>
-      </Toolbar>
+      {enableToolbar && (
+        <Toolbar {...toolbarProps}>
+          <ToolbarContent>
+            <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
+            <ToolbarItem {...paginationToolbarItemProps}>
+              <SimplePagination
+                idPrefix="vulnerability-table"
+                isTop
+                paginationProps={paginationProps}
+              />
+            </ToolbarItem>
+          </ToolbarContent>
+        </Toolbar>
+      )}
 
       <Table {...tableProps} aria-label="Vulnerability table">
         <Thead>
