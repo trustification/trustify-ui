@@ -87,7 +87,7 @@ const PERIOD_UNIT_LIST: PeriodUnitProps = {
 type FormValues = {
   name: string;
   description: string;
-  type: ImporterType;
+  type: ImporterType | "";
   source: string;
   periodValue: number;
   periodUnit: PeriodUnitType;
@@ -96,6 +96,8 @@ type FormValues = {
   keys: { value: string }[];
   onlyPatterns: { value: string }[];
 };
+
+export const myImporters = ["sbom", "csaf", "osv", "cve", ""] as const;
 
 export interface IImporterFormProps {
   importer?: Importer;
@@ -124,6 +126,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
   const importerType = Object.keys(
     importer?.configuration ?? {}
   )[0] as ImporterType;
+
   const importerConfiguration = importer?.configuration[importerType];
 
   const periodValue = getPeriodValue(importerConfiguration?.period);
@@ -140,7 +143,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
     defaultValues: {
       name: importer?.name || "",
       description: importerConfiguration?.description || "",
-      type: importerType,
+      type: "",
       source: importerConfiguration?.source || "",
       periodValue: periodValue || 60,
       periodUnit: periodUnit || "s",
@@ -253,7 +256,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
           fieldId="type"
           isRequired
         >
-          {ALL_IMPORTER_TYPES.map((option, index) => (
+          {myImporters.map((option, index) => (
             <FormSelectOption key={index} value={option} label={option} />
           ))}
         </HookFormPFSelect>
