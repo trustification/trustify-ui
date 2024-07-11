@@ -81,6 +81,17 @@ export interface AdvisoryWithinVulnerability {
       };
     }[];
   };
+  sboms?: {
+    id: string;
+    status: {
+      [key in StatusType]?: {
+        purl: {
+          uuid: string;
+          purl: string;
+        };
+      }[];
+    };
+  }[];
 }
 
 export interface AdvisoryWithinPackage {
