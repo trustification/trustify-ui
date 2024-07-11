@@ -33,6 +33,31 @@ export interface HubPaginatedResult<T> {
   params: HubRequestParams;
 }
 
+// Organizations
+
+export interface Organization {
+  id: string;
+  name: string;
+}
+
+// Products
+
+export interface Product {
+  id: string;
+  name: string;
+  vendor?: {
+    cpe_key: string;
+    id: string;
+    name: string;
+    website: string;
+  };
+  versions?: {
+    id: string;
+    version: string;
+    sbom_id: string;
+  }[];
+}
+
 // Advisories
 
 export type Severity = "none" | "low" | "medium" | "high" | "critical";

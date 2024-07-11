@@ -5,6 +5,7 @@ export const RENDER_DATETIME_FORMAT = "MMM DD, YYYY | HH:mm:ss";
 export const FILTER_DATE_FORMAT = "YYYY-MM-DD";
 
 export const TablePersistenceKeyPrefixes = {
+  products: "pd",
   advisories: "ad",
   vulnerabilities: "vn",
   sboms: "sb",
