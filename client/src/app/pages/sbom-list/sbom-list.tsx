@@ -5,6 +5,12 @@ import { AxiosError, AxiosResponse } from "axios";
 
 import {
   Button,
+  DescriptionList,
+  DescriptionListDescription,
+  DescriptionListGroup,
+  DescriptionListTerm,
+  List,
+  ListItem,
   PageSection,
   PageSectionVariants,
   Text,
@@ -25,7 +31,11 @@ import {
 } from "@patternfly/react-table";
 
 import { TablePersistenceKeyPrefixes } from "@app/Constants";
+import { SBOM } from "@app/api/models";
+import { EditLabelsModal } from "@app/components/EditLabelsModal";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
+import { LabelsAsList } from "@app/components/LabelsAsList";
+import { NotificationsContext } from "@app/components/NotificationsContext";
 import { PackagesCount } from "@app/components/PackagesCount";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
@@ -42,20 +52,54 @@ import {
 } from "@app/hooks/table-controls";
 import { useDownload } from "@app/hooks/useDownload";
 import { useSelectionState } from "@app/hooks/useSelectionState";
-import { useFetchSBOMs, useUploadSBOM } from "@app/queries/sboms";
+import {
+  useFetchSBOMs,
+  useUpdateSbomLabelsMutation,
+  useUploadSBOM,
+} from "@app/queries/sboms";
 import { formatDate } from "@app/utils/utils";
 
 export const SbomList: React.FC = () => {
+  const { pushNotification } = React.useContext(NotificationsContext);
+
   const [showUploadComponent, setShowUploadComponent] = React.useState(false);
   const { uploads, handleUpload, handleRemoveUpload } = useUploadSBOM();
 
+  // Actions that each row can trigger
+  type RowAction = "editLabels";
+  const [selectedRowAction, setSelectedRowAction] =
+    React.useState<RowAction | null>(null);
+  const [selectedRow, setSelectedRow] = React.useState<SBOM | null>(null);
+
+  const prepareActionOnRow = (action: RowAction, row: SBOM) => {
+    setSelectedRowAction(action);
+    setSelectedRow(row);
+  };
+
+  const onUpdateLabelsError = (_error: AxiosError) => {
+    pushNotification({
+      title: "Error while updating labels",
+      variant: "danger",
+    });
+  };
+
+  const { mutate: updateSbomLabels } = useUpdateSbomLabelsMutation(
+    () => {},
+    onUpdateLabelsError
+  );
+
+  const execSaveLabels = (row: SBOM, labels: { [key: string]: string }) => {
+    updateSbomLabels({ ...row, labels });
+  };
+
+  // Table configs
   const tableControlState = useTableControlState({
     tableName: "sboms",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.sboms,
     columnNames: {
       name: "Name",
-      supplier: "Supplier",
       published: "Published",
+      labels: "Labels",
       packages: "Packages",
       vulnerabilities: "Vulnerabilities",
     },
@@ -72,7 +116,7 @@ export const SbomList: React.FC = () => {
       },
     ],
     isExpansionEnabled: true,
-    expandableVariant: "single",
+    expandableVariant: "compound",
   });
 
   const {
@@ -155,13 +199,13 @@ export const SbomList: React.FC = () => {
             </ToolbarContent>
           </Toolbar>
 
-          <Table {...tableProps} aria-label="Sboms details table">
+          <Table {...tableProps} aria-label="SBOM table">
             <Thead>
               <Tr>
                 <TableHeaderContentWithControls {...tableControls}>
                   <Th {...getThProps({ columnKey: "name" })} />
-                  <Th {...getThProps({ columnKey: "supplier" })} />
                   <Th {...getThProps({ columnKey: "published" })} />
+                  <Th {...getThProps({ columnKey: "labels" })} />
                   <Th {...getThProps({ columnKey: "packages" })} />
                   <Th {...getThProps({ columnKey: "vulnerabilities" })} />
                 </TableHeaderContentWithControls>
@@ -175,24 +219,25 @@ export const SbomList: React.FC = () => {
             >
               {currentPageItems.map((item, rowIndex) => {
                 return (
-                  <Tbody key={item.id}>
+                  <Tbody key={item.id} isExpanded={isCellExpanded(item)}>
                     <Tr {...getTrProps({ item })}>
                       <TableRowContentWithControls
                         {...tableControls}
                         item={item}
                         rowIndex={rowIndex}
                       >
-                        <Td width={20} {...getTdProps({ columnKey: "name" })}>
+                        <Td
+                          width={20}
+                          {...getTdProps({
+                            columnKey: "name",
+                            isCompoundExpandToggle: true,
+                            item: item,
+                            rowIndex,
+                          })}
+                        >
                           <NavLink to={`/sboms/${item.id}`}>
                             {item.name}
                           </NavLink>
-                        </Td>
-                        <Td
-                          width={40}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "supplier" })}
-                        >
-                          {item.authors}
                         </Td>
                         <Td
                           width={10}
@@ -202,20 +247,36 @@ export const SbomList: React.FC = () => {
                           {formatDate(item.published)}
                         </Td>
                         <Td
-                          width={10}
-                          {...getTdProps({ columnKey: "packages" })}
+                          width={25}
+                          modifier="truncate"
+                          {...getTdProps({ columnKey: "labels" })}
                         >
+                          {item.labels && <LabelsAsList value={item.labels} />}
+                        </Td>
+
+                        <Td width={10} {...getTdProps({ columnKey: "labels" })}>
                           <PackagesCount sbomId={item.id} />
                         </Td>
                         <Td
                           width={20}
-                          {...getTdProps({ columnKey: "vulnerabilities" })}
+                          {...getTdProps({
+                            columnKey: "vulnerabilities",
+                            isCompoundExpandToggle: true,
+                            item: item,
+                            rowIndex,
+                          })}
                         >
                           <p style={{ color: "red" }}>issue-285</p>
                         </Td>
                         <Td isActionCell>
                           <ActionsColumn
                             items={[
+                              {
+                                title: "Edit labels",
+                                onClick: () => {
+                                  prepareActionOnRow("editLabels", item);
+                                },
+                              },
                               {
                                 title: "Download",
                                 onClick: () => {
@@ -232,11 +293,41 @@ export const SbomList: React.FC = () => {
                         <Td colSpan={7}>
                           <ExpandableRowContent>
                             <div className="pf-v5-u-m-md">
-                              {item.described_by && (
-                                <SbomExpandedArea
-                                  described_by={item.described_by}
-                                />
-                              )}
+                              {isCellExpanded(item, "name") ? (
+                                <>
+                                  <DescriptionList>
+                                    <DescriptionListGroup>
+                                      <DescriptionListTerm>
+                                        Author
+                                      </DescriptionListTerm>
+                                      <DescriptionListDescription>
+                                        <List>
+                                          {item.authors.map((elem, index) => (
+                                            <ListItem key={index}>
+                                              {elem}
+                                            </ListItem>
+                                          ))}
+                                        </List>
+                                      </DescriptionListDescription>
+                                    </DescriptionListGroup>
+                                    <DescriptionListGroup>
+                                      <DescriptionListTerm>
+                                        Described by
+                                      </DescriptionListTerm>
+                                      <DescriptionListDescription>
+                                        {item.described_by && (
+                                          <SbomDescribedBy
+                                            described_by={item.described_by}
+                                          />
+                                        )}
+                                      </DescriptionListDescription>
+                                    </DescriptionListGroup>
+                                  </DescriptionList>
+                                </>
+                              ) : null}
+                              {isCellExpanded(item, "vulnerabilities") ? (
+                                <></>
+                              ) : null}
                             </div>
                           </ExpandableRowContent>
                         </Td>
@@ -261,26 +352,42 @@ export const SbomList: React.FC = () => {
         uploads={uploads}
         handleUpload={handleUpload}
         handleRemoveUpload={handleRemoveUpload}
-        extractSuccessMessage={(response: AxiosResponse<string>) => {
-          return `${response.data} uploaded`;
+        extractSuccessMessage={(
+          response: AxiosResponse<{ document_id: string }>
+        ) => {
+          return `${response.data.document_id} uploaded`;
         }}
         extractErrorMessage={(error: AxiosError) =>
           error.response?.data ? error.message : "Error while uploading file"
         }
         onCloseClick={() => setShowUploadComponent(false)}
       />
+
+      {selectedRowAction === "editLabels" && selectedRow && (
+        <EditLabelsModal
+          resourceName={selectedRow.name}
+          value={selectedRow.labels ?? {}}
+          onSave={(labels) => {
+            execSaveLabels(selectedRow, labels);
+
+            setSelectedRow(null);
+            setSelectedRowAction(null);
+          }}
+          onClose={() => setSelectedRowAction(null)}
+        />
+      )}
     </>
   );
 };
 
-interface SbomExpandedAreaProps {
+interface SbomDescribedByProps {
   described_by: {
     name: string;
     version: string;
   }[];
 }
 
-export const SbomExpandedArea: React.FC<SbomExpandedAreaProps> = ({
+export const SbomDescribedBy: React.FC<SbomDescribedByProps> = ({
   described_by,
 }) => {
   const tableControls = useLocalTableControls({

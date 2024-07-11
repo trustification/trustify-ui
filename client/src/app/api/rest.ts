@@ -136,7 +136,9 @@ export const getSBOMById = (id: number | string) =>
   axios.get<SBOM>(`${SBOMS}/${id}`).then((response) => response.data);
 
 export const getSBOMSourceById = (id: number | string) =>
-  axios.get<string>(`${SBOMS}/${id}/source`).then((response) => response.data);
+  axios
+    .get<string>(`${SBOMS}/${id}/download`)
+    .then((response) => response.data);
 
 export const downloadSBOMById = (id: number | string) =>
   axios.get<string>(`${SBOMS}/${id}/download`, {
@@ -151,6 +153,14 @@ export const uploadSbom = (formData: FormData, config?: AxiosRequestConfig) => {
     return axios.post<SBOM>(`${SBOMS}`, json, config);
   });
 };
+
+export const updateSbomLabels = (
+  id: number | string,
+  labels: { [key: string]: string }
+) =>
+  axios
+    .put<void>(`${SBOMS}/${id}/label`, labels)
+    .then((response) => response.data);
 
 export const getSBOMsByPackageId = (
   packageId: string,

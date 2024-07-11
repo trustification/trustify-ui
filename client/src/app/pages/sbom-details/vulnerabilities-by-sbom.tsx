@@ -2,34 +2,37 @@ import React from "react";
 
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import {
-  ExpandableRowContent,
-  Td as PFTd,
-  Tr as PFTr,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
+    ExpandableRowContent,
+    Td as PFTd,
+    Tr as PFTr,
+    Table,
+    Tbody,
+    Td,
+    Th,
+    Thead,
+    Tr,
 } from "@patternfly/react-table";
 
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
-  ConditionalTableBody,
-  TableHeaderContentWithControls,
+    ConditionalTableBody,
+    TableHeaderContentWithControls,
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchVulnerabilitiesBySbomId } from "@app/queries/vulnerabilities";
 import { formatDate } from "@app/utils/utils";
 
-interface CVEsProps {
+interface VulnerabilitiesBySbomProps {
   sbomId: string;
 }
 
-export const CVEs: React.FC<CVEsProps> = ({ sbomId }) => {
-  const { cves, isFetching, fetchError } = useFetchVulnerabilitiesBySbomId(sbomId);
+export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
+  sbomId,
+}) => {
+  const { cves, isFetching, fetchError } =
+    useFetchVulnerabilitiesBySbomId(sbomId);
 
   const tableControls = useLocalTableControls({
     tableName: "cves-table",

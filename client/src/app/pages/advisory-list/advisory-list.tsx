@@ -64,9 +64,10 @@ import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { formatDate } from "@app/utils/utils";
 
 import { Advisory } from "@app/api/models";
-import { AdvisorySourceViewer } from "@app/components/AdvisorySourceViewer";
 import { EditLabelsModal } from "@app/components/EditLabelsModal";
 import { NotificationsContext } from "@app/components/NotificationsContext";
+import { AdvisorySourceViewer } from "@app/components/SourceViewer";
+
 import { Vulnerabilities } from "../advisory-details/vulnerabilities";
 import { VulnerabilitiesGalleryCount } from "./components/VulnerabilitiesGaleryCount";
 
@@ -350,97 +351,99 @@ export const AdvisoryList: React.FC = () => {
                           })}
                         >
                           <ExpandableRowContent>
-                            {isCellExpanded(item, "identifier") ? (
-                              <div className="pf-v5-u-m-md">
-                                <Stack hasGutter>
-                                  <StackItem>
-                                    <Grid hasGutter>
-                                      <GridItem md={4}>
-                                        <Card isFullHeight isCompact>
-                                          <CardTitle>General view</CardTitle>
-                                          <CardBody>
-                                            <DescriptionList>
-                                              <DescriptionListGroup>
-                                                <DescriptionListTerm>
-                                                  Published
-                                                </DescriptionListTerm>
-                                                <DescriptionListDescription>
-                                                  {formatDate(item.published)}
-                                                </DescriptionListDescription>
-                                              </DescriptionListGroup>
-                                              <DescriptionListGroup>
-                                                <DescriptionListTerm>
-                                                  Modified
-                                                </DescriptionListTerm>
-                                                <DescriptionListDescription>
-                                                  {formatDate(item.modified)}
-                                                </DescriptionListDescription>
-                                              </DescriptionListGroup>
-                                            </DescriptionList>
-                                          </CardBody>
-                                        </Card>
-                                      </GridItem>
-                                      <GridItem md={4}>
-                                        <Card isFullHeight isCompact>
-                                          <CardTitle>Issuer</CardTitle>
-                                          <CardBody>
-                                            <DescriptionList>
-                                              <DescriptionListGroup>
-                                                <DescriptionListTerm>
-                                                  Name
-                                                </DescriptionListTerm>
-                                                <DescriptionListDescription>
-                                                  {item.issuer?.name}
-                                                </DescriptionListDescription>
-                                              </DescriptionListGroup>
-                                              <DescriptionListGroup>
-                                                <DescriptionListTerm>
-                                                  Website
-                                                </DescriptionListTerm>
-                                                <DescriptionListDescription>
-                                                  {item.issuer?.website}
-                                                </DescriptionListDescription>
-                                              </DescriptionListGroup>
-                                            </DescriptionList>
-                                          </CardBody>
-                                        </Card>
-                                      </GridItem>
-                                      <GridItem md={4}>
-                                        <Card isFullHeight isCompact>
-                                          <CardTitle>System</CardTitle>
-                                          <CardBody>
-                                            <DescriptionList>
-                                              <DescriptionListGroup>
-                                                <DescriptionListTerm>
-                                                  Hashes
-                                                </DescriptionListTerm>
-                                                <DescriptionListDescription>
-                                                  {item.hashes && (
-                                                    <HashesAsList
-                                                      value={item.hashes}
-                                                    />
-                                                  )}
-                                                </DescriptionListDescription>
-                                              </DescriptionListGroup>
-                                            </DescriptionList>
-                                          </CardBody>
-                                        </Card>
-                                      </GridItem>
-                                    </Grid>
-                                  </StackItem>
-                                </Stack>
-                              </div>
-                            ) : null}
-                            {isCellExpanded(item, "vulnerabilities") ? (
-                              <div className="pf-v5-u-m-md">
-                                {item.vulnerabilities && (
-                                  <Vulnerabilities
-                                    variant="compact"
-                                    vulnerabilities={item.vulnerabilities}
-                                  />
-                                )}
-                              </div>
-                            ) : null}
+                            <div className="pf-v5-u-m-md">
+                              {isCellExpanded(item, "identifier") ? (
+                                <>
+                                  <Stack hasGutter>
+                                    <StackItem>
+                                      <Grid hasGutter>
+                                        <GridItem md={4}>
+                                          <Card isFullHeight isCompact>
+                                            <CardTitle>General view</CardTitle>
+                                            <CardBody>
+                                              <DescriptionList>
+                                                <DescriptionListGroup>
+                                                  <DescriptionListTerm>
+                                                    Published
+                                                  </DescriptionListTerm>
+                                                  <DescriptionListDescription>
+                                                    {formatDate(item.published)}
+                                                  </DescriptionListDescription>
+                                                </DescriptionListGroup>
+                                                <DescriptionListGroup>
+                                                  <DescriptionListTerm>
+                                                    Modified
+                                                  </DescriptionListTerm>
+                                                  <DescriptionListDescription>
+                                                    {formatDate(item.modified)}
+                                                  </DescriptionListDescription>
+                                                </DescriptionListGroup>
+                                              </DescriptionList>
+                                            </CardBody>
+                                          </Card>
+                                        </GridItem>
+                                        <GridItem md={4}>
+                                          <Card isFullHeight isCompact>
+                                            <CardTitle>Issuer</CardTitle>
+                                            <CardBody>
+                                              <DescriptionList>
+                                                <DescriptionListGroup>
+                                                  <DescriptionListTerm>
+                                                    Name
+                                                  </DescriptionListTerm>
+                                                  <DescriptionListDescription>
+                                                    {item.issuer?.name}
+                                                  </DescriptionListDescription>
+                                                </DescriptionListGroup>
+                                                <DescriptionListGroup>
+                                                  <DescriptionListTerm>
+                                                    Website
+                                                  </DescriptionListTerm>
+                                                  <DescriptionListDescription>
+                                                    {item.issuer?.website}
+                                                  </DescriptionListDescription>
+                                                </DescriptionListGroup>
+                                              </DescriptionList>
+                                            </CardBody>
+                                          </Card>
+                                        </GridItem>
+                                        <GridItem md={4}>
+                                          <Card isFullHeight isCompact>
+                                            <CardTitle>System</CardTitle>
+                                            <CardBody>
+                                              <DescriptionList>
+                                                <DescriptionListGroup>
+                                                  <DescriptionListTerm>
+                                                    Hashes
+                                                  </DescriptionListTerm>
+                                                  <DescriptionListDescription>
+                                                    {item.hashes && (
+                                                      <HashesAsList
+                                                        value={item.hashes}
+                                                      />
+                                                    )}
+                                                  </DescriptionListDescription>
+                                                </DescriptionListGroup>
+                                              </DescriptionList>
+                                            </CardBody>
+                                          </Card>
+                                        </GridItem>
+                                      </Grid>
+                                    </StackItem>
+                                  </Stack>
+                                </>
+                              ) : null}
+                              {isCellExpanded(item, "vulnerabilities") ? (
+                                <>
+                                  {item.vulnerabilities && (
+                                    <Vulnerabilities
+                                      variant="compact"
+                                      vulnerabilities={item.vulnerabilities}
+                                    />
+                                  )}
+                                </>
+                              ) : null}
+                            </div>
                           </ExpandableRowContent>
                         </Td>
                       </Tr>

@@ -10,9 +10,9 @@ import {
 import DownloadIcon from "@patternfly/react-icons/dist/esm/icons/download-icon";
 
 import { PathParam, useRouteParams } from "@app/Routes";
-import { AdvisorySourceViewer } from "@app/components/AdvisorySourceViewer";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
+import { AdvisorySourceViewer } from "@app/components/SourceViewer";
 import { useDownload } from "@app/hooks/useDownload";
 import { useFetchAdvisoryById } from "@app/queries/advisories";
 

@@ -3,13 +3,14 @@ import { NavLink } from "react-router-dom";
 
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import {
-  ExpandableRowContent,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
+    ExpandableRowContent,
+    Table,
+    TableProps,
+    Tbody,
+    Td,
+    Th,
+    Thead,
+    Tr,
 } from "@patternfly/react-table";
 
 import { TablePersistenceKeyPrefixes } from "@app/Constants";
@@ -17,20 +18,29 @@ import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { PackageQualifiers } from "@app/components/PackageQualifiers";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
-  ConditionalTableBody,
-  TableHeaderContentWithControls,
-  TableRowContentWithControls,
+    ConditionalTableBody,
+    TableHeaderContentWithControls,
+    TableRowContentWithControls,
 } from "@app/components/TableControls";
-import { getHubRequestParams, useLocalTableControls, useTableControlProps, useTableControlState } from "@app/hooks/table-controls";
+import {
+    getHubRequestParams,
+    useLocalTableControls,
+    useTableControlProps,
+    useTableControlState,
+} from "@app/hooks/table-controls";
 import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchPackagesBySbomId } from "@app/queries/packages";
 import { decomposePurl } from "@app/utils/utils";
 
 interface PackagesProps {
+  variant?: TableProps["variant"];
   sbomId: string;
 }
 
-export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
+export const PackagesBySbom: React.FC<PackagesProps> = ({
+  variant,
+  sbomId,
+}) => {
   const tableControlState = useTableControlState({
     tableName: "packages-table",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.packages,
@@ -132,16 +142,10 @@ export const Packages: React.FC<PackagesProps> = ({ sbomId }) => {
                     item={item}
                     rowIndex={rowIndex}
                   >
-                    <Td
-                      width={60}
-                      {...getTdProps({ columnKey: "name" })}
-                    >
+                    <Td width={60} {...getTdProps({ columnKey: "name" })}>
                       {item.name}
                     </Td>
-                    <Td
-                      width={40}
-                      {...getTdProps({ columnKey: "version" })}
-                    >
+                    <Td width={40} {...getTdProps({ columnKey: "version" })}>
                       {item.version}
                     </Td>
                   </TableRowContentWithControls>
@@ -176,10 +180,12 @@ interface PackageExpandedAreaProps {
   purls: string[];
 }
 
-export const PackageExpandedArea: React.FC<PackageExpandedAreaProps> = ({ purls }) => {
+export const PackageExpandedArea: React.FC<PackageExpandedAreaProps> = ({
+  purls,
+}) => {
   const packages = React.useMemo(() => {
-    return purls.map(purl => {
-      return { purl, ...decomposePurl(purl) }
+    return purls.map((purl) => {
+      return { purl, ...decomposePurl(purl) };
     });
   }, [purls]);
 
@@ -207,7 +213,7 @@ export const PackageExpandedArea: React.FC<PackageExpandedAreaProps> = ({ purls 
         type: FilterType.search,
         placeholderText: "Search...",
         getItemValue: (item) => {
-          return item.purl
+          return item.purl;
         },
       },
     ],
@@ -217,12 +223,7 @@ export const PackageExpandedArea: React.FC<PackageExpandedAreaProps> = ({ purls 
   const {
     currentPageItems,
     numRenderedColumns,
-    propHelpers: {
-      tableProps,
-      getThProps,
-      getTrProps,
-      getTdProps,
-    },
+    propHelpers: { tableProps, getThProps, getTrProps, getTdProps },
   } = tableControls;
 
   return (
@@ -258,7 +259,8 @@ export const PackageExpandedArea: React.FC<PackageExpandedAreaProps> = ({ purls 
                     <Td
                       width={20}
                       modifier="truncate"
-                      {...getTdProps({ columnKey: "name" })}>
+                      {...getTdProps({ columnKey: "name" })}
+                    >
                       <NavLink
                         to={`/packages/${encodeURIComponent(item.purl)}`}
                       >
@@ -298,7 +300,9 @@ export const PackageExpandedArea: React.FC<PackageExpandedAreaProps> = ({ purls 
                       modifier="truncate"
                       {...getTdProps({ columnKey: "qualifiers" })}
                     >
-                      {item.qualifiers && <PackageQualifiers value={item.qualifiers} />}
+                      {item.qualifiers && (
+                        <PackageQualifiers value={item.qualifiers} />
+                      )}
                     </Td>
                   </TableRowContentWithControls>
                 </Tr>

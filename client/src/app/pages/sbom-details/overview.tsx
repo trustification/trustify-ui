@@ -22,9 +22,6 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
   return (
     <Grid hasGutter>
       <GridItem md={6}>
-        <p style={{ color: "red" }}>issue-285: we should have a chart of vulnerabilities here</p>
-      </GridItem>
-      <GridItem md={6}>
         <DescriptionList
           columnModifier={{
             default: "2Col",
@@ -35,7 +32,7 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
             <DescriptionListDescription>{sbom.name}</DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>
-            <DescriptionListTerm>Supplier</DescriptionListTerm>
+            <DescriptionListTerm>Author</DescriptionListTerm>
             <DescriptionListDescription>
               {sbom.authors}
             </DescriptionListDescription>
