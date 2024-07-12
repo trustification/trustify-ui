@@ -37,8 +37,7 @@ export const ProductVersions: React.FC<ProductVersionsProps> = ({
   React.useEffect(() => {
     const sbombs: TableData[] = (product?.versions ?? []).flatMap((sbom) => {
       return {
-        // TODO should remove hardcoded prefix after https://github.com/trustification/trustify/pull/539
-        sbomId: `urn:uuid:${sbom.sbom_id}`,
+        sbomId: sbom.sbom_id,
         sbomVersion: sbom.version,
       };
     });
