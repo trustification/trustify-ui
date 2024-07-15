@@ -3,14 +3,14 @@ import { NavLink } from "react-router-dom";
 
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import {
-    ExpandableRowContent,
-    Table,
-    TableProps,
-    Tbody,
-    Td,
-    Th,
-    Thead,
-    Tr,
+  ExpandableRowContent,
+  Table,
+  TableProps,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
 } from "@patternfly/react-table";
 
 import { TablePersistenceKeyPrefixes } from "@app/Constants";
@@ -18,15 +18,15 @@ import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { PackageQualifiers } from "@app/components/PackageQualifiers";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
-    ConditionalTableBody,
-    TableHeaderContentWithControls,
-    TableRowContentWithControls,
+  ConditionalTableBody,
+  TableHeaderContentWithControls,
+  TableRowContentWithControls,
 } from "@app/components/TableControls";
 import {
-    getHubRequestParams,
-    useLocalTableControls,
-    useTableControlProps,
-    useTableControlState,
+  getHubRequestParams,
+  useLocalTableControls,
+  useTableControlProps,
+  useTableControlState,
 } from "@app/hooks/table-controls";
 import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchPackagesBySbomId } from "@app/queries/packages";
@@ -155,7 +155,7 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({
                     <Td colSpan={7}>
                       <div className="pf-v5-u-m-md">
                         <ExpandableRowContent>
-                          <PackageExpandedArea purls={item.purl} />
+                          <PackageExpandedArea purls={item.purl ?? []} />
                         </ExpandableRowContent>
                       </div>
                     </Td>

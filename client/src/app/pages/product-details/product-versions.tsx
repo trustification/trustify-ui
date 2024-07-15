@@ -1,4 +1,7 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
+
+import dayjs from "dayjs";
 
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
@@ -89,7 +92,12 @@ export const ProductVersions: React.FC<ProductVersionsProps> = ({
       version: "Version",
     },
     isSortEnabled: true,
-    sortableColumns: [],
+    sortableColumns: ["published"],
+    getSortValues: (item) => ({
+      published: item.sbom?.published
+        ? dayjs(item.sbom.published).millisecond()
+        : 0,
+    }),
     isPaginationEnabled: true,
     isFilterEnabled: true,
     filterCategories: [
@@ -160,7 +168,9 @@ export const ProductVersions: React.FC<ProductVersionsProps> = ({
                     modifier="truncate"
                     {...getTdProps({ columnKey: "name" })}
                   >
-                    {item.sbom?.name}
+                    <NavLink to={`/sboms/${item.sbomId}`}>
+                      {item.sbom?.name}
+                    </NavLink>
                   </Td>
                   <Td
                     width={10}
