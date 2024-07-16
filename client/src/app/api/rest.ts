@@ -11,12 +11,15 @@ import {
   ImporterReport,
   Package,
   PackageWithinSBOM,
+  Product,
   SBOM,
   Vulnerability,
 } from "./models";
 
 const API = "/api";
 
+export const ORGANIZATIONS = API + "/v1/organization";
+export const PRODUCTS = API + "/v1/product";
 export const ADVISORIES = API + "/v1/advisory";
 export const VULNERABILITIES = API + "/v1/vulnerability";
 export const SBOMS = API + "/v1/sbom";
@@ -48,6 +51,24 @@ export const getHubPaginatedResult = <T>(
       params,
     }));
 };
+
+// Organizations
+
+export const getOrganizations = (params: HubRequestParams = {}) =>
+  getHubPaginatedResult<Product>(ORGANIZATIONS, params);
+
+export const getOrganizationById = (id: number | string) =>
+  axios
+    .get<Product>(`${ORGANIZATIONS}/${id}`)
+    .then((response) => response.data);
+
+// Products
+
+export const getProducts = (params: HubRequestParams = {}) =>
+  getHubPaginatedResult<Product>(PRODUCTS, params);
+
+export const getProductById = (id: number | string) =>
+  axios.get<Product>(`${PRODUCTS}/${id}`).then((response) => response.data);
 
 // Advisory
 

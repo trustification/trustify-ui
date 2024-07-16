@@ -33,6 +33,31 @@ export interface HubPaginatedResult<T> {
   params: HubRequestParams;
 }
 
+// Organizations
+
+export interface Organization {
+  id: string;
+  name: string;
+}
+
+// Products
+
+export interface Product {
+  id: string;
+  name: string;
+  vendor?: {
+    cpe_key: string;
+    id: string;
+    name: string;
+    website: string;
+  };
+  versions?: {
+    id: string;
+    version: string;
+    sbom_id: string;
+  }[];
+}
+
 // Advisories
 
 export type Severity = "none" | "low" | "medium" | "high" | "critical";
@@ -44,6 +69,8 @@ export interface Advisory {
   title: string;
   uuid: string;
   issuer?: {
+    id: string;
+    cpe_key: string;
     name?: string;
     website?: string;
   };
@@ -51,6 +78,7 @@ export interface Advisory {
   hashes?: string[];
   labels?: { [key in string]: string };
 
+  average_score?: number;
   average_severity?: Severity;
   vulnerabilities?: VulnerabilityWithinAdvisory[];
 }
@@ -63,8 +91,9 @@ export type StatusType =
 
 export interface AdvisoryWithinVulnerability {
   identifier: string;
-  published: string;
-  modified: string;
+  published?: string;
+  modified?: string;
+  widhdraw?: string;
   title: string;
   uuid: string;
   issuer?: {
@@ -72,25 +101,19 @@ export interface AdvisoryWithinVulnerability {
     website?: string;
   };
 
+  score?: number;
   severity?: Severity;
-  statuses?: {
+  purls?: {
     [key in StatusType]?: {
       version: string;
-      package: {
+      base_purl: {
         purl: string;
       };
     }[];
   };
   sboms?: {
     id: string;
-    status: {
-      [key in StatusType]?: {
-        purl: {
-          uuid: string;
-          purl: string;
-        };
-      }[];
-    };
+    status: StatusType[];
   }[];
 }
 
@@ -119,12 +142,14 @@ export interface Vulnerability {
   identifier: string;
   title?: string;
   description?: string;
+  average_score?: number;
   average_severity?: Severity;
   cwe: string;
-  published: string;
-  modified: string;
-  withdrawn: string;
-  released: string;
+  discovered?: string;
+  published?: string;
+  modified?: string;
+  withdrawn?: string;
+  released?: string;
   non_normative: boolean;
 
   advisories: AdvisoryWithinVulnerability[];
@@ -154,7 +179,8 @@ export interface PackageWithinSBOM {
   id: string;
   name: string;
   version: string;
-  purl: string[];
+  purl?: string[];
+  cpe?: string[];
 }
 
 // SBOM
