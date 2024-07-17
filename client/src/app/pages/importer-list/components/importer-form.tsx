@@ -100,7 +100,7 @@ type FormValues = {
 export const myImporters = ["sbom", "csaf", "osv", "cve", ""] as const;
 
 export interface IImporterFormProps {
-  importer?: Importer;
+  importer: Importer | null;
   onClose: () => void;
 }
 
@@ -143,7 +143,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
     defaultValues: {
       name: importer?.name || "",
       description: importerConfiguration?.description || "",
-      type: "",
+      type: importer ? importerType : "",
       source: importerConfiguration?.source || "",
       periodValue: periodValue || 60,
       periodUnit: periodUnit || "s",
