@@ -474,7 +474,7 @@ export const ImporterList: React.FC = () => {
         onClose={closeCreateUpdateModal}
       >
         <ImporterForm
-          importer={entityToUpdate ? entityToUpdate : undefined}
+          importer={entityToUpdate}
           onClose={closeCreateUpdateModal}
         />
       </Modal>
