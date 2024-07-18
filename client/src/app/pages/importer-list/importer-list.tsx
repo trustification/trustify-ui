@@ -539,6 +539,10 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
     initialItemsPerPage: 5,
     isSortEnabled: true,
     sortableColumns: ["startDate", "endDate"],
+    getSortValues: (report) => ({
+      startDate: dayjs(report.report.startDate).valueOf(),
+      endDate: dayjs(report.report.startDate).valueOf(),
+    }),
     isFilterEnabled: false,
     isExpansionEnabled: false,
   });
