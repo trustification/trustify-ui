@@ -2,23 +2,17 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 
 import {
-  DescriptionList,
-  DescriptionListDescription,
-  DescriptionListGroup,
-  DescriptionListTerm,
+  Button,
+  ButtonVariant,
+  Label,
+  TextContent,
+  Title,
   Toolbar,
   ToolbarContent,
-  ToolbarItem
+  ToolbarItem,
 } from "@patternfly/react-core";
-import {
-  ExpandableRowContent,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from "@patternfly/react-table";
+import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
+import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
 import {
   AdvisoryWithinPackage,
@@ -26,7 +20,9 @@ import {
   Vulnerability,
 } from "@app/api/models";
 import { getVulnerabilityById } from "@app/api/rest";
+import { AdvisoryInDrawerInfo } from "@app/components/AdvisoryInDrawerInfo";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
+import { PageDrawerContent } from "@app/components/PageDrawerContext";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
@@ -37,13 +33,12 @@ import {
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchPackageById } from "@app/queries/packages";
 import { useWithUiId } from "@app/utils/query-utils";
-import { formatDate } from "@app/utils/utils";
-import dayjs from "dayjs";
 
 interface TableData {
   vulnerabilityId: string;
   advisory: AdvisoryWithinPackage;
   status: StatusType;
+  context: { cpe: string };
   vulnerability?: Vulnerability;
 }
 
@@ -54,6 +49,17 @@ interface VulnerabilitiesByPackageProps {
 export const VulnerabilitiesByPackage: React.FC<
   VulnerabilitiesByPackageProps
 > = ({ packageId }) => {
+  type RowAction = "showAdvisory";
+  const [selectedRowAction, setSelectedRowAction] =
+    React.useState<RowAction | null>(null);
+  const [selectedRow, setSelectedRow] = React.useState<TableData | null>(null);
+
+  const showDrawer = (action: RowAction, row: TableData) => {
+    setSelectedRowAction(action);
+    setSelectedRow(row);
+  };
+
+  //
   const { pkg, isFetching, fetchError } = useFetchPackageById(packageId);
 
   const [allVulnerabilities, setAllVulnerabilities] = React.useState<
@@ -75,6 +81,7 @@ export const VulnerabilitiesByPackage: React.FC<
         return advisory.status.map((status) => ({
           vulnerabilityId: status.vulnerability.identifier,
           status: status.status,
+          context: { ...status.context },
           advisory: { ...advisory },
         }));
       })
@@ -93,7 +100,6 @@ export const VulnerabilitiesByPackage: React.FC<
       }, [] as TableData[]);
 
     const allUniqueStatus = new Set<StatusType>();
-    allUniqueStatus.add("affected"); // Make sure this one always exists
     vulnerabilities.forEach((item) => allUniqueStatus.add(item.status));
 
     setAllVulnerabilities(vulnerabilities);
@@ -148,21 +154,15 @@ export const VulnerabilitiesByPackage: React.FC<
       id: "ID",
       title: "Title",
       severity: "Severity",
-      published: "Published",
-      modified: "Modified",
       advisory: "Advisory",
+      context: "Context",
+      status: "Status",
     },
-    hasActionsColumn: true,
+    hasActionsColumn: false,
     isSortEnabled: true,
-    sortableColumns: ["id", "published", "modified"],
+    sortableColumns: ["id"],
     getSortValues: (item) => ({
       id: item.vulnerabilityId,
-      published: item.vulnerability?.published
-        ? dayjs(item.vulnerability.published).millisecond()
-        : 0,
-      modified: item.vulnerability?.published
-        ? dayjs(item.vulnerability.modified).millisecond()
-        : 0,
     }),
     isPaginationEnabled: true,
     isFilterEnabled: true,
@@ -186,11 +186,7 @@ export const VulnerabilitiesByPackage: React.FC<
         matcher: (filter: string, item: TableData) => item.status === filter,
       },
     ],
-    initialFilterValues: {
-      status: ["affected"],
-    },
-    isExpansionEnabled: true,
-    expandableVariant: "compound",
+    isExpansionEnabled: false,
   });
 
   const {
@@ -205,7 +201,6 @@ export const VulnerabilitiesByPackage: React.FC<
       getThProps,
       getTrProps,
       getTdProps,
-      getExpandedContentTdProps,
     },
     expansionDerivedState: { isCellExpanded },
   } = tableControls;
@@ -232,9 +227,9 @@ export const VulnerabilitiesByPackage: React.FC<
               <Th {...getThProps({ columnKey: "id" })} />
               <Th {...getThProps({ columnKey: "title" })} />
               <Th {...getThProps({ columnKey: "severity" })} />
-              <Th {...getThProps({ columnKey: "published" })} />
-              <Th {...getThProps({ columnKey: "modified" })} />
               <Th {...getThProps({ columnKey: "advisory" })} />
+              <Th {...getThProps({ columnKey: "context" })} />
+              <Th {...getThProps({ columnKey: "status" })} />
             </TableHeaderContentWithControls>
           </Tr>
         </Thead>
@@ -259,7 +254,7 @@ export const VulnerabilitiesByPackage: React.FC<
                       </NavLink>
                     </Td>
                     <Td
-                      width={45}
+                      width={35}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "title" })}
                     >
@@ -273,86 +268,37 @@ export const VulnerabilitiesByPackage: React.FC<
                       )}
                     </Td>
                     <Td
-                      width={10}
+                      width={15}
                       modifier="truncate"
-                      {...getTdProps({ columnKey: "published" })}
+                      {...getTdProps({ columnKey: "advisory" })}
                     >
-                      {formatDate(item.vulnerability?.published)}
+                      <Button
+                        size="sm"
+                        variant={ButtonVariant.secondary}
+                        onClick={() => showDrawer("showAdvisory", item)}
+                      >
+                        {item.advisory.identifier}
+                      </Button>
+                    </Td>
+                    <Td
+                      width={25}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "context" })}
+                    >
+                      {item.context.cpe}
                     </Td>
                     <Td
                       width={10}
                       modifier="truncate"
-                      {...getTdProps({ columnKey: "modified" })}
+                      {...getTdProps({ columnKey: "status" })}
                     >
-                      {formatDate(item.vulnerability?.modified)}
-                    </Td>
-                    <Td
-                      width={10}
-                      modifier="truncate"
-                      {...getTdProps({
-                        columnKey: "advisory",
-                        isCompoundExpandToggle: true,
-                        item: item,
-                        rowIndex,
-                      })}
-                    >
-                      {item.status.charAt(0).toUpperCase() +
-                        item.status.slice(1).replace("_", " ")}
+                      <Label>
+                        {item.status.charAt(0).toUpperCase() +
+                          item.status.slice(1).replace("_", " ")}
+                      </Label>
                     </Td>
                   </TableRowContentWithControls>
                 </Tr>
-                {isCellExpanded(item) ? (
-                  <Tr isExpanded>
-                    <Td
-                      {...getExpandedContentTdProps({
-                        item,
-                      })}
-                    >
-                      <div className="pf-v5-u-m-md">
-                        <ExpandableRowContent>
-                          {isCellExpanded(item, "advisory") ? (
-                            <DescriptionList>
-                              <DescriptionListGroup>
-                                <DescriptionListTerm>
-                                  Identifier
-                                </DescriptionListTerm>
-                                <DescriptionListDescription>
-                                  <NavLink
-                                    to={`/advisories/${item.advisory.uuid}`}
-                                  >
-                                    {item.advisory.identifier}
-                                  </NavLink>
-                                </DescriptionListDescription>
-                              </DescriptionListGroup>
-                              <DescriptionListGroup>
-                                <DescriptionListTerm>Title</DescriptionListTerm>
-                                <DescriptionListDescription>
-                                  {item.advisory.title}
-                                </DescriptionListDescription>
-                              </DescriptionListGroup>
-                              <DescriptionListGroup>
-                                <DescriptionListTerm>
-                                  Published
-                                </DescriptionListTerm>
-                                <DescriptionListDescription>
-                                  {formatDate(item.advisory.published)}
-                                </DescriptionListDescription>
-                              </DescriptionListGroup>
-                              <DescriptionListGroup>
-                                <DescriptionListTerm>
-                                  Modified
-                                </DescriptionListTerm>
-                                <DescriptionListDescription>
-                                  {formatDate(item.advisory.modified)}
-                                </DescriptionListDescription>
-                              </DescriptionListGroup>
-                            </DescriptionList>
-                          ) : null}
-                        </ExpandableRowContent>
-                      </div>
-                    </Td>
-                  </Tr>
-                ) : null}
               </Tbody>
             );
           })}
@@ -364,6 +310,32 @@ export const VulnerabilitiesByPackage: React.FC<
         isCompact
         paginationProps={paginationProps}
       />
+
+      <PageDrawerContent
+        isExpanded={selectedRowAction !== null}
+        onCloseClick={() => setSelectedRowAction(null)}
+        pageKey="drawer"
+        drawerPanelContentProps={{ defaultSize: "600px" }}
+        header={
+          <>
+            {selectedRowAction === "showAdvisory" && (
+              <TextContent>
+                <Title headingLevel="h2" size="lg" className={spacing.mtXs}>
+                  Advisory
+                </Title>
+              </TextContent>
+            )}
+          </>
+        }
+      >
+        {selectedRowAction === "showAdvisory" && (
+          <>
+            {selectedRow?.advisory && (
+              <AdvisoryInDrawerInfo advisoryId={selectedRow?.advisory.uuid} />
+            )}
+          </>
+        )}
+      </PageDrawerContent>
     </>
   );
 };

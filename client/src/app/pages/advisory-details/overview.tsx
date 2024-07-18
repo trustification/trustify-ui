@@ -16,17 +16,18 @@ import {
   Grid,
   GridItem,
   Stack,
-  StackItem
+  StackItem,
 } from "@patternfly/react-core";
 import PenIcon from "@patternfly/react-icons/dist/esm/icons/pen-icon";
 
 import { Advisory } from "@app/api/models";
+import { AdvisoryGeneralView } from "@app/components/AdvisoryGeneralView";
+import { AdvisoryIssuer } from "@app/components/AdvisoryIssuer";
 import { EditLabelsModal } from "@app/components/EditLabelsModal";
 import { HashesAsList } from "@app/components/HashesAsList";
 import { LabelsAsList } from "@app/components/LabelsAsList";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import { useUpdateAdvisoryLabelsMutation } from "@app/queries/advisories";
-import { formatDate } from "@app/utils/utils";
 
 interface OverviewProps {
   advisory: Advisory;
@@ -62,26 +63,7 @@ export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
               <Card isFullHeight>
                 <CardTitle>General view</CardTitle>
                 <CardBody>
-                  <DescriptionList>
-                    <DescriptionListGroup>
-                      <DescriptionListTerm>Title</DescriptionListTerm>
-                      <DescriptionListDescription>
-                        {advisory.title}
-                      </DescriptionListDescription>
-                    </DescriptionListGroup>
-                    <DescriptionListGroup>
-                      <DescriptionListTerm>Published</DescriptionListTerm>
-                      <DescriptionListDescription>
-                        {formatDate(advisory.published)}
-                      </DescriptionListDescription>
-                    </DescriptionListGroup>
-                    <DescriptionListGroup>
-                      <DescriptionListTerm>Modified</DescriptionListTerm>
-                      <DescriptionListDescription>
-                        {formatDate(advisory.modified)}
-                      </DescriptionListDescription>
-                    </DescriptionListGroup>
-                  </DescriptionList>
+                  <AdvisoryGeneralView advisory={advisory} />
                 </CardBody>
               </Card>
             </GridItem>
@@ -89,20 +71,7 @@ export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
               <Card isFullHeight>
                 <CardTitle>Issuer</CardTitle>
                 <CardBody>
-                  <DescriptionList>
-                    <DescriptionListGroup>
-                      <DescriptionListTerm>Name</DescriptionListTerm>
-                      <DescriptionListDescription>
-                        {advisory.issuer?.name}
-                      </DescriptionListDescription>
-                    </DescriptionListGroup>
-                    <DescriptionListGroup>
-                      <DescriptionListTerm>Website</DescriptionListTerm>
-                      <DescriptionListDescription>
-                        {advisory.issuer?.website}
-                      </DescriptionListDescription>
-                    </DescriptionListGroup>
-                  </DescriptionList>
+                  <AdvisoryIssuer value={advisory} />
                 </CardBody>
               </Card>
             </GridItem>

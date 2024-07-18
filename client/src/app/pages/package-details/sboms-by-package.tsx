@@ -7,7 +7,6 @@ import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import { TablePersistenceKeyPrefixes } from "@app/Constants";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { LabelsAsList } from "@app/components/LabelsAsList";
-import { PackagesCount } from "@app/components/PackagesCount";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -36,7 +35,6 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({
       name: "Name",
       published: "Published",
       labels: "Labels",
-      packages: "Packages",
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
@@ -113,7 +111,6 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({
               <Th {...getThProps({ columnKey: "name" })} />
               <Th {...getThProps({ columnKey: "published" })} />
               <Th {...getThProps({ columnKey: "labels" })} />
-              <Th {...getThProps({ columnKey: "packages" })} />
             </TableHeaderContentWithControls>
           </Tr>
         </Thead>
@@ -138,18 +135,11 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({
                     {formatDate(item.published)}
                   </Td>
                   <Td
-                    width={25}
+                    width={35}
                     modifier="truncate"
                     {...getTdProps({ columnKey: "labels" })}
                   >
                     {item.labels && <LabelsAsList value={item.labels} />}
-                  </Td>
-                  <Td
-                    width={10}
-                    modifier="truncate"
-                    {...getTdProps({ columnKey: "packages" })}
-                  >
-                    <PackagesCount sbomId={item.id} />
                   </Td>
                 </Tr>
               </Tbody>

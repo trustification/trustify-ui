@@ -38,7 +38,7 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
             </DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>
-            <DescriptionListTerm>Created</DescriptionListTerm>
+            <DescriptionListTerm>Published</DescriptionListTerm>
             <DescriptionListDescription>
               {formatDate(sbom.published)}
             </DescriptionListDescription>

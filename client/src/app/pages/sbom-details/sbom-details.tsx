@@ -50,7 +50,10 @@ export const SbomDetails: React.FC = () => {
               ),
               onClick: () => {
                 if (sbomId) {
-                  downloadSBOM(sbomId);
+                  downloadSBOM(
+                    sbomId,
+                    sbom?.name ? `${sbom?.name}.json` : sbomId
+                  );
                 }
               },
               variant: "secondary",
