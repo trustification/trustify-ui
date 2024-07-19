@@ -57,7 +57,7 @@ import {
 import { LabelsAsList } from "@app/components/LabelsAsList";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 
-import { Advisory } from "@app/api/models";
+import { AdvisoryIndex } from "@app/api/models";
 import { EditLabelsModal } from "@app/components/EditLabelsModal";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import { AdvisorySourceViewer } from "@app/components/SourceViewer";
@@ -77,9 +77,9 @@ export const AdvisoryList: React.FC = () => {
   type RowAction = "editLabels" | "viewSource";
   const [selectedRowAction, setSelectedRowAction] =
     React.useState<RowAction | null>(null);
-  const [selectedRow, setSelectedRow] = React.useState<Advisory | null>(null);
+  const [selectedRow, setSelectedRow] = React.useState<AdvisoryIndex | null>(null);
 
-  const prepareActionOnRow = (action: RowAction, row: Advisory) => {
+  const prepareActionOnRow = (action: RowAction, row: AdvisoryIndex) => {
     setSelectedRowAction(action);
     setSelectedRow(row);
   };
@@ -96,7 +96,7 @@ export const AdvisoryList: React.FC = () => {
     onUpdateLabelsError
   );
 
-  const execSaveLabels = (row: Advisory, labels: { [key: string]: string }) => {
+  const execSaveLabels = (row: AdvisoryIndex, labels: { [key: string]: string }) => {
     updateAdvisoryLabels({ ...row, labels });
   };
 

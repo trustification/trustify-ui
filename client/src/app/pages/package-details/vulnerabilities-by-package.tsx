@@ -16,8 +16,8 @@ import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
 import {
   AdvisoryWithinPackage,
-  SbomStatus,
-  Vulnerability,
+  VulnerabilityStatus,
+  VulnerabilityIndex,
 } from "@app/api/models";
 import { getVulnerabilityById } from "@app/api/rest";
 import { AdvisoryInDrawerInfo } from "@app/components/AdvisoryInDrawerInfo";
@@ -38,9 +38,9 @@ import { VulnerabilityInDrawerInfo } from "@app/components/VulnerabilityInDrawer
 interface TableData {
   vulnerabilityId: string;
   advisory: AdvisoryWithinPackage;
-  status: SbomStatus;
+  status: VulnerabilityStatus;
   context: { cpe: string };
-  vulnerability?: Vulnerability;
+  vulnerability?: VulnerabilityIndex;
 }
 
 interface VulnerabilitiesByPackageProps {
@@ -67,13 +67,13 @@ export const VulnerabilitiesByPackage: React.FC<
     TableData[]
   >([]);
   const [vulnerabilitiesById, setVulnerabilitiesById] = React.useState<
-    Map<string, Vulnerability>
+    Map<string, VulnerabilityIndex>
   >(new Map());
   const [isFetchingVulnerabilities, setIsFetchingVulnerabilities] =
     React.useState(false);
 
   const [allAdvisoryStatus, setAllAdvisoryStatus] = React.useState<
-    Set<SbomStatus>
+    Set<VulnerabilityStatus>
   >(new Set());
 
   React.useEffect(() => {
@@ -100,7 +100,7 @@ export const VulnerabilitiesByPackage: React.FC<
         }
       }, [] as TableData[]);
 
-    const allUniqueStatus = new Set<SbomStatus>();
+    const allUniqueStatus = new Set<VulnerabilityStatus>();
     vulnerabilities.forEach((item) => allUniqueStatus.add(item.status));
 
     setAllVulnerabilities(vulnerabilities);
@@ -119,9 +119,9 @@ export const VulnerabilitiesByPackage: React.FC<
           // Filter out error responses
           return prev;
         }
-      }, [] as Vulnerability[]);
+      }, [] as VulnerabilityIndex[]);
 
-      const vulnerabilitiesById = new Map<string, Vulnerability>();
+      const vulnerabilitiesById = new Map<string, VulnerabilityIndex>();
       validVulnerabilities.forEach((vulnerability) =>
         vulnerabilitiesById.set(vulnerability.identifier, vulnerability)
       );

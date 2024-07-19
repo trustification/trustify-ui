@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-import { Advisory, HubRequestParams } from "@app/api/models";
+import { AdvisoryIndex, HubRequestParams } from "@app/api/models";
 import {
   getAdvisories,
   getAdvisoryById,
@@ -73,7 +73,7 @@ export const useFetchAdvisorySourceById = (id?: number | string) => {
 
 export const useUploadAdvisory = () => {
   const queryClient = useQueryClient();
-  return useUpload<Advisory, { message: string }>({
+  return useUpload<AdvisoryIndex, { message: string }>({
     parallel: true,
     uploadFn: (formData, config) => {
       return uploadAdvisory(formData, config);
@@ -88,7 +88,7 @@ export const useUploadAdvisory = () => {
 
 export const useUpdateAdvisoryLabelsMutation = (
   onSuccess: () => void,
-  onError: (err: AxiosError, payload: Advisory) => void
+  onError: (err: AxiosError, payload: AdvisoryIndex) => void
 ) => {
   const queryClient = useQueryClient();
   return useMutation({

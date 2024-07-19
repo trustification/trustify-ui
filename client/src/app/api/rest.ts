@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import { FORM_DATA_FILE_KEY } from "@app/Constants";
 import { serializeRequestParamsForHub } from "@app/hooks/table-controls/getHubRequestParams";
 import {
-  Advisory,
+  AdvisoryIndex,
   HubPaginatedResult,
   HubRequestParams,
   Importer,
@@ -13,7 +13,7 @@ import {
   PackageWithinSBOM,
   Product,
   SBOM,
-  Vulnerability,
+  VulnerabilityIndex,
 } from "./models";
 
 const API = "/api";
@@ -73,10 +73,10 @@ export const getProductById = (id: number | string) =>
 // Advisory
 
 export const getAdvisories = (params: HubRequestParams = {}) =>
-  getHubPaginatedResult<Advisory>(ADVISORIES, params);
+  getHubPaginatedResult<AdvisoryIndex>(ADVISORIES, params);
 
 export const getAdvisoryById = (id: number | string) =>
-  axios.get<Advisory>(`${ADVISORIES}/${id}`).then((response) => response.data);
+  axios.get<AdvisoryIndex>(`${ADVISORIES}/${id}`).then((response) => response.data);
 
 export const getAdvisorySourceById = (id: number | string) =>
   axios
@@ -96,7 +96,7 @@ export const uploadAdvisory = (
   const file = formData.get(FORM_DATA_FILE_KEY) as File;
   return file.text().then((text) => {
     const json = JSON.parse(text);
-    return axios.post<Advisory>(`${ADVISORIES}`, json, config);
+    return axios.post<AdvisoryIndex>(`${ADVISORIES}`, json, config);
   });
 };
 
@@ -111,11 +111,11 @@ export const updateAdvisoryLabels = (
 // Vulnerability
 
 export const getVulnerabilities = (params: HubRequestParams = {}) =>
-  getHubPaginatedResult<Vulnerability>(VULNERABILITIES, params);
+  getHubPaginatedResult<VulnerabilityIndex>(VULNERABILITIES, params);
 
 export const getVulnerabilityById = (id: number | string) =>
   axios
-    .get<Vulnerability>(`${VULNERABILITIES}/${id}`)
+    .get<VulnerabilityIndex>(`${VULNERABILITIES}/${id}`)
     .then((response) => response.data);
 
 export const getVulnerabilitySourceById = (id: number | string) =>

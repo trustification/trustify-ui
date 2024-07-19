@@ -22,7 +22,7 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { AdvisoryWithinSbom, SbomStatus, Vulnerability } from "@app/api/models";
+import { AdvisoryWithinSbom, VulnerabilityStatus, VulnerabilityIndex } from "@app/api/models";
 import { getVulnerabilityById } from "@app/api/rest";
 import { AdvisoryInDrawerInfo } from "@app/components/AdvisoryInDrawerInfo";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
@@ -42,10 +42,10 @@ import { useWithUiId } from "@app/utils/query-utils";
 interface TableData {
   vulnerabilityId: string;
   advisory: AdvisoryWithinSbom;
-  status: SbomStatus;
+  status: VulnerabilityStatus;
   context: { cpe: string };
   packages: { id: string; name: string; version: string }[];
-  vulnerability?: Vulnerability;
+  vulnerability?: VulnerabilityIndex;
 }
 
 interface VulnerabilitiesBySbomProps {
@@ -72,13 +72,13 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
     TableData[]
   >([]);
   const [vulnerabilitiesById, setVulnerabilitiesById] = React.useState<
-    Map<string, Vulnerability>
+    Map<string, VulnerabilityIndex>
   >(new Map());
   const [isFetchingVulnerabilities, setIsFetchingVulnerabilities] =
     React.useState(false);
 
   const [allAdvisoryStatus, setAllAdvisoryStatus] = React.useState<
-    Set<SbomStatus>
+    Set<VulnerabilityStatus>
   >(new Set());
 
   React.useEffect(() => {
@@ -105,7 +105,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
         }
       }, [] as TableData[]);
 
-    const allUniqueStatus = new Set<SbomStatus>();
+    const allUniqueStatus = new Set<VulnerabilityStatus>();
     vulnerabilities.forEach((item) => allUniqueStatus.add(item.status));
 
     setAllVulnerabilities(vulnerabilities);
@@ -124,9 +124,9 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
           // Filter out error responses
           return prev;
         }
-      }, [] as Vulnerability[]);
+      }, [] as VulnerabilityIndex[]);
 
-      const vulnerabilitiesById = new Map<string, Vulnerability>();
+      const vulnerabilitiesById = new Map<string, VulnerabilityIndex>();
       validVulnerabilities.forEach((vulnerability) =>
         vulnerabilitiesById.set(vulnerability.identifier, vulnerability)
       );
