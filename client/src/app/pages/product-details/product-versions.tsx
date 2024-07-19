@@ -95,7 +95,7 @@ export const ProductVersions: React.FC<ProductVersionsProps> = ({
     sortableColumns: ["published"],
     getSortValues: (item) => ({
       published: item.sbom?.published
-        ? dayjs(item.sbom.published).millisecond()
+        ? dayjs(item.sbom.published).valueOf()
         : 0,
     }),
     isPaginationEnabled: true,
@@ -142,7 +142,11 @@ export const ProductVersions: React.FC<ProductVersionsProps> = ({
         </ToolbarContent>
       </Toolbar>
 
-      <Table {...tableProps} aria-label="Version table">
+      <Table
+        {...tableProps}
+        aria-label="Version table"
+        className="vertical-middle-aligned-table"
+      >
         <Thead>
           <Tr>
             <TableHeaderContentWithControls {...tableControls}>

@@ -63,11 +63,12 @@ export interface Product {
 export type Severity = "none" | "low" | "medium" | "high" | "critical";
 
 export interface Advisory {
-  identifier: string;
-  published: string;
-  modified: string;
-  title: string;
   uuid: string;
+  identifier: string;
+  title: string;
+  published?: string;
+  modified?: string;
+  withdrawn: string;
   issuer?: {
     id: string;
     cpe_key: string;
@@ -91,11 +92,11 @@ export type StatusType =
 
 export interface AdvisoryWithinVulnerability {
   identifier: string;
+  uuid: string;
+  title: string;
   published?: string;
   modified?: string;
   widhdraw?: string;
-  title: string;
-  uuid: string;
   issuer?: {
     name?: string;
     website?: string;
@@ -107,8 +108,10 @@ export interface AdvisoryWithinVulnerability {
     [key in StatusType]?: {
       version: string;
       base_purl: {
+        uuid: string;
         purl: string;
       };
+      context: { cpe: string };
     }[];
   };
   sboms?: {
@@ -118,17 +121,20 @@ export interface AdvisoryWithinVulnerability {
 }
 
 export interface AdvisoryWithinPackage {
-  identifier: string;
-  published: string;
-  modified: string;
-  title: string;
   uuid: string;
+  identifier: string;
+  title: string;
+  published?: string;
+  modified?: string;
   issuer?: {
     name?: string;
     website?: string;
   };
 
+  labels?: { [key in string]: string };
+
   status: {
+    context: { cpe: string };
     status: StatusType;
     vulnerability: {
       identifier: string;
@@ -157,14 +163,17 @@ export interface Vulnerability {
 
 export interface VulnerabilityWithinAdvisory {
   identifier: string;
+  title: string;
+  description: string;
+  score: Severity;
   severity: Severity;
-  non_normative: {
-    title: string;
-    discovered?: string;
-    released?: string;
-    cwe?: string;
-  };
-  cwe: string;
+  discovered?: string;
+  modified?: string;
+  published?: string;
+  released?: string;
+  withdrawn?: string;
+  cwe?: string;
+  normative: true;
 }
 
 // Package

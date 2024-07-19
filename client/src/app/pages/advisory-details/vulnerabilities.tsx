@@ -50,13 +50,13 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
       released: "Released",
       cwe: "CWE",
     },
-    hasActionsColumn: true,
+    hasActionsColumn: false,
     isSortEnabled: true,
     sortableColumns: ["identifier", "discovered", "released"],
     getSortValues: (vuln) => ({
       identifier: vuln?.identifier || "",
-      discovered: vuln ? dayjs(vuln.non_normative.discovered).millisecond() : 0,
-      released: vuln ? dayjs(vuln.non_normative.released).millisecond() : 0,
+      discovered: vuln.discovered ? dayjs(vuln.discovered).valueOf() : 0,
+      released: vuln.released ? dayjs(vuln.released).valueOf() : 0,
     }),
     isPaginationEnabled: true,
     isExpansionEnabled: false,
@@ -110,9 +110,9 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
             <TableHeaderContentWithControls {...tableControls}>
               <Th {...getThProps({ columnKey: "identifier" })} />
               <Th {...getThProps({ columnKey: "title" })} />
+              <Th {...getThProps({ columnKey: "severity" })} />
               <Th {...getThProps({ columnKey: "discovered" })} />
               <Th {...getThProps({ columnKey: "released" })} />
-              <Th {...getThProps({ columnKey: "severity" })} />
               <Th {...getThProps({ columnKey: "cwe" })} />
             </TableHeaderContentWithControls>
           </Tr>
@@ -142,19 +142,19 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
                       modifier="truncate"
                       {...getTdProps({ columnKey: "title" })}
                     >
-                      {item.non_normative.title}
-                    </Td>
-                    <Td width={10} {...getTdProps({ columnKey: "discovered" })}>
-                      {formatDate(item.non_normative.discovered)}
-                    </Td>
-                    <Td width={10} {...getTdProps({ columnKey: "released" })}>
-                      {formatDate(item.non_normative.released)}
+                      {item.title || item.description}
                     </Td>
                     <Td width={15} {...getTdProps({ columnKey: "severity" })}>
                       <SeverityShieldAndText value={item.severity} />
                     </Td>
+                    <Td width={10} {...getTdProps({ columnKey: "discovered" })}>
+                      {formatDate(item.discovered)}
+                    </Td>
+                    <Td width={10} {...getTdProps({ columnKey: "released" })}>
+                      {formatDate(item.released)}
+                    </Td>
                     <Td width={10} {...getTdProps({ columnKey: "cwe" })}>
-                      {item.non_normative.cwe}
+                      {item.cwe}
                     </Td>
                   </TableRowContentWithControls>
                 </Tr>

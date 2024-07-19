@@ -12,7 +12,7 @@ import {
   TextContent,
   Toolbar,
   ToolbarContent,
-  ToolbarItem
+  ToolbarItem,
 } from "@patternfly/react-core";
 import {
   ExpandableRowContent,
@@ -44,7 +44,7 @@ import { useFetchPackages } from "@app/queries/packages";
 import { decomposePurl } from "@app/utils/utils";
 
 interface TableData extends Package {
-  decomposedPurl?: DecomposedPurl
+  decomposedPurl?: DecomposedPurl;
 }
 
 export const PackageList: React.FC = () => {
@@ -57,7 +57,6 @@ export const PackageList: React.FC = () => {
       version: "Version",
       type: "Type",
       qualifiers: "Qualifiers",
-      cve: "CVEs",
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
@@ -86,12 +85,12 @@ export const PackageList: React.FC = () => {
   );
 
   const enrichedPackages = React.useMemo(() => {
-    return packages.map(item => {
+    return packages.map((item) => {
       const result: TableData = {
         ...item,
-        decomposedPurl: decomposePurl(item.purl)
+        decomposedPurl: decomposePurl(item.purl),
       };
-      return result
+      return result;
     });
   }, [packages]);
 
@@ -158,7 +157,6 @@ export const PackageList: React.FC = () => {
                   <Th {...getThProps({ columnKey: "version" })} />
                   <Th {...getThProps({ columnKey: "type" })} />
                   <Th {...getThProps({ columnKey: "qualifiers" })} />
-                  <Th {...getThProps({ columnKey: "cve" })} />
                 </TableHeaderContentWithControls>
               </Tr>
             </Thead>
@@ -177,11 +175,13 @@ export const PackageList: React.FC = () => {
                         item={item}
                         rowIndex={rowIndex}
                       >
-                        <Td width={20} {...getTdProps({ columnKey: "name" })}>
+                        <Td width={25} {...getTdProps({ columnKey: "name" })}>
                           <NavLink
                             to={`/packages/${encodeURIComponent(item.uuid)}`}
                           >
-                            {item.decomposedPurl ? item.decomposedPurl?.name : item.purl}
+                            {item.decomposedPurl
+                              ? item.decomposedPurl?.name
+                              : item.purl}
                           </NavLink>
                         </Td>
                         <Td
@@ -206,15 +206,14 @@ export const PackageList: React.FC = () => {
                           {item.decomposedPurl?.type}
                         </Td>
                         <Td
-                          width={30}
+                          width={40}
                           {...getTdProps({ columnKey: "qualifiers" })}
                         >
-                          {item.decomposedPurl?.qualifiers && <PackageQualifiers value={item.decomposedPurl?.qualifiers} />}
-                        </Td>
-                        <Td width={15} {...getTdProps({ columnKey: "cve" })}>
-                          {/* <VulnerabilitiesGalleryCount
-                          vulnerabilities={item.related_cves}
-                        /> */}
+                          {item.decomposedPurl?.qualifiers && (
+                            <PackageQualifiers
+                              value={item.decomposedPurl?.qualifiers}
+                            />
+                          )}
                         </Td>
                       </TableRowContentWithControls>
                     </Tr>

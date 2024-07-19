@@ -8,10 +8,6 @@ import {
   Card,
   CardBody,
   CardTitle,
-  DescriptionList,
-  DescriptionListDescription,
-  DescriptionListGroup,
-  DescriptionListTerm,
   Grid,
   GridItem,
   Modal,
@@ -58,16 +54,16 @@ import {
   useUploadAdvisory,
 } from "@app/queries/advisories";
 
-import { HashesAsList } from "@app/components/HashesAsList";
 import { LabelsAsList } from "@app/components/LabelsAsList";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
-import { formatDate } from "@app/utils/utils";
 
 import { Advisory } from "@app/api/models";
 import { EditLabelsModal } from "@app/components/EditLabelsModal";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import { AdvisorySourceViewer } from "@app/components/SourceViewer";
 
+import { AdvisoryGeneralView } from "@app/components/AdvisoryGeneralView";
+import { AdvisoryIssuer } from "@app/components/AdvisoryIssuer";
 import { Vulnerabilities } from "../advisory-details/vulnerabilities";
 import { VulnerabilitiesGalleryCount } from "./components/VulnerabilitiesGaleryCount";
 
@@ -357,74 +353,27 @@ export const AdvisoryList: React.FC = () => {
                                   <Stack hasGutter>
                                     <StackItem>
                                       <Grid hasGutter>
-                                        <GridItem md={4}>
+                                        <GridItem md={6}>
                                           <Card isFullHeight isCompact>
                                             <CardTitle>General view</CardTitle>
                                             <CardBody>
-                                              <DescriptionList>
-                                                <DescriptionListGroup>
-                                                  <DescriptionListTerm>
-                                                    Published
-                                                  </DescriptionListTerm>
-                                                  <DescriptionListDescription>
-                                                    {formatDate(item.published)}
-                                                  </DescriptionListDescription>
-                                                </DescriptionListGroup>
-                                                <DescriptionListGroup>
-                                                  <DescriptionListTerm>
-                                                    Modified
-                                                  </DescriptionListTerm>
-                                                  <DescriptionListDescription>
-                                                    {formatDate(item.modified)}
-                                                  </DescriptionListDescription>
-                                                </DescriptionListGroup>
-                                              </DescriptionList>
+                                              <AdvisoryGeneralView
+                                                advisory={item}
+                                                excludedFields={["title"]}
+                                                descriptionListProps={{
+                                                  columnModifier: {
+                                                    default: "2Col",
+                                                  },
+                                                }}
+                                              />
                                             </CardBody>
                                           </Card>
                                         </GridItem>
-                                        <GridItem md={4}>
+                                        <GridItem md={6}>
                                           <Card isFullHeight isCompact>
                                             <CardTitle>Issuer</CardTitle>
                                             <CardBody>
-                                              <DescriptionList>
-                                                <DescriptionListGroup>
-                                                  <DescriptionListTerm>
-                                                    Name
-                                                  </DescriptionListTerm>
-                                                  <DescriptionListDescription>
-                                                    {item.issuer?.name}
-                                                  </DescriptionListDescription>
-                                                </DescriptionListGroup>
-                                                <DescriptionListGroup>
-                                                  <DescriptionListTerm>
-                                                    Website
-                                                  </DescriptionListTerm>
-                                                  <DescriptionListDescription>
-                                                    {item.issuer?.website}
-                                                  </DescriptionListDescription>
-                                                </DescriptionListGroup>
-                                              </DescriptionList>
-                                            </CardBody>
-                                          </Card>
-                                        </GridItem>
-                                        <GridItem md={4}>
-                                          <Card isFullHeight isCompact>
-                                            <CardTitle>System</CardTitle>
-                                            <CardBody>
-                                              <DescriptionList>
-                                                <DescriptionListGroup>
-                                                  <DescriptionListTerm>
-                                                    Hashes
-                                                  </DescriptionListTerm>
-                                                  <DescriptionListDescription>
-                                                    {item.hashes && (
-                                                      <HashesAsList
-                                                        value={item.hashes}
-                                                      />
-                                                    )}
-                                                  </DescriptionListDescription>
-                                                </DescriptionListGroup>
-                                              </DescriptionList>
+                                              <AdvisoryIssuer value={item} />
                                             </CardBody>
                                           </Card>
                                         </GridItem>
