@@ -290,7 +290,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                       </Button>
                     </Td>
                     <Td
-                      width={25}
+                      width={15}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "context" })}
                     >
