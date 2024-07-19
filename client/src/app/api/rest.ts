@@ -129,11 +129,6 @@ export const downloadVulnerabilityById = (id: number | string) =>
     headers: { Accept: "text/plain", responseType: "blob" },
   });
 
-export const getVulnerabilitiesBySbomId = (id: string | number) =>
-  axios
-    .get<Vulnerability[]>(`${SBOMS}/${id}/vulnerabilities`)
-    .then((response) => response.data);
-
 // Package
 
 export const getPackages = (params: HubRequestParams = {}) =>

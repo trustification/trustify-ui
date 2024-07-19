@@ -177,7 +177,10 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({
 };
 
 interface PackageExpandedAreaProps {
-  purls: string[];
+  purls: {
+    uuid: string;
+    purl: string;
+  }[];
 }
 
 export const PackageExpandedArea: React.FC<PackageExpandedAreaProps> = ({
@@ -185,7 +188,11 @@ export const PackageExpandedArea: React.FC<PackageExpandedAreaProps> = ({
 }) => {
   const packages = React.useMemo(() => {
     return purls.map((purl) => {
-      return { purl, ...decomposePurl(purl) };
+      return {
+        uuid: purl.uuid,
+        purl: purl.purl,
+        ...decomposePurl(purl.purl),
+      };
     });
   }, [purls]);
 

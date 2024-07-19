@@ -91,8 +91,8 @@ export type StatusType =
   | "affected";
 
 export interface AdvisoryWithinVulnerability {
-  identifier: string;
   uuid: string;
+  identifier: string;
   title: string;
   published?: string;
   modified?: string;
@@ -126,19 +126,44 @@ export interface AdvisoryWithinPackage {
   title: string;
   published?: string;
   modified?: string;
+  widhdraw?: string;
   issuer?: {
     name?: string;
     website?: string;
   };
 
   labels?: { [key in string]: string };
-
   status: {
     context: { cpe: string };
     status: StatusType;
     vulnerability: {
       identifier: string;
     };
+  }[];
+}
+
+export interface AdvisoryWithinSbom {
+  uuid: string;
+  identifier: string;
+  title: string;
+  published?: string;
+  modified?: string;
+  widhdraw?: string;
+  issuer?: {
+    name?: string;
+    website?: string;
+  };
+
+  labels?: { [key in string]: string };
+  status: {
+    context: { cpe: string };
+    status: StatusType;
+    vulnerability_id: string;
+    packages: {
+      id: string;
+      name: string;
+      version: string;
+    }[];
   }[];
 }
 
@@ -156,23 +181,23 @@ export interface Vulnerability {
   modified?: string;
   withdrawn?: string;
   released?: string;
-  non_normative: boolean;
+  normative: boolean;
 
   advisories: AdvisoryWithinVulnerability[];
 }
 
 export interface VulnerabilityWithinAdvisory {
   identifier: string;
-  title: string;
-  description: string;
-  score: Severity;
+  title?: string;
+  description?: string;
+  score?: Severity;
   severity: Severity;
-  discovered?: string;
-  modified?: string;
-  published?: string;
-  released?: string;
-  withdrawn?: string;
   cwe?: string;
+  discovered?: string;
+  published?: string;
+  modified?: string;
+  withdrawn?: string;
+  released?: string;
   normative: true;
 }
 
@@ -188,8 +213,10 @@ export interface PackageWithinSBOM {
   id: string;
   name: string;
   version: string;
-  purl?: string[];
-  cpe?: string[];
+  purl?: {
+    uuid: string;
+    purl: string;
+  }[];
 }
 
 // SBOM
@@ -206,6 +233,8 @@ export interface SBOM {
 
   hashes?: string[];
   labels?: { [key in string]: string };
+
+  advisories?: AdvisoryWithinSbom[];
 }
 
 // Importer

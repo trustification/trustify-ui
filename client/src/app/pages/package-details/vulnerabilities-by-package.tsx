@@ -33,6 +33,7 @@ import {
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchPackageById } from "@app/queries/packages";
 import { useWithUiId } from "@app/utils/query-utils";
+import { VulnerabilityInDrawerInfo } from "@app/components/VulnerabilityInDrawerInfo";
 
 interface TableData {
   vulnerabilityId: string;
@@ -49,7 +50,7 @@ interface VulnerabilitiesByPackageProps {
 export const VulnerabilitiesByPackage: React.FC<
   VulnerabilitiesByPackageProps
 > = ({ packageId }) => {
-  type RowAction = "showAdvisory";
+  type RowAction = "showVulnerability" | "showAdvisory";
   const [selectedRowAction, setSelectedRowAction] =
     React.useState<RowAction | null>(null);
   const [selectedRow, setSelectedRow] = React.useState<TableData | null>(null);
@@ -151,7 +152,7 @@ export const VulnerabilitiesByPackage: React.FC<
     items: tableDataWithUiId,
     isLoading: false,
     columnNames: {
-      id: "ID",
+      identifier: "Identifier",
       title: "Title",
       severity: "Severity",
       advisory: "Advisory",
@@ -160,9 +161,9 @@ export const VulnerabilitiesByPackage: React.FC<
     },
     hasActionsColumn: false,
     isSortEnabled: true,
-    sortableColumns: ["id"],
+    sortableColumns: ["identifier"],
     getSortValues: (item) => ({
-      id: item.vulnerabilityId,
+      identifier: item.vulnerabilityId,
     }),
     isPaginationEnabled: true,
     isFilterEnabled: true,
@@ -224,7 +225,7 @@ export const VulnerabilitiesByPackage: React.FC<
         <Thead>
           <Tr>
             <TableHeaderContentWithControls {...tableControls}>
-              <Th {...getThProps({ columnKey: "id" })} />
+              <Th {...getThProps({ columnKey: "identifier" })} />
               <Th {...getThProps({ columnKey: "title" })} />
               <Th {...getThProps({ columnKey: "severity" })} />
               <Th {...getThProps({ columnKey: "advisory" })} />
@@ -248,10 +249,14 @@ export const VulnerabilitiesByPackage: React.FC<
                     item={item}
                     rowIndex={rowIndex}
                   >
-                    <Td width={15} {...getTdProps({ columnKey: "id" })}>
-                      <NavLink to={`/vulnerabilities/${item.vulnerabilityId}`}>
+                    <Td width={15} {...getTdProps({ columnKey: "identifier" })}>
+                      <Button
+                        size="sm"
+                        variant={ButtonVariant.secondary}
+                        onClick={() => showDrawer("showVulnerability", item)}
+                      >
                         {item.vulnerabilityId}
-                      </NavLink>
+                      </Button>
                     </Td>
                     <Td
                       width={35}
@@ -318,6 +323,13 @@ export const VulnerabilitiesByPackage: React.FC<
         drawerPanelContentProps={{ defaultSize: "600px" }}
         header={
           <>
+            {selectedRowAction === "showVulnerability" && (
+              <TextContent>
+                <Title headingLevel="h2" size="lg" className={spacing.mtXs}>
+                  Vulnerability
+                </Title>
+              </TextContent>
+            )}
             {selectedRowAction === "showAdvisory" && (
               <TextContent>
                 <Title headingLevel="h2" size="lg" className={spacing.mtXs}>
@@ -328,6 +340,15 @@ export const VulnerabilitiesByPackage: React.FC<
           </>
         }
       >
+        {selectedRowAction === "showVulnerability" && (
+          <>
+            {selectedRow?.advisory && (
+              <VulnerabilityInDrawerInfo
+                vulnerabilityId={selectedRow?.vulnerabilityId}
+              />
+            )}
+          </>
+        )}{" "}
         {selectedRowAction === "showAdvisory" && (
           <>
             {selectedRow?.advisory && (

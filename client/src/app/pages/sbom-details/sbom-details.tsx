@@ -18,6 +18,7 @@ import { useFetchSBOMById } from "@app/queries/sboms";
 
 import { Overview } from "./overview";
 import { PackagesBySbom } from "./packages-by-sbom";
+import { VulnerabilitiesBySbom } from "./vulnerabilities-by-sbom";
 
 export const SbomDetails: React.FC = () => {
   const sbomId = useRouteParams(PathParam.SBOM_ID);
@@ -79,9 +80,7 @@ export const SbomDetails: React.FC = () => {
               title: "Vulnerabilities",
               children: (
                 <div className="pf-v5-u-m-md">
-                  <p style={{ color: "red" }}>
-                    issue-285 we should have a list of vulnerabilities here
-                  </p>
+                  {sbomId && <VulnerabilitiesBySbom sbomId={sbomId} />}
                 </div>
               ),
             },

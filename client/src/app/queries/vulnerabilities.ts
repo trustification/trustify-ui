@@ -4,7 +4,6 @@ import { AxiosError } from "axios";
 import { HubRequestParams } from "@app/api/models";
 import {
   getVulnerabilities,
-  getVulnerabilitiesBySbomId,
   getVulnerabilityById,
   getVulnerabilitySourceById,
 } from "@app/api/rest";
@@ -59,22 +58,6 @@ export const useFetchVulnerabilitySourceById = (id?: number | string) => {
 
   return {
     source: data,
-    isFetching: isLoading,
-    fetchError: error as AxiosError,
-  };
-};
-
-export const useFetchVulnerabilitiesBySbomId = (sbomId: string | number) => {
-  const { data, isLoading, error } = useQuery({
-    queryKey: [VulnerabilitiesQueryKey, "by-sbom", sbomId],
-    queryFn: () =>
-      sbomId === undefined
-        ? Promise.resolve(undefined)
-        : getVulnerabilitiesBySbomId(sbomId),
-  });
-
-  return {
-    cves: data || [],
     isFetching: isLoading,
     fetchError: error as AxiosError,
   };
