@@ -16,7 +16,7 @@ import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
 import {
   AdvisoryWithinPackage,
-  StatusType,
+  SbomStatus,
   Vulnerability,
 } from "@app/api/models";
 import { getVulnerabilityById } from "@app/api/rest";
@@ -38,7 +38,7 @@ import { VulnerabilityInDrawerInfo } from "@app/components/VulnerabilityInDrawer
 interface TableData {
   vulnerabilityId: string;
   advisory: AdvisoryWithinPackage;
-  status: StatusType;
+  status: SbomStatus;
   context: { cpe: string };
   vulnerability?: Vulnerability;
 }
@@ -73,7 +73,7 @@ export const VulnerabilitiesByPackage: React.FC<
     React.useState(false);
 
   const [allAdvisoryStatus, setAllAdvisoryStatus] = React.useState<
-    Set<StatusType>
+    Set<SbomStatus>
   >(new Set());
 
   React.useEffect(() => {
@@ -100,7 +100,7 @@ export const VulnerabilitiesByPackage: React.FC<
         }
       }, [] as TableData[]);
 
-    const allUniqueStatus = new Set<StatusType>();
+    const allUniqueStatus = new Set<SbomStatus>();
     vulnerabilities.forEach((item) => allUniqueStatus.add(item.status));
 
     setAllVulnerabilities(vulnerabilities);
