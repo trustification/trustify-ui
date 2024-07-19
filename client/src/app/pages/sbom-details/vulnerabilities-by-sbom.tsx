@@ -22,7 +22,7 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { AdvisoryWithinSbom, StatusType, Vulnerability } from "@app/api/models";
+import { AdvisoryWithinSbom, SbomStatus, Vulnerability } from "@app/api/models";
 import { getVulnerabilityById } from "@app/api/rest";
 import { AdvisoryInDrawerInfo } from "@app/components/AdvisoryInDrawerInfo";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
@@ -34,16 +34,15 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
+import { VulnerabilityInDrawerInfo } from "@app/components/VulnerabilityInDrawerInfo";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchSBOMById } from "@app/queries/sboms";
 import { useWithUiId } from "@app/utils/query-utils";
-import { NavLink } from "react-router-dom";
-import { VulnerabilityInDrawerInfo } from "@app/components/VulnerabilityInDrawerInfo";
 
 interface TableData {
   vulnerabilityId: string;
   advisory: AdvisoryWithinSbom;
-  status: StatusType;
+  status: SbomStatus;
   context: { cpe: string };
   packages: { id: string; name: string; version: string }[];
   vulnerability?: Vulnerability;
@@ -79,7 +78,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
     React.useState(false);
 
   const [allAdvisoryStatus, setAllAdvisoryStatus] = React.useState<
-    Set<StatusType>
+    Set<SbomStatus>
   >(new Set());
 
   React.useEffect(() => {
@@ -106,7 +105,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
         }
       }, [] as TableData[]);
 
-    const allUniqueStatus = new Set<StatusType>();
+    const allUniqueStatus = new Set<SbomStatus>();
     vulnerabilities.forEach((item) => allUniqueStatus.add(item.status));
 
     setAllVulnerabilities(vulnerabilities);

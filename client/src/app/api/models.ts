@@ -3,6 +3,7 @@ export type WithUiId<T> = T & { _ui_unique_id: string };
 /** Mark an object as "New" therefore does not have an `id` field. */
 export type New<T extends { id: number }> = Omit<T, "id">;
 
+export type Labels = Record<string, string>;
 export interface HubFilter {
   field: string;
   operator?: "=" | "!=" | "~" | ">" | ">=" | "<" | "<=";
@@ -77,18 +78,39 @@ export interface Advisory {
   };
 
   hashes?: string[];
-  labels?: { [key in string]: string };
+  labels?: Labels;
 
   average_score?: number;
   average_severity?: Severity;
   vulnerabilities?: VulnerabilityWithinAdvisory[];
 }
 
-export type StatusType =
+export type SbomStatus =
   | "fixed"
   | "not_affected"
   | "known_not_affected"
   | "affected";
+
+export interface AdvisoryIssuer {
+  name?: string;
+  website?: string;
+}
+
+export interface Sbom {
+  id: string;
+  status: SbomStatus[];
+}
+
+type Purl = {
+  version: string;
+  base_purl: {
+    uuid: string;
+    purl: string;
+  };
+  context: { cpe: string };
+};
+
+export type Purls = Record<SbomStatus, Purl[]>;
 
 export interface AdvisoryWithinVulnerability {
   uuid: string;
@@ -97,27 +119,22 @@ export interface AdvisoryWithinVulnerability {
   published?: string;
   modified?: string;
   widhdraw?: string;
-  issuer?: {
-    name?: string;
-    website?: string;
-  };
+  issuer?: AdvisoryIssuer;
 
   score?: number;
   severity?: Severity;
-  purls?: {
-    [key in StatusType]?: {
-      version: string;
-      base_purl: {
-        uuid: string;
-        purl: string;
-      };
-      context: { cpe: string };
-    }[];
+  purls?: Purls;
+  sboms?: Sbom[];
+}
+
+export interface AdvisoryWithinPackageStatus {
+  context: {
+    cpe: string;
   };
-  sboms?: {
-    id: string;
-    status: StatusType[];
-  }[];
+  status: SbomStatus;
+  vulnerability: {
+    identifier: string;
+  };
 }
 
 export interface AdvisoryWithinPackage {
@@ -127,19 +144,9 @@ export interface AdvisoryWithinPackage {
   published?: string;
   modified?: string;
   widhdraw?: string;
-  issuer?: {
-    name?: string;
-    website?: string;
-  };
-
-  labels?: { [key in string]: string };
-  status: {
-    context: { cpe: string };
-    status: StatusType;
-    vulnerability: {
-      identifier: string;
-    };
-  }[];
+  issuer?: AdvisoryIssuer;
+  labels?: Labels;
+  status: AdvisoryWithinPackageStatus[];
 }
 
 export interface AdvisoryWithinSbom {
@@ -157,7 +164,7 @@ export interface AdvisoryWithinSbom {
   labels?: { [key in string]: string };
   status: {
     context: { cpe: string };
-    status: StatusType;
+    status: SbomStatus;
     vulnerability_id: string;
     packages: {
       id: string;
@@ -221,18 +228,20 @@ export interface PackageWithinSBOM {
 
 // SBOM
 
+export type SbomDescription = {
+  name: string;
+  version: string;
+};
+
 export interface SBOM {
   id: string;
   name: string;
   authors: string[];
   published: string;
-  described_by?: {
-    name: string;
-    version: string;
-  }[];
+  described_by?: SbomDescription[];
 
   hashes?: string[];
-  labels?: { [key in string]: string };
+  labels?: Labels;
 
   advisories?: AdvisoryWithinSbom[];
 }
@@ -264,14 +273,16 @@ export interface ImporterConfigurationValues {
   keys?: string[];
 }
 
+export interface Report {
+  startDate: string;
+  endDate: string;
+  numberOfItems: string;
+}
+
 export interface ImporterReport {
   id: string;
   error?: string;
-  report: {
-    startDate: string;
-    endDate: string;
-    numberOfItems: string;
-  };
+  report: Report;
 }
 
 export interface ImporterReportDetails {
@@ -287,6 +298,6 @@ export interface DecomposedPurl {
   name: string;
   namespace?: string;
   version?: string;
-  qualifiers?: { [key in string]: string };
+  qualifiers?: Labels;
   path?: string;
 }
