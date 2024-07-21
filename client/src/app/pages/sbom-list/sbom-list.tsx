@@ -53,6 +53,7 @@ import {
 import { useDownload } from "@app/hooks/useDownload";
 import { useSelectionState } from "@app/hooks/useSelectionState";
 import {
+  useDeleteSBOMByIdMutation,
   useFetchSBOMs,
   useUpdateSbomLabelsMutation,
   useUploadSBOM,
@@ -87,6 +88,8 @@ export const SbomList: React.FC = () => {
     () => {},
     onUpdateLabelsError
   );
+
+  const deleteSBOMByIdMutation = useDeleteSBOMByIdMutation();
 
   const execSaveLabels = (row: SBOM, labels: { [key: string]: string }) => {
     updateSbomLabels({ ...row, labels });
@@ -123,6 +126,7 @@ export const SbomList: React.FC = () => {
     result: { data: advisories, total: totalItemCount },
     isFetching,
     fetchError,
+    refetch,
   } = useFetchSBOMs(
     getHubRequestParams({
       ...tableControlState,
@@ -282,6 +286,10 @@ export const SbomList: React.FC = () => {
                                 onClick: () => {
                                   downloadSBOM(item.id, `${item.name}.json`);
                                 },
+                              },
+                              {
+                                title: "Delete",
+                                onClick: () => deleteSBOMByIdMutation.mutate(item.id),
                               },
                             ]}
                           />

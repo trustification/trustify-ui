@@ -9,8 +9,11 @@ import {
   getSBOMsByPackageId,
   updateSbomLabels,
   uploadSbom,
+  deleteSBOMById,
 } from "@app/api/rest";
 import { useUpload } from "@app/hooks/useUpload";
+import {NotificationsContext} from "@app/components/NotificationsContext";
+import React from "react";
 
 export const SBOMsQueryKey = "sboms";
 
@@ -48,6 +51,24 @@ export const useFetchSBOMById = (id?: number | string) => {
     isFetching: isLoading,
     fetchError: error as AxiosError,
   };
+};
+
+export const useDeleteSBOMByIdMutation = () => {
+  const queryClient = useQueryClient();
+  const {pushNotification} = React.useContext(NotificationsContext);
+
+  return useMutation({
+    mutationFn: (id: number | string) => deleteSBOMById(id),
+    onSuccess: (_res, id) => {
+      queryClient.invalidateQueries({queryKey: [SBOMsQueryKey, id]});
+    },
+    onError: (err: AxiosError, _payload: number | string) => {
+      pushNotification({
+        title: "Error while deleting SBOM",
+        variant: "danger",
+      });
+    }
+  });
 };
 
 export const useFetchSBOMSourceById = (id?: number | string) => {

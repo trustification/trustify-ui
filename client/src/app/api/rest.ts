@@ -191,6 +191,9 @@ export const getSBOMsByPackageId = (
     { key: "id", value: packageId },
   ]);
 
+export const deleteSBOMById = (id: number | string) =>
+  axios.delete<SBOM>(`${SBOMS}/${id}`).then((response) => response.data);
+
 // Importer
 
 export const getImporters = () =>
