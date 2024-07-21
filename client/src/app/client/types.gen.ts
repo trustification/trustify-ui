@@ -257,7 +257,17 @@ export type OrganizationSummary = OrganizationHead & {
 };
 
 export type OsvImporter = CommonImporter & {
+  /**
+   * An optional branch. Will use the default branch otherwise.
+   */
+  branch?: string | null;
+  /**
+   * An optional path to start searching for documents. Will use the root of the repository otherwise.
+   */
   path?: string | null;
+  /**
+   * The URL to the git repository of the OSV data
+   */
   source: string;
 };
 
@@ -781,6 +791,19 @@ export type GetAdvisoryResponse = AdvisoryDetails;
 
 export type GetAdvisoryError = unknown;
 
+export type DeleteAdvisoryData = {
+  path: {
+    /**
+     * Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
+     */
+    key: string;
+  };
+};
+
+export type DeleteAdvisoryResponse = AdvisoryDetails;
+
+export type DeleteAdvisoryError = unknown;
+
 export type DownloadAdvisoryData = {
   path: {
     /**
@@ -973,7 +996,7 @@ export type ListProductsResponse = PaginatedProductSummary;
 
 export type ListProductsError = unknown;
 
-export type GetProductsData = {
+export type GetProductData = {
   path: {
     /**
      * Opaque ID of the product
@@ -982,9 +1005,22 @@ export type GetProductsData = {
   };
 };
 
-export type GetProductsResponse = ProductDetails;
+export type GetProductResponse = ProductDetails;
 
-export type GetProductsError = unknown;
+export type GetProductError = unknown;
+
+export type DeleteProductData = {
+  path: {
+    /**
+     * Opaque ID of the product
+     */
+    id: string;
+  };
+};
+
+export type DeleteProductResponse = ProductDetails;
+
+export type DeleteProductError = unknown;
 
 export type ListPurlData = {
   query?: {
@@ -1389,6 +1425,19 @@ export type GetVulnerabilityResponse = VulnerabilityDetails;
 
 export type GetVulnerabilityError = unknown;
 
+export type DeleteVulnerabilityData = {
+  path: {
+    /**
+     * ID of the vulnerability
+     */
+    id: string;
+  };
+};
+
+export type DeleteVulnerabilityResponse = VulnerabilityDetails;
+
+export type DeleteVulnerabilityError = unknown;
+
 export type $OpenApiTs = {
   "/api/v1/advisory": {
     get: {
@@ -1445,6 +1494,19 @@ export type $OpenApiTs = {
   "/api/v1/advisory/{key}": {
     get: {
       req: GetAdvisoryData;
+      res: {
+        /**
+         * Matching advisory
+         */
+        "200": AdvisoryDetails;
+        /**
+         * Matching advisory not found
+         */
+        "404": unknown;
+      };
+    };
+    delete: {
+      req: DeleteAdvisoryData;
       res: {
         /**
          * Matching advisory
@@ -1624,7 +1686,20 @@ export type $OpenApiTs = {
   };
   "/api/v1/product/{id}": {
     get: {
-      req: GetProductsData;
+      req: GetProductData;
+      res: {
+        /**
+         * Matching product
+         */
+        "200": ProductDetails;
+        /**
+         * Matching product not found
+         */
+        "404": unknown;
+      };
+    };
+    delete: {
+      req: DeleteProductData;
       res: {
         /**
          * Matching product
@@ -1877,6 +1952,19 @@ export type $OpenApiTs = {
   "/api/v1/vulnerability/{id}": {
     get: {
       req: GetVulnerabilityData;
+      res: {
+        /**
+         * Specified vulnerability
+         */
+        "200": VulnerabilityDetails;
+        /**
+         * Specified vulnerability not found
+         */
+        "404": unknown;
+      };
+    };
+    delete: {
+      req: DeleteVulnerabilityData;
       res: {
         /**
          * Specified vulnerability

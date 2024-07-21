@@ -1,8 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 import { HubRequestParams } from "@app/api/models";
 import { getProductById, getProducts } from "@app/api/rest";
+import { deleteProduct, ProductDetails } from "@app/client";
+import { client } from "@app/axios-config/apiInit";
 
 export const ProductsQueryKey = "products";
 
@@ -40,4 +42,17 @@ export const useFetchProductById = (id?: number | string) => {
     isFetching: isLoading,
     fetchError: error as AxiosError,
   };
+};
+
+export const useDeleteProductMutation = (
+  onError?: (err: AxiosError, id: string) => void,
+  onSuccess?: (payload: ProductDetails, id: string) => void
+) => {
+  return useMutation({
+    mutationFn: async (id: string) =>
+      (await deleteProduct({ client, path: { id } })).data,
+    mutationKey: [ProductsQueryKey],
+    onSuccess,
+    onError,
+  });
 };
