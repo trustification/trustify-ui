@@ -1,12 +1,23 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 
-import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
+import {
+  Button,
+  ButtonVariant,
+  TextContent,
+  Title,
+  Toolbar,
+  ToolbarContent,
+  ToolbarItem,
+} from "@patternfly/react-core";
+import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
 import { TablePersistenceKeyPrefixes } from "@app/Constants";
+import { SBOM } from "@app/api/models";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { LabelsAsList } from "@app/components/LabelsAsList";
+import { PageDrawerContent } from "@app/components/PageDrawerContext";
+import { SbomInDrawerInfo } from "@app/components/SbomInDrawerInfo";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -28,6 +39,17 @@ interface SbomsByPackageProps {
 export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({
   packageId,
 }) => {
+  type RowAction = "showSbom";
+  const [selectedRowAction, setSelectedRowAction] =
+    React.useState<RowAction | null>(null);
+  const [selectedRow, setSelectedRow] = React.useState<SBOM | null>(null);
+
+  const showDrawer = (action: RowAction, row: SBOM) => {
+    setSelectedRowAction(action);
+    setSelectedRow(row);
+  };
+
+  //
   const tableControlState = useTableControlState({
     tableName: "sboms",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.sboms_by_package,
@@ -125,7 +147,13 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({
               <Tbody key={item.id}>
                 <Tr {...getTrProps({ item })}>
                   <Td width={35} {...getTdProps({ columnKey: "name" })}>
-                    <NavLink to={`/sboms/${item.id}`}>{item.name}</NavLink>
+                    <Button
+                      size="sm"
+                      variant={ButtonVariant.secondary}
+                      onClick={() => showDrawer("showSbom", item)}
+                    >
+                      {item.name}
+                    </Button>
                   </Td>
                   <Td
                     width={10}
@@ -153,6 +181,28 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({
         isCompact
         paginationProps={paginationProps}
       />
+
+      <PageDrawerContent
+        isExpanded={selectedRowAction !== null}
+        onCloseClick={() => setSelectedRowAction(null)}
+        pageKey="drawer"
+        drawerPanelContentProps={{ defaultSize: "600px" }}
+        header={
+          <>
+            {selectedRowAction === "showSbom" && (
+              <TextContent>
+                <Title headingLevel="h2" size="lg" className={spacing.mtXs}>
+                  Advisory
+                </Title>
+              </TextContent>
+            )}
+          </>
+        }
+      >
+        {selectedRowAction === "showSbom" && (
+          <>{selectedRow && <SbomInDrawerInfo sbomId={selectedRow.id} />}</>
+        )}
+      </PageDrawerContent>
     </>
   );
 };

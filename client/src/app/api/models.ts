@@ -3,7 +3,6 @@ export type WithUiId<T> = T & { _ui_unique_id: string };
 /** Mark an object as "New" therefore does not have an `id` field. */
 export type New<T extends { id: number }> = Omit<T, "id">;
 
-export type Labels = Record<string, string>;
 export interface HubFilter {
   field: string;
   operator?: "=" | "!=" | "~" | ">" | ">=" | "<" | "<=";
@@ -34,6 +33,38 @@ export interface HubPaginatedResult<T> {
   params: HubRequestParams;
 }
 
+// Common
+
+export type Severity = "none" | "low" | "medium" | "high" | "critical";
+
+export type Labels = Record<string, string>;
+
+export type VulnerabilityStatus =
+  | "fixed"
+  | "not_affected"
+  | "known_not_affected"
+  | "affected";
+
+export interface Context {
+  cpe: string;
+}
+
+export interface Vendor {
+  id: string;
+  cpe_key: string;
+  name: string;
+  website: string;
+}
+
+type Purl = {
+  version: string;
+  base_purl: {
+    uuid: string;
+    purl: string;
+  };
+  context: Context;
+};
+
 // Organizations
 
 export interface Organization {
@@ -46,136 +77,96 @@ export interface Organization {
 export interface Product {
   id: string;
   name: string;
-  vendor?: {
-    cpe_key: string;
-    id: string;
-    name: string;
-    website: string;
-  };
-  versions?: {
-    id: string;
-    version: string;
-    sbom_id: string;
-  }[];
+  vendor?: Vendor;
+  versions?: ProductVersion[];
+}
+
+export interface ProductVersion {
+  id: string;
+  version: string;
+  sbom_id: string;
 }
 
 // Advisories
 
-export type Severity = "none" | "low" | "medium" | "high" | "critical";
-
-export interface Advisory {
+interface Advisory {
   uuid: string;
   identifier: string;
   title: string;
   published?: string;
   modified?: string;
-  withdrawn: string;
-  issuer?: {
-    id: string;
-    cpe_key: string;
-    name?: string;
-    website?: string;
-  };
+  withdrawn?: string;
+  issuer?: Vendor;
   hashes?: string[];
   labels?: Labels;
+}
+
+export interface AdvisoryIndex extends Advisory {
   average_score?: number;
   average_severity?: Severity;
+
   vulnerabilities?: VulnerabilityWithinAdvisory[];
 }
 
-export type SbomStatus =
-  | "fixed"
-  | "not_affected"
-  | "known_not_affected"
-  | "affected";
-
-export interface AdvisoryIssuer {
-  name?: string;
-  website?: string;
-}
-
-export interface Sbom {
-  id: string;
-  status: SbomStatus[];
-}
-
-type Purl = {
-  version: string;
-  base_purl: {
-    uuid: string;
-    purl: string;
-  };
-  context: { cpe: string };
-};
-
-export type Purls = Record<SbomStatus, Purl[]>;
-
-export interface AdvisoryWithinVulnerability {
-  identifier: string;
-  uuid: string;
-  title: string;
-  published?: string;
-  modified?: string;
-  widhdraw?: string;
-  issuer?: AdvisoryIssuer;
+export interface AdvisoryWithinVulnerability extends Advisory {
   score?: number;
   severity?: Severity;
-  purls?: Purls;
-  sboms?: Sbom[];
+
+  purls?: Record<VulnerabilityStatus, Purl[]>;
+  sboms?: {
+    id: string;
+    status: VulnerabilityStatus[];
+  }[];
+}
+
+export interface AdvisoryWithinPackage extends Advisory {
+  status: AdvisoryWithinPackageStatus[];
 }
 
 export interface AdvisoryWithinPackageStatus {
-  context: {
-    cpe: string;
-  };
-  status: SbomStatus;
-  vulnerability: {
-    identifier: string;
-  };
+  context: Context;
+  status: VulnerabilityStatus;
+  vulnerability: Vulnerability;
 }
 
-export interface AdvisoryWithinPackage {
-  uuid: string;
-  identifier: string;
-  title: string;
-  published?: string;
-  modified?: string;
-  issuer?: AdvisoryIssuer;
-  labels?: Labels;
-  status: AdvisoryWithinPackageStatus[];
+export interface AdvisoryWithinSbom extends Advisory {
+  status: {
+    context: Context;
+    status: VulnerabilityStatus;
+    vulnerability_id: string;
+    packages: {
+      id: string;
+      name: string;
+      version: string;
+    }[];
+  }[];
 }
 
 // Vulnerability
 
-export interface Vulnerability {
+interface Vulnerability {
   identifier: string;
+  normative: boolean;
   title?: string;
   description?: string;
-  average_score?: number;
-  average_severity?: Severity;
-  cwe: string;
-  discovered?: string;
   published?: string;
   modified?: string;
   withdrawn?: string;
+  discovered?: string;
   released?: string;
-  non_normative: boolean;
+  cwe?: string;
+}
+
+export interface VulnerabilityIndex extends Vulnerability {
+  average_score?: number;
+  average_severity?: Severity;
+
   advisories: AdvisoryWithinVulnerability[];
 }
 
-export interface VulnerabilityWithinAdvisory {
-  identifier: string;
-  title: string;
-  description: string;
-  score: Severity;
+export interface VulnerabilityWithinAdvisory extends Vulnerability {
+  score?: Severity;
   severity: Severity;
-  discovered?: string;
-  modified?: string;
-  published?: string;
-  released?: string;
-  withdrawn?: string;
-  cwe?: string;
-  normative: true;
 }
 
 // Package
@@ -183,6 +174,7 @@ export interface VulnerabilityWithinAdvisory {
 export interface Package {
   uuid: string;
   purl: string;
+
   advisories?: AdvisoryWithinPackage[];
 }
 
@@ -190,16 +182,13 @@ export interface PackageWithinSBOM {
   id: string;
   name: string;
   version: string;
-  purl?: string[];
-  cpe?: string[];
+  purl?: {
+    uuid: string;
+    purl: string;
+  }[];
 }
 
 // SBOM
-
-export type SbomDescription = {
-  name: string;
-  version: string;
-};
 
 export interface SBOM {
   id: string;
@@ -210,7 +199,14 @@ export interface SBOM {
 
   hashes?: string[];
   labels?: Labels;
+
+  advisories?: AdvisoryWithinSbom[];
 }
+
+export type SbomDescription = {
+  name: string;
+  version: string;
+};
 
 // Importer
 

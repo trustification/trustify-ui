@@ -101,7 +101,6 @@ export const SbomList: React.FC = () => {
       published: "Published",
       labels: "Labels",
       packages: "Packages",
-      vulnerabilities: "Vulnerabilities",
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
@@ -207,7 +206,6 @@ export const SbomList: React.FC = () => {
                   <Th {...getThProps({ columnKey: "published" })} />
                   <Th {...getThProps({ columnKey: "labels" })} />
                   <Th {...getThProps({ columnKey: "packages" })} />
-                  <Th {...getThProps({ columnKey: "vulnerabilities" })} />
                 </TableHeaderContentWithControls>
               </Tr>
             </Thead>
@@ -227,7 +225,7 @@ export const SbomList: React.FC = () => {
                         rowIndex={rowIndex}
                       >
                         <Td
-                          width={20}
+                          width={40}
                           {...getTdProps({
                             columnKey: "name",
                             isCompoundExpandToggle: true,
@@ -254,19 +252,8 @@ export const SbomList: React.FC = () => {
                           {item.labels && <LabelsAsList value={item.labels} />}
                         </Td>
 
-                        <Td width={10} {...getTdProps({ columnKey: "labels" })}>
+                        <Td width={10} {...getTdProps({ columnKey: "packages" })}>
                           <PackagesCount sbomId={item.id} />
-                        </Td>
-                        <Td
-                          width={20}
-                          {...getTdProps({
-                            columnKey: "vulnerabilities",
-                            isCompoundExpandToggle: true,
-                            item: item,
-                            rowIndex,
-                          })}
-                        >
-                          <p style={{ color: "red" }}>issue-285</p>
                         </Td>
                         <Td isActionCell>
                           <ActionsColumn
@@ -324,9 +311,6 @@ export const SbomList: React.FC = () => {
                                     </DescriptionListGroup>
                                   </DescriptionList>
                                 </>
-                              ) : null}
-                              {isCellExpanded(item, "vulnerabilities") ? (
-                                <></>
                               ) : null}
                             </div>
                           </ExpandableRowContent>

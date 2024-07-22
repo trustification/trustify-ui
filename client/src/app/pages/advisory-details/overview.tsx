@@ -20,7 +20,7 @@ import {
 } from "@patternfly/react-core";
 import PenIcon from "@patternfly/react-icons/dist/esm/icons/pen-icon";
 
-import { Advisory } from "@app/api/models";
+import { AdvisoryIndex } from "@app/api/models";
 import { AdvisoryGeneralView } from "@app/components/AdvisoryGeneralView";
 import { AdvisoryIssuer } from "@app/components/AdvisoryIssuer";
 import { EditLabelsModal } from "@app/components/EditLabelsModal";
@@ -30,7 +30,7 @@ import { NotificationsContext } from "@app/components/NotificationsContext";
 import { useUpdateAdvisoryLabelsMutation } from "@app/queries/advisories";
 
 interface OverviewProps {
-  advisory: Advisory;
+  advisory: AdvisoryIndex;
 }
 
 export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
