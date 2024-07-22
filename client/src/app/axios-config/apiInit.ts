@@ -3,6 +3,14 @@ import { User, UserManager } from "oidc-client-ts";
 
 import { OIDC_CLIENT_ID, OIDC_SERVER_URL, oidcClientSettings } from "@app/oidc";
 
+import { createClient } from "@hey-api/client-axios";
+
+createClient({
+  // set default base url for requests
+  baseURL: "/",
+  axios: axios,
+});
+
 function getUser() {
   const oidcStorage = sessionStorage.getItem(
     `oidc.user:${OIDC_SERVER_URL}:${OIDC_CLIENT_ID}`
