@@ -70,6 +70,9 @@ export const getProducts = (params: HubRequestParams = {}) =>
 export const getProductById = (id: number | string) =>
   axios.get<Product>(`${PRODUCTS}/${id}`).then((response) => response.data);
 
+export const deleteProductById = (id: number | string) =>
+  axios.delete<Product>(`${PRODUCTS}/${id}`).then((response) => response.data);
+
 // Advisory
 
 export const getAdvisories = (params: HubRequestParams = {}) =>

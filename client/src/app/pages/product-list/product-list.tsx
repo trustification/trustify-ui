@@ -10,7 +10,15 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core";
-import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
+import {
+  ActionsColumn,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr
+} from "@patternfly/react-table";
 
 import { TablePersistenceKeyPrefixes } from "@app/Constants";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
@@ -28,7 +36,10 @@ import {
 import { useSelectionState } from "@app/hooks/useSelectionState";
 
 import { useFetchOrganizations } from "@app/queries/organizations";
-import { useFetchProducts } from "@app/queries/products";
+import {
+  useDeleteProductByIdMutation,
+  useFetchProducts
+} from "@app/queries/products";
 
 export const ProductList: React.FC = () => {
   const { result: organizations } = useFetchOrganizations({
@@ -83,6 +94,8 @@ export const ProductList: React.FC = () => {
       },
     })
   );
+
+  const deleteProductByIdMutation = useDeleteProductByIdMutation()
 
   const tableControls = useTableControlProps({
     ...tableControlState,
@@ -182,6 +195,17 @@ export const ProductList: React.FC = () => {
                           {...getTdProps({ columnKey: "versions" })}
                         >
                           {item.versions?.length}
+                        </Td>
+                        <Td isActionCell>
+                          <ActionsColumn
+                            items={[
+                              {
+                                title: "Delete",
+                                onClick: () =>
+                                  deleteProductByIdMutation.mutate(item.id),
+                              },
+                            ]}
+                          />
                         </Td>
                       </TableRowContentWithControls>
                     </Tr>

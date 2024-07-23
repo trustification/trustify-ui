@@ -1,8 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 import { HubRequestParams } from "@app/api/models";
-import { getProductById, getProducts } from "@app/api/rest";
+import {
+  deleteProductById,
+  getProductById,
+  getProducts
+} from "@app/api/rest";
+import React from "react";
+import {NotificationsContext} from "@app/components/NotificationsContext";
 
 export const ProductsQueryKey = "products";
 
@@ -40,4 +46,22 @@ export const useFetchProductById = (id?: number | string) => {
     isFetching: isLoading,
     fetchError: error as AxiosError,
   };
+};
+
+export const useDeleteProductByIdMutation = () => {
+  const queryClient = useQueryClient();
+  const {pushNotification} = React.useContext(NotificationsContext);
+
+  return useMutation({
+    mutationFn: (id: number | string) => deleteProductById(id),
+    onSuccess: (_res, id) => {
+      queryClient.invalidateQueries({queryKey: [ProductsQueryKey, id]});
+    },
+    onError: (err: AxiosError, _payload: number | string) => {
+      pushNotification({
+        title: "Error while deleting Products",
+        variant: "danger",
+      });
+    }
+  });
 };
