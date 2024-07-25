@@ -49,6 +49,7 @@ import {
 import { useDownload } from "@app/hooks/useDownload";
 import { useSelectionState } from "@app/hooks/useSelectionState";
 import {
+  useDeleteAdvisoryByIdMutation,
   useFetchAdvisories,
   useUpdateAdvisoryLabelsMutation,
   useUploadAdvisory,
@@ -153,6 +154,8 @@ export const AdvisoryList: React.FC = () => {
       },
     })
   );
+
+  const deleteAdvisoryByIdMutation = useDeleteAdvisoryByIdMutation();
 
   const tableControls = useTableControlProps({
     ...tableControlState,
@@ -333,6 +336,11 @@ export const AdvisoryList: React.FC = () => {
                                     `${item.identifier}.json`
                                   );
                                 },
+                              },
+                              {
+                                title: "Delete",
+                                onClick: () =>
+                                  deleteAdvisoryByIdMutation.mutate(item.uuid),
                               },
                             ]}
                           />

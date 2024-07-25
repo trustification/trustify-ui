@@ -78,6 +78,9 @@ export const getAdvisories = (params: HubRequestParams = {}) =>
 export const getAdvisoryById = (id: number | string) =>
   axios.get<AdvisoryIndex>(`${ADVISORIES}/${id}`).then((response) => response.data);
 
+export const deleteAdvisoryById = (id: number | string) =>
+  axios.delete<AdvisoryIndex>(`${ADVISORIES}/${id}`).then((response) => response.data);
+
 export const getAdvisorySourceById = (id: number | string) =>
   axios
     .get<string>(`${ADVISORIES}/${id}/download`)

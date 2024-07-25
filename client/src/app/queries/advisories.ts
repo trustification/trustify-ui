@@ -3,6 +3,7 @@ import { AxiosError } from "axios";
 
 import { AdvisoryIndex, HubRequestParams } from "@app/api/models";
 import {
+  deleteAdvisoryById,
   getAdvisories,
   getAdvisoryById,
   getAdvisorySourceById,
@@ -10,6 +11,8 @@ import {
   uploadAdvisory,
 } from "@app/api/rest";
 import { useUpload } from "@app/hooks/useUpload";
+import React from "react";
+import {NotificationsContext} from "@app/components/NotificationsContext";
 
 export interface IAdvisoriesQueryParams {
   filterText?: string;
@@ -54,6 +57,24 @@ export const useFetchAdvisoryById = (id?: number | string) => {
     isFetching: isLoading,
     fetchError: error as AxiosError,
   };
+};
+
+export const useDeleteAdvisoryByIdMutation = () => {
+  const queryClient = useQueryClient();
+  const {pushNotification} = React.useContext(NotificationsContext);
+
+  return useMutation({
+    mutationFn: (id: number | string) => deleteAdvisoryById(id),
+    onSuccess: (_res, id) => {
+      queryClient.invalidateQueries({queryKey: [AdvisoriesQueryKey, id]});
+    },
+    onError: (err: AxiosError, _payload: number | string) => {
+      pushNotification({
+        title: "Error while deleting Advisory",
+        variant: "danger",
+      });
+    }
+  });
 };
 
 export const useFetchAdvisorySourceById = (id?: number | string) => {
