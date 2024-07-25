@@ -118,6 +118,9 @@ export const getVulnerabilityById = (id: number | string) =>
     .get<VulnerabilityIndex>(`${VULNERABILITIES}/${id}`)
     .then((response) => response.data);
 
+export const deleteVulnerabilityById = (id: number | string) =>
+  axios.delete<VulnerabilityIndex>(`${VULNERABILITIES}/${id}`).then((response) => response.data);
+
 export const getVulnerabilitySourceById = (id: number | string) =>
   axios
     .get<string>(`${VULNERABILITIES}/${id}/source`)

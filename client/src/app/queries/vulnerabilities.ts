@@ -1,12 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 import { HubRequestParams } from "@app/api/models";
 import {
+  deleteVulnerabilityById,
   getVulnerabilities,
   getVulnerabilityById,
   getVulnerabilitySourceById,
 } from "@app/api/rest";
+import React from "react";
+import {NotificationsContext} from "@app/components/NotificationsContext";
 
 export const VulnerabilitiesQueryKey = "vulnerabilities";
 
@@ -44,6 +47,24 @@ export const useFetchVulnerabilityById = (id?: number | string) => {
     isFetching: isLoading,
     fetchError: error as AxiosError,
   };
+};
+
+export const useDeleteVulnerabilityByIdMutation = () => {
+  const queryClient = useQueryClient();
+  const {pushNotification} = React.useContext(NotificationsContext);
+
+  return useMutation({
+    mutationFn: (id: number | string) => deleteVulnerabilityById(id),
+    onSuccess: (_res, id) => {
+      queryClient.invalidateQueries({queryKey: [VulnerabilitiesQueryKey, id]});
+    },
+    onError: (err: AxiosError, _payload: number | string) => {
+      pushNotification({
+        title: "Error while deleting Vulnerability",
+        variant: "danger",
+      });
+    }
+  });
 };
 
 export const useFetchVulnerabilitySourceById = (id?: number | string) => {
