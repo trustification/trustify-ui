@@ -66,7 +66,7 @@ export const useDeleteAdvisoryByIdMutation = () => {
   return useMutation({
     mutationFn: (id: number | string) => deleteAdvisoryById(id),
     onSuccess: (_res, id) => {
-      queryClient.invalidateQueries({queryKey: [AdvisoriesQueryKey, id]});
+      queryClient.invalidateQueries({queryKey: [AdvisoriesQueryKey]});
     },
     onError: (err: AxiosError, _payload: number | string) => {
       pushNotification({
