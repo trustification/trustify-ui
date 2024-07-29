@@ -55,7 +55,7 @@ export const useDeleteProductByIdMutation = () => {
   return useMutation({
     mutationFn: (id: number | string) => deleteProductById(id),
     onSuccess: (_res, id) => {
-      queryClient.invalidateQueries({queryKey: [ProductsQueryKey, id]});
+      queryClient.invalidateQueries({queryKey: [ProductsQueryKey]});
     },
     onError: (err: AxiosError, _payload: number | string) => {
       pushNotification({
