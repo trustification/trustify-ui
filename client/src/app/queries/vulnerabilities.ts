@@ -56,7 +56,7 @@ export const useDeleteVulnerabilityByIdMutation = () => {
   return useMutation({
     mutationFn: (id: number | string) => deleteVulnerabilityById(id),
     onSuccess: (_res, id) => {
-      queryClient.invalidateQueries({queryKey: [VulnerabilitiesQueryKey, id]});
+      queryClient.invalidateQueries({queryKey: [VulnerabilitiesQueryKey]});
     },
     onError: (err: AxiosError, _payload: number | string) => {
       pushNotification({
