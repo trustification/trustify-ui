@@ -60,7 +60,7 @@ export const useDeleteSBOMByIdMutation = () => {
   return useMutation({
     mutationFn: (id: number | string) => deleteSBOMById(id),
     onSuccess: (_res, id) => {
-      queryClient.invalidateQueries({queryKey: [SBOMsQueryKey, id]});
+      queryClient.invalidateQueries({queryKey: [SBOMsQueryKey]});
     },
     onError: (err: AxiosError, _payload: number | string) => {
       pushNotification({
