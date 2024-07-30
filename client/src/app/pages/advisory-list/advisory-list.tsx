@@ -18,7 +18,7 @@ import {
   TextContent,
   Toolbar,
   ToolbarContent,
-  ToolbarItem
+  ToolbarItem,
 } from "@patternfly/react-core";
 import {
   ActionsColumn,
