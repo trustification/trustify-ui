@@ -10,7 +10,6 @@ import {
   CardTitle,
   Grid,
   GridItem,
-  Modal,
   PageSection,
   PageSectionVariants,
   Stack,
@@ -19,7 +18,7 @@ import {
   TextContent,
   Toolbar,
   ToolbarContent,
-  ToolbarItem,
+  ToolbarItem
 } from "@patternfly/react-core";
 import {
   ActionsColumn,
@@ -60,7 +59,6 @@ import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { AdvisoryIndex } from "@app/api/models";
 import { EditLabelsModal } from "@app/components/EditLabelsModal";
 import { NotificationsContext } from "@app/components/NotificationsContext";
-import { AdvisorySourceViewer } from "@app/components/SourceViewer";
 
 import { AdvisoryGeneralView } from "@app/components/AdvisoryGeneralView";
 import { AdvisoryIssuer } from "@app/components/AdvisoryIssuer";
@@ -74,10 +72,12 @@ export const AdvisoryList: React.FC = () => {
   const { uploads, handleUpload, handleRemoveUpload } = useUploadAdvisory();
 
   // Actions that each row can trigger
-  type RowAction = "editLabels" | "viewSource";
+  type RowAction = "editLabels";
   const [selectedRowAction, setSelectedRowAction] =
     React.useState<RowAction | null>(null);
-  const [selectedRow, setSelectedRow] = React.useState<AdvisoryIndex | null>(null);
+  const [selectedRow, setSelectedRow] = React.useState<AdvisoryIndex | null>(
+    null
+  );
 
   const prepareActionOnRow = (action: RowAction, row: AdvisoryIndex) => {
     setSelectedRowAction(action);
@@ -96,7 +96,10 @@ export const AdvisoryList: React.FC = () => {
     onUpdateLabelsError
   );
 
-  const execSaveLabels = (row: AdvisoryIndex, labels: { [key: string]: string }) => {
+  const execSaveLabels = (
+    row: AdvisoryIndex,
+    labels: { [key: string]: string }
+  ) => {
     updateAdvisoryLabels({ ...row, labels });
   };
 
@@ -320,12 +323,6 @@ export const AdvisoryList: React.FC = () => {
                                 },
                               },
                               {
-                                title: "View source",
-                                onClick: () => {
-                                  prepareActionOnRow("viewSource", item);
-                                },
-                              },
-                              {
                                 title: "Download",
                                 onClick: () => {
                                   downloadAdvisory(
@@ -439,27 +436,6 @@ export const AdvisoryList: React.FC = () => {
           }}
           onClose={() => setSelectedRowAction(null)}
         />
-      )}
-
-      {selectedRowAction === "viewSource" && selectedRow && (
-        <Modal
-          title={selectedRow?.identifier}
-          isOpen
-          onClose={() => setSelectedRowAction(null)}
-          actions={[
-            <Button
-              key="cancel"
-              variant="link"
-              onClick={() => setSelectedRowAction(null)}
-            >
-              Close
-            </Button>,
-          ]}
-        >
-          {selectedRow && (
-            <AdvisorySourceViewer advisoryId={selectedRow.uuid} />
-          )}
-        </Modal>
       )}
     </>
   );
