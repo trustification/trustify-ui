@@ -1,11 +1,35 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
+import {
+  Checkbox,
+  DataList,
+  DataListCell,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
+  DescriptionList,
+  DescriptionListDescription,
+  DescriptionListGroup,
+  DescriptionListTerm,
+  Flex,
+  FlexItem,
+  Stack,
+  StackItem,
+  Tab,
+  Tabs,
+  TabTitleText,
+  Text,
+  TextContent,
+  TextVariants,
+  Title,
+  Toolbar,
+  ToolbarContent,
+  ToolbarItem,
+} from "@patternfly/react-core";
 import {
   ExpandableRowContent,
   Table,
-  TableProps,
   Tbody,
   Td,
   Th,
@@ -22,6 +46,7 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
+import { VulnerabilityGallery } from "@app/components/VulnerabilityGallery";
 import {
   getHubRequestParams,
   useLocalTableControls,
@@ -31,37 +56,38 @@ import {
 import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchPackagesBySbomId } from "@app/queries/packages";
 import { decomposePurl } from "@app/utils/utils";
+import { PageDrawerContent } from "@app/components/PageDrawerContext";
+import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 
 interface PackagesProps {
-  variant?: TableProps["variant"];
   sbomId: string;
 }
 
-export const PackagesBySbom: React.FC<PackagesProps> = ({
-  variant,
-  sbomId,
-}) => {
+export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
+  const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
+
   const tableControlState = useTableControlState({
     tableName: "packages-table",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.packages,
     columnNames: {
       name: "Name",
       version: "Version",
+      vulnerabilities: "Vulnerabilities",
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
-    sortableColumns: [],
+    sortableColumns: ["name"],
     isFilterEnabled: true,
     filterCategories: [
       {
         categoryKey: "",
         title: "Filter tex",
         type: FilterType.search,
-        placeholderText: "Search...",
+        placeholderText: "Search by name...",
       },
     ],
-    isExpansionEnabled: true,
-    expandableVariant: "single",
+    isExpansionEnabled: false,
+    // expandableVariant: "single",
   });
 
   const {
@@ -72,6 +98,9 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({
     sbomId,
     getHubRequestParams({
       ...tableControlState,
+      hubSortFieldKeys: {
+        name: "name",
+      },
     })
   );
 
@@ -108,6 +137,13 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({
       <Toolbar {...toolbarProps}>
         <ToolbarContent>
           <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
+          <ToolbarItem>
+            <Checkbox
+              label="Show only affected packages"
+              id="uncontrolled-check-1"
+              isChecked
+            />
+          </ToolbarItem>
           <ToolbarItem {...paginationToolbarItemProps}>
             <SimplePagination
               idPrefix="package-table"
@@ -124,6 +160,7 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({
             <TableHeaderContentWithControls {...tableControls}>
               <Th {...getThProps({ columnKey: "name" })} />
               <Th {...getThProps({ columnKey: "version" })} />
+              <Th {...getThProps({ columnKey: "vulnerabilities" })} />
             </TableHeaderContentWithControls>
           </Tr>
         </Thead>
@@ -142,11 +179,25 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({
                     item={item}
                     rowIndex={rowIndex}
                   >
-                    <Td width={60} {...getTdProps({ columnKey: "name" })}>
-                      {item.name}
+                    <Td width={50} {...getTdProps({ columnKey: "name" })}>
+                      <a onClick={() => setIsExpanded(true)}>{item.name}</a>
                     </Td>
-                    <Td width={40} {...getTdProps({ columnKey: "version" })}>
+                    <Td width={20} {...getTdProps({ columnKey: "version" })}>
                       {item.version}
+                    </Td>
+                    <Td
+                      width={30}
+                      {...getTdProps({ columnKey: "vulnerabilities" })}
+                    >
+                      <VulnerabilityGallery
+                        severities={{
+                          critical: Math.floor(Math.random() * 10),
+                          high: Math.floor(Math.random() * 10),
+                          medium: Math.floor(Math.random() * 10),
+                          low: Math.floor(Math.random() * 10),
+                          none: Math.floor(Math.random() * 10),
+                        }}
+                      />
                     </Td>
                   </TableRowContentWithControls>
                 </Tr>
@@ -172,6 +223,93 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({
         isCompact
         paginationProps={paginationProps}
       />
+
+      <PageDrawerContent
+        isExpanded={isExpanded}
+        onCloseClick={() => setIsExpanded(!isExpanded)}
+        pageKey="drawer"
+        drawerPanelContentProps={{ defaultSize: "600px" }}
+        header={
+          <>
+            <TextContent>
+              <Title headingLevel="h2" size="lg">
+                Package Overview
+              </Title>
+            </TextContent>
+          </>
+        }
+      >
+        <Stack hasGutter>
+          <StackItem>
+            <DescriptionList>
+              <DescriptionListGroup>
+                <DescriptionListTerm>Name</DescriptionListTerm>
+                <DescriptionListDescription>
+                  org.aesh/aesh
+                </DescriptionListDescription>
+              </DescriptionListGroup>
+              <DescriptionListGroup>
+                <DescriptionListTerm>Version</DescriptionListTerm>
+                <DescriptionListDescription>
+                  1.1.1.Final
+                </DescriptionListDescription>
+              </DescriptionListGroup>
+              <DescriptionListGroup>
+                <DescriptionListTerm>Architecture</DescriptionListTerm>
+                <DescriptionListDescription>x64</DescriptionListDescription>
+              </DescriptionListGroup>
+            </DescriptionList>
+          </StackItem>
+          <StackItem>
+            <Tabs
+              defaultActiveKey={0}
+              aria-label="Tabs in the uncontrolled example"
+              role="region"
+              isBox
+            >
+              <Tab
+                eventKey={0}
+                title={<TabTitleText>Affected</TabTitleText>}
+                aria-label="Uncontrolled ref content - users"
+              >
+                <DataList aria-label="Simple data list example" isCompact>
+                  <DataListItem aria-labelledby="simple-item1">
+                    <DataListItemRow>
+                      <DataListItemCells
+                        dataListCells={[
+                          <DataListCell key="primary content">
+                            <Text component={TextVariants.a}>CVE-123456</Text>
+                          </DataListCell>,
+                          <DataListCell key="secondary content">
+                            <SeverityShieldAndText value="high" />
+                          </DataListCell>,
+                        ]}
+                      />
+                    </DataListItemRow>
+                  </DataListItem>
+                  <DataListItem aria-labelledby="simple-item2">
+                    <DataListItemRow>
+                      <DataListItemCells
+                        dataListCells={[
+                          <DataListCell key="primary content">
+                            <Text component={TextVariants.a}>CVE-98765</Text>
+                          </DataListCell>,
+                          <DataListCell key="secondary content">
+                            <SeverityShieldAndText value="low" />
+                          </DataListCell>,
+                        ]}
+                      />
+                    </DataListItemRow>
+                  </DataListItem>
+                </DataList>
+              </Tab>
+              <Tab eventKey={1} title={<TabTitleText>Fixed</TabTitleText>}>
+                Containers
+              </Tab>
+            </Tabs>
+          </StackItem>
+        </Stack>
+      </PageDrawerContent>
     </>
   );
 };

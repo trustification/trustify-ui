@@ -4,7 +4,15 @@ import { NavLink } from "react-router-dom";
 import dayjs from "dayjs";
 
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
-import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
+import {
+  ActionsColumn,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@patternfly/react-table";
 
 import { Product, SBOM } from "@app/api/models";
 import { getSBOMById } from "@app/api/rest";
@@ -17,6 +25,8 @@ import {
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { formatDate } from "@app/utils/utils";
+import { SbomVulnerabilityShields } from "@app/components/SbomVulnerabilityShields";
+import { VulnerabilityGallery } from "@app/components/VulnerabilityGallery";
 
 interface TableData {
   sbomId: string;
@@ -86,10 +96,9 @@ export const ProductVersions: React.FC<ProductVersionsProps> = ({
     items: tableData,
     isLoading: false,
     columnNames: {
-      name: "Name",
-      published: "Published",
-      labels: "Labels",
       version: "Version",
+      published: "Published",
+      vulnerabilities: "Vulnerabilities",
     },
     isSortEnabled: true,
     sortableColumns: ["published"],
@@ -105,11 +114,12 @@ export const ProductVersions: React.FC<ProductVersionsProps> = ({
         categoryKey: "filterText",
         title: "Filter tex",
         type: FilterType.search,
-        placeholderText: "Search...",
+        placeholderText: "Search by version...",
         getItemValue: (item) => item.sbomVersion,
       },
     ],
     isExpansionEnabled: false,
+    hasActionsColumn: true,
   });
 
   const {
@@ -150,10 +160,9 @@ export const ProductVersions: React.FC<ProductVersionsProps> = ({
         <Thead>
           <Tr>
             <TableHeaderContentWithControls {...tableControls}>
-              <Th {...getThProps({ columnKey: "name" })} />
-              <Th {...getThProps({ columnKey: "published" })} />
-              <Th {...getThProps({ columnKey: "labels" })} />
               <Th {...getThProps({ columnKey: "version" })} />
+              <Th {...getThProps({ columnKey: "published" })} />
+              <Th {...getThProps({ columnKey: "vulnerabilities" })} />
             </TableHeaderContentWithControls>
           </Tr>
         </Thead>
@@ -168,12 +177,12 @@ export const ProductVersions: React.FC<ProductVersionsProps> = ({
               <Tbody key={item.sbomId}>
                 <Tr {...getTrProps({ item })}>
                   <Td
-                    width={15}
+                    width={20}
                     modifier="truncate"
-                    {...getTdProps({ columnKey: "name" })}
+                    {...getTdProps({ columnKey: "version" })}
                   >
                     <NavLink to={`/sboms/${item.sbomId}`}>
-                      {item.sbom?.name}
+                      {item.sbomVersion}
                     </NavLink>
                   </Td>
                   <Td
@@ -186,18 +195,32 @@ export const ProductVersions: React.FC<ProductVersionsProps> = ({
                   <Td
                     width={10}
                     modifier="truncate"
-                    {...getTdProps({ columnKey: "labels" })}
+                    {...getTdProps({ columnKey: "vulnerabilities" })}
                   >
-                    {item.sbom?.labels && (
-                      <LabelsAsList value={item.sbom?.labels} />
-                    )}
+                    {/* {item.sbom && <SbomVulnerabilityShields sbom={item.sbom} />} */}
+                    <VulnerabilityGallery
+                        severities={{
+                          critical: Math.floor(Math.random() * 10),
+                          high: Math.floor(Math.random() * 10),
+                          medium: Math.floor(Math.random() * 10),
+                          low: Math.floor(Math.random() * 10),
+                          none: Math.floor(Math.random() * 10),
+                        }}
+                      />
                   </Td>
-                  <Td
-                    width={10}
-                    modifier="truncate"
-                    {...getTdProps({ columnKey: "version" })}
-                  >
-                    {item.sbomVersion}
+                  <Td isActionCell>
+                    <ActionsColumn
+                      items={[
+                        {
+                          title: "Download",
+                          onClick: () => {},
+                        },
+                        {
+                          title: "Delete",
+                          onClick: () => {},
+                        },
+                      ]}
+                    />
                   </Td>
                 </Tr>
               </Tbody>

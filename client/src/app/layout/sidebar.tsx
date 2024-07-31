@@ -34,7 +34,7 @@ export const SidebarApp: React.FC = () => {
               Products
             </NavLink>
           </li>
-          <li className="pf-v5-c-nav__item">
+          {/* <li className="pf-v5-c-nav__item">
             <NavLink
               to="/sboms"
               className={({ isActive }) => {
@@ -43,7 +43,7 @@ export const SidebarApp: React.FC = () => {
             >
               SBOMs
             </NavLink>
-          </li>
+          </li> */}
           <li className="pf-v5-c-nav__item">
             <NavLink
               to="/vulnerabilities"
@@ -54,7 +54,7 @@ export const SidebarApp: React.FC = () => {
               Vulnerabilities
             </NavLink>
           </li>
-          <li className="pf-v5-c-nav__item">
+          {/* <li className="pf-v5-c-nav__item">
             <NavLink
               to="/packages"
               className={({ isActive }) => {
@@ -73,7 +73,7 @@ export const SidebarApp: React.FC = () => {
             >
               Advisories
             </NavLink>
-          </li>
+          </li> */}
           <li className="pf-v5-c-nav__item">
             <NavLink
               to="/importers"

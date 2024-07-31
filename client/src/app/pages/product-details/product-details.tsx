@@ -11,7 +11,7 @@ import {
 import { PathParam, useRouteParams } from "@app/Routes";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useFetchProductById } from "@app/queries/products";
-import { Overview } from "./overview";
+
 import { ProductVersions } from "./product-versions";
 
 export const ProductDetails: React.FC = () => {
@@ -25,7 +25,7 @@ export const ProductDetails: React.FC = () => {
           breadcrumbs={
             <Breadcrumb>
               <BreadcrumbItem key="advisories">
-                <Link to="/advisories">Products</Link>
+                <Link to="/products">Products</Link>
               </BreadcrumbItem>
               <BreadcrumbItem isActive>Product details</BreadcrumbItem>
             </Breadcrumb>
@@ -34,37 +34,12 @@ export const ProductDetails: React.FC = () => {
           pageHeading={{
             title: product?.name ?? "",
           }}
-          tabs={[
-            {
-              eventKey: "versions",
-              title: "Versions",
-              children: (
-                <div className="pf-v5-u-m-md">
-                  <LoadingWrapper
-                    isFetching={isFetching}
-                    fetchError={fetchError}
-                  >
-                    {product && <ProductVersions product={product} />}
-                  </LoadingWrapper>
-                </div>
-              ),
-            },
-            {
-              eventKey: "overview",
-              title: "Overview",
-              children: (
-                <div className="pf-v5-u-m-md">
-                  <LoadingWrapper
-                    isFetching={isFetching}
-                    fetchError={fetchError}
-                  >
-                    {product && <Overview product={product} />}
-                  </LoadingWrapper>
-                </div>
-              ),
-            },
-          ]}
-        />
+          tabs={[]}
+        >
+          <LoadingWrapper isFetching={isFetching} fetchError={fetchError}>
+            {product && <ProductVersions product={product} />}
+          </LoadingWrapper>
+        </DetailsPage>
       </PageSection>
     </>
   );

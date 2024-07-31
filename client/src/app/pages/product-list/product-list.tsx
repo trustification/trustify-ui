@@ -10,7 +10,15 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core";
-import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
+import {
+  ActionsColumn,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@patternfly/react-table";
 
 import { TablePersistenceKeyPrefixes } from "@app/Constants";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
@@ -26,23 +34,16 @@ import {
   useTableControlState,
 } from "@app/hooks/table-controls";
 import { useSelectionState } from "@app/hooks/useSelectionState";
-
-import { useFetchOrganizations } from "@app/queries/organizations";
 import { useFetchProducts } from "@app/queries/products";
 
 export const ProductList: React.FC = () => {
-  const { result: organizations } = useFetchOrganizations({
-    page: { pageNumber: 1, itemsPerPage: 1000 },
-  });
-
   // Table config
   const tableControlState = useTableControlState({
     tableName: "products",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.advisories,
     columnNames: {
       name: "Name",
-      vendor: "Vendor",
-      versions: "Versions",
+      versions: "SBOM count",
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
@@ -52,20 +53,8 @@ export const ProductList: React.FC = () => {
       {
         categoryKey: "",
         title: "Filter text",
-        placeholderText: "Search",
+        placeholderText: "Search by name...",
         type: FilterType.search,
-      },
-      {
-        categoryKey: "organization",
-        title: "Organization",
-        placeholderText: "Organization",
-        type: FilterType.multiselect,
-        selectOptions: [
-          ...(organizations.data ?? []).map((org) => ({
-            value: org.id,
-            label: org.name,
-          })),
-        ],
       },
     ],
     isExpansionEnabled: false,
@@ -108,7 +97,6 @@ export const ProductList: React.FC = () => {
       getThProps,
       getTrProps,
       getTdProps,
-      getExpandedContentTdProps,
     },
     expansionDerivedState: { isCellExpanded },
   } = tableControls;
@@ -144,7 +132,6 @@ export const ProductList: React.FC = () => {
               <Tr>
                 <TableHeaderContentWithControls {...tableControls}>
                   <Th {...getThProps({ columnKey: "name" })} />
-                  <Th {...getThProps({ columnKey: "vendor" })} />
                   <Th {...getThProps({ columnKey: "versions" })} />
                 </TableHeaderContentWithControls>
               </Tr>
@@ -164,17 +151,10 @@ export const ProductList: React.FC = () => {
                         item={item}
                         rowIndex={rowIndex}
                       >
-                        <Td width={30} {...getTdProps({ columnKey: "name" })}>
+                        <Td width={80} {...getTdProps({ columnKey: "name" })}>
                           <NavLink to={`/products/${item.id}`}>
                             {item.name}
                           </NavLink>
-                        </Td>
-                        <Td
-                          width={50}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "vendor" })}
-                        >
-                          {item.vendor?.name}
                         </Td>
                         <Td
                           width={20}
