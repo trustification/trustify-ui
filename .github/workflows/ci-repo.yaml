@@ -1,4 +1,4 @@
-name: CI
+name: CI (repo level)
 
 on:
   push:
@@ -9,6 +9,8 @@ on:
     branches:
       - main
       - "release-*"
+  workflow_dispatch:
+  workflow_call:
 
 jobs:
   ci:
@@ -21,6 +23,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
       - name: Verify package-lock.json
         run: ./scripts/verify_lock.mjs
       - name: Install
@@ -39,4 +42,4 @@ jobs:
         run: cargo check
       - name: Crate Clippy
         working-directory: ./crate
-        run: cargo clippy --all-targets --all-features -- -D warnings 
+        run: cargo clippy --all-targets --all-features -- -D warnings
