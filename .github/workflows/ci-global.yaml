@@ -1,0 +1,38 @@
+name: CI (global trustify CI)
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+  workflow_call:
+
+concurrency:
+  group: ci-global-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-upload-for-global-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: save trustd image
+        run: |
+          docker build . -t ghcr.io/trustification/trustd:latest -f Dockerfile.server
+          docker save -o /tmp/trustd.tar ghcr.io/trustification/trustd:latest
+
+      - name: Upload trustd image as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: trustd
+          path: /tmp/trustd.tar
+          retention-days: 1
+
+  run-global-ci:
+    needs: build-and-upload-for-global-ci
+    uses: carlosthe19916/ci/.github/workflows/global-ci.yml@main
+    with:
+      component_name: trustd
+      run_api_tests: false
