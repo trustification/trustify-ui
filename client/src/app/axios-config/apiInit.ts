@@ -5,10 +5,11 @@ import { OIDC_CLIENT_ID, OIDC_SERVER_URL, oidcClientSettings } from "@app/oidc";
 
 import { createClient } from "@hey-api/client-axios";
 
-createClient({
+export const client = createClient({
   // set default base url for requests
   baseURL: "/",
   axios: axios,
+  throwOnError: true,
 });
 
 function getUser() {

@@ -20,7 +20,7 @@
     "*.{css,json,md,yaml,yml}": "prettier --write"
   },
   "dependencies": {
-    "@hey-api/client-axios": "^0.1.1",
+    "@hey-api/client-axios": "^0.2.0",
     "@hookform/resolvers": "^2.9.11",
     "@patternfly/patternfly": "^5.2.1",
     "@patternfly/react-charts": "^7.2.1",
@@ -55,7 +55,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@hey-api/openapi-ts": "^0.50.1",
+    "@hey-api/openapi-ts": "^0.52.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",

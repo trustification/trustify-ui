@@ -12,6 +12,7 @@ import {
 } from "@app/api/rest";
 import { useUpload } from "@app/hooks/useUpload";
 import { getSbom } from "@app/client";
+import { client } from "@app/axios-config/apiInit";
 
 export const SBOMsQueryKey = "sboms";
 
@@ -40,7 +41,9 @@ export const useFetchSBOMById = (id?: string) => {
   const { data, isLoading, error } = useQuery({
     queryKey: [SBOMsQueryKey, id],
     queryFn: async () =>
-      id === undefined ? undefined : (await getSbom({ path: { id } })).data,
+      id === undefined
+        ? undefined
+        : (await getSbom({ client, path: { id } })).data,
     enabled: id !== undefined,
   });
 
