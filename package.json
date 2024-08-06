@@ -18,7 +18,9 @@
     "start:dev": "concurrently -n common,client -c 'white.bold.inverse,green.bold.inverse,blue.bold.inverse' 'npm:start:dev:common' 'npm:start:dev:client'",
     "start": "npm run build -w common -w client && npm run start -w server",
     "test": "npm run test -ws --if-present --",
-    "lint": "npm run lint -ws --if-present --"
+    "lint": "npm run lint -ws --if-present --",
+    "generate": "npm run generate -w client",
+    "prettier": "npx prettier --write './**/*.{ts,js,json}'"
   },
   "lint-staged": {
     "package-lock.json": "./scripts/verify_lock.mjs",
