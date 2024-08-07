@@ -21,6 +21,9 @@ import type {
   GetAdvisoryData,
   GetAdvisoryError,
   GetAdvisoryResponse,
+  DeleteAdvisoryData,
+  DeleteAdvisoryError,
+  DeleteAdvisoryResponse,
   DownloadAdvisoryData,
   DownloadAdvisoryError,
   DownloadAdvisoryResponse,
@@ -56,9 +59,12 @@ import type {
   ListProductsData,
   ListProductsError,
   ListProductsResponse,
-  GetProductsData,
-  GetProductsError,
-  GetProductsResponse,
+  GetProductData,
+  GetProductError,
+  GetProductResponse,
+  DeleteProductData,
+  DeleteProductError,
+  DeleteProductResponse,
   ListPurlData,
   ListPurlError,
   ListPurlResponse,
@@ -121,6 +127,9 @@ import type {
   GetVulnerabilityData,
   GetVulnerabilityError,
   GetVulnerabilityResponse,
+  DeleteVulnerabilityData,
+  DeleteVulnerabilityError,
+  DeleteVulnerabilityResponse,
 } from "./types.gen";
 
 export const client = createClient(createConfig());
@@ -185,6 +194,16 @@ export const getAdvisory = (options: Options<GetAdvisoryData>) => {
       url: "/api/v1/advisory/{key}",
     }
   );
+};
+
+export const deleteAdvisory = (options: Options<DeleteAdvisoryData>) => {
+  return (options?.client ?? client).delete<
+    DeleteAdvisoryResponse,
+    DeleteAdvisoryError
+  >({
+    ...options,
+    url: "/api/v1/advisory/{key}",
+  });
 };
 
 export const downloadAdvisory = (options: Options<DownloadAdvisoryData>) => {
@@ -332,13 +351,21 @@ export const listProducts = (options?: Options<ListProductsData>) => {
   });
 };
 
-export const getProducts = (options: Options<GetProductsData>) => {
-  return (options?.client ?? client).get<GetProductsResponse, GetProductsError>(
-    {
-      ...options,
-      url: "/api/v1/product/{id}",
-    }
-  );
+export const getProduct = (options: Options<GetProductData>) => {
+  return (options?.client ?? client).get<GetProductResponse, GetProductError>({
+    ...options,
+    url: "/api/v1/product/{id}",
+  });
+};
+
+export const deleteProduct = (options: Options<DeleteProductData>) => {
+  return (options?.client ?? client).delete<
+    DeleteProductResponse,
+    DeleteProductError
+  >({
+    ...options,
+    url: "/api/v1/product/{id}",
+  });
 };
 
 export const listPurl = (options?: Options<ListPurlData>) => {
@@ -554,6 +581,18 @@ export const getVulnerability = (options: Options<GetVulnerabilityData>) => {
   return (options?.client ?? client).get<
     GetVulnerabilityResponse,
     GetVulnerabilityError
+  >({
+    ...options,
+    url: "/api/v1/vulnerability/{id}",
+  });
+};
+
+export const deleteVulnerability = (
+  options: Options<DeleteVulnerabilityData>
+) => {
+  return (options?.client ?? client).delete<
+    DeleteVulnerabilityResponse,
+    DeleteVulnerabilityError
   >({
     ...options,
     url: "/api/v1/vulnerability/{id}",
