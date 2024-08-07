@@ -4,7 +4,7 @@ info:
   description: Software Supply-Chain Security API
   license:
     name: ''
-  version: 0.1.0-alpha.11
+  version: 0.1.0-alpha.12
 paths:
   /api/v1/advisory:
     get:
@@ -137,6 +137,26 @@ paths:
       tags:
       - advisory
       operationId: getAdvisory
+      parameters:
+      - name: key
+        in: path
+        description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Matching advisory
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdvisoryDetails'
+        '404':
+          description: Matching advisory not found
+    delete:
+      tags:
+      - advisory
+      operationId: deleteAdvisory
       parameters:
       - name: key
         in: path
@@ -491,7 +511,28 @@ paths:
     get:
       tags:
       - product
-      operationId: getProducts
+      operationId: getProduct
+      parameters:
+      - name: id
+        in: path
+        description: Opaque ID of the product
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Matching product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetails'
+        '404':
+          description: Matching product not found
+    delete:
+      tags:
+      - product
+      operationId: deleteProduct
       parameters:
       - name: id
         in: path
@@ -1223,6 +1264,26 @@ paths:
                 $ref: '#/components/schemas/VulnerabilityDetails'
         '404':
           description: Specified vulnerability not found
+    delete:
+      tags:
+      - vulnerability
+      operationId: deleteVulnerability
+      parameters:
+      - name: id
+        in: path
+        description: ID of the vulnerability
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Specified vulnerability
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VulnerabilityDetails'
+        '404':
+          description: Specified vulnerability not found
 components:
   schemas:
     AdvisoryDetails:
@@ -1616,11 +1677,17 @@ components:
         required:
         - source
         properties:
+          branch:
+            type: string
+            description: An optional branch. Will use the default branch otherwise.
+            nullable: true
           path:
             type: string
+            description: An optional path to start searching for documents. Will use the root of the repository otherwise.
             nullable: true
           source:
             type: string
+            description: The URL to the git repository of the OSV data
     PaginatedAdvisorySummary:
       type: object
       description: Paginated returned items

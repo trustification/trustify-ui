@@ -9,6 +9,9 @@ import {
   updateAdvisoryLabels,
   uploadAdvisory,
 } from "@app/api/rest";
+import { AdvisoryDetails, deleteAdvisory } from "@app/client";
+import { client } from "@app/axios-config/apiInit";
+
 import { useUpload } from "@app/hooks/useUpload";
 
 export interface IAdvisoriesQueryParams {
@@ -54,6 +57,19 @@ export const useFetchAdvisoryById = (id?: number | string) => {
     isFetching: isLoading,
     fetchError: error as AxiosError,
   };
+};
+
+export const useDeleteAdvisoryMutation = (
+  onError?: (err: AxiosError, id: string) => void,
+  onSuccess?: (payload: AdvisoryDetails, id: string) => void
+) => {
+  return useMutation({
+    mutationFn: async (key: string) =>
+      (await deleteAdvisory({ client, path: { key } })).data,
+    mutationKey: [AdvisoriesQueryKey],
+    onSuccess,
+    onError,
+  });
 };
 
 export const useFetchAdvisorySourceById = (id?: number | string) => {

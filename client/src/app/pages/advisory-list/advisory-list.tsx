@@ -48,6 +48,7 @@ import {
 import { useDownload } from "@app/hooks/useDownload";
 import { useSelectionState } from "@app/hooks/useSelectionState";
 import {
+  useDeleteAdvisoryMutation,
   useFetchAdvisories,
   useUpdateAdvisoryLabelsMutation,
   useUploadAdvisory,
@@ -64,6 +65,7 @@ import { AdvisoryGeneralView } from "@app/components/AdvisoryGeneralView";
 import { AdvisoryIssuer } from "@app/components/AdvisoryIssuer";
 import { Vulnerabilities } from "../advisory-details/vulnerabilities";
 import { VulnerabilitiesGalleryCount } from "./components/VulnerabilitiesGaleryCount";
+import {useNotifyErrorCallback} from "@app/hooks/useNotifyErrorCallback";
 
 export const AdvisoryList: React.FC = () => {
   const { pushNotification } = React.useContext(NotificationsContext);
@@ -155,6 +157,10 @@ export const AdvisoryList: React.FC = () => {
         severity: "average_score",
       },
     })
+  );
+
+  const deleteAdvisoryByIdMutation = useDeleteAdvisoryMutation(
+    useNotifyErrorCallback("Error occurred while deleting the advisory")
   );
 
   const tableControls = useTableControlProps({
@@ -330,6 +336,11 @@ export const AdvisoryList: React.FC = () => {
                                     `${item.identifier}.json`
                                   );
                                 },
+                              },
+                              {
+                                title: "Delete",
+                                onClick: () =>
+                                  deleteAdvisoryByIdMutation.mutate(item.uuid),
                               },
                             ]}
                           />

@@ -581,12 +581,21 @@ export const $OsvImporter = {
       type: "object",
       required: ["source"],
       properties: {
+        branch: {
+          type: "string",
+          description:
+            "An optional branch. Will use the default branch otherwise.",
+          nullable: true,
+        },
         path: {
           type: "string",
+          description:
+            "An optional path to start searching for documents. Will use the root of the repository otherwise.",
           nullable: true,
         },
         source: {
           type: "string",
+          description: "The URL to the git repository of the OSV data",
         },
       },
     },
