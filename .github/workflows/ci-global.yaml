@@ -34,5 +34,5 @@ jobs:
     needs: build-and-upload-for-global-ci
     uses: carlosthe19916/trustify-ci/.github/workflows/global-ci.yml@main
     with:
-      component_name: trustd
+      artifact: trustd
       run_api_tests: false
