@@ -36,7 +36,7 @@ export const $AdvisoryDetails = {
 
 export const $AdvisoryHead = {
   type: "object",
-  required: ["uuid", "identifier"],
+  required: ["uuid", "identifier", "hashes", "labels"],
   properties: {
     hashes: {
       type: "array",
@@ -262,6 +262,7 @@ export const $BasePurlDetails = {
     },
     {
       type: "object",
+      required: ["versions"],
       properties: {
         versions: {
           type: "array",
@@ -300,6 +301,10 @@ export const $BasePurlSummary = {
   ],
 } as const;
 
+export const $BinaryByteSize = {
+  type: "string",
+} as const;
+
 export const $CommonImporter = {
   type: "object",
   required: ["period"],
@@ -332,6 +337,11 @@ export const $CsafImporter = {
       type: "object",
       required: ["source"],
       properties: {
+        fetchRetries: {
+          type: "integer",
+          nullable: true,
+          minimum: 0,
+        },
         onlyPatterns: {
           type: "array",
           items: {
@@ -819,6 +829,7 @@ export const $ProductDetails = {
     },
     {
       type: "object",
+      required: ["versions"],
       properties: {
         vendor: {
           allOf: [
@@ -831,7 +842,7 @@ export const $ProductDetails = {
         versions: {
           type: "array",
           items: {
-            $ref: "#/components/schemas/ProductVersionHead",
+            $ref: "#/components/schemas/ProductVersionDetails",
           },
         },
       },
@@ -860,6 +871,7 @@ export const $ProductSummary = {
     },
     {
       type: "object",
+      required: ["versions"],
       properties: {
         vendor: {
           allOf: [
@@ -874,6 +886,27 @@ export const $ProductSummary = {
           items: {
             $ref: "#/components/schemas/ProductVersionHead",
           },
+        },
+      },
+    },
+  ],
+} as const;
+
+export const $ProductVersionDetails = {
+  allOf: [
+    {
+      $ref: "#/components/schemas/ProductVersionHead",
+    },
+    {
+      type: "object",
+      properties: {
+        sbom: {
+          allOf: [
+            {
+              $ref: "#/components/schemas/SbomHead",
+            },
+          ],
+          nullable: true,
         },
       },
     },
@@ -931,7 +964,7 @@ export const $PurlDetails = {
     },
     {
       type: "object",
-      required: ["version", "base"],
+      required: ["version", "base", "advisories"],
       properties: {
         advisories: {
           type: "array",
@@ -1059,6 +1092,7 @@ export const $SbomAdvisory = {
     },
     {
       type: "object",
+      required: ["status"],
       properties: {
         status: {
           type: "array",
@@ -1078,7 +1112,7 @@ export const $SbomDetails = {
     },
     {
       type: "object",
-      required: ["advisories"],
+      required: ["authors", "described_by", "advisories"],
       properties: {
         advisories: {
           type: "array",
@@ -1110,7 +1144,7 @@ export const $SbomDetails = {
 
 export const $SbomHead = {
   type: "object",
-  required: ["id", "document_id", "name"],
+  required: ["id", "hashes", "document_id", "labels", "name"],
   properties: {
     document_id: {
       type: "string",
@@ -1143,6 +1177,11 @@ export const $SbomImporter = {
       type: "object",
       required: ["source"],
       properties: {
+        fetchRetries: {
+          type: "integer",
+          nullable: true,
+          minimum: 0,
+        },
         keys: {
           type: "array",
           items: {
@@ -1155,6 +1194,14 @@ export const $SbomImporter = {
           items: {
             type: "string",
           },
+        },
+        sizeLimit: {
+          allOf: [
+            {
+              $ref: "#/components/schemas/BinaryByteSize",
+            },
+          ],
+          nullable: true,
         },
         source: {
           type: "string",
@@ -1169,7 +1216,7 @@ export const $SbomImporter = {
 
 export const $SbomPackage = {
   type: "object",
-  required: ["id", "name"],
+  required: ["id", "name", "purl", "cpe"],
   properties: {
     cpe: {
       type: "array",
@@ -1211,7 +1258,7 @@ export const $SbomPackageRelation = {
 
 export const $SbomStatus = {
   type: "object",
-  required: ["vulnerability_id", "status"],
+  required: ["vulnerability_id", "status", "packages"],
   properties: {
     context: {
       allOf: [
@@ -1243,6 +1290,7 @@ export const $SbomSummary = {
     },
     {
       type: "object",
+      required: ["authors", "described_by"],
       properties: {
         authors: {
           type: "array",
@@ -1372,7 +1420,7 @@ export const $VersionedPurlDetails = {
     },
     {
       type: "object",
-      required: ["base"],
+      required: ["base", "purls", "advisories"],
       properties: {
         advisories: {
           type: "array",
@@ -1433,7 +1481,7 @@ export const $VersionedPurlSummary = {
     },
     {
       type: "object",
-      required: ["base"],
+      required: ["base", "purls"],
       properties: {
         base: {
           $ref: "#/components/schemas/BasePurlHead",
@@ -1567,7 +1615,7 @@ export const $VulnerabilityDetails = {
 
 export const $VulnerabilityHead = {
   type: "object",
-  required: ["identifier"],
+  required: ["normative", "identifier"],
   properties: {
     cwe: {
       type: "string",
@@ -1638,6 +1686,7 @@ export const $VulnerabilitySummary = {
     },
     {
       type: "object",
+      required: ["advisories"],
       properties: {
         advisories: {
           type: "array",

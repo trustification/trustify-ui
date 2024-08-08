@@ -4,7 +4,7 @@ info:
   description: Software Supply-Chain Security API
   license:
     name: ''
-  version: 0.1.0-alpha.12
+  version: 0.1.0-alpha.13
 paths:
   /api/v1/advisory:
     get:
@@ -1312,6 +1312,8 @@ components:
       required:
       - uuid
       - identifier
+      - hashes
+      - labels
       properties:
         hashes:
           type: array
@@ -1465,6 +1467,8 @@ components:
       allOf:
       - $ref: '#/components/schemas/BasePurlHead'
       - type: object
+        required:
+        - versions
         properties:
           versions:
             type: array
@@ -1486,6 +1490,8 @@ components:
       allOf:
       - $ref: '#/components/schemas/BasePurlHead'
       - type: object
+    BinaryByteSize:
+      type: string
     CommonImporter:
       type: object
       required:
@@ -1510,6 +1516,10 @@ components:
         required:
         - source
         properties:
+          fetchRetries:
+            type: integer
+            nullable: true
+            minimum: 0
           onlyPatterns:
             type: array
             items:
@@ -1862,6 +1872,8 @@ components:
       allOf:
       - $ref: '#/components/schemas/ProductHead'
       - type: object
+        required:
+        - versions
         properties:
           vendor:
             allOf:
@@ -1870,7 +1882,7 @@ components:
           versions:
             type: array
             items:
-              $ref: '#/components/schemas/ProductVersionHead'
+              $ref: '#/components/schemas/ProductVersionDetails'
     ProductHead:
       type: object
       required:
@@ -1886,6 +1898,8 @@ components:
       allOf:
       - $ref: '#/components/schemas/ProductHead'
       - type: object
+        required:
+        - versions
         properties:
           vendor:
             allOf:
@@ -1895,6 +1909,15 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/ProductVersionHead'
+    ProductVersionDetails:
+      allOf:
+      - $ref: '#/components/schemas/ProductVersionHead'
+      - type: object
+        properties:
+          sbom:
+            allOf:
+            - $ref: '#/components/schemas/SbomHead'
+            nullable: true
     ProductVersionHead:
       type: object
       required:
@@ -1931,6 +1954,7 @@ components:
         required:
         - version
         - base
+        - advisories
         properties:
           advisories:
             type: array
@@ -2023,6 +2047,8 @@ components:
       allOf:
       - $ref: '#/components/schemas/AdvisoryHead'
       - type: object
+        required:
+        - status
         properties:
           status:
             type: array
@@ -2033,6 +2059,8 @@ components:
       - $ref: '#/components/schemas/SbomHead'
       - type: object
         required:
+        - authors
+        - described_by
         - advisories
         properties:
           advisories:
@@ -2055,7 +2083,9 @@ components:
       type: object
       required:
       - id
+      - hashes
       - document_id
+      - labels
       - name
       properties:
         document_id:
@@ -2078,6 +2108,10 @@ components:
         required:
         - source
         properties:
+          fetchRetries:
+            type: integer
+            nullable: true
+            minimum: 0
           keys:
             type: array
             items:
@@ -2087,6 +2121,10 @@ components:
             type: array
             items:
               type: string
+          sizeLimit:
+            allOf:
+            - $ref: '#/components/schemas/BinaryByteSize'
+            nullable: true
           source:
             type: string
           v3Signatures:
@@ -2096,6 +2134,8 @@ components:
       required:
       - id
       - name
+      - purl
+      - cpe
       properties:
         cpe:
           type: array
@@ -2127,6 +2167,7 @@ components:
       required:
       - vulnerability_id
       - status
+      - packages
       properties:
         context:
           allOf:
@@ -2144,6 +2185,9 @@ components:
       allOf:
       - $ref: '#/components/schemas/SbomHead'
       - type: object
+        required:
+        - authors
+        - described_by
         properties:
           authors:
             type: array
@@ -2228,6 +2272,8 @@ components:
       - type: object
         required:
         - base
+        - purls
+        - advisories
         properties:
           advisories:
             type: array
@@ -2271,6 +2317,7 @@ components:
       - type: object
         required:
         - base
+        - purls
         properties:
           base:
             $ref: '#/components/schemas/BasePurlHead'
@@ -2353,6 +2400,7 @@ components:
     VulnerabilityHead:
       type: object
       required:
+      - normative
       - identifier
       properties:
         cwe:
@@ -2404,6 +2452,8 @@ components:
       allOf:
       - $ref: '#/components/schemas/VulnerabilityHead'
       - type: object
+        required:
+        - advisories
         properties:
           advisories:
             type: array

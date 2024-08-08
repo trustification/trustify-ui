@@ -3,14 +3,19 @@ import { AxiosError } from "axios";
 
 import { HubRequestParams, SBOM } from "@app/api/models";
 import {
-  getSBOMs,
   getSBOMsByPackageId,
   getSBOMSourceById,
-  updateSbomLabels,
   uploadSbom,
 } from "@app/api/rest";
 import { useUpload } from "@app/hooks/useUpload";
-import { deleteSbom, getSbom, SbomDetails } from "@app/client";
+import {
+  deleteSbom,
+  getSbom,
+  listSboms,
+  updateSbomLabels,
+  SbomDetails,
+  SbomSummary,
+} from "@app/client";
 import { client } from "@app/axios-config/apiInit";
 
 export const SBOMsQueryKey = "sboms";
@@ -21,14 +26,14 @@ export const useFetchSBOMs = (
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [SBOMsQueryKey, params],
-    queryFn: () => getSBOMs(params),
+    queryFn: () => listSboms({ client }),
     refetchInterval: !refetchDisabled ? 5000 : false,
   });
   return {
     result: {
-      data: data?.data || [],
-      total: data?.total ?? 0,
-      params: data?.params ?? params,
+      data: data?.data.items || [],
+      total: data?.data.total ?? 0,
+      params: params,
     },
     isFetching: isLoading,
     fetchError: error,
@@ -94,15 +99,15 @@ export const useUploadSBOM = () => {
 
 export const useUpdateSbomLabelsMutation = (
   onSuccess: () => void,
-  onError: (err: AxiosError, payload: SBOM) => void
+  onError: (err: AxiosError, payload: SbomSummary) => void
 ) => {
-  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (obj) => updateSbomLabels(obj.id, obj.labels ?? {}),
-    onSuccess: (_res, _payload) => {
-      onSuccess();
-      queryClient.invalidateQueries({ queryKey: [SBOMsQueryKey] });
-    },
+    mutationFn: (obj) =>
+      updateSbomLabels({ client, path: { id: obj.id }, body: obj.labels }).then(
+        (res) => res.data
+      ),
+    mutationKey: [SBOMsQueryKey],
+    onSuccess,
     onError: onError,
   });
 };

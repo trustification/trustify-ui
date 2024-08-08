@@ -19,13 +19,13 @@ export type AdvisoryHead = {
   /**
    * Hashes of the underlying original document as ingested.
    */
-  hashes?: Array<Id>;
+  hashes: Array<Id>;
   /**
    * The identifier of the advisory, as assigned by the issuing organization.
    */
   identifier: string;
   issuer?: OrganizationSummary | null;
-  labels?: Labels;
+  labels: Labels;
   /**
    * The date (in RFC3339 format) of when the advisory was last modified, if any.
    */
@@ -119,7 +119,7 @@ export type Assertion =
     };
 
 export type BasePurlDetails = BasePurlHead & {
-  versions?: Array<VersionedPurlSummary>;
+  versions: Array<VersionedPurlSummary>;
 };
 
 export type BasePurlHead = {
@@ -133,6 +133,8 @@ export type BasePurlHead = {
 export type BasePurlSummary = BasePurlHead & {
   [key: string]: unknown;
 };
+
+export type BinaryByteSize = string;
 
 export type CommonImporter = {
   /**
@@ -151,6 +153,7 @@ export type CommonImporter = {
 };
 
 export type CsafImporter = CommonImporter & {
+  fetchRetries?: number | null;
   onlyPatterns?: Array<string>;
   source: string;
   v3Signatures?: boolean;
@@ -413,7 +416,7 @@ export type PaginatedVulnerabilitySummary = {
 
 export type ProductDetails = ProductHead & {
   vendor?: OrganizationSummary | null;
-  versions?: Array<ProductVersionHead>;
+  versions: Array<ProductVersionDetails>;
 };
 
 export type ProductHead = {
@@ -423,7 +426,11 @@ export type ProductHead = {
 
 export type ProductSummary = ProductHead & {
   vendor?: OrganizationSummary | null;
-  versions?: Array<ProductVersionHead>;
+  versions: Array<ProductVersionHead>;
+};
+
+export type ProductVersionDetails = ProductVersionHead & {
+  sbom?: SbomHead | null;
 };
 
 export type ProductVersionHead = {
@@ -439,7 +446,7 @@ export type PurlAdvisory = AdvisoryHead & {
 };
 
 export type PurlDetails = PurlHead & {
-  advisories?: Array<PurlAdvisory>;
+  advisories: Array<PurlAdvisory>;
   base: BasePurlHead;
   version: VersionedPurlHead;
 };
@@ -499,36 +506,38 @@ export type RevisionedImporter = {
 };
 
 export type SbomAdvisory = AdvisoryHead & {
-  status?: Array<SbomStatus>;
+  status: Array<SbomStatus>;
 };
 
 export type SbomDetails = SbomHead & {
   advisories: Array<SbomAdvisory>;
-  authors?: Array<string>;
-  described_by?: Array<SbomPackage>;
+  authors: Array<string>;
+  described_by: Array<SbomPackage>;
   published?: string | null;
 };
 
 export type SbomHead = {
   document_id: string;
-  hashes?: Array<Id>;
+  hashes: Array<Id>;
   id: string;
-  labels?: Labels;
+  labels: Labels;
   name: string;
 };
 
 export type SbomImporter = CommonImporter & {
+  fetchRetries?: number | null;
   keys?: Array<string>;
   onlyPatterns?: Array<string>;
+  sizeLimit?: BinaryByteSize | null;
   source: string;
   v3Signatures?: boolean;
 };
 
 export type SbomPackage = {
-  cpe?: Array<string>;
+  cpe: Array<string>;
   id: string;
   name: string;
-  purl?: Array<PurlSummary>;
+  purl: Array<PurlSummary>;
   version?: string | null;
 };
 
@@ -539,14 +548,14 @@ export type SbomPackageRelation = {
 
 export type SbomStatus = {
   context?: StatusContext | null;
-  packages?: Array<SbomPackage>;
+  packages: Array<SbomPackage>;
   status: string;
   vulnerability_id: string;
 };
 
 export type SbomSummary = SbomHead & {
-  authors?: Array<string>;
-  described_by?: Array<SbomPackage>;
+  authors: Array<string>;
+  described_by: Array<SbomPackage>;
   published?: string | null;
 };
 
@@ -584,9 +593,9 @@ export type VersionedPurlAdvisory = AdvisoryHead & {
 };
 
 export type VersionedPurlDetails = VersionedPurlHead & {
-  advisories?: Array<VersionedPurlAdvisory>;
+  advisories: Array<VersionedPurlAdvisory>;
   base: BasePurlHead;
-  purls?: Array<PurlHead>;
+  purls: Array<PurlHead>;
 };
 
 export type VersionedPurlHead = {
@@ -608,7 +617,7 @@ export type VersionedPurlStatus = {
 
 export type VersionedPurlSummary = VersionedPurlHead & {
   base: BasePurlHead;
-  purls?: Array<PurlHead>;
+  purls: Array<PurlHead>;
 };
 
 export type VulnerabilityAdvisoryHead = AdvisoryHead & {
@@ -674,7 +683,7 @@ export type VulnerabilityHead = {
    * The date (in RFC3339 format) of when the vulnerability was last modified, if any.
    */
   modified?: string | null;
-  normative?: boolean;
+  normative: boolean;
   /**
    * The date (in RFC3339 format) of when the vulnerability was published, if any.
    */
@@ -694,7 +703,7 @@ export type VulnerabilityHead = {
 };
 
 export type VulnerabilitySummary = VulnerabilityHead & {
-  advisories?: Array<VulnerabilityAdvisoryHead>;
+  advisories: Array<VulnerabilityAdvisoryHead>;
   /**
    * Average (arithmetic mean) score of the vulnerability aggregated from *all* related advisories.
    */
