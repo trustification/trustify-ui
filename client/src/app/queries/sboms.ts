@@ -36,13 +36,10 @@ export const useFetchSBOMs = (
   };
 };
 
-export const useFetchSBOMById = (id?: string) => {
+export const useFetchSBOMById = (id: string) => {
   const { data, isLoading, error } = useQuery({
     queryKey: [SBOMsQueryKey, id],
-    queryFn: async () =>
-      id === undefined
-        ? undefined
-        : (await getSbom({ client, path: { id } })).data,
+    queryFn: async () => (await getSbom({ client, path: { id } })).data,
     enabled: id !== undefined,
   });
 
@@ -66,11 +63,10 @@ export const useDeleteSbomMutation = (
   });
 };
 
-export const useFetchSBOMSourceById = (id?: number | string) => {
+export const useFetchSBOMSourceById = (id: number | string) => {
   const { data, isLoading, error } = useQuery({
     queryKey: [SBOMsQueryKey, id, "source"],
-    queryFn: () =>
-      id === undefined ? Promise.resolve(undefined) : getSBOMSourceById(id),
+    queryFn: () => getSBOMSourceById(id),
     enabled: id !== undefined,
   });
 
