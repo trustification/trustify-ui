@@ -4,11 +4,8 @@ export type AdvisoryDetails = AdvisoryHead & {
   /**
    * Average (arithmetic mean) score of the advisory aggregated from *all* related vulnerability assertions.
    */
-  average_score?: number | null;
-  /**
-   * Average (arithmetic mean) severity of the advisory aggregated from *all* related vulnerability assertions.
-   */
-  average_severity?: string | null;
+  average_score: number | null;
+  average_severity: Severity | null;
   /**
    * Vulnerabilities addressed within this advisory.
    */
@@ -24,7 +21,7 @@ export type AdvisoryHead = {
    * The identifier of the advisory, as assigned by the issuing organization.
    */
   identifier: string;
-  issuer?: OrganizationSummary | null;
+  issuer: OrganizationSummary | null;
   labels: Labels;
   /**
    * The date (in RFC3339 format) of when the advisory was last modified, if any.
@@ -33,11 +30,11 @@ export type AdvisoryHead = {
   /**
    * The date (in RFC3339 format) of when the advisory was published, if any.
    */
-  published?: string | null;
+  published: string | null;
   /**
    * The title of the advisory as assigned by the issuing organization.
    */
-  title?: string | null;
+  title: string | null;
   /**
    * The opaque UUID of the advisory.
    */
@@ -45,18 +42,18 @@ export type AdvisoryHead = {
   /**
    * The date (in RFC3339 format) of when the advisory was withdrawn, if any.
    */
-  withdrawn?: string | null;
+  withdrawn: string | null;
 };
 
 export type AdvisorySummary = AdvisoryHead & {
   /**
    * Average (arithmetic mean) score of the advisory aggregated from *all* related vulnerability assertions.
    */
-  average_score?: number | null;
+  average_score: number | null;
   /**
    * Average (arithmetic mean) severity of the advisory aggregated from *all* related vulnerability assertions.
    */
-  average_severity?: string | null;
+  average_severity: string | null;
   /**
    * Vulnerabilities addressed within this advisory.
    */
@@ -75,18 +72,7 @@ export type AdvisoryVulnerabilityHead = VulnerabilityHead & {
    * the particular vulnerability.
    */
   score: number;
-  /**
-   * The English-language word description of the severity of the given
-   * vulnerability, as asserted by the advisory, using the CVSS bucketing
-   * ranges.
-   *
-   * Critical: 9.0–10.0
-   * High: 7.0–8.9
-   * Medium: 4.0–6.9
-   * Low: 0.1–3.9
-   * None: 0
-   */
-  severity: string;
+  severity: Severity;
 };
 
 /**
@@ -240,7 +226,7 @@ export type OrganizationHead = {
   /**
    * The `CPE` key of the organization, if known.
    */
-  cpe_key?: string | null;
+  cpe_key: string | null;
   /**
    * The opaque UUID of the organization.
    */
@@ -252,7 +238,7 @@ export type OrganizationHead = {
   /**
    * The website of the organization, if known.
    */
-  website?: string | null;
+  website: string | null;
 };
 
 export type OrganizationSummary = OrganizationHead & {
@@ -415,7 +401,7 @@ export type PaginatedVulnerabilitySummary = {
 };
 
 export type ProductDetails = ProductHead & {
-  vendor?: OrganizationSummary | null;
+  vendor: OrganizationSummary | null;
   versions: Array<ProductVersionDetails>;
 };
 
@@ -425,7 +411,7 @@ export type ProductHead = {
 };
 
 export type ProductSummary = ProductHead & {
-  vendor?: OrganizationSummary | null;
+  vendor: OrganizationSummary | null;
   versions: Array<ProductVersionHead>;
 };
 
@@ -460,7 +446,7 @@ export type PurlHead = {
 };
 
 export type PurlStatus = {
-  context?: StatusContext | null;
+  context: StatusContext | null;
   status: string;
   vulnerability: VulnerabilityHead;
 };
@@ -509,19 +495,18 @@ export type SbomAdvisory = AdvisoryHead & {
   status: Array<SbomStatus>;
 };
 
-export type SbomDetails = SbomHead & {
+export type SbomDetails = SbomSummary & {
   advisories: Array<SbomAdvisory>;
-  authors: Array<string>;
-  described_by: Array<SbomPackage>;
-  published?: string | null;
 };
 
 export type SbomHead = {
+  authors: Array<string>;
   document_id: string;
   hashes: Array<Id>;
   id: string;
   labels: Labels;
   name: string;
+  published: string | null;
 };
 
 export type SbomImporter = CommonImporter & {
@@ -554,10 +539,19 @@ export type SbomStatus = {
 };
 
 export type SbomSummary = SbomHead & {
-  authors: Array<string>;
   described_by: Array<SbomPackage>;
-  published?: string | null;
 };
+
+/**
+ * Qualitative Severity Rating Scale
+ *
+ * Described in CVSS v3.1 Specification: Section 5:
+ * <https://www.first.org/cvss/specification-document#t17>
+ *
+ * > For some purposes it is useful to have a textual representation of the
+ * > numeric Base, Temporal and Environmental scores.
+ */
+export type Severity = "none" | "low" | "medium" | "high" | "critical";
 
 export type State = "waiting" | "running";
 
@@ -621,13 +615,13 @@ export type VersionedPurlSummary = VersionedPurlHead & {
 };
 
 export type VulnerabilityAdvisoryHead = AdvisoryHead & {
-  score?: number | null;
-  severity?: string | null;
+  score: number | null;
+  severity: Severity | null;
 };
 
 export type VulnerabilityAdvisoryStatus = {
   base_purl: BasePurlHead;
-  context?: StatusContext | null;
+  context: StatusContext | null;
   version: string;
 };
 
@@ -653,26 +647,23 @@ export type VulnerabilityDetails = VulnerabilityHead & {
   /**
    * Average (arithmetic mean) score of the vulnerability aggregated from *all* related advisories.
    */
-  average_score?: number | null;
-  /**
-   * Average (arithmetic mean) severity of the vulnerability aggregated from *all* related advisories.
-   */
-  average_severity?: string | null;
+  average_score: number | null;
+  average_severity: Severity | null;
 };
 
 export type VulnerabilityHead = {
   /**
    * Associated CWE, if any.
    */
-  cwe?: string | null;
+  cwe: string | null;
   /**
    * The description of the vulnerability, if known.
    */
-  description?: string | null;
+  description: string | null;
   /**
    * The date (in RFC3339 format) of when the vulnerability was discovered, if any.
    */
-  discovered?: string | null;
+  discovered: string | null;
   /**
    * The globally-unique identifier for the vulnerability.
    * Traditionally (but not required) refers to the assigned
@@ -682,24 +673,24 @@ export type VulnerabilityHead = {
   /**
    * The date (in RFC3339 format) of when the vulnerability was last modified, if any.
    */
-  modified?: string | null;
+  modified: string | null;
   normative: boolean;
   /**
    * The date (in RFC3339 format) of when the vulnerability was published, if any.
    */
-  published?: string | null;
+  published: string | null;
   /**
    * The date (in RFC3339 format) of when software containing the vulnerability first released, if known.
    */
-  released?: string | null;
+  released: string | null;
   /**
    * The title of the vulnerability, if known.
    */
-  title?: string | null;
+  title: string | null;
   /**
    * The date (in RFC3339 format) of when the vulnerability was last withdrawn, if any.
    */
-  withdrawn?: string | null;
+  withdrawn: string | null;
 };
 
 export type VulnerabilitySummary = VulnerabilityHead & {
@@ -707,11 +698,8 @@ export type VulnerabilitySummary = VulnerabilityHead & {
   /**
    * Average (arithmetic mean) score of the vulnerability aggregated from *all* related advisories.
    */
-  average_score?: number | null;
-  /**
-   * Average (arithmetic mean) severity of the vulnerability aggregated from *all* related advisories.
-   */
-  average_severity?: string | null;
+  average_score: number | null;
+  average_severity: Severity | null;
 };
 
 export type Which = "left" | "right";

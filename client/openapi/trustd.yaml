@@ -3,7 +3,7 @@ info:
   title: Trustify
   description: Software Supply-Chain Security API
   license:
-    name: ''
+    name: Apache-2.0
   version: 0.1.0-alpha.13
 paths:
   /api/v1/advisory:
@@ -1292,6 +1292,8 @@ components:
       - type: object
         required:
         - vulnerabilities
+        - average_severity
+        - average_score
         properties:
           average_score:
             type: number
@@ -1299,8 +1301,8 @@ components:
             description: Average (arithmetic mean) score of the advisory aggregated from *all* related vulnerability assertions.
             nullable: true
           average_severity:
-            type: string
-            description: Average (arithmetic mean) severity of the advisory aggregated from *all* related vulnerability assertions.
+            allOf:
+            - $ref: '#/components/schemas/Severity'
             nullable: true
           vulnerabilities:
             type: array
@@ -1313,6 +1315,10 @@ components:
       - uuid
       - identifier
       - hashes
+      - issuer
+      - published
+      - withdrawn
+      - title
       - labels
       properties:
         hashes:
@@ -1357,6 +1363,8 @@ components:
       - $ref: '#/components/schemas/AdvisoryHead'
       - type: object
         required:
+        - average_severity
+        - average_score
         - vulnerabilities
         properties:
           average_score:
@@ -1399,17 +1407,7 @@ components:
               The average (arithmetic mean) score this advisory assigns to
               the particular vulnerability.
           severity:
-            type: string
-            description: |-
-              The English-language word description of the severity of the given
-              vulnerability, as asserted by the advisory, using the CVSS bucketing
-              ranges.
-
-              Critical: 9.0–10.0
-              High: 7.0–8.9
-              Medium: 4.0–6.9
-              Low: 0.1–3.9
-              None: 0
+            $ref: '#/components/schemas/Severity'
     AdvisoryVulnerabilitySummary:
       allOf:
       - $ref: '#/components/schemas/AdvisoryVulnerabilityHead'
@@ -1660,6 +1658,8 @@ components:
       required:
       - id
       - name
+      - cpe_key
+      - website
       properties:
         cpe_key:
           type: string
@@ -1874,6 +1874,7 @@ components:
       - type: object
         required:
         - versions
+        - vendor
         properties:
           vendor:
             allOf:
@@ -1900,6 +1901,7 @@ components:
       - type: object
         required:
         - versions
+        - vendor
         properties:
           vendor:
             allOf:
@@ -1981,6 +1983,7 @@ components:
       required:
       - vulnerability
       - status
+      - context
       properties:
         context:
           allOf:
@@ -2056,29 +2059,15 @@ components:
               $ref: '#/components/schemas/SbomStatus'
     SbomDetails:
       allOf:
-      - $ref: '#/components/schemas/SbomHead'
+      - $ref: '#/components/schemas/SbomSummary'
       - type: object
         required:
-        - authors
-        - described_by
         - advisories
         properties:
           advisories:
             type: array
             items:
               $ref: '#/components/schemas/SbomAdvisory'
-          authors:
-            type: array
-            items:
-              type: string
-          described_by:
-            type: array
-            items:
-              $ref: '#/components/schemas/SbomPackage'
-          published:
-            type: string
-            format: date-time
-            nullable: true
     SbomHead:
       type: object
       required:
@@ -2086,8 +2075,14 @@ components:
       - hashes
       - document_id
       - labels
+      - published
+      - authors
       - name
       properties:
+        authors:
+          type: array
+          items:
+            type: string
         document_id:
           type: string
         hashes:
@@ -2101,6 +2096,10 @@ components:
           $ref: '#/components/schemas/Labels'
         name:
           type: string
+        published:
+          type: string
+          format: date-time
+          nullable: true
     SbomImporter:
       allOf:
       - $ref: '#/components/schemas/CommonImporter'
@@ -2186,21 +2185,28 @@ components:
       - $ref: '#/components/schemas/SbomHead'
       - type: object
         required:
-        - authors
         - described_by
         properties:
-          authors:
-            type: array
-            items:
-              type: string
           described_by:
             type: array
             items:
               $ref: '#/components/schemas/SbomPackage'
-          published:
-            type: string
-            format: date-time
-            nullable: true
+    Severity:
+      type: string
+      description: |-
+        Qualitative Severity Rating Scale
+
+        Described in CVSS v3.1 Specification: Section 5:
+        <https://www.first.org/cvss/specification-document#t17>
+
+        > For some purposes it is useful to have a textual representation of the
+        > numeric Base, Temporal and Environmental scores.
+      enum:
+      - none
+      - low
+      - medium
+      - high
+      - critical
     State:
       type: string
       enum:
@@ -2329,19 +2335,24 @@ components:
       allOf:
       - $ref: '#/components/schemas/AdvisoryHead'
       - type: object
+        required:
+        - severity
+        - score
         properties:
           score:
             type: number
             format: double
             nullable: true
           severity:
-            type: string
+            allOf:
+            - $ref: '#/components/schemas/Severity'
             nullable: true
     VulnerabilityAdvisoryStatus:
       type: object
       required:
       - base_purl
       - version
+      - context
       properties:
         base_purl:
           $ref: '#/components/schemas/BasePurlHead'
@@ -2381,6 +2392,8 @@ components:
       - $ref: '#/components/schemas/VulnerabilityHead'
       - type: object
         required:
+        - average_severity
+        - average_score
         - advisories
         properties:
           advisories:
@@ -2394,14 +2407,22 @@ components:
             description: Average (arithmetic mean) score of the vulnerability aggregated from *all* related advisories.
             nullable: true
           average_severity:
-            type: string
-            description: Average (arithmetic mean) severity of the vulnerability aggregated from *all* related advisories.
+            allOf:
+            - $ref: '#/components/schemas/Severity'
             nullable: true
     VulnerabilityHead:
       type: object
       required:
       - normative
       - identifier
+      - title
+      - description
+      - published
+      - modified
+      - withdrawn
+      - discovered
+      - released
+      - cwe
       properties:
         cwe:
           type: string
@@ -2453,6 +2474,8 @@ components:
       - $ref: '#/components/schemas/VulnerabilityHead'
       - type: object
         required:
+        - average_severity
+        - average_score
         - advisories
         properties:
           advisories:
@@ -2465,8 +2488,8 @@ components:
             description: Average (arithmetic mean) score of the vulnerability aggregated from *all* related advisories.
             nullable: true
           average_severity:
-            type: string
-            description: Average (arithmetic mean) severity of the vulnerability aggregated from *all* related advisories.
+            allOf:
+            - $ref: '#/components/schemas/Severity'
             nullable: true
     Which:
       type: string
