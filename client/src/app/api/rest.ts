@@ -76,7 +76,9 @@ export const getAdvisories = (params: HubRequestParams = {}) =>
   getHubPaginatedResult<AdvisoryIndex>(ADVISORIES, params);
 
 export const getAdvisoryById = (id: number | string) =>
-  axios.get<AdvisoryIndex>(`${ADVISORIES}/${id}`).then((response) => response.data);
+  axios
+    .get<AdvisoryIndex>(`${ADVISORIES}/${id}`)
+    .then((response) => response.data);
 
 export const getAdvisorySourceById = (id: number | string) =>
   axios

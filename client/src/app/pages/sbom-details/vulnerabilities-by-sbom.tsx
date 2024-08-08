@@ -38,13 +38,14 @@ import { VulnerabilityInDrawerInfo } from "@app/components/VulnerabilityInDrawer
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchSBOMById } from "@app/queries/sboms";
 import { useWithUiId } from "@app/utils/query-utils";
+import {SbomPackage} from "@app/client";
 
 interface TableData {
   vulnerabilityId: string;
   advisory: AdvisoryWithinSbom;
   status: VulnerabilityStatus;
   context: { cpe: string };
-  packages: { id: string; name: string; version: string }[];
+  packages: SbomPackage[];
   vulnerability?: VulnerabilityIndex;
 }
 
@@ -82,17 +83,17 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
   >(new Set());
 
   React.useEffect(() => {
-    const vulnerabilities: TableData[] = (sbom?.advisories ?? [])
+    const vulnerabilities = (sbom?.advisories ?? [])
       .flatMap((advisory) => {
-        return advisory.status.map((status) => ({
+        return (advisory.status ?? []).map((status) => ({
           vulnerabilityId: status.vulnerability_id,
           status: status.status,
           context: { ...status.context },
-          packages: [...status.packages],
+          packages: status.packages || [],
           advisory: { ...advisory },
-        }));
+        } as TableData));
       })
-      .reduce((prev, current) => {
+      .reduce((prev, current)=> {
         const exists = prev.find(
           (item) =>
             item.vulnerabilityId === current.vulnerabilityId &&
@@ -378,11 +379,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
 };
 
 interface VulnerabilitiesExpandedAreaProps {
-  packages: {
-    id: string;
-    name: string;
-    version: string;
-  }[];
+  packages: SbomPackage[];
 }
 
 export const VulnerabilitiesExpandedArea: React.FC<

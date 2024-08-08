@@ -44,11 +44,10 @@ export const useCreateImporterMutation = (
   });
 };
 
-export const useFethImporterById = (id?: number | string) => {
+export const useFetchImporterById = (id: number | string) => {
   const { data, isLoading, error } = useQuery({
     queryKey: [ImportersQueryKey, id],
-    queryFn: () =>
-      id === undefined ? Promise.resolve(undefined) : getImporterById(id),
+    queryFn: () => getImporterById(id),
     enabled: id !== undefined,
   });
 

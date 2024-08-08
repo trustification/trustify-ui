@@ -9,6 +9,9 @@ import {
   updateAdvisoryLabels,
   uploadAdvisory,
 } from "@app/api/rest";
+import { AdvisoryDetails, deleteAdvisory } from "@app/client";
+import { client } from "@app/axios-config/apiInit";
+
 import { useUpload } from "@app/hooks/useUpload";
 
 export interface IAdvisoriesQueryParams {
@@ -41,11 +44,10 @@ export const useFetchAdvisories = (
   };
 };
 
-export const useFetchAdvisoryById = (id?: number | string) => {
+export const useFetchAdvisoryById = (id: number | string) => {
   const { data, isLoading, error } = useQuery({
     queryKey: [AdvisoriesQueryKey, id],
-    queryFn: () =>
-      id === undefined ? Promise.resolve(undefined) : getAdvisoryById(id),
+    queryFn: () => getAdvisoryById(id),
     enabled: id !== undefined,
   });
 
@@ -56,11 +58,23 @@ export const useFetchAdvisoryById = (id?: number | string) => {
   };
 };
 
-export const useFetchAdvisorySourceById = (id?: number | string) => {
+export const useDeleteAdvisoryMutation = (
+  onError?: (err: AxiosError, id: string) => void,
+  onSuccess?: (payload: AdvisoryDetails, id: string) => void
+) => {
+  return useMutation({
+    mutationFn: async (key: string) =>
+      (await deleteAdvisory({ client, path: { key } })).data,
+    mutationKey: [AdvisoriesQueryKey],
+    onSuccess,
+    onError,
+  });
+};
+
+export const useFetchAdvisorySourceById = (id: number | string) => {
   const { data, isLoading, error } = useQuery({
     queryKey: [AdvisoriesQueryKey, id, "source"],
-    queryFn: () =>
-      id === undefined ? Promise.resolve(undefined) : getAdvisorySourceById(id),
+    queryFn: () => getAdvisorySourceById(id),
     enabled: id !== undefined,
   });
 

@@ -3,14 +3,15 @@ import { AxiosError } from "axios";
 
 import { HubRequestParams, SBOM } from "@app/api/models";
 import {
-  getSBOMById,
-  getSBOMSourceById,
   getSBOMs,
   getSBOMsByPackageId,
+  getSBOMSourceById,
   updateSbomLabels,
   uploadSbom,
 } from "@app/api/rest";
 import { useUpload } from "@app/hooks/useUpload";
+import { deleteSbom, getSbom, SbomDetails } from "@app/client";
+import { client } from "@app/axios-config/apiInit";
 
 export const SBOMsQueryKey = "sboms";
 
@@ -35,11 +36,10 @@ export const useFetchSBOMs = (
   };
 };
 
-export const useFetchSBOMById = (id?: number | string) => {
+export const useFetchSBOMById = (id: string) => {
   const { data, isLoading, error } = useQuery({
     queryKey: [SBOMsQueryKey, id],
-    queryFn: () =>
-      id === undefined ? Promise.resolve(undefined) : getSBOMById(id),
+    queryFn: async () => (await getSbom({ client, path: { id } })).data,
     enabled: id !== undefined,
   });
 
@@ -50,11 +50,23 @@ export const useFetchSBOMById = (id?: number | string) => {
   };
 };
 
-export const useFetchSBOMSourceById = (id?: number | string) => {
+export const useDeleteSbomMutation = (
+  onError?: (err: AxiosError, id: string) => void,
+  onSuccess?: (payload: SbomDetails, id: string) => void
+) => {
+  return useMutation({
+    mutationFn: async (id: string) =>
+      (await deleteSbom({ client, path: { id } })).data,
+    mutationKey: [SBOMsQueryKey],
+    onSuccess: onSuccess,
+    onError: onError,
+  });
+};
+
+export const useFetchSBOMSourceById = (id: number | string) => {
   const { data, isLoading, error } = useQuery({
     queryKey: [SBOMsQueryKey, id, "source"],
-    queryFn: () =>
-      id === undefined ? Promise.resolve(undefined) : getSBOMSourceById(id),
+    queryFn: () => getSBOMSourceById(id),
     enabled: id !== undefined,
   });
 
