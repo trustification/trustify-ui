@@ -29,11 +29,10 @@ export const useFetchProducts = (
   };
 };
 
-export const useFetchProductById = (id?: number | string) => {
+export const useFetchProductById = (id: number | string) => {
   const { data, isLoading, error } = useQuery({
     queryKey: [ProductsQueryKey, id],
-    queryFn: () =>
-      id === undefined ? Promise.resolve(undefined) : getProductById(id),
+    queryFn: () => getProductById(id),
     enabled: id !== undefined,
   });
 

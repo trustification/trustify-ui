@@ -33,11 +33,10 @@ export const useFetchVulnerabilities = (
   };
 };
 
-export const useFetchVulnerabilityById = (id?: number | string) => {
+export const useFetchVulnerabilityById = (id: number | string) => {
   const { data, isLoading, error } = useQuery({
     queryKey: [VulnerabilitiesQueryKey, id],
-    queryFn: () =>
-      id === undefined ? Promise.resolve(undefined) : getVulnerabilityById(id),
+    queryFn: () => getVulnerabilityById(id),
     enabled: id !== undefined,
   });
 
@@ -61,13 +60,10 @@ export const useDeleteVulnerabilityMutation = (
   });
 };
 
-export const useFetchVulnerabilitySourceById = (id?: number | string) => {
+export const useFetchVulnerabilitySourceById = (id: number | string) => {
   const { data, isLoading, error } = useQuery({
     queryKey: [VulnerabilitiesQueryKey, id, "source"],
-    queryFn: () =>
-      id === undefined
-        ? Promise.resolve(undefined)
-        : getVulnerabilitySourceById(id),
+    queryFn: () => getVulnerabilitySourceById(id),
     enabled: id !== undefined,
   });
 
