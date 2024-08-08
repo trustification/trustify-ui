@@ -27,11 +27,10 @@ export const useFetchOrganizations = (
   };
 };
 
-export const useFetchOrganizationById = (id?: number | string) => {
+export const useFetchOrganizationById = (id: number | string) => {
   const { data, isLoading, error } = useQuery({
     queryKey: [OrganizationsQueryKey, id],
-    queryFn: () =>
-      id === undefined ? Promise.resolve(undefined) : getOrganizationById(id),
+    queryFn: () => getOrganizationById(id),
     enabled: id !== undefined,
   });
 

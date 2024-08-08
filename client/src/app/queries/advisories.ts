@@ -44,11 +44,10 @@ export const useFetchAdvisories = (
   };
 };
 
-export const useFetchAdvisoryById = (id?: number | string) => {
+export const useFetchAdvisoryById = (id: number | string) => {
   const { data, isLoading, error } = useQuery({
     queryKey: [AdvisoriesQueryKey, id],
-    queryFn: () =>
-      id === undefined ? Promise.resolve(undefined) : getAdvisoryById(id),
+    queryFn: () => getAdvisoryById(id),
     enabled: id !== undefined,
   });
 
@@ -72,11 +71,10 @@ export const useDeleteAdvisoryMutation = (
   });
 };
 
-export const useFetchAdvisorySourceById = (id?: number | string) => {
+export const useFetchAdvisorySourceById = (id: number | string) => {
   const { data, isLoading, error } = useQuery({
     queryKey: [AdvisoriesQueryKey, id, "source"],
-    queryFn: () =>
-      id === undefined ? Promise.resolve(undefined) : getAdvisorySourceById(id),
+    queryFn: () => getAdvisorySourceById(id),
     enabled: id !== undefined,
   });
 
