@@ -61,10 +61,6 @@ jobs:
           fi
 
   #
-  # Based on:
-  #   - image-build.yaml
-  #   - trustification/release-tools/.github/workflows/build-push-images.yaml@main
-  #
   # Only test the image build, no push to registry is required.
   #
   test-image-build:
