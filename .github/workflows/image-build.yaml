@@ -14,16 +14,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  image-build:
+  ui-image-build:
     uses: trustification/release-tools/.github/workflows/build-push-images.yaml@main
     with:
       registry: "ghcr.io"
       image_name: "${{ github.repository_owner }}/trustify-ui"
-      containerfile: "./Containerfile"
-      architectures: '[ "amd64", "arm64", "ppc64le", "s390x" ]'
+      containerfile: "./Dockerfile"
+      architectures: '[ "amd64", "arm64" ]'
       extra-args: "--ulimit nofile=4096:4096"
-      pre_build_cmd: |
-        sed -i '/RUN npm clean-install/i RUN npm install -g npm@9' Containerfile
     secrets:
       registry_username: ${{ github.actor }}
       registry_password: ${{ secrets.GITHUB_TOKEN }}
