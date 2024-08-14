@@ -1579,7 +1579,7 @@ export const $VulnerabilityAdvisorySummary = {
         sboms: {
           type: "array",
           items: {
-            $ref: "#/components/schemas/SbomStatus",
+            $ref: "#/components/schemas/VulnerabilitySbomStatus",
           },
           description:
             "SBOMs claimed by this advisory to be addressed by this vulnerability.",
@@ -1700,6 +1700,31 @@ CVE identifier.`,
       nullable: true,
     },
   },
+} as const;
+
+export const $VulnerabilitySbomStatus = {
+  allOf: [
+    {
+      $ref: "#/components/schemas/SbomHead",
+    },
+    {
+      type: "object",
+      required: ["status"],
+      properties: {
+        status: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          uniqueItems: true,
+        },
+        version: {
+          type: "string",
+          nullable: true,
+        },
+      },
+    },
+  ],
 } as const;
 
 export const $VulnerabilitySummary = {
