@@ -15,6 +15,7 @@ import {
 import { client } from "@app/axios-config/apiInit";
 import { dataOf } from "@app/queries/dataOf";
 import { uploadSbom } from "@app/api/rest";
+import { requestParamsQuery } from "../hooks/table-controls";
 
 export const SBOMsQueryKey = "sboms";
 
@@ -24,7 +25,11 @@ export const useFetchSBOMs = (
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [SBOMsQueryKey, params],
-    queryFn: () => listSboms({ client }),
+    queryFn: () =>
+      listSboms({
+        client,
+        query: { ...requestParamsQuery(params) },
+      }),
     refetchInterval: !refetchDisabled ? 5000 : false,
   });
   return {
@@ -118,7 +123,11 @@ export const useFetchSbomsByPackageId = (
     queryKey: [SBOMsQueryKey, "by-package", packageId, params],
     queryFn: () =>
       dataOf(
-        listRelatedSboms({ client, path: { id: packageId }, body: params })
+        listRelatedSboms({
+          client,
+          path: { id: packageId },
+          query: { ...requestParamsQuery(params) },
+        })
       ),
   });
   return {

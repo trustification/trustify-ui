@@ -57,3 +57,35 @@ export const serializeRequestParamsForHub = (
   serializePaginationRequestParamsForHub(deserializedParams, serializedParams);
   return serializedParams;
 };
+
+interface HubRequestParamsQuery {
+  /**
+   * The maximum number of entries to return.
+   *
+   * Zero means: no limit
+   */
+  limit?: number;
+  /**
+   * The first item to return, skipping all that come before it.
+   *
+   * NOTE: The order of items is defined by the API being called.
+   */
+  offset?: number;
+  q?: string;
+  sort?: string;
+}
+
+/**
+ * Like serializeRequestParamsForHub but returns a plain object instead of URLSearchParams.
+ */
+export const requestParamsQuery = (
+  deserializedParams: HubRequestParams
+): HubRequestParamsQuery => {
+  const params = serializeRequestParamsForHub(deserializedParams);
+  return {
+    limit: Number(params.get("limit")),
+    offset: Number(params.get("offset")),
+    q: params.get("q") ?? undefined,
+    sort: params.get("sort") ?? undefined,
+  };
+};
