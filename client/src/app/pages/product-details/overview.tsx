@@ -13,11 +13,10 @@ import {
   Stack,
   StackItem,
 } from "@patternfly/react-core";
-
-import { Product } from "@app/api/models";
+import { ProductDetails } from "../../client";
 
 interface OverviewProps {
-  product: Product;
+  product: ProductDetails;
 }
 
 export const Overview: React.FC<OverviewProps> = ({ product }) => {
