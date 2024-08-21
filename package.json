@@ -8,6 +8,7 @@
     "url": "https://github.com/trustification/trustify-ui.git"
   },
   "scripts": {
+    "format:check": "npx prettier --check './**/*.{ts,js,json}'",
     "clean": "rimraf ./dist && npm run clean -ws --if-present",
     "clean:all": "npm run clean && rimraf ./node_modules ./**/node_modules/",
     "dist": "rimraf ./dist && copyfiles -e 'node_modules/**' entrypoint.sh '**/package.json' '*/dist/**/*' ./dist",
