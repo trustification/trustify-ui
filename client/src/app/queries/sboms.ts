@@ -125,8 +125,7 @@ export const useFetchSbomsByPackageId = (
       dataOf(
         listRelatedSboms({
           client,
-          path: { id: packageId },
-          query: { ...requestParamsQuery(params) },
+          query: { id: packageId, ...requestParamsQuery(params) },
         })
       ),
   });

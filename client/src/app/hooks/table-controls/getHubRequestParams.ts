@@ -3,18 +3,19 @@
 
 import { HubRequestParams } from "@app/api/models";
 import {
-  IGetFilterHubRequestParamsArgs,
   getFilterHubRequestParams,
+  IGetFilterHubRequestParamsArgs,
+  serializeFilterForHub,
   serializeFilterRequestParamsForHub,
 } from "./filtering";
 import {
-  IGetSortHubRequestParamsArgs,
   getSortHubRequestParams,
+  IGetSortHubRequestParamsArgs,
   serializeSortRequestParamsForHub,
 } from "./sorting";
 import {
-  IGetPaginationHubRequestParamsArgs,
   getPaginationHubRequestParams,
+  IGetPaginationHubRequestParamsArgs,
   serializePaginationRequestParamsForHub,
 } from "./pagination";
 
@@ -79,13 +80,33 @@ interface HubRequestParamsQuery {
  * Like serializeRequestParamsForHub but returns a plain object instead of URLSearchParams.
  */
 export const requestParamsQuery = (
-  deserializedParams: HubRequestParams
+  p: HubRequestParams
 ): HubRequestParamsQuery => {
-  const params = serializeRequestParamsForHub(deserializedParams);
-  return {
-    limit: Number(params.get("limit")),
-    offset: Number(params.get("offset")),
-    q: params.get("q") ?? undefined,
-    sort: params.get("sort") ?? undefined,
-  };
+  let limit = undefined as number | undefined;
+  let offset = undefined as number | undefined;
+  if (p.page) {
+    limit = p.page.itemsPerPage;
+    offset = (p.page.pageNumber - 1) * p.page.itemsPerPage;
+  }
+
+  let sort = undefined as string | undefined;
+  if (p.sort) {
+    sort = `${p.sort.field}:${p.sort.direction}`;
+  }
+
+  let q = undefined as string | undefined;
+  if (p.filters) {
+    q = p.filters
+      .filter((f) => {
+        const { value } = f;
+        return typeof value === "string" || typeof value === "number"
+          ? true
+          : value.list.length > 0;
+      })
+      .sort((a, b) => a.field.localeCompare(b.field))
+      .map(serializeFilterForHub)
+      .join("&");
+  }
+
+  return { limit, offset, q, sort };
 };
