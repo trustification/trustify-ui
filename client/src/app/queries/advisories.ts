@@ -10,7 +10,7 @@ import {
   uploadAdvisory,
 } from "@app/api/rest";
 import { AdvisoryDetails, deleteAdvisory } from "@app/client";
-import {client } from "@app/axios-config/apiInit";
+import { client } from "@app/axios-config/apiInit";
 
 import { useUpload } from "@app/hooks/useUpload";
 
