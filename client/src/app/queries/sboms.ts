@@ -1,17 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-
 import { HubRequestParams, SBOM } from "@app/api/models";
-import {
-  getSBOMs,
-  getSBOMsByPackageId,
-  getSBOMSourceById,
-  updateSbomLabels,
-  uploadSbom,
-} from "@app/api/rest";
 import { useUpload } from "@app/hooks/useUpload";
-import { deleteSbom, getSbom, SbomDetails } from "@app/client";
+import {
+  deleteSbom,
+  downloadSbom,
+  getSbom,
+  listRelatedSboms,
+  listSboms,
+  SbomDetails,
+  SbomSummary,
+  updateSbomLabels,
+} from "@app/client";
 import { client } from "@app/axios-config/apiInit";
+import { dataOf } from "@app/queries/dataOf";
+import { uploadSbom } from "@app/api/rest";
+import { requestParamsQuery } from "../hooks/table-controls";
 
 export const SBOMsQueryKey = "sboms";
 
@@ -21,14 +25,18 @@ export const useFetchSBOMs = (
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [SBOMsQueryKey, params],
-    queryFn: () => getSBOMs(params),
+    queryFn: () =>
+      listSboms({
+        client,
+        query: { ...requestParamsQuery(params) },
+      }),
     refetchInterval: !refetchDisabled ? 5000 : false,
   });
   return {
     result: {
-      data: data?.data || [],
-      total: data?.total ?? 0,
-      params: data?.params ?? params,
+      data: data?.data.items || [],
+      total: data?.data.total ?? 0,
+      params: params,
     },
     isFetching: isLoading,
     fetchError: error,
@@ -39,7 +47,7 @@ export const useFetchSBOMs = (
 export const useFetchSBOMById = (id: string) => {
   const { data, isLoading, error } = useQuery({
     queryKey: [SBOMsQueryKey, id],
-    queryFn: async () => (await getSbom({ client, path: { id } })).data,
+    queryFn: async () => dataOf(getSbom({ client, path: { id } })),
     enabled: id !== undefined,
   });
 
@@ -56,18 +64,18 @@ export const useDeleteSbomMutation = (
 ) => {
   return useMutation({
     mutationFn: async (id: string) =>
-      (await deleteSbom({ client, path: { id } })).data,
+      dataOf(deleteSbom({ client, path: { id } })),
     mutationKey: [SBOMsQueryKey],
     onSuccess: onSuccess,
     onError: onError,
   });
 };
 
-export const useFetchSBOMSourceById = (id: number | string) => {
+export const useFetchSBOMSourceById = (key: string) => {
   const { data, isLoading, error } = useQuery({
-    queryKey: [SBOMsQueryKey, id, "source"],
-    queryFn: () => getSBOMSourceById(id),
-    enabled: id !== undefined,
+    queryKey: [SBOMsQueryKey, key, "source"],
+    queryFn: () => dataOf(downloadSbom({ client, path: { key } })),
+    enabled: key !== undefined,
   });
 
   return {
@@ -94,15 +102,15 @@ export const useUploadSBOM = () => {
 
 export const useUpdateSbomLabelsMutation = (
   onSuccess: () => void,
-  onError: (err: AxiosError, payload: SBOM) => void
+  onError: (err: AxiosError, payload: SbomSummary) => void
 ) => {
-  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (obj) => updateSbomLabels(obj.id, obj.labels ?? {}),
-    onSuccess: (_res, _payload) => {
-      onSuccess();
-      queryClient.invalidateQueries({ queryKey: [SBOMsQueryKey] });
-    },
+    mutationFn: (obj) =>
+      dataOf(
+        updateSbomLabels({ client, path: { id: obj.id }, body: obj.labels })
+      ),
+    mutationKey: [SBOMsQueryKey],
+    onSuccess,
     onError: onError,
   });
 };
@@ -113,13 +121,19 @@ export const useFetchSbomsByPackageId = (
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [SBOMsQueryKey, "by-package", packageId, params],
-    queryFn: () => getSBOMsByPackageId(packageId, params),
+    queryFn: () =>
+      dataOf(
+        listRelatedSboms({
+          client,
+          query: { id: packageId, ...requestParamsQuery(params) },
+        })
+      ),
   });
   return {
     result: {
-      data: data?.data || [],
+      data: data?.items || [],
       total: data?.total ?? 0,
-      params: data?.params ?? params,
+      params,
     },
     isFetching: isLoading,
     fetchError: error,

@@ -7,7 +7,7 @@ export const $AdvisoryDetails = {
     },
     {
       type: "object",
-      required: ["vulnerabilities"],
+      required: ["vulnerabilities", "average_severity", "average_score"],
       properties: {
         average_score: {
           type: "number",
@@ -17,9 +17,11 @@ export const $AdvisoryDetails = {
           nullable: true,
         },
         average_severity: {
-          type: "string",
-          description:
-            "Average (arithmetic mean) severity of the advisory aggregated from *all* related vulnerability assertions.",
+          allOf: [
+            {
+              $ref: "#/components/schemas/Severity",
+            },
+          ],
           nullable: true,
         },
         vulnerabilities: {
@@ -36,7 +38,16 @@ export const $AdvisoryDetails = {
 
 export const $AdvisoryHead = {
   type: "object",
-  required: ["uuid", "identifier"],
+  required: [
+    "uuid",
+    "identifier",
+    "hashes",
+    "issuer",
+    "published",
+    "withdrawn",
+    "title",
+    "labels",
+  ],
   properties: {
     hashes: {
       type: "array",
@@ -103,7 +114,7 @@ export const $AdvisorySummary = {
     },
     {
       type: "object",
-      required: ["vulnerabilities"],
+      required: ["average_severity", "average_score", "vulnerabilities"],
       properties: {
         average_score: {
           type: "number",
@@ -162,16 +173,7 @@ export const $AdvisoryVulnerabilityHead = {
 the particular vulnerability.`,
         },
         severity: {
-          type: "string",
-          description: `The English-language word description of the severity of the given
-vulnerability, as asserted by the advisory, using the CVSS bucketing
-ranges.
-
-Critical: 9.0–10.0
-High: 7.0–8.9
-Medium: 4.0–6.9
-Low: 0.1–3.9
-None: 0`,
+          $ref: "#/components/schemas/Severity",
         },
       },
     },
@@ -262,6 +264,7 @@ export const $BasePurlDetails = {
     },
     {
       type: "object",
+      required: ["versions"],
       properties: {
         versions: {
           type: "array",
@@ -300,6 +303,10 @@ export const $BasePurlSummary = {
   ],
 } as const;
 
+export const $BinaryByteSize = {
+  type: "string",
+} as const;
+
 export const $CommonImporter = {
   type: "object",
   required: ["period"],
@@ -332,6 +339,11 @@ export const $CsafImporter = {
       type: "object",
       required: ["source"],
       properties: {
+        fetchRetries: {
+          type: "integer",
+          nullable: true,
+          minimum: 0,
+        },
         onlyPatterns: {
           type: "array",
           items: {
@@ -537,7 +549,7 @@ export const $OrganizationHead = {
   type: "object",
   description: `An organization who may issue advisories, product SBOMs, or
 otherwise be involved in supply-chain evidence.`,
-  required: ["id", "name"],
+  required: ["id", "name", "cpe_key", "website"],
   properties: {
     cpe_key: {
       type: "string",
@@ -819,6 +831,7 @@ export const $ProductDetails = {
     },
     {
       type: "object",
+      required: ["versions", "vendor"],
       properties: {
         vendor: {
           allOf: [
@@ -831,7 +844,7 @@ export const $ProductDetails = {
         versions: {
           type: "array",
           items: {
-            $ref: "#/components/schemas/ProductVersionHead",
+            $ref: "#/components/schemas/ProductVersionDetails",
           },
         },
       },
@@ -860,6 +873,7 @@ export const $ProductSummary = {
     },
     {
       type: "object",
+      required: ["versions", "vendor"],
       properties: {
         vendor: {
           allOf: [
@@ -874,6 +888,27 @@ export const $ProductSummary = {
           items: {
             $ref: "#/components/schemas/ProductVersionHead",
           },
+        },
+      },
+    },
+  ],
+} as const;
+
+export const $ProductVersionDetails = {
+  allOf: [
+    {
+      $ref: "#/components/schemas/ProductVersionHead",
+    },
+    {
+      type: "object",
+      properties: {
+        sbom: {
+          allOf: [
+            {
+              $ref: "#/components/schemas/SbomHead",
+            },
+          ],
+          nullable: true,
         },
       },
     },
@@ -931,7 +966,7 @@ export const $PurlDetails = {
     },
     {
       type: "object",
-      required: ["version", "base"],
+      required: ["version", "base", "advisories"],
       properties: {
         advisories: {
           type: "array",
@@ -967,7 +1002,7 @@ export const $PurlHead = {
 
 export const $PurlStatus = {
   type: "object",
-  required: ["vulnerability", "status"],
+  required: ["vulnerability", "status", "context"],
   properties: {
     context: {
       allOf: [
@@ -1059,6 +1094,7 @@ export const $SbomAdvisory = {
     },
     {
       type: "object",
+      required: ["status"],
       properties: {
         status: {
           type: "array",
@@ -1074,7 +1110,7 @@ export const $SbomAdvisory = {
 export const $SbomDetails = {
   allOf: [
     {
-      $ref: "#/components/schemas/SbomHead",
+      $ref: "#/components/schemas/SbomSummary",
     },
     {
       type: "object",
@@ -1086,23 +1122,6 @@ export const $SbomDetails = {
             $ref: "#/components/schemas/SbomAdvisory",
           },
         },
-        authors: {
-          type: "array",
-          items: {
-            type: "string",
-          },
-        },
-        described_by: {
-          type: "array",
-          items: {
-            $ref: "#/components/schemas/SbomPackage",
-          },
-        },
-        published: {
-          type: "string",
-          format: "date-time",
-          nullable: true,
-        },
       },
     },
   ],
@@ -1110,8 +1129,22 @@ export const $SbomDetails = {
 
 export const $SbomHead = {
   type: "object",
-  required: ["id", "document_id", "name"],
+  required: [
+    "id",
+    "hashes",
+    "document_id",
+    "labels",
+    "published",
+    "authors",
+    "name",
+  ],
   properties: {
+    authors: {
+      type: "array",
+      items: {
+        type: "string",
+      },
+    },
     document_id: {
       type: "string",
     },
@@ -1131,6 +1164,11 @@ export const $SbomHead = {
     name: {
       type: "string",
     },
+    published: {
+      type: "string",
+      format: "date-time",
+      nullable: true,
+    },
   },
 } as const;
 
@@ -1143,6 +1181,11 @@ export const $SbomImporter = {
       type: "object",
       required: ["source"],
       properties: {
+        fetchRetries: {
+          type: "integer",
+          nullable: true,
+          minimum: 0,
+        },
         keys: {
           type: "array",
           items: {
@@ -1155,6 +1198,14 @@ export const $SbomImporter = {
           items: {
             type: "string",
           },
+        },
+        sizeLimit: {
+          allOf: [
+            {
+              $ref: "#/components/schemas/BinaryByteSize",
+            },
+          ],
+          nullable: true,
         },
         source: {
           type: "string",
@@ -1169,7 +1220,7 @@ export const $SbomImporter = {
 
 export const $SbomPackage = {
   type: "object",
-  required: ["id", "name"],
+  required: ["id", "name", "purl", "cpe"],
   properties: {
     cpe: {
       type: "array",
@@ -1211,7 +1262,7 @@ export const $SbomPackageRelation = {
 
 export const $SbomStatus = {
   type: "object",
-  required: ["vulnerability_id", "status"],
+  required: ["vulnerability_id", "status", "packages"],
   properties: {
     context: {
       allOf: [
@@ -1243,27 +1294,29 @@ export const $SbomSummary = {
     },
     {
       type: "object",
+      required: ["described_by"],
       properties: {
-        authors: {
-          type: "array",
-          items: {
-            type: "string",
-          },
-        },
         described_by: {
           type: "array",
           items: {
             $ref: "#/components/schemas/SbomPackage",
           },
         },
-        published: {
-          type: "string",
-          format: "date-time",
-          nullable: true,
-        },
       },
     },
   ],
+} as const;
+
+export const $Severity = {
+  type: "string",
+  description: `Qualitative Severity Rating Scale
+
+Described in CVSS v3.1 Specification: Section 5:
+<https://www.first.org/cvss/specification-document#t17>
+
+> For some purposes it is useful to have a textual representation of the
+> numeric Base, Temporal and Environmental scores.`,
+  enum: ["none", "low", "medium", "high", "critical"],
 } as const;
 
 export const $State = {
@@ -1372,7 +1425,7 @@ export const $VersionedPurlDetails = {
     },
     {
       type: "object",
-      required: ["base"],
+      required: ["base", "purls", "advisories"],
       properties: {
         advisories: {
           type: "array",
@@ -1433,7 +1486,7 @@ export const $VersionedPurlSummary = {
     },
     {
       type: "object",
-      required: ["base"],
+      required: ["base", "purls"],
       properties: {
         base: {
           $ref: "#/components/schemas/BasePurlHead",
@@ -1456,6 +1509,7 @@ export const $VulnerabilityAdvisoryHead = {
     },
     {
       type: "object",
+      required: ["severity", "score"],
       properties: {
         score: {
           type: "number",
@@ -1463,7 +1517,11 @@ export const $VulnerabilityAdvisoryHead = {
           nullable: true,
         },
         severity: {
-          type: "string",
+          allOf: [
+            {
+              $ref: "#/components/schemas/Severity",
+            },
+          ],
           nullable: true,
         },
       },
@@ -1473,7 +1531,7 @@ export const $VulnerabilityAdvisoryHead = {
 
 export const $VulnerabilityAdvisoryStatus = {
   type: "object",
-  required: ["base_purl", "version"],
+  required: ["base_purl", "version", "context"],
   properties: {
     base_purl: {
       $ref: "#/components/schemas/BasePurlHead",
@@ -1538,7 +1596,7 @@ export const $VulnerabilityDetails = {
     },
     {
       type: "object",
-      required: ["advisories"],
+      required: ["average_severity", "average_score", "advisories"],
       properties: {
         advisories: {
           type: "array",
@@ -1555,9 +1613,11 @@ export const $VulnerabilityDetails = {
           nullable: true,
         },
         average_severity: {
-          type: "string",
-          description:
-            "Average (arithmetic mean) severity of the vulnerability aggregated from *all* related advisories.",
+          allOf: [
+            {
+              $ref: "#/components/schemas/Severity",
+            },
+          ],
           nullable: true,
         },
       },
@@ -1567,7 +1627,18 @@ export const $VulnerabilityDetails = {
 
 export const $VulnerabilityHead = {
   type: "object",
-  required: ["identifier"],
+  required: [
+    "normative",
+    "identifier",
+    "title",
+    "description",
+    "published",
+    "modified",
+    "withdrawn",
+    "discovered",
+    "released",
+    "cwe",
+  ],
   properties: {
     cwe: {
       type: "string",
@@ -1638,6 +1709,7 @@ export const $VulnerabilitySummary = {
     },
     {
       type: "object",
+      required: ["average_severity", "average_score", "advisories"],
       properties: {
         advisories: {
           type: "array",
@@ -1653,9 +1725,11 @@ export const $VulnerabilitySummary = {
           nullable: true,
         },
         average_severity: {
-          type: "string",
-          description:
-            "Average (arithmetic mean) severity of the vulnerability aggregated from *all* related advisories.",
+          allOf: [
+            {
+              $ref: "#/components/schemas/Severity",
+            },
+          ],
           nullable: true,
         },
       },
