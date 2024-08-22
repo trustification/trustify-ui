@@ -17,7 +17,7 @@ import {
   Td,
   Th,
   Thead,
-  Tr
+  Tr,
 } from "@patternfly/react-table";
 
 import { TablePersistenceKeyPrefixes } from "@app/Constants";
@@ -38,9 +38,9 @@ import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchOrganizations } from "@app/queries/organizations";
 import {
   useDeleteProductMutation,
-  useFetchProducts
+  useFetchProducts,
 } from "@app/queries/products";
-import {useNotifyErrorCallback} from "@app/hooks/useNotifyErrorCallback";
+import { useNotifyErrorCallback } from "@app/hooks/useNotifyErrorCallback";
 
 export const ProductList: React.FC = () => {
   const { result: organizations } = useFetchOrganizations({
@@ -98,7 +98,7 @@ export const ProductList: React.FC = () => {
 
   const deleteProductByIdMutation = useDeleteProductMutation(
     useNotifyErrorCallback("Error occurred while deleting the product")
-  )
+  );
 
   const tableControls = useTableControlProps({
     ...tableControlState,

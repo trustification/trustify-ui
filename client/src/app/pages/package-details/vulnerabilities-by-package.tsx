@@ -14,10 +14,7 @@ import {
 import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
-import {
-  AdvisoryWithinPackage,
-  VulnerabilityStatus,
-} from "@app/api/models";
+import { AdvisoryWithinPackage, VulnerabilityStatus } from "@app/api/models";
 import { getVulnerabilityById } from "@app/api/rest";
 import { AdvisoryInDrawerInfo } from "@app/components/AdvisoryInDrawerInfo";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
@@ -33,8 +30,8 @@ import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchPackageById } from "@app/queries/packages";
 import { useWithUiId } from "@app/utils/query-utils";
 import { VulnerabilityInDrawerInfo } from "@app/components/VulnerabilityInDrawerInfo";
-import {getVulnerability, VulnerabilityDetails} from "../../client";
-import {client} from "../../axios-config/apiInit";
+import { getVulnerability, VulnerabilityDetails } from "@app/client";
+import { client } from "@app/axios-config/apiInit";
 
 interface TableData {
   vulnerabilityId: string;
@@ -110,7 +107,15 @@ export const VulnerabilitiesByPackage: React.FC<
 
     Promise.all(
       vulnerabilities
-        .map(async (item) => (await getVulnerability({ client, path: { id: item.vulnerabilityId } })).data)
+        .map(
+          async (item) =>
+            (
+              await getVulnerability({
+                client,
+                path: { id: item.vulnerabilityId },
+              })
+            ).data
+        )
         .map((vulnerability) => vulnerability.catch(() => null))
     ).then((vulnerabilities) => {
       const validVulnerabilities = vulnerabilities.reduce((prev, current) => {
