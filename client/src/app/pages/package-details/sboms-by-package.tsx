@@ -31,7 +31,7 @@ import {
 import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchSbomsByPackageId } from "@app/queries/sboms";
 import { formatDate } from "@app/utils/utils";
-import {SbomSummary} from "@app/client";
+import { SbomSummary } from "@app/client";
 
 interface SbomsByPackageProps {
   packageId: string;
@@ -43,7 +43,9 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({
   type RowAction = "showSbom";
   const [selectedRowAction, setSelectedRowAction] =
     React.useState<RowAction | null>(null);
-  const [selectedRow, setSelectedRow] = React.useState<SbomSummary | null>(null);
+  const [selectedRow, setSelectedRow] = React.useState<SbomSummary | null>(
+    null
+  );
 
   const showDrawer = (action: RowAction, row: SbomSummary) => {
     setSelectedRowAction(action);
