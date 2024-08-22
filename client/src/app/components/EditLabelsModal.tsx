@@ -1,19 +1,19 @@
 import React from "react";
 
 import {
-    Button,
-    ButtonVariant,
-    Form,
-    FormGroup,
-    Grid,
-    GridItem,
-    Label,
-    LabelGroup,
-    Modal,
-    ModalVariant,
-    Stack,
-    StackItem,
-    TextInput,
+  Button,
+  ButtonVariant,
+  Form,
+  FormGroup,
+  Grid,
+  GridItem,
+  Label,
+  LabelGroup,
+  Modal,
+  ModalVariant,
+  Stack,
+  StackItem,
+  TextInput,
 } from "@patternfly/react-core";
 
 interface EditLabelsProps {

@@ -38,8 +38,12 @@ import { VulnerabilityInDrawerInfo } from "@app/components/VulnerabilityInDrawer
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchSBOMById } from "@app/queries/sboms";
 import { useWithUiId } from "@app/utils/query-utils";
-import {getVulnerability, SbomPackage, VulnerabilityDetails} from "@app/client";
-import {client} from "../../axios-config/apiInit";
+import {
+  getVulnerability,
+  SbomPackage,
+  VulnerabilityDetails,
+} from "@app/client";
+import { client } from "@app/axios-config/apiInit";
 
 interface TableData {
   vulnerabilityId: string;
@@ -86,15 +90,18 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
   React.useEffect(() => {
     const vulnerabilities = (sbom?.advisories ?? [])
       .flatMap((advisory) => {
-        return (advisory.status ?? []).map((status) => ({
-          vulnerabilityId: status.vulnerability_id,
-          status: status.status,
-          context: { ...status.context },
-          packages: status.packages || [],
-          advisory: { ...advisory },
-        } as TableData));
+        return (advisory.status ?? []).map(
+          (status) =>
+            ({
+              vulnerabilityId: status.vulnerability_id,
+              status: status.status,
+              context: { ...status.context },
+              packages: status.packages || [],
+              advisory: { ...advisory },
+            }) as TableData
+        );
       })
-      .reduce((prev, current)=> {
+      .reduce((prev, current) => {
         const exists = prev.find(
           (item) =>
             item.vulnerabilityId === current.vulnerabilityId &&
@@ -116,7 +123,15 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
 
     Promise.all(
       vulnerabilities
-        .map(async (item) => (await getVulnerability({ client, path: { id: item.vulnerabilityId } })).data)
+        .map(
+          async (item) =>
+            (
+              await getVulnerability({
+                client,
+                path: { id: item.vulnerabilityId },
+              })
+            ).data
+        )
         .map((vulnerability) => vulnerability.catch(() => null))
     ).then((vulnerabilities) => {
       const validVulnerabilities = vulnerabilities.reduce((prev, current) => {

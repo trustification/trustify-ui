@@ -82,7 +82,9 @@ export const useRouteParams = (pathParam: PathParam) => {
   const params = useParams();
   let value = params[pathParam];
   if (value === undefined) {
-    throw new Error(`ASSERTION FAILURE: required path parameter not set: ${pathParam}`);
+    throw new Error(
+      `ASSERTION FAILURE: required path parameter not set: ${pathParam}`
+    );
   }
   return value;
 };
