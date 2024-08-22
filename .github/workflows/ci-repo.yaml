@@ -1,4 +1,4 @@
-name: CI
+name: CI (repo level)
 
 on:
   push:
@@ -9,21 +9,22 @@ on:
     branches:
       - main
       - "release-*"
+  workflow_dispatch:
+  workflow_call:
 
 jobs:
   ci:
-    name: ci
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
       - name: Verify package-lock.json
         run: ./scripts/verify_lock.mjs
-      - name: Install
+      - name: Install dependencies
         run: npm clean-install --ignore-scripts
       # - name: Lint sources
       #   run: npm run lint
@@ -31,6 +32,9 @@ jobs:
         run: npm run build
       - name: Test
         run: npm run test -- --coverage --watchAll=false
+      - name: Format check
+        run: npm run format:check
+
       - name: Crate Format
         working-directory: ./crate
         run: cargo fmt --check
@@ -39,4 +43,4 @@ jobs:
         run: cargo check
       - name: Crate Clippy
         working-directory: ./crate
-        run: cargo clippy --all-targets --all-features -- -D warnings 
+        run: cargo clippy --all-targets --all-features -- -D warnings

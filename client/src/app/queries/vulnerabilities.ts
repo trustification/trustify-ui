@@ -1,12 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 import { HubRequestParams } from "@app/api/models";
 import {
-  getVulnerabilities,
-  getVulnerabilityById,
-  getVulnerabilitySourceById,
-} from "@app/api/rest";
+  deleteVulnerability,
+  getVulnerability,
+  listVulnerabilities,
+  VulnerabilityDetails,
+} from "@app/client";
+import { client } from "@app/axios-config/apiInit";
+import { requestParamsQuery } from "@app/hooks/table-controls";
+import { convertQuery, dataOf } from "@app/queries/dataOf";
 
 export const VulnerabilitiesQueryKey = "vulnerabilities";
 
@@ -14,51 +18,47 @@ export const useFetchVulnerabilities = (
   params: HubRequestParams = {},
   refetchDisabled: boolean = false
 ) => {
-  const { data, isLoading, error, refetch } = useQuery({
+  const query = useQuery({
     queryKey: [VulnerabilitiesQueryKey, params],
-    queryFn: () => getVulnerabilities(params),
+    queryFn: () =>
+      dataOf(
+        listVulnerabilities({
+          client,
+          query: { ...requestParamsQuery(params) },
+        })
+      ),
     refetchInterval: !refetchDisabled ? 5000 : false,
   });
   return {
+    ...convertQuery(query),
     result: {
-      data: data?.data || [],
-      total: data?.total ?? 0,
-      params: data?.params ?? params,
+      data: query.data?.items || [],
+      total: query.data?.total ?? 0,
+      params: params,
     },
-    isFetching: isLoading,
-    fetchError: error,
-    refetch,
   };
 };
 
-export const useFetchVulnerabilityById = (id?: number | string) => {
-  const { data, isLoading, error } = useQuery({
+export const useFetchVulnerabilityById = (id: string) => {
+  const query = useQuery({
     queryKey: [VulnerabilitiesQueryKey, id],
-    queryFn: () =>
-      id === undefined ? Promise.resolve(undefined) : getVulnerabilityById(id),
-    enabled: id !== undefined,
+    queryFn: () => dataOf(getVulnerability({ client, path: { id } })),
   });
-
   return {
-    vulnerability: data,
-    isFetching: isLoading,
-    fetchError: error as AxiosError,
+    ...convertQuery(query),
+    vulnerability: query.data,
   };
 };
 
-export const useFetchVulnerabilitySourceById = (id?: number | string) => {
-  const { data, isLoading, error } = useQuery({
-    queryKey: [VulnerabilitiesQueryKey, id, "source"],
-    queryFn: () =>
-      id === undefined
-        ? Promise.resolve(undefined)
-        : getVulnerabilitySourceById(id),
-    enabled: id !== undefined,
+export const useDeleteVulnerabilityMutation = (
+  onError?: (err: AxiosError, id: string) => void,
+  onSuccess?: (payload: VulnerabilityDetails, id: string) => void
+) => {
+  return useMutation({
+    mutationFn: (id: string) =>
+      dataOf(deleteVulnerability({ client, path: { id } })),
+    mutationKey: [VulnerabilitiesQueryKey],
+    onSuccess,
+    onError,
   });
-
-  return {
-    source: data,
-    isFetching: isLoading,
-    fetchError: error as AxiosError,
-  };
 };

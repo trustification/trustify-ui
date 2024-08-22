@@ -14,11 +14,7 @@ import {
 import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
-import {
-  AdvisoryWithinPackage,
-  VulnerabilityStatus,
-  VulnerabilityIndex,
-} from "@app/api/models";
+import { AdvisoryWithinPackage, VulnerabilityStatus } from "@app/api/models";
 import { getVulnerabilityById } from "@app/api/rest";
 import { AdvisoryInDrawerInfo } from "@app/components/AdvisoryInDrawerInfo";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
@@ -34,13 +30,15 @@ import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchPackageById } from "@app/queries/packages";
 import { useWithUiId } from "@app/utils/query-utils";
 import { VulnerabilityInDrawerInfo } from "@app/components/VulnerabilityInDrawerInfo";
+import { getVulnerability, VulnerabilityDetails } from "@app/client";
+import { client } from "@app/axios-config/apiInit";
 
 interface TableData {
   vulnerabilityId: string;
   advisory: AdvisoryWithinPackage;
   status: VulnerabilityStatus;
   context: { cpe: string };
-  vulnerability?: VulnerabilityIndex;
+  vulnerability?: VulnerabilityDetails;
 }
 
 interface VulnerabilitiesByPackageProps {
@@ -67,7 +65,7 @@ export const VulnerabilitiesByPackage: React.FC<
     TableData[]
   >([]);
   const [vulnerabilitiesById, setVulnerabilitiesById] = React.useState<
-    Map<string, VulnerabilityIndex>
+    Map<string, VulnerabilityDetails>
   >(new Map());
   const [isFetchingVulnerabilities, setIsFetchingVulnerabilities] =
     React.useState(false);
@@ -109,7 +107,15 @@ export const VulnerabilitiesByPackage: React.FC<
 
     Promise.all(
       vulnerabilities
-        .map((item) => getVulnerabilityById(item.vulnerabilityId))
+        .map(
+          async (item) =>
+            (
+              await getVulnerability({
+                client,
+                path: { id: item.vulnerabilityId },
+              })
+            ).data
+        )
         .map((vulnerability) => vulnerability.catch(() => null))
     ).then((vulnerabilities) => {
       const validVulnerabilities = vulnerabilities.reduce((prev, current) => {
@@ -119,9 +125,9 @@ export const VulnerabilitiesByPackage: React.FC<
           // Filter out error responses
           return prev;
         }
-      }, [] as VulnerabilityIndex[]);
+      }, [] as VulnerabilityDetails[]);
 
-      const vulnerabilitiesById = new Map<string, VulnerabilityIndex>();
+      const vulnerabilitiesById = new Map<string, VulnerabilityDetails>();
       validVulnerabilities.forEach((vulnerability) =>
         vulnerabilitiesById.set(vulnerability.identifier, vulnerability)
       );
