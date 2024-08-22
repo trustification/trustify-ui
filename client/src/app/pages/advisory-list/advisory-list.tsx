@@ -65,7 +65,7 @@ import { AdvisoryGeneralView } from "@app/components/AdvisoryGeneralView";
 import { AdvisoryIssuer } from "@app/components/AdvisoryIssuer";
 import { Vulnerabilities } from "../advisory-details/vulnerabilities";
 import { VulnerabilitiesGalleryCount } from "./components/VulnerabilitiesGaleryCount";
-import {useNotifyErrorCallback} from "@app/hooks/useNotifyErrorCallback";
+import { useNotifyErrorCallback } from "@app/hooks/useNotifyErrorCallback";
 
 export const AdvisoryList: React.FC = () => {
   const { pushNotification } = React.useContext(NotificationsContext);
