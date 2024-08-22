@@ -268,9 +268,7 @@ export const PackageExpandedArea: React.FC<PackageExpandedAreaProps> = ({
                       modifier="truncate"
                       {...getTdProps({ columnKey: "name" })}
                     >
-                      <NavLink
-                        to={`/packages/${encodeURIComponent(item.purl)}`}
-                      >
+                      <NavLink to={`/packages/${item.uuid}`}>
                         {item.name}
                       </NavLink>
                     </Td>
