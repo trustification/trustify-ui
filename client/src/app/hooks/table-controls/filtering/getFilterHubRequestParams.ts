@@ -108,14 +108,14 @@ export const getFilterHubRequestParams = <
       // Note: If we need to support more of the logic operators in HubFilter in the future,
       //       we'll need to figure out how to express those on the FilterCategory objects
       //       and translate them here.
-      if (filterCategory.type === "numsearch") {
+      if (filterCategory.type === "numsearch" && serverFilterValue[0]) {
         pushOrMergeFilter(filters, {
           field: serverFilterField,
           operator: "=",
           value: Number(serverFilterValue[0]),
         });
       }
-      if (filterCategory.type === "search") {
+      if (filterCategory.type === "search" && serverFilterValue[0]) {
         pushOrMergeFilter(filters, {
           field: serverFilterField,
           operator: "~",
