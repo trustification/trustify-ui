@@ -22,7 +22,7 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { AdvisoryWithinSbom, VulnerabilityStatus, VulnerabilityIndex } from "@app/api/models";
+import { AdvisoryWithinSbom, VulnerabilityStatus } from "@app/api/models";
 import { getVulnerabilityById } from "@app/api/rest";
 import { AdvisoryInDrawerInfo } from "@app/components/AdvisoryInDrawerInfo";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
@@ -38,7 +38,12 @@ import { VulnerabilityInDrawerInfo } from "@app/components/VulnerabilityInDrawer
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchSBOMById } from "@app/queries/sboms";
 import { useWithUiId } from "@app/utils/query-utils";
-import {SbomPackage} from "@app/client";
+import {
+  getVulnerability,
+  SbomPackage,
+  VulnerabilityDetails,
+} from "@app/client";
+import { client } from "@app/axios-config/apiInit";
 
 interface TableData {
   vulnerabilityId: string;
@@ -46,7 +51,7 @@ interface TableData {
   status: VulnerabilityStatus;
   context: { cpe: string };
   packages: SbomPackage[];
-  vulnerability?: VulnerabilityIndex;
+  vulnerability?: VulnerabilityDetails;
 }
 
 interface VulnerabilitiesBySbomProps {
@@ -73,7 +78,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
     TableData[]
   >([]);
   const [vulnerabilitiesById, setVulnerabilitiesById] = React.useState<
-    Map<string, VulnerabilityIndex>
+    Map<string, VulnerabilityDetails>
   >(new Map());
   const [isFetchingVulnerabilities, setIsFetchingVulnerabilities] =
     React.useState(false);
@@ -85,15 +90,18 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
   React.useEffect(() => {
     const vulnerabilities = (sbom?.advisories ?? [])
       .flatMap((advisory) => {
-        return (advisory.status ?? []).map((status) => ({
-          vulnerabilityId: status.vulnerability_id,
-          status: status.status,
-          context: { ...status.context },
-          packages: status.packages || [],
-          advisory: { ...advisory },
-        } as TableData));
+        return (advisory.status ?? []).map(
+          (status) =>
+            ({
+              vulnerabilityId: status.vulnerability_id,
+              status: status.status,
+              context: { ...status.context },
+              packages: status.packages || [],
+              advisory: { ...advisory },
+            }) as TableData
+        );
       })
-      .reduce((prev, current)=> {
+      .reduce((prev, current) => {
         const exists = prev.find(
           (item) =>
             item.vulnerabilityId === current.vulnerabilityId &&
@@ -115,7 +123,15 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
 
     Promise.all(
       vulnerabilities
-        .map((item) => getVulnerabilityById(item.vulnerabilityId))
+        .map(
+          async (item) =>
+            (
+              await getVulnerability({
+                client,
+                path: { id: item.vulnerabilityId },
+              })
+            ).data
+        )
         .map((vulnerability) => vulnerability.catch(() => null))
     ).then((vulnerabilities) => {
       const validVulnerabilities = vulnerabilities.reduce((prev, current) => {
@@ -125,9 +141,9 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
           // Filter out error responses
           return prev;
         }
-      }, [] as VulnerabilityIndex[]);
+      }, [] as VulnerabilityDetails[]);
 
-      const vulnerabilitiesById = new Map<string, VulnerabilityIndex>();
+      const vulnerabilitiesById = new Map<string, VulnerabilityDetails>();
       validVulnerabilities.forEach((vulnerability) =>
         vulnerabilitiesById.set(vulnerability.identifier, vulnerability)
       );

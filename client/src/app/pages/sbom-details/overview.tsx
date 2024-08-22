@@ -13,7 +13,7 @@ import {
 import { compareBySeverityFn, severityList } from "@app/api/model-utils";
 import { SBOM, Severity } from "@app/api/models";
 import { formatDate } from "@app/utils/utils";
-import {SbomDetails} from "@app/client";
+import { SbomDetails } from "@app/client";
 
 interface InfoProps {
   sbom: SbomDetails;

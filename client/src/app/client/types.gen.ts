@@ -636,7 +636,7 @@ export type VulnerabilityAdvisorySummary = VulnerabilityAdvisoryHead & {
   /**
    * SBOMs claimed by this advisory to be addressed by this vulnerability.
    */
-  sboms: Array<SbomStatus>;
+  sboms: Array<VulnerabilitySbomStatus>;
 };
 
 export type VulnerabilityDetails = VulnerabilityHead & {
@@ -691,6 +691,11 @@ export type VulnerabilityHead = {
    * The date (in RFC3339 format) of when the vulnerability was last withdrawn, if any.
    */
   withdrawn: string | null;
+};
+
+export type VulnerabilitySbomStatus = SbomHead & {
+  status: Array<string>;
+  version?: string | null;
 };
 
 export type VulnerabilitySummary = VulnerabilityHead & {
