@@ -17,6 +17,7 @@ import {
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { formatDate } from "@app/utils/utils";
+import { ProductDetails } from "../../client";
 
 interface TableData {
   sbomId: string;
@@ -25,7 +26,7 @@ interface TableData {
 }
 
 interface ProductVersionsProps {
-  product: Product;
+  product: ProductDetails;
 }
 
 export const ProductVersions: React.FC<ProductVersionsProps> = ({
@@ -42,7 +43,7 @@ export const ProductVersions: React.FC<ProductVersionsProps> = ({
       return {
         sbomId: sbom.sbom_id,
         sbomVersion: sbom.version,
-      };
+      } as TableData;
     });
 
     setAllSboms(sbombs);
