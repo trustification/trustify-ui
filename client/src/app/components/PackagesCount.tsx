@@ -3,7 +3,7 @@ import React from "react";
 import { useFetchPackagesBySbomId } from "@app/queries/packages";
 
 export interface IPackagesCountProps {
-  sbomId: string | number;
+  sbomId: string;
 }
 
 export const PackagesCount: React.FC<IPackagesCountProps> = ({ sbomId }) => {

@@ -1,5 +1,4 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 
 import {
   Button,
@@ -14,8 +13,7 @@ import {
 import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
-import { AdvisoryWithinPackage, VulnerabilityStatus } from "@app/api/models";
-import { getVulnerabilityById } from "@app/api/rest";
+import { VulnerabilityStatus } from "@app/api/models";
 import { AdvisoryInDrawerInfo } from "@app/components/AdvisoryInDrawerInfo";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { PageDrawerContent } from "@app/components/PageDrawerContext";
@@ -30,14 +28,20 @@ import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchPackageById } from "@app/queries/packages";
 import { useWithUiId } from "@app/utils/query-utils";
 import { VulnerabilityInDrawerInfo } from "@app/components/VulnerabilityInDrawerInfo";
-import { getVulnerability, VulnerabilityDetails } from "@app/client";
+import {
+  getVulnerability,
+  PurlAdvisory,
+  StatusContext,
+  VulnerabilityDetails,
+} from "@app/client";
 import { client } from "@app/axios-config/apiInit";
+import { ShowStatusContext } from "../vulnerability-details/packages-by-vulnerability";
 
 interface TableData {
   vulnerabilityId: string;
-  advisory: AdvisoryWithinPackage;
+  advisory: PurlAdvisory;
   status: VulnerabilityStatus;
-  context: { cpe: string };
+  context: StatusContext | null;
   vulnerability?: VulnerabilityDetails;
 }
 
@@ -77,12 +81,15 @@ export const VulnerabilitiesByPackage: React.FC<
   React.useEffect(() => {
     const vulnerabilities: TableData[] = (pkg?.advisories ?? [])
       .flatMap((advisory) => {
-        return advisory.status.map((status) => ({
-          vulnerabilityId: status.vulnerability.identifier,
-          status: status.status,
-          context: { ...status.context },
-          advisory: { ...advisory },
-        }));
+        return advisory.status.map(
+          (status) =>
+            ({
+              vulnerabilityId: status.vulnerability.identifier,
+              status: status.status,
+              context: status.context,
+              advisory: advisory,
+            }) as TableData
+        );
       })
       // TODO remove this reduce once https://github.com/trustification/trustify/issues/477 is fixed
       .reduce((prev, current) => {
@@ -220,7 +227,7 @@ export const VulnerabilitiesByPackage: React.FC<
           <ToolbarItem {...paginationToolbarItemProps}>
             <SimplePagination
               idPrefix="vulnerability-table"
-              isTop
+              isTop={true}
               paginationProps={paginationProps}
             />
           </ToolbarItem>
@@ -296,7 +303,7 @@ export const VulnerabilitiesByPackage: React.FC<
                       modifier="truncate"
                       {...getTdProps({ columnKey: "context" })}
                     >
-                      {item.context.cpe}
+                      <ShowStatusContext value={item.context} />
                     </Td>
                     <Td
                       width={10}
