@@ -1,6 +1,7 @@
 import React from "react";
 import ProductList from "@app/pages/product-list";
 import {
+  Badge,
   PageSection,
   PageSectionVariants,
   Popover,
@@ -94,14 +95,28 @@ export const Search: React.FC = () => {
         >
           <Tab
             eventKey={0}
-            title={<TabTitleText>Products</TabTitleText>}
+            title={
+              <TabTitleText>
+                Products{"  "}
+                <Badge key={0} screenReaderText="Search Result Count">
+                  0
+                </Badge>
+              </TabTitleText>
+            }
             aria-label="Products"
           >
             <ProductList />
           </Tab>
           <Tab
             eventKey={1}
-            title={<TabTitleText>SBOMs</TabTitleText>}
+            title={
+              <TabTitleText>
+                SBOMs{"  "}
+                <Badge key={1} screenReaderText="Search Result Count">
+                  0
+                </Badge>
+              </TabTitleText>
+            }
             actions={
               <>
                 <TabAction aria-label={`SBOM help popover`} ref={ref}>
@@ -115,17 +130,54 @@ export const Search: React.FC = () => {
           </Tab>
           <Tab
             eventKey={2}
-            title={<TabTitleText>Vulnerabilities</TabTitleText>}
+            title={
+              <TabTitleText>
+                Vulnerabilities{"  "}
+                <Badge key={2} screenReaderText="Search Result Count">
+                  0
+                </Badge>
+              </TabTitleText>
+            }
           >
             <VulnerabilityList />
           </Tab>
-          <Tab eventKey={3} title={<TabTitleText>Packages</TabTitleText>}>
+          <Tab
+            eventKey={3}
+            title={
+              <TabTitleText>
+                Packages{"  "}
+                <Badge key={3} screenReaderText="Search Result Count">
+                  0
+                </Badge>
+              </TabTitleText>
+            }
+          >
             <PackageList />
           </Tab>
-          <Tab eventKey={4} title={<TabTitleText>Advisories</TabTitleText>}>
+          <Tab
+            eventKey={4}
+            title={
+              <TabTitleText>
+                Advisories{"  "}
+                <Badge key={4} screenReaderText="Search Result Count">
+                  0
+                </Badge>
+              </TabTitleText>
+            }
+          >
             <AdvisoryList />
           </Tab>
-          <Tab eventKey={5} title={<TabTitleText>Importers</TabTitleText>}>
+          <Tab
+            eventKey={5}
+            title={
+              <TabTitleText>
+                Importers{"  "}
+                <Badge key={5} screenReaderText="Search Result Count">
+                  {resultsCount}
+                </Badge>
+              </TabTitleText>
+            }
+          >
             <ImporterList />
           </Tab>
         </Tabs>
