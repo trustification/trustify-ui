@@ -3,20 +3,20 @@ import ProductList from "@app/pages/product-list";
 import {
   PageSection,
   PageSectionVariants,
+  Popover,
+  Tab,
+  TabAction,
+  TabTitleText,
+  Tabs,
   Text,
   TextContent,
 } from "@patternfly/react-core";
-import {
-  Tabs,
-  Tab,
-  TabTitleText,
-  Checkbox,
-  Tooltip,
-} from "@patternfly/react-core";
+import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
 export const Search: React.FC = () => {
   const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
   const [isBox, setIsBox] = React.useState<boolean>(false);
+  const ref = React.createRef<HTMLElement>();
 
   const handleTabClick = (
     event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent,
@@ -25,8 +25,14 @@ export const Search: React.FC = () => {
     setActiveTabKey(tabIndex);
   };
 
-  const tooltip = (
-    <Tooltip content="Aria-disabled tabs are like disabled tabs, but focusable. Allows for tooltip support." />
+  const sbomPopover = (popoverRef: React.RefObject<any>) => (
+    <Popover
+      bodyContent={
+        <div>Software Bill of Materials for Products and Containers.</div>
+      }
+      position={"right"}
+      triggerRef={popoverRef}
+    />
   );
 
   return (
@@ -50,7 +56,18 @@ export const Search: React.FC = () => {
         >
           Products
         </Tab>
-        <Tab eventKey={1} title={<TabTitleText>SBOMs</TabTitleText>}>
+        <Tab
+          eventKey={1}
+          title={<TabTitleText>SBOMs</TabTitleText>}
+          actions={
+            <>
+              <TabAction aria-label={`SBOM help popover`} ref={ref}>
+                <HelpIcon />
+              </TabAction>
+              {sbomPopover(ref)}
+            </>
+          }
+        >
           SBOMs
         </Tab>
         <Tab eventKey={2} title={<TabTitleText>Vulnerabilities</TabTitleText>}>
@@ -62,11 +79,7 @@ export const Search: React.FC = () => {
         <Tab eventKey={4} title={<TabTitleText>Advisories</TabTitleText>}>
           Advisories
         </Tab>
-        <Tab
-          tooltip={tooltip}
-          eventKey={5}
-          title={<TabTitleText>Importers</TabTitleText>}
-        >
+        <Tab eventKey={5} title={<TabTitleText>Importers</TabTitleText>}>
           Importers
         </Tab>
       </Tabs>
