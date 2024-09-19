@@ -174,11 +174,11 @@ export const SbomList: React.FC = () => {
 
   return (
     <>
-      <PageSection variant={PageSectionVariants.light}>
-        <TextContent>
-          <Text component="h1">SBOMs</Text>
-        </TextContent>
-      </PageSection>
+      {/*<PageSection variant={PageSectionVariants.light}>*/}
+      {/*  <TextContent>*/}
+      {/*    <Text component="h1">SBOMs</Text>*/}
+      {/*  </TextContent>*/}
+      {/*</PageSection>*/}
       <PageSection>
         <div
           style={{

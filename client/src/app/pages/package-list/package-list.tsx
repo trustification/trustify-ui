@@ -124,11 +124,11 @@ export const PackageList: React.FC = () => {
 
   return (
     <>
-      <PageSection variant={PageSectionVariants.light}>
-        <TextContent>
-          <Text component="h1">Packages</Text>
-        </TextContent>
-      </PageSection>
+      {/*<PageSection variant={PageSectionVariants.light}>*/}
+      {/*  <TextContent>*/}
+      {/*    <Text component="h1">Packages</Text>*/}
+      {/*  </TextContent>*/}
+      {/*</PageSection>*/}
       <PageSection>
         <div
           style={{

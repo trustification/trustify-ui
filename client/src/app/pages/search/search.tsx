@@ -10,19 +10,36 @@ import {
   Tabs,
   Text,
   TextContent,
+  SearchInput,
 } from "@patternfly/react-core";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
+import SbomList from "@app/pages/sbom-list";
+import VulnerabilityList from "@app/pages/vulnerability-list";
+import PackageList from "@app/pages/package-list";
+import AdvisoryList from "@app/pages/advisory-list";
+import ImporterList from "@app/pages/importer-list";
 
 export const Search: React.FC = () => {
   const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
-  const [isBox, setIsBox] = React.useState<boolean>(false);
   const ref = React.createRef<HTMLElement>();
+  const [searchValue, setSearchValue] = React.useState("");
+  const [resultsCount, setResultsCount] = React.useState(0);
 
   const handleTabClick = (
     event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent,
     tabIndex: string | number
   ) => {
     setActiveTabKey(tabIndex);
+  };
+
+  const onChangeSearch = (value: string) => {
+    setSearchValue(value);
+    setResultsCount(3);
+  };
+
+  const onClearSearch = () => {
+    setSearchValue("");
+    setResultsCount(0);
   };
 
   const sbomPopover = (popoverRef: React.RefObject<any>) => (
@@ -41,11 +58,17 @@ export const Search: React.FC = () => {
         <TextContent>
           <Text component="h1">Search</Text>
         </TextContent>
+        <SearchInput
+          placeholder="Search for an SBOM, advisory, or CVE"
+          value={searchValue}
+          onChange={(_event, value) => onChangeSearch(value)}
+          onClear={onClearSearch}
+          resultsCount={resultsCount}
+        />
       </PageSection>
       <Tabs
         activeKey={activeTabKey}
         onSelect={handleTabClick}
-        isBox={isBox}
         aria-label="Tabs"
         role="region"
       >
@@ -54,7 +77,7 @@ export const Search: React.FC = () => {
           title={<TabTitleText>Products</TabTitleText>}
           aria-label="Products"
         >
-          Products
+          <ProductList />
         </Tab>
         <Tab
           eventKey={1}
@@ -68,19 +91,19 @@ export const Search: React.FC = () => {
             </>
           }
         >
-          SBOMs
+          <SbomList />
         </Tab>
         <Tab eventKey={2} title={<TabTitleText>Vulnerabilities</TabTitleText>}>
-          Vulnerabilities
+          <VulnerabilityList />
         </Tab>
         <Tab eventKey={3} title={<TabTitleText>Packages</TabTitleText>}>
-          Packages
+          <PackageList />
         </Tab>
         <Tab eventKey={4} title={<TabTitleText>Advisories</TabTitleText>}>
-          Advisories
+          <AdvisoryList />
         </Tab>
         <Tab eventKey={5} title={<TabTitleText>Importers</TabTitleText>}>
-          Importers
+          <ImporterList />
         </Tab>
       </Tabs>
     </>
