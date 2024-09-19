@@ -131,11 +131,6 @@ export const ProductList: React.FC = () => {
 
   return (
     <>
-      <PageSection variant={PageSectionVariants.light}>
-        <TextContent>
-          <Text component="h1">Products</Text>
-        </TextContent>
-      </PageSection>
       <PageSection>
         <div
           style={{
