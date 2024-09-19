@@ -10,6 +10,10 @@ import {
   Tabs,
   Text,
   TextContent,
+  Toolbar,
+  ToolbarContent,
+  ToolbarGroup,
+  ToolbarItem,
   SearchInput,
 } from "@patternfly/react-core";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
@@ -55,57 +59,77 @@ export const Search: React.FC = () => {
   return (
     <>
       <PageSection variant={PageSectionVariants.light}>
-        <TextContent>
-          <Text component="h1">Search</Text>
-        </TextContent>
-        <SearchInput
-          placeholder="Search for an SBOM, advisory, or CVE"
-          value={searchValue}
-          onChange={(_event, value) => onChangeSearch(value)}
-          onClear={onClearSearch}
-          resultsCount={resultsCount}
-        />
+        <Toolbar isStatic>
+          <ToolbarContent>
+            <ToolbarGroup align={{ default: "alignLeft" }}>
+              <TextContent>
+                <Text component="h1">Search</Text>
+              </TextContent>
+            </ToolbarGroup>
+            <ToolbarGroup
+              variant="icon-button-group"
+              align={{ default: "alignRight" }}
+            >
+              <ToolbarGroup visibility={{ default: "hidden", lg: "visible" }}>
+                <ToolbarItem widths={{ default: "500px" }}>
+                  <SearchInput
+                    placeholder="Search for an SBOM, advisory, or CVE"
+                    value={searchValue}
+                    onChange={(_event, value) => onChangeSearch(value)}
+                    onClear={onClearSearch}
+                    resultsCount={resultsCount}
+                  />
+                </ToolbarItem>
+              </ToolbarGroup>
+            </ToolbarGroup>
+          </ToolbarContent>
+        </Toolbar>
       </PageSection>
-      <Tabs
-        activeKey={activeTabKey}
-        onSelect={handleTabClick}
-        aria-label="Tabs"
-        role="region"
-      >
-        <Tab
-          eventKey={0}
-          title={<TabTitleText>Products</TabTitleText>}
-          aria-label="Products"
+      <PageSection>
+        <Tabs
+          activeKey={activeTabKey}
+          onSelect={handleTabClick}
+          aria-label="Tabs"
+          role="region"
         >
-          <ProductList />
-        </Tab>
-        <Tab
-          eventKey={1}
-          title={<TabTitleText>SBOMs</TabTitleText>}
-          actions={
-            <>
-              <TabAction aria-label={`SBOM help popover`} ref={ref}>
-                <HelpIcon />
-              </TabAction>
-              {sbomPopover(ref)}
-            </>
-          }
-        >
-          <SbomList />
-        </Tab>
-        <Tab eventKey={2} title={<TabTitleText>Vulnerabilities</TabTitleText>}>
-          <VulnerabilityList />
-        </Tab>
-        <Tab eventKey={3} title={<TabTitleText>Packages</TabTitleText>}>
-          <PackageList />
-        </Tab>
-        <Tab eventKey={4} title={<TabTitleText>Advisories</TabTitleText>}>
-          <AdvisoryList />
-        </Tab>
-        <Tab eventKey={5} title={<TabTitleText>Importers</TabTitleText>}>
-          <ImporterList />
-        </Tab>
-      </Tabs>
+          <Tab
+            eventKey={0}
+            title={<TabTitleText>Products</TabTitleText>}
+            aria-label="Products"
+          >
+            <ProductList />
+          </Tab>
+          <Tab
+            eventKey={1}
+            title={<TabTitleText>SBOMs</TabTitleText>}
+            actions={
+              <>
+                <TabAction aria-label={`SBOM help popover`} ref={ref}>
+                  <HelpIcon />
+                </TabAction>
+                {sbomPopover(ref)}
+              </>
+            }
+          >
+            <SbomList />
+          </Tab>
+          <Tab
+            eventKey={2}
+            title={<TabTitleText>Vulnerabilities</TabTitleText>}
+          >
+            <VulnerabilityList />
+          </Tab>
+          <Tab eventKey={3} title={<TabTitleText>Packages</TabTitleText>}>
+            <PackageList />
+          </Tab>
+          <Tab eventKey={4} title={<TabTitleText>Advisories</TabTitleText>}>
+            <AdvisoryList />
+          </Tab>
+          <Tab eventKey={5} title={<TabTitleText>Importers</TabTitleText>}>
+            <ImporterList />
+          </Tab>
+        </Tabs>
+      </PageSection>
     </>
   );
 };
