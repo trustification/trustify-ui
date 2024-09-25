@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import { Nav, NavList, PageSidebar } from "@patternfly/react-core";
+import { Nav, NavGroup, PageSidebar } from "@patternfly/react-core";
 import { css } from "@patternfly/react-styles";
 
 import { LayoutTheme } from "./layout-constants";
@@ -13,7 +13,7 @@ export const SidebarApp: React.FC = () => {
   const renderPageNav = () => {
     return (
       <Nav id="nav-sidebar" aria-label="Nav" theme={LayoutTheme}>
-        <NavList>
+        <NavGroup title="Quickstart">
           <li className="pf-v5-c-nav__item">
             <NavLink
               to="/"
@@ -34,6 +34,8 @@ export const SidebarApp: React.FC = () => {
               Search
             </NavLink>
           </li>
+        </NavGroup>
+        <NavGroup title="Groups">
           <li className="pf-v5-c-nav__item">
             <NavLink
               to="/products"
@@ -44,6 +46,8 @@ export const SidebarApp: React.FC = () => {
               Products
             </NavLink>
           </li>
+        </NavGroup>
+        <NavGroup title="Entities">
           <li className="pf-v5-c-nav__item">
             <NavLink
               to="/sboms"
@@ -74,7 +78,7 @@ export const SidebarApp: React.FC = () => {
               Packages
             </NavLink>
           </li>
-          <li className="pf-v5-c-nav__item">
+          {/* <li className="pf-v5-c-nav__item">
             <NavLink
               to="/advisories"
               className={({ isActive }) => {
@@ -83,7 +87,9 @@ export const SidebarApp: React.FC = () => {
             >
               Advisories
             </NavLink>
-          </li>
+          </li> */}
+        </NavGroup>
+        <NavGroup title="Settings">
           <li className="pf-v5-c-nav__item">
             <NavLink
               to="/importers"
@@ -94,7 +100,7 @@ export const SidebarApp: React.FC = () => {
               Importers
             </NavLink>
           </li>
-        </NavList>
+        </NavGroup>
       </Nav>
     );
   };

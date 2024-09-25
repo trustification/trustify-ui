@@ -1,10 +1,15 @@
 import React from "react";
-import ProductList from "@app/pages/product-list";
+
 import {
   Badge,
+  Card,
+  CardBody,
+  Grid,
+  GridItem,
   PageSection,
   PageSectionVariants,
   Popover,
+  SearchInput,
   Tab,
   TabAction,
   TabTitleText,
@@ -15,37 +20,61 @@ import {
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
-  SearchInput,
 } from "@patternfly/react-core";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
-import SbomList from "@app/pages/sbom-list";
-import VulnerabilityList from "@app/pages/vulnerability-list";
-import PackageList from "@app/pages/package-list";
-import AdvisoryList from "@app/pages/advisory-list";
-import ImporterList from "@app/pages/importer-list";
+
+import { PackageSearchContext } from "../package-list/package-context";
+import { SbomSearchContext } from "../sbom-list/sbom-context";
+import { SbomTable } from "../sbom-list/sbom-table";
+import { VulnerabilitySearchContext } from "../vulnerability-list/vulnerability-context";
+import { SearchHeaderContext, SearchProvider } from "./search-context";
+
+export const SearchPage: React.FC = () => {
+  return (
+    <SearchProvider>
+      <Search />
+    </SearchProvider>
+  );
+};
 
 export const Search: React.FC = () => {
-  const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
-  const ref = React.createRef<HTMLElement>();
+  const { setSearchTerm } = React.useContext(SearchHeaderContext);
+  const { totalItemCount: sbomTotalCount } =
+    React.useContext(SbomSearchContext);
+  const { totalItemCount: packageTotalCount } =
+    React.useContext(PackageSearchContext);
+  const { totalItemCount: vulnerabilityTotalCount } = React.useContext(
+    VulnerabilitySearchContext
+  );
+
+  // Search
+
   const [searchValue, setSearchValue] = React.useState("");
-  const [resultsCount, setResultsCount] = React.useState(0);
+
+  const onChangeSearchValue = (value: string) => {
+    setSearchValue(value);
+  };
+
+  const onClearSearchValue = () => {
+    setSearchValue("");
+  };
+
+  const onChangeContextSearchValue = () => {
+    setSearchTerm(searchValue);
+  };
+
+  // Tabs
+
+  const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
 
   const handleTabClick = (
-    event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent,
+    _event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent,
     tabIndex: string | number
   ) => {
     setActiveTabKey(tabIndex);
   };
 
-  const onChangeSearch = (value: string) => {
-    setSearchValue(value);
-    setResultsCount(3);
-  };
-
-  const onClearSearch = () => {
-    setSearchValue("");
-    setResultsCount(0);
-  };
+  const sbomPopoverRef = React.createRef<HTMLElement>();
 
   const sbomPopover = (popoverRef: React.RefObject<any>) => (
     <Popover
@@ -74,11 +103,14 @@ export const Search: React.FC = () => {
               <ToolbarGroup visibility={{ default: "hidden", lg: "visible" }}>
                 <ToolbarItem widths={{ default: "500px" }}>
                   <SearchInput
-                    placeholder="Search for an SBOM, advisory, or CVE"
+                    placeholder="Search for an SBOM, Package, or Vulnerability"
                     value={searchValue}
-                    onChange={(_event, value) => onChangeSearch(value)}
-                    onClear={onClearSearch}
-                    resultsCount={resultsCount}
+                    onChange={(_event, value) => onChangeSearchValue(value)}
+                    onClear={onClearSearchValue}
+                    onKeyDown={(event: React.KeyboardEvent) => {
+                      if (event.key && event.key !== "Enter") return;
+                      onChangeContextSearchValue();
+                    }}
                   />
                 </ToolbarItem>
               </ToolbarGroup>
@@ -87,100 +119,77 @@ export const Search: React.FC = () => {
         </Toolbar>
       </PageSection>
       <PageSection>
-        <Tabs
-          activeKey={activeTabKey}
-          onSelect={handleTabClick}
-          aria-label="Tabs"
-          role="region"
-        >
-          <Tab
-            eventKey={0}
-            title={
-              <TabTitleText>
-                Products{"  "}
-                <Badge key={0} screenReaderText="Search Result Count">
-                  0
-                </Badge>
-              </TabTitleText>
-            }
-            aria-label="Products"
-          >
-            <ProductList />
-          </Tab>
-          <Tab
-            eventKey={1}
-            title={
-              <TabTitleText>
-                SBOMs{"  "}
-                <Badge key={1} screenReaderText="Search Result Count">
-                  0
-                </Badge>
-              </TabTitleText>
-            }
-            actions={
-              <>
-                <TabAction aria-label={`SBOM help popover`} ref={ref}>
-                  <HelpIcon />
-                </TabAction>
-                {sbomPopover(ref)}
-              </>
-            }
-          >
-            <SbomList />
-          </Tab>
-          <Tab
-            eventKey={2}
-            title={
-              <TabTitleText>
-                Vulnerabilities{"  "}
-                <Badge key={2} screenReaderText="Search Result Count">
-                  0
-                </Badge>
-              </TabTitleText>
-            }
-          >
-            <VulnerabilityList />
-          </Tab>
-          <Tab
-            eventKey={3}
-            title={
-              <TabTitleText>
-                Packages{"  "}
-                <Badge key={3} screenReaderText="Search Result Count">
-                  0
-                </Badge>
-              </TabTitleText>
-            }
-          >
-            <PackageList />
-          </Tab>
-          <Tab
-            eventKey={4}
-            title={
-              <TabTitleText>
-                Advisories{"  "}
-                <Badge key={4} screenReaderText="Search Result Count">
-                  0
-                </Badge>
-              </TabTitleText>
-            }
-          >
-            <AdvisoryList />
-          </Tab>
-          <Tab
-            eventKey={5}
-            title={
-              <TabTitleText>
-                Importers{"  "}
-                <Badge key={5} screenReaderText="Search Result Count">
-                  {resultsCount}
-                </Badge>
-              </TabTitleText>
-            }
-          >
-            <ImporterList />
-          </Tab>
-        </Tabs>
+        <Grid hasGutter>
+          <GridItem md={2}>
+            <Card>
+              <CardBody>fikter</CardBody>
+            </Card>
+          </GridItem>
+          <GridItem md={10}>
+            <Card>
+              <CardBody>
+                <Tabs
+                  activeKey={activeTabKey}
+                  onSelect={handleTabClick}
+                  aria-label="Tabs"
+                  role="region"
+                  isBox
+                >
+                  <Tab
+                    eventKey={0}
+                    title={
+                      <TabTitleText>
+                        SBOMs{"  "}
+                        <Badge screenReaderText="Search Result Count">
+                          {sbomTotalCount}
+                        </Badge>
+                      </TabTitleText>
+                    }
+                    actions={
+                      <>
+                        <TabAction
+                          aria-label={`SBOM help popover`}
+                          ref={sbomPopoverRef}
+                        >
+                          <HelpIcon />
+                        </TabAction>
+                        {sbomPopover(sbomPopoverRef)}
+                      </>
+                    }
+                  >
+                    <SbomTable />
+                  </Tab>
+                  <Tab
+                    eventKey={1}
+                    title={
+                      <TabTitleText>
+                        Packages{"  "}
+                        <Badge screenReaderText="Search Result Count">
+                          {packageTotalCount}
+                        </Badge>
+                      </TabTitleText>
+                    }
+                  >
+                    package list
+                  </Tab>
+                  <Tab
+                    eventKey={2}
+                    title={
+                      <TabTitleText>
+                        Vulnerabilities{"  "}
+                        <Badge screenReaderText="Search Result Count">
+                          {vulnerabilityTotalCount}
+                        </Badge>
+                      </TabTitleText>
+                    }
+                  >
+                    Vulnerability list
+                  </Tab>
+                </Tabs>
+              </CardBody>
+            </Card>
+          </GridItem>
+        </Grid>
       </PageSection>
     </>
   );
