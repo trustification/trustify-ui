@@ -2,22 +2,22 @@ import * as React from "react";
 
 import {
   FilterCategory,
-  FilterValue,
   FilterType,
-  ISelectFilterCategory,
-  ISearchFilterCategory,
+  FilterValue,
   IMultiselectFilterCategory,
-} from "./FilterToolbar";
-import { SelectFilterControl } from "./SelectFilterControl";
+  ISearchFilterCategory,
+  ISelectFilterCategory,
+} from "../FilterToolbar";
 import { SearchFilterControl } from "./SearchFilterControl";
-import { MultiselectFilterControl } from "./MultiselectFilterControl";
+import { RadioFilterControl } from "./RadioFilterControl";
+import { CheckboxFilterControl } from "./CheckboxFilterControl";
 
 export interface IFilterControlProps<TItem, TFilterCategoryKey extends string> {
   category: FilterCategory<TItem, TFilterCategoryKey>;
   filterValue: FilterValue;
   setFilterValue: (newValue: FilterValue) => void;
-  showToolbarItem: boolean;
   isDisabled?: boolean;
+  isSidebar?: boolean;
 }
 
 export const FilterControl = <TItem, TFilterCategoryKey extends string>({
@@ -28,8 +28,7 @@ export const FilterControl = <TItem, TFilterCategoryKey extends string>({
 >): JSX.Element | null => {
   if (category.type === FilterType.select) {
     return (
-      <SelectFilterControl
-        isScrollable
+      <RadioFilterControl
         category={category as ISelectFilterCategory<TItem, TFilterCategoryKey>}
         {...props}
       />
@@ -49,8 +48,7 @@ export const FilterControl = <TItem, TFilterCategoryKey extends string>({
   }
   if (category.type === FilterType.multiselect) {
     return (
-      <MultiselectFilterControl
-        isScrollable
+      <CheckboxFilterControl
         category={
           category as IMultiselectFilterCategory<TItem, TFilterCategoryKey>
         }

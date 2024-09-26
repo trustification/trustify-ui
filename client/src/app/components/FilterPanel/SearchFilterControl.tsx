@@ -1,14 +1,13 @@
-import * as React from "react";
 import {
-  ToolbarFilter,
-  InputGroup,
-  TextInput,
   Button,
   ButtonVariant,
+  InputGroup,
+  TextInput,
 } from "@patternfly/react-core";
 import SearchIcon from "@patternfly/react-icons/dist/esm/icons/search-icon";
+import * as React from "react";
+import { ISearchFilterCategory } from "../FilterToolbar";
 import { IFilterControlProps } from "./FilterControl";
-import { ISearchFilterCategory } from "./FilterToolbar";
 
 export interface ISearchFilterControlProps<
   TItem,
@@ -22,7 +21,6 @@ export const SearchFilterControl = <TItem, TFilterCategoryKey extends string>({
   category,
   filterValue,
   setFilterValue,
-  showToolbarItem,
   isNumeric,
   isDisabled = false,
 }: React.PropsWithChildren<
@@ -41,38 +39,32 @@ export const SearchFilterControl = <TItem, TFilterCategoryKey extends string>({
   };
 
   const id = `${category.categoryKey}-input`;
+
   return (
-    <ToolbarFilter
-      chips={filterValue || []}
-      deleteChip={() => setFilterValue([])}
-      categoryName={category.title}
-      showToolbarItem={showToolbarItem}
-    >
-      <InputGroup>
-        <TextInput
-          name={id}
-          id="search-input"
-          type={isNumeric ? "number" : "search"}
-          onChange={(_, value) => setInputValue(value)}
-          aria-label={`${category.title} filter`}
-          value={inputValue}
-          placeholder={category.placeholderText}
-          onKeyDown={(event: React.KeyboardEvent) => {
-            if (event.key && event.key !== "Enter") return;
-            onFilterSubmit();
-          }}
-          isDisabled={isDisabled}
-        />
-        <Button
-          variant={ButtonVariant.control}
-          id="search-button"
-          aria-label="search button for search input"
-          onClick={onFilterSubmit}
-          isDisabled={isDisabled}
-        >
-          <SearchIcon />
-        </Button>
-      </InputGroup>
-    </ToolbarFilter>
+    <InputGroup>
+      <TextInput
+        name={id}
+        id="search-input"
+        type={isNumeric ? "number" : "search"}
+        onChange={(_, value) => setInputValue(value)}
+        aria-label={`${category.title} filter`}
+        value={inputValue}
+        placeholder={category.placeholderText}
+        onKeyDown={(event: React.KeyboardEvent) => {
+          if (event.key && event.key !== "Enter") return;
+          onFilterSubmit();
+        }}
+        isDisabled={isDisabled}
+      />
+      <Button
+        variant={ButtonVariant.control}
+        id="search-button"
+        aria-label="search button for search input"
+        onClick={onFilterSubmit}
+        isDisabled={isDisabled}
+      >
+        <SearchIcon />
+      </Button>
+    </InputGroup>
   );
 };

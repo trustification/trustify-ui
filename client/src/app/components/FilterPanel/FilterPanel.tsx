@@ -1,22 +1,31 @@
 import * as React from "react";
 
+import { Card, CardBody, CardTitle } from "@patternfly/react-core";
+
 import { FilterControl } from "./FilterControl";
 import {
   FilterCategory,
   FilterValue,
-  IFilterToolbarProps,
-} from "./FilterToolbar";
-import { Card, CardBody, CardTitle } from "@patternfly/react-core";
+  IFilterValues,
+} from "../FilterToolbar/FilterToolbar";
 
-export const FilterSidePanel = <TItem, TFilterCategoryKey extends string>({
+export interface IFilterPanelProps<TItem, TFilterCategoryKey extends string> {
+  filterCategories: FilterCategory<TItem, TFilterCategoryKey>[];
+  filterValues: IFilterValues<TFilterCategoryKey>;
+  setFilterValues: (values: IFilterValues<TFilterCategoryKey>) => void;
+  isDisabled?: boolean;
+  ommitFilterCategoryKeys?: TFilterCategoryKey[];
+}
+
+export const FilterPanel = <TItem, TFilterCategoryKey extends string>({
   filterCategories,
   filterValues,
   setFilterValues,
   isDisabled = false,
   ommitFilterCategoryKeys = [],
-}: React.PropsWithChildren<IFilterToolbarProps<TItem, TFilterCategoryKey>> & {
-  ommitFilterCategoryKeys?: string[];
-}): JSX.Element | null => {
+}: React.PropsWithChildren<
+  IFilterPanelProps<TItem, TFilterCategoryKey>
+>): JSX.Element | null => {
   const setFilterValue = (
     category: FilterCategory<TItem, TFilterCategoryKey>,
     newValue: FilterValue
@@ -43,7 +52,6 @@ export const FilterSidePanel = <TItem, TFilterCategoryKey extends string>({
                   setFilterValue={(newValue) =>
                     setFilterValue(category, newValue)
                   }
-                  showToolbarItem={true}
                   isDisabled={isDisabled}
                   isSidebar
                 />

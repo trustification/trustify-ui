@@ -1,9 +1,7 @@
 import * as React from "react";
 import {
-  Checkbox,
   MenuToggle,
   MenuToggleElement,
-  Radio,
   Select,
   SelectList,
   SelectOption,
@@ -21,7 +19,6 @@ export interface ISelectFilterControlProps<
 > extends IFilterControlProps<TItem, TFilterCategoryKey> {
   category: ISelectFilterCategory<TItem, TFilterCategoryKey>;
   isScrollable?: boolean;
-  isSidebar?: boolean;
 }
 
 export const SelectFilterControl = <TItem, TFilterCategoryKey extends string>({
@@ -31,7 +28,6 @@ export const SelectFilterControl = <TItem, TFilterCategoryKey extends string>({
   showToolbarItem,
   isDisabled = false,
   isScrollable = false,
-  isSidebar,
 }: React.PropsWithChildren<
   ISelectFilterControlProps<TItem, TFilterCategoryKey>
 >): JSX.Element | null => {
@@ -90,7 +86,7 @@ export const SelectFilterControl = <TItem, TFilterCategoryKey extends string>({
     );
   };
 
-  return !isSidebar ? (
+  return (
     <ToolbarFilter
       id={`filter-control-${category.categoryKey}`}
       chips={chips}
@@ -129,28 +125,5 @@ export const SelectFilterControl = <TItem, TFilterCategoryKey extends string>({
         </SelectList>
       </Select>
     </ToolbarFilter>
-  ) : (
-    <>
-      {category.selectOptions.map(
-        ({ label, value, optionProps = {} }, index) => {
-          const { isDisabled, ...rest } = optionProps;
-          const isSelected = filterValue?.includes(value) || false;
-          return (
-            <Radio
-              isDisabled={isDisabled}
-              key={index}
-              id={`radio-${index}`}
-              name="radio"
-              isLabelWrapped
-              label={label}
-              isChecked={isSelected}
-              onChange={() => {
-                onFilterSelect(value as string);
-              }}
-            />
-          );
-        }
-      )}
-    </>
   );
 };

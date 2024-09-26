@@ -23,7 +23,7 @@ import {
 } from "@patternfly/react-core";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
-import { FilterSidePanel } from "@app/components/FilterToolbar";
+import { FilterPanel } from "@app/components/FilterPanel";
 
 import { SearchProvider } from "./search-context";
 
@@ -54,21 +54,21 @@ export const Search: React.FC = () => {
   const {
     totalItemCount: sbomTotalCount,
     tableControls: {
-      propHelpers: { filterToolbarProps: sbomFilterProps },
+      propHelpers: { filterPanelProps: sbomFilterPanelProps },
     },
   } = React.useContext(SbomSearchContext);
 
   const {
     totalItemCount: packageTotalCount,
     tableControls: {
-      propHelpers: { filterToolbarProps: packageFilterProps },
+      propHelpers: { filterPanelProps: packageFilterPanelProps },
     },
   } = React.useContext(PackageSearchContext);
 
   const {
     totalItemCount: vulnerabilityTotalCount,
     tableControls: {
-      propHelpers: { filterToolbarProps: vulnerabilityFilterProps },
+      propHelpers: { filterPanelProps: vulnerabilityFilterPanelProps },
     },
   } = React.useContext(VulnerabilitySearchContext);
 
@@ -157,22 +157,22 @@ export const Search: React.FC = () => {
       <PageSection>
         <Grid hasGutter>
           <GridItem md={2}>
-            <Card>
+            <Card isFullHeight>
               <CardBody>
                 {activeTabKey === 0 ? (
-                  <FilterSidePanel
+                  <FilterPanel
                     ommitFilterCategoryKeys={[""]}
-                    {...sbomFilterProps}
+                    {...sbomFilterPanelProps}
                   />
                 ) : activeTabKey === 1 ? (
-                  <FilterSidePanel
+                  <FilterPanel
                     ommitFilterCategoryKeys={[""]}
-                    {...packageFilterProps}
+                    {...packageFilterPanelProps}
                   />
                 ) : activeTabKey === 2 ? (
-                  <FilterSidePanel
+                  <FilterPanel
                     ommitFilterCategoryKeys={[""]}
-                    {...vulnerabilityFilterProps}
+                    {...vulnerabilityFilterPanelProps}
                   />
                 ) : null}
               </CardBody>
