@@ -24,7 +24,7 @@ interface IPackageSearchContext {
     PackageTableData,
     "name" | "namespace" | "version" | "type" | "qualifiers",
     never,
-    "",
+    "" | "type",
     string
   >;
 
@@ -65,6 +65,17 @@ export const PackageSearchProvider: React.FunctionComponent<
         title: "Filter text",
         placeholderText: "Search",
         type: FilterType.search,
+      },
+      {
+        categoryKey: "type",
+        title: "Type",
+        placeholderText: "Type",
+        type: FilterType.multiselect,
+        selectOptions: [
+          { value: "maven", label: "Maven" },
+          { value: "rpm", label: "RPM" },
+          { value: "npm", label: "NPM" },
+        ],
       },
     ],
     isExpansionEnabled: true,

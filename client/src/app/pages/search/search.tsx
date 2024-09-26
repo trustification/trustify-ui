@@ -23,11 +23,16 @@ import {
 } from "@patternfly/react-core";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
+import { FilterSidePanel } from "@app/components/FilterToolbar";
+
+import { SearchProvider } from "./search-context";
+
 import { PackageSearchContext } from "../package-list/package-context";
+import { PackageTable } from "../package-list/package-table";
 import { SbomSearchContext } from "../sbom-list/sbom-context";
 import { SbomTable } from "../sbom-list/sbom-table";
 import { VulnerabilitySearchContext } from "../vulnerability-list/vulnerability-context";
-import { SearchHeaderContext, SearchProvider } from "./search-context";
+import { VulnerabilityTable } from "../vulnerability-list/vulnerability-table";
 
 export const SearchPage: React.FC = () => {
   return (
@@ -38,14 +43,34 @@ export const SearchPage: React.FC = () => {
 };
 
 export const Search: React.FC = () => {
-  const { setSearchTerm } = React.useContext(SearchHeaderContext);
-  const { totalItemCount: sbomTotalCount } =
+  const { tableControls: sbomTableControls } =
     React.useContext(SbomSearchContext);
-  const { totalItemCount: packageTotalCount } =
+  const { tableControls: packageTableControls } =
     React.useContext(PackageSearchContext);
-  const { totalItemCount: vulnerabilityTotalCount } = React.useContext(
+  const { tableControls: vulnerabilityTableControls } = React.useContext(
     VulnerabilitySearchContext
   );
+
+  const {
+    totalItemCount: sbomTotalCount,
+    tableControls: {
+      propHelpers: { filterToolbarProps: sbomFilterProps },
+    },
+  } = React.useContext(SbomSearchContext);
+
+  const {
+    totalItemCount: packageTotalCount,
+    tableControls: {
+      propHelpers: { filterToolbarProps: packageFilterProps },
+    },
+  } = React.useContext(PackageSearchContext);
+
+  const {
+    totalItemCount: vulnerabilityTotalCount,
+    tableControls: {
+      propHelpers: { filterToolbarProps: vulnerabilityFilterProps },
+    },
+  } = React.useContext(VulnerabilitySearchContext);
 
   // Search
 
@@ -60,7 +85,18 @@ export const Search: React.FC = () => {
   };
 
   const onChangeContextSearchValue = () => {
-    setSearchTerm(searchValue);
+    sbomTableControls.filterState.setFilterValues({
+      ...sbomTableControls.filterState.filterValues,
+      "": [searchValue],
+    });
+    packageTableControls.filterState.setFilterValues({
+      ...packageTableControls.filterState.filterValues,
+      "": [searchValue],
+    });
+    vulnerabilityTableControls.filterState.setFilterValues({
+      ...vulnerabilityTableControls.filterState.filterValues,
+      "": [searchValue],
+    });
   };
 
   // Tabs
@@ -122,7 +158,24 @@ export const Search: React.FC = () => {
         <Grid hasGutter>
           <GridItem md={2}>
             <Card>
-              <CardBody>fikter</CardBody>
+              <CardBody>
+                {activeTabKey === 0 ? (
+                  <FilterSidePanel
+                    ommitFilterCategoryKeys={[""]}
+                    {...sbomFilterProps}
+                  />
+                ) : activeTabKey === 1 ? (
+                  <FilterSidePanel
+                    ommitFilterCategoryKeys={[""]}
+                    {...packageFilterProps}
+                  />
+                ) : activeTabKey === 2 ? (
+                  <FilterSidePanel
+                    ommitFilterCategoryKeys={[""]}
+                    {...vulnerabilityFilterProps}
+                  />
+                ) : null}
+              </CardBody>
             </Card>
           </GridItem>
           <GridItem md={10}>
@@ -133,7 +186,6 @@ export const Search: React.FC = () => {
                   onSelect={handleTabClick}
                   aria-label="Tabs"
                   role="region"
-                  isBox
                 >
                   <Tab
                     eventKey={0}
@@ -170,7 +222,7 @@ export const Search: React.FC = () => {
                       </TabTitleText>
                     }
                   >
-                    package list
+                    <PackageTable />
                   </Tab>
                   <Tab
                     eventKey={2}
@@ -183,7 +235,7 @@ export const Search: React.FC = () => {
                       </TabTitleText>
                     }
                   >
-                    Vulnerability list
+                    <VulnerabilityTable />
                   </Tab>
                 </Tabs>
               </CardBody>

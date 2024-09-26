@@ -16,6 +16,7 @@ export interface ISearchFilterControlProps<
 > extends IFilterControlProps<TItem, TFilterCategoryKey> {
   category: ISearchFilterCategory<TItem, TFilterCategoryKey>;
   isNumeric: boolean;
+  isSidebar?: boolean;
 }
 
 export const SearchFilterControl = <TItem, TFilterCategoryKey extends string>({
@@ -25,6 +26,7 @@ export const SearchFilterControl = <TItem, TFilterCategoryKey extends string>({
   showToolbarItem,
   isNumeric,
   isDisabled = false,
+  isSidebar,
 }: React.PropsWithChildren<
   ISearchFilterControlProps<TItem, TFilterCategoryKey>
 >): JSX.Element | null => {
@@ -41,38 +43,45 @@ export const SearchFilterControl = <TItem, TFilterCategoryKey extends string>({
   };
 
   const id = `${category.categoryKey}-input`;
-  return (
+
+  const input = (
+    <InputGroup>
+      <TextInput
+        name={id}
+        id="search-input"
+        type={isNumeric ? "number" : "search"}
+        onChange={(_, value) => setInputValue(value)}
+        aria-label={`${category.title} filter`}
+        value={inputValue}
+        placeholder={category.placeholderText}
+        onKeyDown={(event: React.KeyboardEvent) => {
+          if (event.key && event.key !== "Enter") return;
+          onFilterSubmit();
+        }}
+        isDisabled={isDisabled}
+      />
+      <Button
+        variant={ButtonVariant.control}
+        id="search-button"
+        aria-label="search button for search input"
+        onClick={onFilterSubmit}
+        isDisabled={isDisabled}
+      >
+        <SearchIcon />
+      </Button>
+    </InputGroup>
+  );
+
+  return !isSidebar ? (
     <ToolbarFilter
       chips={filterValue || []}
       deleteChip={() => setFilterValue([])}
       categoryName={category.title}
       showToolbarItem={showToolbarItem}
     >
-      <InputGroup>
-        <TextInput
-          name={id}
-          id="search-input"
-          type={isNumeric ? "number" : "search"}
-          onChange={(_, value) => setInputValue(value)}
-          aria-label={`${category.title} filter`}
-          value={inputValue}
-          placeholder={category.placeholderText}
-          onKeyDown={(event: React.KeyboardEvent) => {
-            if (event.key && event.key !== "Enter") return;
-            onFilterSubmit();
-          }}
-          isDisabled={isDisabled}
-        />
-        <Button
-          variant={ButtonVariant.control}
-          id="search-button"
-          aria-label="search button for search input"
-          onClick={onFilterSubmit}
-          isDisabled={isDisabled}
-        >
-          <SearchIcon />
-        </Button>
-      </InputGroup>
+      {input}
     </ToolbarFilter>
+  ) : (
+    <>{input}</>
   );
 };

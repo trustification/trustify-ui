@@ -2,6 +2,7 @@ import * as React from "react";
 import {
   Badge,
   Button,
+  Checkbox,
   MenuToggle,
   MenuToggleElement,
   Select,
@@ -29,6 +30,7 @@ export interface IMultiselectFilterControlProps<TItem>
   extends IFilterControlProps<TItem, string> {
   category: IMultiselectFilterCategory<TItem, string>;
   isScrollable?: boolean;
+  isSidebar?: boolean;
 }
 
 export const MultiselectFilterControl = <TItem,>({
@@ -38,6 +40,7 @@ export const MultiselectFilterControl = <TItem,>({
   showToolbarItem,
   isDisabled = false,
   isScrollable = false,
+  isSidebar,
 }: React.PropsWithChildren<
   IMultiselectFilterControlProps<TItem>
 >): JSX.Element | null => {
@@ -336,7 +339,7 @@ export const MultiselectFilterControl = <TItem,>({
     </MenuToggle>
   );
 
-  return (
+  return !isSidebar ? (
     <ToolbarFilter
       id={`filter-control-${category.categoryKey}`}
       chips={chips}
@@ -359,5 +362,24 @@ export const MultiselectFilterControl = <TItem,>({
         </SelectList>
       </Select>
     </ToolbarFilter>
+  ) : (
+    <>
+      {flatOptions.map(({ label, value, optionProps = {} }, index) => {
+        const { isDisabled, ...rest } = optionProps;
+        return (
+          <Checkbox
+            isDisabled={isDisabled}
+            key={index}
+            id={`checkbox-${index}`}
+            isLabelWrapped
+            label={label}
+            isChecked={filterValue?.includes(value)}
+            onChange={() => {
+              onSelect(value);
+            }}
+          />
+        );
+      })}
+    </>
   );
 };

@@ -3,40 +3,6 @@ import { PackageSearchProvider } from "../package-list/package-context";
 import { SbomSearchProvider } from "../sbom-list/sbom-context";
 import { VulnerabilitySearchProvider } from "../vulnerability-list/vulnerability-context";
 
-interface ISearchHeaderContext {
-  searchTerm: string;
-  setSearchTerm: (value: string) => void;
-}
-
-const searchHeaderContextDefaultValue = {} as ISearchHeaderContext;
-
-export const SearchHeaderContext = React.createContext<ISearchHeaderContext>(
-  searchHeaderContextDefaultValue
-);
-
-interface ISearchHeaderProvider {
-  children: React.ReactNode;
-}
-
-export const SearchHeaderProvider: React.FunctionComponent<
-  ISearchHeaderProvider
-> = ({ children }: ISearchHeaderProvider) => {
-  const [searchTerm, setSearchTerm] = React.useState("");
-
-  return (
-    <SearchHeaderContext.Provider
-      value={{
-        searchTerm,
-        setSearchTerm,
-      }}
-    >
-      {children}
-    </SearchHeaderContext.Provider>
-  );
-};
-
-// Put all required context under only one
-
 interface Provider<TProps> {
   Component: React.ComponentType<React.PropsWithChildren<TProps>>;
   props?: Omit<TProps, "children">;
@@ -69,7 +35,6 @@ function createProvider<TProps>(
 }
 
 const allSearchProviders = [
-  createProvider(SearchHeaderProvider, {}),
   createProvider(SbomSearchProvider, {}),
   createProvider(PackageSearchProvider, {}),
   createProvider(VulnerabilitySearchProvider, {}),
