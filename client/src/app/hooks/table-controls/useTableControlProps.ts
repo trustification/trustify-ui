@@ -187,6 +187,7 @@ export const useTableControlProps = <
       getTrProps,
       getTdProps,
       filterToolbarProps: propsForFilterToolbar,
+      filterPanelProps: propsForFilterToolbar,
       paginationProps,
       paginationToolbarItemProps,
       toolbarBulkSelectorProps,

@@ -1,9 +1,9 @@
 import { HubFilter, HubRequestParams } from "@app/api/models";
-import { objectKeys } from "@app/utils/utils";
 import {
   FilterCategory,
   getFilterLogicOperator,
 } from "@app/components/FilterToolbar";
+import { objectKeys } from "@app/utils/utils";
 import { IFilterState } from "./useFilterState";
 
 /**
@@ -135,6 +135,16 @@ export const getFilterHubRequestParams = <
           operator: "=",
           value: {
             list: serverFilterValue,
+            operator: getFilterLogicOperator(filterCategory, "OR"),
+          },
+        });
+      }
+      if (filterCategory.type === "dateRange") {
+        pushOrMergeFilter(filters, {
+          field: serverFilterField,
+          operator: "=",
+          value: {
+            list: serverFilterValue[0].split("/"),
             operator: getFilterLogicOperator(filterCategory, "OR"),
           },
         });

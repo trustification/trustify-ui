@@ -196,11 +196,11 @@ export const AdvisoryList: React.FC = () => {
 
   return (
     <>
-      <PageSection variant={PageSectionVariants.light}>
-        <TextContent>
-          <Text component="h1">Advisories</Text>
-        </TextContent>
-      </PageSection>
+      {/*<PageSection variant={PageSectionVariants.light}>*/}
+      {/*  <TextContent>*/}
+      {/*    <Text component="h1">Advisories</Text>*/}
+      {/*  </TextContent>*/}
+      {/*</PageSection>*/}
       <PageSection>
         <div
           style={{
