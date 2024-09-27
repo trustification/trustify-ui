@@ -19,7 +19,7 @@ interface ISbomSearchContext {
     SbomSummary,
     "name" | "published" | "labels" | "packages",
     "published",
-    "" | "type",
+    "",
     string
   >;
 
@@ -59,16 +59,6 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
         title: "Filter text",
         placeholderText: "Search",
         type: FilterType.search,
-      },
-      {
-        categoryKey: "type",
-        title: "Type",
-        placeholderText: "Type",
-        type: FilterType.multiselect,
-        selectOptions: [
-          { value: "spdx", label: "SPDX" },
-          { value: "cyclonedx", label: "CycloneDX" },
-        ],
       },
     ],
     isExpansionEnabled: true,

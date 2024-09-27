@@ -34,8 +34,6 @@ export const SidebarApp: React.FC = () => {
               Search
             </NavLink>
           </li>
-        </NavGroup>
-        <NavGroup title="Groups">
           <li className="pf-v5-c-nav__item">
             <NavLink
               to="/products"
