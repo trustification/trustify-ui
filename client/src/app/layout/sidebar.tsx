@@ -76,7 +76,7 @@ export const SidebarApp: React.FC = () => {
               Packages
             </NavLink>
           </li>
-          {/* <li className="pf-v5-c-nav__item">
+          <li className="pf-v5-c-nav__item">
             <NavLink
               to="/advisories"
               className={({ isActive }) => {
@@ -85,7 +85,7 @@ export const SidebarApp: React.FC = () => {
             >
               Advisories
             </NavLink>
-          </li> */}
+          </li>
         </NavGroup>
         <NavGroup title="Settings">
           <li className="pf-v5-c-nav__item">

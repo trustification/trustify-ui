@@ -277,11 +277,11 @@ export const ImporterList: React.FC = () => {
 
   return (
     <>
-      {/*<PageSection variant={PageSectionVariants.light}>*/}
-      {/*  <TextContent>*/}
-      {/*    <Text component="h1">Importers</Text>*/}
-      {/*  </TextContent>*/}
-      {/*</PageSection>*/}
+      <PageSection variant={PageSectionVariants.light}>
+        <TextContent>
+          <Text component="h1">Importers</Text>
+        </TextContent>
+      </PageSection>
       <PageSection>
         <div
           style={{
