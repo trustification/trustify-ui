@@ -1,27 +1,28 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-import { Importer } from "@app/api/models";
+import { client } from "@app/axios-config/apiInit";
 import {
   createImporter,
   deleteImporter,
-  getImporterById,
-  getImporterReports,
-  getImporters,
+  getImporter,
+  ImporterConfiguration,
+  listImporterReports,
+  listImporters,
   updateImporter,
-} from "@app/api/rest";
+} from "@app/client";
 
 export const ImportersQueryKey = "importers";
 
 export const useFetchImporters = (refetchDisabled: boolean = false) => {
   const { isLoading, error, refetch, data } = useQuery({
     queryKey: [ImportersQueryKey],
-    queryFn: getImporters,
+    queryFn: () => listImporters({ client }),
     refetchInterval: !refetchDisabled ? 5000 : false,
   });
 
   return {
-    importers: data || [],
+    importers: data?.data || [],
     isFetching: isLoading,
     fetchError: error,
     refetch,
@@ -29,25 +30,40 @@ export const useFetchImporters = (refetchDisabled: boolean = false) => {
 };
 
 export const useCreateImporterMutation = (
-  onSuccess: (res: Importer) => void,
-  onError: (err: AxiosError, payload: Importer) => void
+  onSuccess: (res: void) => void,
+  onError: (
+    err: AxiosError,
+    payload: {
+      importerName: string;
+      configuration: ImporterConfiguration;
+    }
+  ) => void
 ) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (obj) => createImporter(obj.name, obj.configuration),
+    mutationFn: (payload: {
+      importerName: string;
+      configuration: ImporterConfiguration;
+    }) => {
+      return createImporter({
+        client,
+        path: { name: payload.importerName },
+        body: payload.configuration,
+      });
+    },
     onSuccess: ({ data }, _payload) => {
-      onSuccess(data);
+      onSuccess();
       queryClient.invalidateQueries({ queryKey: [ImportersQueryKey] });
     },
     onError,
   });
 };
 
-export const useFetchImporterById = (id: number | string) => {
+export const useFetchImporterById = (id: string) => {
   const { data, isLoading, error } = useQuery({
     queryKey: [ImportersQueryKey, id],
-    queryFn: () => getImporterById(id),
+    queryFn: () => getImporter({ client, path: { name: id } }),
     enabled: id !== undefined,
   });
 
@@ -59,14 +75,26 @@ export const useFetchImporterById = (id: number | string) => {
 };
 
 export const useUpdateImporterMutation = (
-  onSuccess: (payload: Importer) => void,
-  onError: (err: AxiosError, payload: Importer) => void
+  onSuccess: (payload: void) => void,
+  onError: (
+    err: AxiosError,
+    payload: { importerName: string; configuration: ImporterConfiguration }
+  ) => void
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (obj) => updateImporter(obj.name, obj.configuration),
+    mutationFn: (payload: {
+      importerName: string;
+      configuration: ImporterConfiguration;
+    }) => {
+      return updateImporter({
+        client,
+        path: { name: payload.importerName },
+        body: payload.configuration,
+      });
+    },
     onSuccess: (_res, payload) => {
-      onSuccess(payload);
+      onSuccess();
       queryClient.invalidateQueries({ queryKey: [ImportersQueryKey] });
     },
     onError: onError,
@@ -74,13 +102,13 @@ export const useUpdateImporterMutation = (
 };
 
 export const useDeleteIporterMutation = (
-  onSuccess: (id: number | string) => void,
-  onError: (err: AxiosError, id: number | string) => void
+  onSuccess: (id: string) => void,
+  onError: (err: AxiosError, id: string) => void
 ) => {
   const queryClient = useQueryClient();
 
   const { isPending, mutate, error } = useMutation({
-    mutationFn: (id: string | number) => deleteImporter(id),
+    mutationFn: (id: string) => deleteImporter({ client, path: { name: id } }),
     onSuccess: (_res, id) => {
       onSuccess(id);
       queryClient.invalidateQueries({ queryKey: [ImportersQueryKey] });
@@ -104,12 +132,15 @@ export const useFetchImporterReports = (
 ) => {
   const { data, isLoading, refetch, error } = useQuery({
     queryKey: [ImportersQueryKey, id, "reports"],
-    queryFn: () => getImporterReports(id),
+    queryFn: () => listImporterReports({ client, path: { name: id } }),
     refetchInterval: !refetchDisabled ? 5000 : false,
   });
 
   return {
-    importers: data?.data || [],
+    result: {
+      data: data?.data?.items || [],
+      total: data?.data?.total ?? 0,
+    },
     isFetching: isLoading,
     fetchError: error,
     refetch,

@@ -20,17 +20,16 @@ import {
 } from "@patternfly/react-core";
 import PenIcon from "@patternfly/react-icons/dist/esm/icons/pen-icon";
 
-import { AdvisoryIndex } from "@app/api/models";
+import { AdvisoryDetails } from "@app/client";
 import { AdvisoryGeneralView } from "@app/components/AdvisoryGeneralView";
 import { AdvisoryIssuer } from "@app/components/AdvisoryIssuer";
 import { EditLabelsModal } from "@app/components/EditLabelsModal";
-import { HashesAsList } from "@app/components/HashesAsList";
 import { LabelsAsList } from "@app/components/LabelsAsList";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import { useUpdateAdvisoryLabelsMutation } from "@app/queries/advisories";
 
 interface OverviewProps {
-  advisory: AdvisoryIndex;
+  advisory: AdvisoryDetails;
 }
 
 export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
@@ -80,14 +79,14 @@ export const Overview: React.FC<OverviewProps> = ({ advisory }) => {
                 <CardTitle>System</CardTitle>
                 <CardBody>
                   <DescriptionList>
-                    <DescriptionListGroup>
+                    {/* <DescriptionListGroup>
                       <DescriptionListTerm>Hashes</DescriptionListTerm>
                       <DescriptionListDescription>
                         {advisory.hashes && (
                           <HashesAsList value={advisory.hashes} />
                         )}
                       </DescriptionListDescription>
-                    </DescriptionListGroup>
+                    </DescriptionListGroup> */}
                     <DescriptionListGroup>
                       <DescriptionListTerm>
                         Labels {""}

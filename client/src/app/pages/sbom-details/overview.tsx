@@ -11,12 +11,12 @@ import {
 } from "@patternfly/react-core";
 
 import { compareBySeverityFn, severityList } from "@app/api/model-utils";
-import { SBOM, Severity } from "@app/api/models";
+import { Severity } from "@app/api/models";
+import { SbomSummary } from "@app/client";
 import { formatDate } from "@app/utils/utils";
-import { SbomDetails } from "@app/client";
 
 interface InfoProps {
-  sbom: SbomDetails;
+  sbom: SbomSummary;
 }
 
 export const Overview: React.FC<InfoProps> = ({ sbom }) => {

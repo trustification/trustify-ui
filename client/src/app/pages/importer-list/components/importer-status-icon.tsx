@@ -1,10 +1,10 @@
 import React from "react";
 
-import { ImporterStatus } from "@app/api/models";
+import { State } from "@app/client";
 import { IconedStatus } from "@app/components/IconedStatus";
 
 export interface ImporterStatusIconProps {
-  state: ImporterStatus;
+  state: State;
 }
 
 export type AnalysisState =
@@ -15,7 +15,7 @@ export type AnalysisState =
   | "InProgress"
   | "NotStarted";
 
-const importerStateToAnalyze: Map<ImporterStatus, AnalysisState> = new Map([
+const importerStateToAnalyze: Map<State, AnalysisState> = new Map([
   ["waiting", "Scheduled"],
   ["running", "InProgress"],
 ]);
@@ -23,7 +23,7 @@ const importerStateToAnalyze: Map<ImporterStatus, AnalysisState> = new Map([
 export const ImporterStatusIcon: React.FC<ImporterStatusIconProps> = ({
   state,
 }) => {
-  const getImporterStatus = (state: ImporterStatus): AnalysisState => {
+  const getImporterStatus = (state: State): AnalysisState => {
     if (importerStateToAnalyze.has(state)) {
       const value = importerStateToAnalyze.get(state);
       if (value) return value;

@@ -14,6 +14,13 @@ import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
 import { VulnerabilityStatus } from "@app/api/models";
+import { client } from "@app/axios-config/apiInit";
+import {
+  getVulnerability,
+  PurlAdvisory,
+  StatusContext,
+  VulnerabilityDetails,
+} from "@app/client";
 import { AdvisoryInDrawerInfo } from "@app/components/AdvisoryInDrawerInfo";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { PageDrawerContent } from "@app/components/PageDrawerContext";
@@ -24,17 +31,11 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
+import { VulnerabilityInDrawerInfo } from "@app/components/VulnerabilityInDrawerInfo";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchPackageById } from "@app/queries/packages";
 import { useWithUiId } from "@app/utils/query-utils";
-import { VulnerabilityInDrawerInfo } from "@app/components/VulnerabilityInDrawerInfo";
-import {
-  getVulnerability,
-  PurlAdvisory,
-  StatusContext,
-  VulnerabilityDetails,
-} from "@app/client";
-import { client } from "@app/axios-config/apiInit";
+
 import { ShowStatusContext } from "../vulnerability-details/packages-by-vulnerability";
 
 interface TableData {

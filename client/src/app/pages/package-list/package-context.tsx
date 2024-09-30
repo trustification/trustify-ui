@@ -2,7 +2,8 @@ import React from "react";
 
 import { AxiosError } from "axios";
 
-import { DecomposedPurl, Package } from "@app/api/models";
+import { DecomposedPurl } from "@app/api/models";
+import { PurlSummary } from "@app/client";
 import { FilterType } from "@app/components/FilterToolbar";
 import { TablePersistenceKeyPrefixes } from "@app/Constants";
 import {
@@ -15,7 +16,7 @@ import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchPackages } from "@app/queries/packages";
 import { decomposePurl } from "@app/utils/utils";
 
-interface PackageTableData extends Package {
+interface PackageTableData extends PurlSummary {
   decomposedPurl?: DecomposedPurl;
 }
 

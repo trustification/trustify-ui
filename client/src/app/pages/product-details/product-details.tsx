@@ -11,6 +11,7 @@ import {
 import { PathParam, useRouteParams } from "@app/Routes";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useFetchProductById } from "@app/queries/products";
+
 import { Overview } from "./overview";
 import { ProductVersions } from "./product-versions";
 
