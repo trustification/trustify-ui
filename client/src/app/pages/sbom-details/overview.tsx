@@ -11,8 +11,7 @@ import {
 } from "@patternfly/react-core";
 
 import { compareBySeverityFn, severityList } from "@app/api/model-utils";
-import { Severity } from "@app/api/models";
-import { SbomSummary } from "@app/client";
+import { SbomSummary, Severity } from "@app/client";
 import { formatDate } from "@app/utils/utils";
 
 interface InfoProps {

@@ -59,8 +59,7 @@ import { LabelsAsList } from "@app/components/LabelsAsList";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 
-import { Severity } from "@app/api/models";
-import { AdvisorySummary } from "@app/client";
+import { AdvisorySummary, Severity } from "@app/client";
 import { AdvisoryGeneralView } from "@app/components/AdvisoryGeneralView";
 import { AdvisoryIssuer } from "@app/components/AdvisoryIssuer";
 

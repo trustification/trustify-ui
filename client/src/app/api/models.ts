@@ -1,3 +1,5 @@
+import { Labels } from "@app/client";
+
 export type WithUiId<T> = T & { _ui_unique_id: string };
 
 /** Mark an object as "New" therefore does not have an `id` field. */
@@ -34,10 +36,6 @@ export interface HubPaginatedResult<T> {
 }
 
 // Common
-
-export type Severity = "none" | "low" | "medium" | "high" | "critical";
-
-export type Labels = Record<string, string>;
 
 export type VulnerabilityStatus =
   | "fixed"
