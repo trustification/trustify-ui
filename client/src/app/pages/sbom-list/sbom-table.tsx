@@ -118,14 +118,16 @@ export const SbomTable: React.FC = ({}) => {
 
   return (
     <>
-      <Table {...tableProps} aria-label="SBOM table">
+      <Table {...tableProps} aria-label="sbom-table">
         <Thead>
           <Tr>
             <TableHeaderContentWithControls {...tableControls}>
               <Th {...getThProps({ columnKey: "name" })} />
+              <Th {...getThProps({ columnKey: "version" })} />
+              <Th {...getThProps({ columnKey: "supplier" })} />
               <Th {...getThProps({ columnKey: "published" })} />
-              <Th {...getThProps({ columnKey: "labels" })} />
               <Th {...getThProps({ columnKey: "packages" })} />
+              <Th {...getThProps({ columnKey: "vulnerabilities" })} />
             </TableHeaderContentWithControls>
           </Tr>
         </Thead>
@@ -158,21 +160,24 @@ export const SbomTable: React.FC = ({}) => {
                     <Td
                       width={10}
                       modifier="truncate"
-                      {...getTdProps({ columnKey: "published" })}
-                    >
+                      {...getTdProps({ columnKey: "version" })}
+                    ></Td>
+                    <Td
+                      width={20}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "supplier" })}
+                    ></Td>
+
+                    <Td width={10} {...getTdProps({ columnKey: "published" })}>
                       {formatDate(item.published)}
                     </Td>
-                    <Td
-                      width={25}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "labels" })}
-                    >
-                      {item.labels && <LabelsAsList value={item.labels} />}
-                    </Td>
-
                     <Td width={10} {...getTdProps({ columnKey: "packages" })}>
                       <PackagesCount sbomId={item.id} />
                     </Td>
+                    <Td
+                      width={10}
+                      {...getTdProps({ columnKey: "vulnerabilities" })}
+                    ></Td>
                     <Td isActionCell>
                       <ActionsColumn
                         items={[
@@ -198,53 +203,13 @@ export const SbomTable: React.FC = ({}) => {
                     </Td>
                   </TableRowContentWithControls>
                 </Tr>
-                {isCellExpanded(item) ? (
-                  <Tr isExpanded>
-                    <Td colSpan={7}>
-                      <ExpandableRowContent>
-                        <div className="pf-v5-u-m-md">
-                          {isCellExpanded(item, "name") ? (
-                            <>
-                              <DescriptionList>
-                                <DescriptionListGroup>
-                                  <DescriptionListTerm>
-                                    Author
-                                  </DescriptionListTerm>
-                                  <DescriptionListDescription>
-                                    <List>
-                                      {item.authors.map((elem, index) => (
-                                        <ListItem key={index}>{elem}</ListItem>
-                                      ))}
-                                    </List>
-                                  </DescriptionListDescription>
-                                </DescriptionListGroup>
-                                <DescriptionListGroup>
-                                  <DescriptionListTerm>
-                                    Described by
-                                  </DescriptionListTerm>
-                                  <DescriptionListDescription>
-                                    {item.described_by && (
-                                      <SbomDescribedBy
-                                        described_by={item.described_by}
-                                      />
-                                    )}
-                                  </DescriptionListDescription>
-                                </DescriptionListGroup>
-                              </DescriptionList>
-                            </>
-                          ) : null}
-                        </div>
-                      </ExpandableRowContent>
-                    </Td>
-                  </Tr>
-                ) : null}
               </Tbody>
             );
           })}
         </ConditionalTableBody>
       </Table>
       <SimplePagination
-        idPrefix="sbom-apps-table"
+        idPrefix="sbom-table"
         isTop={false}
         isCompact
         paginationProps={paginationProps}
@@ -263,97 +228,6 @@ export const SbomTable: React.FC = ({}) => {
           onClose={() => setSelectedRowAction(null)}
         />
       )}
-    </>
-  );
-};
-
-interface SbomDescribedByProps {
-  described_by: SbomPackage[];
-}
-
-export const SbomDescribedBy: React.FC<SbomDescribedByProps> = ({
-  described_by,
-}) => {
-  const tableControls = useLocalTableControls({
-    variant: "compact",
-    tableName: "version-table",
-    idProperty: "name",
-    items: described_by,
-    columnNames: {
-      name: "Name",
-      version: "Version",
-    },
-    isPaginationEnabled: false,
-    isSortEnabled: true,
-    sortableColumns: [],
-    isFilterEnabled: true,
-    filterCategories: [
-      {
-        categoryKey: "",
-        title: "Filter tex",
-        type: FilterType.search,
-        placeholderText: "Search...",
-        getItemValue: (item) => {
-          return item.name;
-        },
-      },
-    ],
-    isExpansionEnabled: false,
-  });
-
-  const {
-    currentPageItems,
-    numRenderedColumns,
-    propHelpers: { tableProps, getThProps, getTrProps, getTdProps },
-  } = tableControls;
-
-  return (
-    <>
-      <Table {...tableProps} aria-label="Version table">
-        <Thead>
-          <Tr>
-            <TableHeaderContentWithControls {...tableControls}>
-              <Th {...getThProps({ columnKey: "name" })} />
-              <Th {...getThProps({ columnKey: "version" })} />
-            </TableHeaderContentWithControls>
-          </Tr>
-        </Thead>
-        <ConditionalTableBody
-          isLoading={false}
-          isError={undefined}
-          isNoData={described_by?.length === 0}
-          numRenderedColumns={numRenderedColumns}
-        >
-          {currentPageItems?.map((item, rowIndex) => {
-            return (
-              <Tbody key={item.name}>
-                <Tr {...getTrProps({ item })}>
-                  <TableRowContentWithControls
-                    {...tableControls}
-                    item={item}
-                    rowIndex={rowIndex}
-                  >
-                    <Td
-                      width={20}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "name" })}
-                    >
-                      {item.name}
-                    </Td>
-                    <Td
-                      width={15}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "version" })}
-                    >
-                      {item.version}
-                    </Td>
-                  </TableRowContentWithControls>
-                </Tr>
-              </Tbody>
-            );
-          })}
-        </ConditionalTableBody>
-      </Table>
     </>
   );
 };

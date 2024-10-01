@@ -163,9 +163,7 @@ export const useFetchSbomsAdvisory = (sbomId: string) => {
   });
 
   return {
-    // TODO remove the workaround once the issue is fixed
-    // Workaround to a wrong openapi definiton https://github.com/trustification/trustify/issues/866
-    advisories: (data?.data as SbomAdvisory[] | undefined) || [],
+    advisories: data?.data || [],
     isFetching: isLoading,
     fetchError: error,
   };
