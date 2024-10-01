@@ -6,6 +6,14 @@ export const $AdvisoryDetails = {
       $ref: "#/components/schemas/AdvisoryHead",
     },
     {
+      allOf: [
+        {
+          $ref: "#/components/schemas/SourceDocument",
+        },
+      ],
+      nullable: true,
+    },
+    {
       type: "object",
       required: ["vulnerabilities", "average_severity", "average_score"],
       properties: {
@@ -41,7 +49,6 @@ export const $AdvisoryHead = {
   required: [
     "uuid",
     "identifier",
-    "hashes",
     "issuer",
     "published",
     "withdrawn",
@@ -49,13 +56,6 @@ export const $AdvisoryHead = {
     "labels",
   ],
   properties: {
-    hashes: {
-      type: "array",
-      items: {
-        $ref: "#/components/schemas/Id",
-      },
-      description: "Hashes of the underlying original document as ingested.",
-    },
     identifier: {
       type: "string",
       description:
@@ -94,7 +94,6 @@ export const $AdvisoryHead = {
     },
     uuid: {
       type: "string",
-      format: "uuid",
       description: "The opaque UUID of the advisory.",
     },
     withdrawn: {
@@ -111,6 +110,14 @@ export const $AdvisorySummary = {
   allOf: [
     {
       $ref: "#/components/schemas/AdvisoryHead",
+    },
+    {
+      allOf: [
+        {
+          $ref: "#/components/schemas/SourceDocument",
+        },
+      ],
+      nullable: true,
     },
     {
       type: "object",
@@ -202,6 +209,87 @@ May include several, varying by minor version of the CVSS3 vector.`,
   ],
   description:
     "Summary of information from this advisory regarding a single specific vulnerability.",
+} as const;
+
+export const $AnalysisStatus = {
+  type: "object",
+  required: ["sbom_count", "graph_count"],
+  properties: {
+    graph_count: {
+      type: "integer",
+      format: "int32",
+    },
+    sbom_count: {
+      type: "integer",
+      format: "int32",
+    },
+  },
+} as const;
+
+export const $AncNode = {
+  type: "object",
+  required: ["sbom_id", "node_id", "purl", "name"],
+  properties: {
+    name: {
+      type: "string",
+    },
+    node_id: {
+      type: "string",
+    },
+    purl: {
+      type: "string",
+    },
+    sbom_id: {
+      type: "string",
+    },
+  },
+} as const;
+
+export const $AncestorSummary = {
+  type: "object",
+  required: [
+    "sbom_id",
+    "node_id",
+    "purl",
+    "name",
+    "published",
+    "document_id",
+    "product_name",
+    "product_version",
+    "ancestors",
+  ],
+  properties: {
+    ancestors: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/AncNode",
+      },
+    },
+    document_id: {
+      type: "string",
+    },
+    name: {
+      type: "string",
+    },
+    node_id: {
+      type: "string",
+    },
+    product_name: {
+      type: "string",
+    },
+    product_version: {
+      type: "string",
+    },
+    published: {
+      type: "string",
+    },
+    purl: {
+      type: "string",
+    },
+    sbom_id: {
+      type: "string",
+    },
+  },
 } as const;
 
 export const $Assertion = {
@@ -307,6 +395,76 @@ export const $BinaryByteSize = {
   type: "string",
 } as const;
 
+export const $ChatMessage = {
+  type: "object",
+  required: ["message_type", "content"],
+  properties: {
+    content: {
+      type: "string",
+    },
+    internal_state: {
+      type: "string",
+      nullable: true,
+    },
+    message_type: {
+      $ref: "#/components/schemas/MessageType",
+    },
+  },
+} as const;
+
+export const $ChatState = {
+  type: "object",
+  required: ["messages"],
+  properties: {
+    messages: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/ChatMessage",
+      },
+    },
+  },
+} as const;
+
+export const $ClearlyDefinedImporter = {
+  allOf: [
+    {
+      $ref: "#/components/schemas/CommonImporter",
+    },
+    {
+      type: "object",
+      properties: {
+        source: {
+          type: "string",
+        },
+        types: {
+          type: "array",
+          items: {
+            $ref: "#/components/schemas/ClearlyDefinedPackageType",
+          },
+          uniqueItems: true,
+        },
+      },
+    },
+  ],
+} as const;
+
+export const $ClearlyDefinedPackageType = {
+  type: "string",
+  enum: [
+    "composer",
+    "crate",
+    "deb",
+    "gem",
+    "git",
+    "go",
+    "maven",
+    "npm",
+    "nuget",
+    "pod",
+    "pypi",
+  ],
+} as const;
+
 export const $CommonImporter = {
   type: "object",
   required: ["period"],
@@ -392,6 +550,113 @@ export const $CveImporter = {
   ],
 } as const;
 
+export const $CweImporter = {
+  allOf: [
+    {
+      $ref: "#/components/schemas/CommonImporter",
+    },
+    {
+      type: "object",
+      properties: {
+        source: {
+          type: "string",
+        },
+      },
+    },
+  ],
+} as const;
+
+export const $DatasetIngestResult = {
+  type: "object",
+  required: ["warnings", "files"],
+  properties: {
+    files: {
+      type: "object",
+      additionalProperties: {
+        $ref: "#/components/schemas/IngestResult",
+      },
+    },
+    warnings: {
+      type: "array",
+      items: {
+        type: "string",
+      },
+    },
+  },
+} as const;
+
+export const $DepNode = {
+  type: "object",
+  required: ["sbom_id", "node_id", "purl", "name", "deps"],
+  properties: {
+    deps: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/DepNode",
+      },
+    },
+    name: {
+      type: "string",
+    },
+    node_id: {
+      type: "string",
+    },
+    purl: {
+      type: "string",
+    },
+    sbom_id: {
+      type: "string",
+    },
+  },
+} as const;
+
+export const $DepSummary = {
+  type: "object",
+  required: [
+    "sbom_id",
+    "node_id",
+    "purl",
+    "name",
+    "published",
+    "document_id",
+    "product_name",
+    "product_version",
+    "deps",
+  ],
+  properties: {
+    deps: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/DepNode",
+      },
+    },
+    document_id: {
+      type: "string",
+    },
+    name: {
+      type: "string",
+    },
+    node_id: {
+      type: "string",
+    },
+    product_name: {
+      type: "string",
+    },
+    product_version: {
+      type: "string",
+    },
+    published: {
+      type: "string",
+    },
+    purl: {
+      type: "string",
+    },
+    sbom_id: {
+      type: "string",
+    },
+  },
+} as const;
+
 export const $Id = {
   type: "string",
   description: "A hash/digest prefixed with its type.",
@@ -454,6 +719,24 @@ export const $ImporterConfiguration = {
         },
       },
     },
+    {
+      type: "object",
+      required: ["clearlyDefined"],
+      properties: {
+        clearlyDefined: {
+          $ref: "#/components/schemas/ClearlyDefinedImporter",
+        },
+      },
+    },
+    {
+      type: "object",
+      required: ["cwe"],
+      properties: {
+        cwe: {
+          $ref: "#/components/schemas/CweImporter",
+        },
+      },
+    },
   ],
 } as const;
 
@@ -489,6 +772,14 @@ export const $ImporterData = {
       description: "The last successful run",
       nullable: true,
     },
+    progress: {
+      allOf: [
+        {
+          $ref: "#/components/schemas/Progress",
+        },
+      ],
+      nullable: true,
+    },
     state: {
       $ref: "#/components/schemas/State",
     },
@@ -517,11 +808,100 @@ export const $ImporterReport = {
   },
 } as const;
 
+export const $Info = {
+  type: "object",
+  required: ["version"],
+  properties: {
+    build: {
+      type: "object",
+    },
+    version: {
+      type: "string",
+    },
+  },
+} as const;
+
+export const $IngestResult = {
+  type: "object",
+  description: "The result of the ingestion process",
+  required: ["id", "document_id"],
+  properties: {
+    document_id: {
+      type: "string",
+      description: "The ID declared by the document",
+    },
+    id: {
+      $ref: "#/components/schemas/Id",
+    },
+    warnings: {
+      type: "array",
+      items: {
+        type: "string",
+      },
+      description: "Warnings that occurred during the import process",
+    },
+  },
+} as const;
+
 export const $Labels = {
   type: "object",
   additionalProperties: {
     type: "string",
   },
+} as const;
+
+export const $LicenseDetailsPurlSummary = {
+  type: "object",
+  required: ["purl", "sbom"],
+  properties: {
+    purl: {
+      $ref: "#/components/schemas/VersionedPurlHead",
+    },
+    sbom: {
+      $ref: "#/components/schemas/SbomHead",
+    },
+  },
+} as const;
+
+export const $LicenseSummary = {
+  type: "object",
+  required: [
+    "id",
+    "license",
+    "spdx_licenses",
+    "spdx_license_exceptions",
+    "purls",
+  ],
+  properties: {
+    id: {
+      type: "string",
+    },
+    license: {
+      type: "string",
+    },
+    purls: {
+      type: "integer",
+      format: "int64",
+      minimum: 0,
+    },
+    spdx_license_exceptions: {
+      type: "array",
+      items: {
+        type: "string",
+      },
+    },
+    spdx_licenses: {
+      type: "array",
+      items: {
+        type: "string",
+      },
+    },
+  },
+} as const;
+
+export const $MessageType = {
+  type: "string",
+  enum: ["human", "system", "ai", "tool"],
 } as const;
 
 export const $OrganizationDetails = {
@@ -614,6 +994,46 @@ export const $OsvImporter = {
   ],
 } as const;
 
+export const $PackageNode = {
+  type: "object",
+  required: [
+    "sbom_id",
+    "node_id",
+    "purl",
+    "name",
+    "published",
+    "document_id",
+    "product_name",
+    "product_version",
+  ],
+  properties: {
+    document_id: {
+      type: "string",
+    },
+    name: {
+      type: "string",
+    },
+    node_id: {
+      type: "string",
+    },
+    product_name: {
+      type: "string",
+    },
+    product_version: {
+      type: "string",
+    },
+    published: {
+      type: "string",
+    },
+    purl: {
+      type: "string",
+    },
+    sbom_id: {
+      type: "string",
+    },
+  },
+} as const;
+
 export const $PaginatedAdvisorySummary = {
   type: "object",
   description: "Paginated returned items",
@@ -665,6 +1085,48 @@ export const $PaginatedImporterReport = {
       type: "array",
       items: {
         $ref: "#/components/schemas/ImporterReport",
+      },
+      description: "Returned items",
+    },
+    total: {
+      type: "integer",
+      format: "int64",
+      description: "Total number of items found",
+      minimum: 0,
+    },
+  },
+} as const;
+
+export const $PaginatedLicenseDetailsPurlSummary = {
+  type: "object",
+  description: "Paginated returned items",
+  required: ["items", "total"],
+  properties: {
+    items: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/LicenseDetailsPurlSummary",
+      },
+      description: "Returned items",
+    },
+    total: {
+      type: "integer",
+      format: "int64",
+      description: "Total number of items found",
+      minimum: 0,
+    },
+  },
+} as const;
+
+export const $PaginatedLicenseSummary = {
+  type: "object",
+  description: "Paginated returned items",
+  required: ["items", "total"],
+  properties: {
+    items: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/LicenseSummary",
       },
       description: "Returned items",
     },
@@ -803,6 +1265,27 @@ export const $PaginatedSbomSummary = {
   },
 } as const;
 
+export const $PaginatedSpdxLicenseSummary = {
+  type: "object",
+  description: "Paginated returned items",
+  required: ["items", "total"],
+  properties: {
+    items: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/SpdxLicenseSummary",
+      },
+      description: "Returned items",
+    },
+    total: {
+      type: "integer",
+      format: "int64",
+      description: "Total number of items found",
+      minimum: 0,
+    },
+  },
+} as const;
+
 export const $PaginatedVulnerabilitySummary = {
   type: "object",
   description: "Paginated returned items",
@@ -812,6 +1295,27 @@ export const $PaginatedVulnerabilitySummary = {
       type: "array",
       items: {
         $ref: "#/components/schemas/VulnerabilitySummary",
+      },
+      description: "Returned items",
+    },
+    total: {
+      type: "integer",
+      format: "int64",
+      description: "Total number of items found",
+      minimum: 0,
+    },
+  },
+} as const;
+
+export const $PaginatedWeaknessSummary = {
+  type: "object",
+  description: "Paginated returned items",
+  required: ["items", "total"],
+  properties: {
+    items: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/WeaknessSummary",
       },
       description: "Returned items",
     },
@@ -858,10 +1362,24 @@ export const $ProductHead = {
   properties: {
     id: {
       type: "string",
-      format: "uuid",
     },
     name: {
       type: "string",
+    },
+  },
+} as const;
+
+export const $ProductSbomHead = {
+  type: "object",
+  required: ["labels", "published"],
+  properties: {
+    labels: {
+      $ref: "#/components/schemas/Labels",
+    },
+    published: {
+      type: "string",
+      format: "date-time",
+      nullable: true,
     },
   },
 } as const;
@@ -905,7 +1423,7 @@ export const $ProductVersionDetails = {
         sbom: {
           allOf: [
             {
-              $ref: "#/components/schemas/SbomHead",
+              $ref: "#/components/schemas/ProductSbomHead",
             },
           ],
           nullable: true,
@@ -921,15 +1439,59 @@ export const $ProductVersionHead = {
   properties: {
     id: {
       type: "string",
-      format: "uuid",
     },
     sbom_id: {
       type: "string",
-      format: "uuid",
-      nullable: true,
     },
     version: {
       type: "string",
+    },
+  },
+} as const;
+
+export const $Progress = {
+  type: "object",
+  required: [
+    "current",
+    "total",
+    "percent",
+    "rate",
+    "estimated_seconds_remaining",
+    "estimated_completion",
+  ],
+  properties: {
+    current: {
+      type: "integer",
+      format: "int32",
+      description: "The current processed items.",
+      minimum: 0,
+    },
+    estimated_completion: {
+      type: "string",
+      format: "date-time",
+      description: "The estimated time of completion.",
+    },
+    estimated_seconds_remaining: {
+      type: "integer",
+      format: "int64",
+      description: "The estimated remaining time in seconds.",
+      minimum: 0,
+    },
+    percent: {
+      type: "number",
+      format: "float",
+      description: "Progress in percent (0..=1)",
+    },
+    rate: {
+      type: "number",
+      format: "float",
+      description: "The average processing rate (per second).",
+    },
+    total: {
+      type: "integer",
+      format: "int32",
+      description: "The total number of items to be processed.",
+      minimum: 0,
     },
   },
 } as const;
@@ -966,7 +1528,7 @@ export const $PurlDetails = {
     },
     {
       type: "object",
-      required: ["version", "base", "advisories"],
+      required: ["version", "base", "advisories", "licenses"],
       properties: {
         advisories: {
           type: "array",
@@ -976,6 +1538,12 @@ export const $PurlDetails = {
         },
         base: {
           $ref: "#/components/schemas/BasePurlHead",
+        },
+        licenses: {
+          type: "array",
+          items: {
+            $ref: "#/components/schemas/PurlLicenseSummary",
+          },
         },
         version: {
           $ref: "#/components/schemas/VersionedPurlHead",
@@ -996,6 +1564,22 @@ export const $PurlHead = {
       type: "string",
       format: "uuid",
       description: "The ID of the qualified PURL",
+    },
+  },
+} as const;
+
+export const $PurlLicenseSummary = {
+  type: "object",
+  required: ["sbom", "licenses"],
+  properties: {
+    licenses: {
+      type: "array",
+      items: {
+        type: "string",
+      },
+    },
+    sbom: {
+      $ref: "#/components/schemas/SbomHead",
     },
   },
 } as const;
@@ -1064,6 +1648,7 @@ export const $Relationship = {
     "build_tool_of",
     "dev_tool_of",
     "described_by",
+    "package_of",
   ],
 } as const;
 
@@ -1129,15 +1714,7 @@ export const $SbomDetails = {
 
 export const $SbomHead = {
   type: "object",
-  required: [
-    "id",
-    "hashes",
-    "document_id",
-    "labels",
-    "published",
-    "authors",
-    "name",
-  ],
+  required: ["id", "document_id", "labels", "published", "authors", "name"],
   properties: {
     authors: {
       type: "array",
@@ -1148,15 +1725,8 @@ export const $SbomHead = {
     document_id: {
       type: "string",
     },
-    hashes: {
-      type: "array",
-      items: {
-        $ref: "#/components/schemas/Id",
-      },
-    },
     id: {
       type: "string",
-      format: "uuid",
     },
     labels: {
       $ref: "#/components/schemas/Labels",
@@ -1293,6 +1863,14 @@ export const $SbomSummary = {
       $ref: "#/components/schemas/SbomHead",
     },
     {
+      allOf: [
+        {
+          $ref: "#/components/schemas/SourceDocument",
+        },
+      ],
+      nullable: true,
+    },
+    {
       type: "object",
       required: ["described_by"],
       properties: {
@@ -1317,6 +1895,52 @@ Described in CVSS v3.1 Specification: Section 5:
 > For some purposes it is useful to have a textual representation of the
 > numeric Base, Temporal and Environmental scores.`,
   enum: ["none", "low", "medium", "high", "critical"],
+} as const;
+
+export const $SourceDocument = {
+  type: "object",
+  required: ["sha256", "sha384", "sha512"],
+  properties: {
+    sha256: {
+      type: "string",
+    },
+    sha384: {
+      type: "string",
+    },
+    sha512: {
+      type: "string",
+    },
+  },
+} as const;
+
+export const $SpdxLicenseDetails = {
+  allOf: [
+    {
+      $ref: "#/components/schemas/SpdxLicenseSummary",
+    },
+    {
+      type: "object",
+      required: ["text"],
+      properties: {
+        text: {
+          type: "string",
+        },
+      },
+    },
+  ],
+} as const;
+
+export const $SpdxLicenseSummary = {
+  type: "object",
+  required: ["id", "name"],
+  properties: {
+    id: {
+      type: "string",
+    },
+    name: {
+      type: "string",
+    },
+  },
 } as const;
 
 export const $State = {
@@ -1637,13 +2261,15 @@ export const $VulnerabilityHead = {
     "withdrawn",
     "discovered",
     "released",
-    "cwe",
+    "cwes",
   ],
   properties: {
-    cwe: {
-      type: "string",
+    cwes: {
+      type: "array",
+      items: {
+        type: "string",
+      },
       description: "Associated CWE, if any.",
-      nullable: true,
     },
     description: {
       type: "string",
@@ -1758,6 +2384,111 @@ export const $VulnerabilitySummary = {
           nullable: true,
         },
       },
+    },
+  ],
+} as const;
+
+export const $WeaknessDetails = {
+  allOf: [
+    {
+      $ref: "#/components/schemas/WeaknessHead",
+    },
+    {
+      type: "object",
+      properties: {
+        can_also_be: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          nullable: true,
+        },
+        can_follow: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          nullable: true,
+        },
+        can_precede: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          nullable: true,
+        },
+        child_of: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          nullable: true,
+        },
+        extended_description: {
+          type: "string",
+          nullable: true,
+        },
+        parent_of: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          nullable: true,
+        },
+        peer_of: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          nullable: true,
+        },
+        required_by: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          nullable: true,
+        },
+        requires: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          nullable: true,
+        },
+        starts_with: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          nullable: true,
+        },
+      },
+    },
+  ],
+} as const;
+
+export const $WeaknessHead = {
+  type: "object",
+  required: ["id"],
+  properties: {
+    description: {
+      type: "string",
+      nullable: true,
+    },
+    id: {
+      type: "string",
+    },
+  },
+} as const;
+
+export const $WeaknessSummary = {
+  allOf: [
+    {
+      $ref: "#/components/schemas/WeaknessHead",
+    },
+    {
+      type: "object",
     },
   ],
 } as const;

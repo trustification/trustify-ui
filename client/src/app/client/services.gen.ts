@@ -6,6 +6,8 @@ import {
   type Options,
 } from "@hey-api/client-axios";
 import type {
+  InfoError,
+  InfoResponse,
   ListAdvisoriesData,
   ListAdvisoriesError,
   ListAdvisoriesResponse,
@@ -27,6 +29,26 @@ import type {
   DownloadAdvisoryData,
   DownloadAdvisoryError,
   DownloadAdvisoryResponse,
+  CompletionsData,
+  CompletionsError,
+  CompletionsResponse,
+  SearchComponentDepsData,
+  SearchComponentDepsError,
+  SearchComponentDepsResponse,
+  GetComponentDepsData,
+  GetComponentDepsError,
+  GetComponentDepsResponse,
+  SearchComponentRootComponentsData,
+  SearchComponentRootComponentsError,
+  SearchComponentRootComponentsResponse,
+  GetComponentRootComponentsData,
+  GetComponentRootComponentsError,
+  GetComponentRootComponentsResponse,
+  StatusError,
+  StatusResponse,
+  UploadDatasetData,
+  UploadDatasetError,
+  UploadDatasetResponse,
   ListImportersError,
   ListImportersResponse,
   GetImporterData,
@@ -41,15 +63,33 @@ import type {
   DeleteImporterData,
   DeleteImporterError,
   DeleteImporterResponse,
+  PatchImporterData,
+  PatchImporterError,
+  PatchImporterResponse,
   EnableImporterData,
   EnableImporterError,
   EnableImporterResponse,
   ForceRunImporterData,
   ForceRunImporterError,
   ForceRunImporterResponse,
-  GetImporterReportsData,
-  GetImporterReportsError,
-  GetImporterReportsResponse,
+  ListImporterReportsData,
+  ListImporterReportsError,
+  ListImporterReportsResponse,
+  ListLicensesData,
+  ListLicensesError,
+  ListLicensesResponse,
+  ListSpdxLicensesData,
+  ListSpdxLicensesError,
+  ListSpdxLicensesResponse,
+  GetSpdxLicenseData,
+  GetSpdxLicenseError,
+  GetSpdxLicenseResponse,
+  GetLicensesData,
+  GetLicensesError,
+  GetLicensesResponse,
+  GetLicensePurlsData,
+  GetLicensePurlsError,
+  GetLicensePurlsResponse,
   ListOrganizationsData,
   ListOrganizationsError,
   ListOrganizationsResponse,
@@ -106,6 +146,9 @@ import type {
   DeleteSbomData,
   DeleteSbomError,
   DeleteSbomResponse,
+  GetSbomAdvisoriesData,
+  GetSbomAdvisoriesError,
+  GetSbomAdvisoriesResponse,
   UpdateSbomLabelsData,
   UpdateSbomLabelsError,
   UpdateSbomLabelsResponse,
@@ -130,10 +173,26 @@ import type {
   DeleteVulnerabilityData,
   DeleteVulnerabilityError,
   DeleteVulnerabilityResponse,
+  ListWeaknessesData,
+  ListWeaknessesError,
+  ListWeaknessesResponse,
+  GetWeaknessData,
+  GetWeaknessError,
+  GetWeaknessResponse,
 } from "./types.gen";
 
 export const client = createClient(createConfig());
 
+export const info = (options?: Options) => {
+  return (options?.client ?? client).get<InfoResponse, InfoError>({
+    ...options,
+    url: "/.well-known/trustify",
+  });
+};
+
+/**
+ * List advisories
+ */
 export const listAdvisories = (options?: Options<ListAdvisoriesData>) => {
   return (options?.client ?? client).get<
     ListAdvisoriesResponse,
@@ -187,6 +246,9 @@ export const patchAdvisoryLabels = (
   });
 };
 
+/**
+ * Get an advisory
+ */
 export const getAdvisory = (options: Options<GetAdvisoryData>) => {
   return (options?.client ?? client).get<GetAdvisoryResponse, GetAdvisoryError>(
     {
@@ -196,6 +258,9 @@ export const getAdvisory = (options: Options<GetAdvisoryData>) => {
   );
 };
 
+/**
+ * Delete an advisory
+ */
 export const deleteAdvisory = (options: Options<DeleteAdvisoryData>) => {
   return (options?.client ?? client).delete<
     DeleteAdvisoryResponse,
@@ -206,6 +271,9 @@ export const deleteAdvisory = (options: Options<DeleteAdvisoryData>) => {
   });
 };
 
+/**
+ * Download an advisory document
+ */
 export const downloadAdvisory = (options: Options<DownloadAdvisoryData>) => {
   return (options?.client ?? client).get<
     DownloadAdvisoryResponse,
@@ -213,6 +281,82 @@ export const downloadAdvisory = (options: Options<DownloadAdvisoryData>) => {
   >({
     ...options,
     url: "/api/v1/advisory/{key}/download",
+  });
+};
+
+export const completions = (options: Options<CompletionsData>) => {
+  return (options?.client ?? client).post<
+    CompletionsResponse,
+    CompletionsError
+  >({
+    ...options,
+    url: "/api/v1/ai/completions",
+  });
+};
+
+export const searchComponentDeps = (
+  options?: Options<SearchComponentDepsData>
+) => {
+  return (options?.client ?? client).get<
+    SearchComponentDepsResponse,
+    SearchComponentDepsError
+  >({
+    ...options,
+    url: "/api/v1/analysis/dep",
+  });
+};
+
+export const getComponentDeps = (options: Options<GetComponentDepsData>) => {
+  return (options?.client ?? client).get<
+    GetComponentDepsResponse,
+    GetComponentDepsError
+  >({
+    ...options,
+    url: "/api/v1/analysis/dep/{key}",
+  });
+};
+
+export const searchComponentRootComponents = (
+  options?: Options<SearchComponentRootComponentsData>
+) => {
+  return (options?.client ?? client).get<
+    SearchComponentRootComponentsResponse,
+    SearchComponentRootComponentsError
+  >({
+    ...options,
+    url: "/api/v1/analysis/root-component",
+  });
+};
+
+export const getComponentRootComponents = (
+  options: Options<GetComponentRootComponentsData>
+) => {
+  return (options?.client ?? client).get<
+    GetComponentRootComponentsResponse,
+    GetComponentRootComponentsError
+  >({
+    ...options,
+    url: "/api/v1/analysis/root-component/{key}",
+  });
+};
+
+export const status = (options?: Options) => {
+  return (options?.client ?? client).get<StatusResponse, StatusError>({
+    ...options,
+    url: "/api/v1/analysis/status",
+  });
+};
+
+/**
+ * Upload a new dataset
+ */
+export const uploadDataset = (options: Options<UploadDatasetData>) => {
+  return (options?.client ?? client).post<
+    UploadDatasetResponse,
+    UploadDatasetError
+  >({
+    ...options,
+    url: "/api/v1/dataset",
   });
 };
 
@@ -283,6 +427,19 @@ export const deleteImporter = (options: Options<DeleteImporterData>) => {
 /**
  * Update an existing importer configuration
  */
+export const patchImporter = (options: Options<PatchImporterData>) => {
+  return (options?.client ?? client).patch<
+    PatchImporterResponse,
+    PatchImporterError
+  >({
+    ...options,
+    url: "/api/v1/importer/{name}",
+  });
+};
+
+/**
+ * Update an existing importer configuration
+ */
 export const enableImporter = (options: Options<EnableImporterData>) => {
   return (options?.client ?? client).put<
     EnableImporterResponse,
@@ -309,18 +466,85 @@ export const forceRunImporter = (options: Options<ForceRunImporterData>) => {
 /**
  * Get reports for an importer
  */
-export const getImporterReports = (
-  options: Options<GetImporterReportsData>
+export const listImporterReports = (
+  options: Options<ListImporterReportsData>
 ) => {
   return (options?.client ?? client).get<
-    GetImporterReportsResponse,
-    GetImporterReportsError
+    ListImporterReportsResponse,
+    ListImporterReportsError
   >({
     ...options,
     url: "/api/v1/importer/{name}/report",
   });
 };
 
+/**
+ * List licenses
+ */
+export const listLicenses = (options?: Options<ListLicensesData>) => {
+  return (options?.client ?? client).get<
+    ListLicensesResponse,
+    ListLicensesError
+  >({
+    ...options,
+    url: "/api/v1/license",
+  });
+};
+
+/**
+ * List SPDX licenses
+ */
+export const listSpdxLicenses = (options?: Options<ListSpdxLicensesData>) => {
+  return (options?.client ?? client).get<
+    ListSpdxLicensesResponse,
+    ListSpdxLicensesError
+  >({
+    ...options,
+    url: "/api/v1/license/spdx/license",
+  });
+};
+
+/**
+ * Get SPDX license details
+ */
+export const getSpdxLicense = (options: Options<GetSpdxLicenseData>) => {
+  return (options?.client ?? client).get<
+    GetSpdxLicenseResponse,
+    GetSpdxLicenseError
+  >({
+    ...options,
+    url: "/api/v1/license/spdx/license/{id}",
+  });
+};
+
+/**
+ * Retrieve license details
+ */
+export const getLicenses = (options: Options<GetLicensesData>) => {
+  return (options?.client ?? client).get<GetLicensesResponse, GetLicensesError>(
+    {
+      ...options,
+      url: "/api/v1/license/{uuid}",
+    }
+  );
+};
+
+/**
+ * Retrieve pURLs covered by a license
+ */
+export const getLicensePurls = (options: Options<GetLicensePurlsData>) => {
+  return (options?.client ?? client).get<
+    GetLicensePurlsResponse,
+    GetLicensePurlsError
+  >({
+    ...options,
+    url: "/api/v1/license/{uuid}/purl",
+  });
+};
+
+/**
+ * List organizations
+ */
 export const listOrganizations = (options?: Options<ListOrganizationsData>) => {
   return (options?.client ?? client).get<
     ListOrganizationsResponse,
@@ -331,6 +555,9 @@ export const listOrganizations = (options?: Options<ListOrganizationsData>) => {
   });
 };
 
+/**
+ * Retrieve organization details
+ */
 export const getOrganization = (options: Options<GetOrganizationData>) => {
   return (options?.client ?? client).get<
     GetOrganizationResponse,
@@ -368,6 +595,9 @@ export const deleteProduct = (options: Options<DeleteProductData>) => {
   });
 };
 
+/**
+ * List fully-qualified pURLs
+ */
 export const listPurl = (options?: Options<ListPurlData>) => {
   return (options?.client ?? client).get<ListPurlResponse, ListPurlError>({
     ...options,
@@ -375,6 +605,9 @@ export const listPurl = (options?: Options<ListPurlData>) => {
   });
 };
 
+/**
+ * List base versionless pURLs
+ */
 export const listBasePurls = (options?: Options<ListBasePurlsData>) => {
   return (options?.client ?? client).get<
     ListBasePurlsResponse,
@@ -385,6 +618,9 @@ export const listBasePurls = (options?: Options<ListBasePurlsData>) => {
   });
 };
 
+/**
+ * Retrieve details about a base versionless pURL
+ */
 export const getBasePurl = (options: Options<GetBasePurlData>) => {
   return (options?.client ?? client).get<GetBasePurlResponse, GetBasePurlError>(
     {
@@ -394,6 +630,9 @@ export const getBasePurl = (options: Options<GetBasePurlData>) => {
   );
 };
 
+/**
+ * List known pURL types
+ */
 export const listPurlTypes = (options?: Options) => {
   return (options?.client ?? client).get<
     ListPurlTypesResponse,
@@ -404,6 +643,9 @@ export const listPurlTypes = (options?: Options) => {
   });
 };
 
+/**
+ * Retrieve details about a pURL type
+ */
 export const getPurlType = (options: Options<GetPurlTypeData>) => {
   return (options?.client ?? client).get<GetPurlTypeResponse, GetPurlTypeError>(
     {
@@ -413,6 +655,9 @@ export const getPurlType = (options: Options<GetPurlTypeData>) => {
   );
 };
 
+/**
+ * Retrieve base pURL details of a type
+ */
 export const getBasePurlOfType = (options: Options<GetBasePurlOfTypeData>) => {
   return (options?.client ?? client).get<
     GetBasePurlOfTypeResponse,
@@ -423,6 +668,9 @@ export const getBasePurlOfType = (options: Options<GetBasePurlOfTypeData>) => {
   });
 };
 
+/**
+ * Retrieve versioned pURL details of a type
+ */
 export const getVersionedPurlOfType = (
   options: Options<GetVersionedPurlOfTypeData>
 ) => {
@@ -435,6 +683,9 @@ export const getVersionedPurlOfType = (
   });
 };
 
+/**
+ * Retrieve details of a versioned, non-qualified pURL
+ */
 export const getVersionedPurl = (options: Options<GetVersionedPurlData>) => {
   return (options?.client ?? client).get<
     GetVersionedPurlResponse,
@@ -445,6 +696,9 @@ export const getVersionedPurl = (options: Options<GetVersionedPurlData>) => {
   });
 };
 
+/**
+ * Retrieve details of a fully-qualified pURL
+ */
 export const getPurl = (options: Options<GetPurlData>) => {
   return (options?.client ?? client).get<GetPurlResponse, GetPurlError>({
     ...options,
@@ -498,6 +752,16 @@ export const deleteSbom = (options: Options<DeleteSbomData>) => {
   >({
     ...options,
     url: "/api/v1/sbom/{id}",
+  });
+};
+
+export const getSbomAdvisories = (options: Options<GetSbomAdvisoriesData>) => {
+  return (options?.client ?? client).get<
+    GetSbomAdvisoriesResponse,
+    GetSbomAdvisoriesError
+  >({
+    ...options,
+    url: "/api/v1/sbom/{id}/advisory",
   });
 };
 
@@ -565,6 +829,9 @@ export const downloadSbom = (options: Options<DownloadSbomData>) => {
   });
 };
 
+/**
+ * List vulnerabilities
+ */
 export const listVulnerabilities = (
   options?: Options<ListVulnerabilitiesData>
 ) => {
@@ -577,6 +844,9 @@ export const listVulnerabilities = (
   });
 };
 
+/**
+ * Retrieve vulnerability details
+ */
 export const getVulnerability = (options: Options<GetVulnerabilityData>) => {
   return (options?.client ?? client).get<
     GetVulnerabilityResponse,
@@ -587,6 +857,9 @@ export const getVulnerability = (options: Options<GetVulnerabilityData>) => {
   });
 };
 
+/**
+ * Delete vulnerability
+ */
 export const deleteVulnerability = (
   options: Options<DeleteVulnerabilityData>
 ) => {
@@ -597,4 +870,29 @@ export const deleteVulnerability = (
     ...options,
     url: "/api/v1/vulnerability/{id}",
   });
+};
+
+/**
+ * List weaknesses
+ */
+export const listWeaknesses = (options?: Options<ListWeaknessesData>) => {
+  return (options?.client ?? client).get<
+    ListWeaknessesResponse,
+    ListWeaknessesError
+  >({
+    ...options,
+    url: "/api/v1/weakness",
+  });
+};
+
+/**
+ * Retrieve weakness details
+ */
+export const getWeakness = (options: Options<GetWeaknessData>) => {
+  return (options?.client ?? client).get<GetWeaknessResponse, GetWeaknessError>(
+    {
+      ...options,
+      url: "/api/v1/weakness/{id}",
+    }
+  );
 };
