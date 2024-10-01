@@ -1708,7 +1708,7 @@ export type UploadSbomData = {
   };
 };
 
-export type UploadSbomResponse = unknown;
+export type UploadSbomResponse = IngestResult;
 
 export type UploadSbomError = unknown;
 
@@ -1765,7 +1765,7 @@ export type DeleteSbomData = {
   };
 };
 
-export type DeleteSbomResponse = SbomDetails;
+export type DeleteSbomResponse = SbomSummary;
 
 export type DeleteSbomError = unknown;
 
@@ -1778,7 +1778,7 @@ export type GetSbomAdvisoriesData = {
   };
 };
 
-export type GetSbomAdvisoriesResponse = SbomDetails;
+export type GetSbomAdvisoriesResponse = Array<SbomAdvisory>;
 
 export type GetSbomAdvisoriesError = unknown;
 
