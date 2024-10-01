@@ -88,6 +88,10 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
   >(new Set());
 
   React.useEffect(() => {
+    if (advisories.length === 0) {
+      return;
+    }
+
     const vulnerabilities = (advisories ?? [])
       .flatMap((advisory) => {
         return (advisory.status ?? []).map(

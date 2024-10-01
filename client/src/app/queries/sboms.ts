@@ -10,6 +10,7 @@ import {
   getSbomAdvisories,
   listRelatedSboms,
   listSboms,
+  SbomAdvisory,
   SbomDetails,
   SbomSummary,
   updateSbomLabels,
@@ -162,7 +163,9 @@ export const useFetchSbomsAdvisory = (sbomId: string) => {
   });
 
   return {
-    advisories: data?.data?.advisories || [],
+    // TODO remove the workaround once the issue is fixed
+    // Workaround to a wrong openapi definiton https://github.com/trustification/trustify/issues/866
+    advisories: (data?.data as SbomAdvisory[] | undefined) || [],
     isFetching: isLoading,
     fetchError: error,
   };

@@ -161,7 +161,7 @@ export const AdvisoryList: React.FC = () => {
   const onDeleteAdvisorySuccess = (advisory: AdvisorySummary) => {
     pushNotification({
       title: `The advisory ${advisory.identifier} was deleted`,
-      variant: "danger",
+      variant: "success",
     });
   };
 
