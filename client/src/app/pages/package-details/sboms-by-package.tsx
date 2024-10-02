@@ -13,7 +13,7 @@ import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
 import { TablePersistenceKeyPrefixes } from "@app/Constants";
-import { SBOM } from "@app/api/models";
+import { SbomSummary } from "@app/client";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { LabelsAsList } from "@app/components/LabelsAsList";
 import { PageDrawerContent } from "@app/components/PageDrawerContext";
@@ -31,7 +31,6 @@ import {
 import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchSbomsByPackageId } from "@app/queries/sboms";
 import { formatDate } from "@app/utils/utils";
-import { SbomSummary } from "@app/client";
 
 interface SbomsByPackageProps {
   packageId: string;

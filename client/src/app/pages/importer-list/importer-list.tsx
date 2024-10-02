@@ -27,13 +27,7 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
-import dayjs from "dayjs";
 
-import {
-  Importer,
-  ImporterConfigurationValues,
-  ImporterType,
-} from "@app/api/models";
 import {
   ConfirmDialog,
   ConfirmDialogProps,
@@ -45,8 +39,15 @@ import {
   useFetchImporters,
   useUpdateImporterMutation,
 } from "@app/queries/importers";
-import { formatDateTime, getAxiosErrorMessage } from "@app/utils/utils";
+import { getAxiosErrorMessage } from "@app/utils/utils";
 
+import { client } from "@app/axios-config/apiInit";
+import {
+  forceRunImporter,
+  Importer,
+  ImporterConfiguration,
+  SbomImporter,
+} from "@app/client";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
@@ -56,7 +57,6 @@ import {
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 
-import { runImporter } from "@app/api/rest";
 import { ImporterForm } from "./components/importer-form";
 import { ImporterStatusIcon } from "./components/importer-status-icon";
 
@@ -106,26 +106,24 @@ export const ImporterList: React.FC = () => {
   );
 
   const execEnableDisableImporter = (row: Importer, enable: boolean) => {
-    const importerType = Object.keys(
-      row.configuration ?? {}
-    )[0] as ImporterType;
-    const currentConfigValues = row.configuration[
+    const importerType = Object.keys(row.configuration ?? {})[0];
+    const currentConfigValues = (row.configuration as any)[
       importerType
-    ] as ImporterConfigurationValues;
+    ] as SbomImporter;
 
-    const newConfigValues: ImporterConfigurationValues = {
+    const newConfigValues: SbomImporter = {
       ...currentConfigValues,
       disabled: !enable,
     };
 
-    const payload: Importer = {
-      ...row,
-      configuration: {
-        [importerType]: newConfigValues,
-      },
-    };
+    const payload = {
+      [importerType]: newConfigValues,
+    } as ImporterConfiguration;
 
-    updateImporter(payload);
+    updateImporter({
+      importerName: row.name,
+      configuration: payload,
+    });
   };
 
   // Run Importer
@@ -144,8 +142,10 @@ export const ImporterList: React.FC = () => {
     });
   };
 
-  const execRunImporter = (id: string | number) => {
-    runImporter(id).then(onRunImporterSuccess).catch(onRunImporterError);
+  const execRunImporter = (id: string) => {
+    forceRunImporter({ client, path: { name: id }, body: true })
+      .then(onRunImporterSuccess)
+      .catch(onRunImporterError);
   };
 
   // Delete importer
@@ -332,11 +332,10 @@ export const ImporterList: React.FC = () => {
               numRenderedColumns={numRenderedColumns}
             >
               {currentPageItems?.map((item, rowIndex) => {
-                const importerType = Object.keys(
-                  item.configuration ?? {}
-                )[0] as ImporterType;
-                const configValues = item.configuration[importerType];
-
+                const importerType = Object.keys(item.configuration ?? {})[0];
+                const configValues = (item.configuration as any)[
+                  importerType
+                ] as SbomImporter;
                 const isImporterEnabled = configValues?.disabled === false;
 
                 return (
@@ -406,7 +405,7 @@ export const ImporterList: React.FC = () => {
                                     },
                                   ]
                                 : []),
-                              ...(configValues?.disabled
+                              ...(!isImporterEnabled
                                 ? [
                                     {
                                       title: "Enable",
@@ -521,8 +520,11 @@ interface ImporterExpandedAreaProps {
 export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
   importerId,
 }) => {
-  const { importers, isFetching, fetchError } =
-    useFetchImporterReports(importerId);
+  const {
+    result: { data: importers },
+    isFetching,
+    fetchError,
+  } = useFetchImporterReports(importerId);
 
   const tableControls = useLocalTableControls({
     variant: "compact",
@@ -538,10 +540,11 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
     isPaginationEnabled: true,
     initialItemsPerPage: 5,
     isSortEnabled: true,
-    sortableColumns: ["startDate", "endDate"],
+    // sortableColumns: ["startDate", "endDate"],
+    sortableColumns: [],
     getSortValues: (report) => ({
-      startDate: dayjs(report.report.startDate).valueOf(),
-      endDate: dayjs(report.report.endDate).valueOf(),
+      // startDate: dayjs(report.report.startDate).valueOf(),
+      // endDate: dayjs(report.report.endDate).valueOf(),
     }),
     isFilterEnabled: false,
     isExpansionEnabled: false,
@@ -607,21 +610,21 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
                       modifier="truncate"
                       {...getTdProps({ columnKey: "startDate" })}
                     >
-                      {formatDateTime(item.report.startDate)}
+                      {"formatDateTime(item.report.startDate)"}
                     </Td>
                     <Td
                       width={15}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "endDate" })}
                     >
-                      {formatDateTime(item.report.endDate)}
+                      {"formatDateTime(item.report.endDate)"}
                     </Td>
                     <Td
                       width={10}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "numberOfItems" })}
                     >
-                      {item.report.numberOfItems}
+                      {"item.report.numberOfItems"}
                     </Td>
                     <Td
                       width={50}

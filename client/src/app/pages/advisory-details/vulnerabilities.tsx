@@ -14,7 +14,7 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { VulnerabilityWithinAdvisory } from "@app/api/models";
+import { AdvisoryVulnerabilityHead } from "@app/client";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -29,7 +29,7 @@ import { formatDate } from "@app/utils/utils";
 interface VulnerabilitiesProps {
   enableToolbar?: boolean;
   variant?: TableProps["variant"];
-  vulnerabilities: VulnerabilityWithinAdvisory[];
+  vulnerabilities: AdvisoryVulnerabilityHead[];
 }
 
 export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
@@ -154,7 +154,7 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
                       {formatDate(item.released)}
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "cwe" })}>
-                      {item.cwe}
+                      {"item.cwe"}
                     </Td>
                   </TableRowContentWithControls>
                 </Tr>

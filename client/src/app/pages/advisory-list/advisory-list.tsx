@@ -54,18 +54,17 @@ import {
   useUploadAdvisory,
 } from "@app/queries/advisories";
 
+import { EditLabelsModal } from "@app/components/EditLabelsModal";
 import { LabelsAsList } from "@app/components/LabelsAsList";
+import { NotificationsContext } from "@app/components/NotificationsContext";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 
-import { AdvisoryIndex } from "@app/api/models";
-import { EditLabelsModal } from "@app/components/EditLabelsModal";
-import { NotificationsContext } from "@app/components/NotificationsContext";
-
+import { AdvisorySummary, Severity } from "@app/client";
 import { AdvisoryGeneralView } from "@app/components/AdvisoryGeneralView";
 import { AdvisoryIssuer } from "@app/components/AdvisoryIssuer";
+
 import { Vulnerabilities } from "../advisory-details/vulnerabilities";
 import { VulnerabilitiesGalleryCount } from "./components/VulnerabilitiesGaleryCount";
-import { useNotifyErrorCallback } from "@app/hooks/useNotifyErrorCallback";
 
 export const AdvisoryList: React.FC = () => {
   const { pushNotification } = React.useContext(NotificationsContext);
@@ -77,11 +76,11 @@ export const AdvisoryList: React.FC = () => {
   type RowAction = "editLabels";
   const [selectedRowAction, setSelectedRowAction] =
     React.useState<RowAction | null>(null);
-  const [selectedRow, setSelectedRow] = React.useState<AdvisoryIndex | null>(
+  const [selectedRow, setSelectedRow] = React.useState<AdvisorySummary | null>(
     null
   );
 
-  const prepareActionOnRow = (action: RowAction, row: AdvisoryIndex) => {
+  const prepareActionOnRow = (action: RowAction, row: AdvisorySummary) => {
     setSelectedRowAction(action);
     setSelectedRow(row);
   };
@@ -99,7 +98,7 @@ export const AdvisoryList: React.FC = () => {
   );
 
   const execSaveLabels = (
-    row: AdvisoryIndex,
+    row: AdvisorySummary,
     labels: { [key: string]: string }
   ) => {
     updateAdvisoryLabels({ ...row, labels });
@@ -159,8 +158,23 @@ export const AdvisoryList: React.FC = () => {
     })
   );
 
+  const onDeleteAdvisorySuccess = (advisory: AdvisorySummary) => {
+    pushNotification({
+      title: `The advisory ${advisory.identifier} was deleted`,
+      variant: "success",
+    });
+  };
+
+  const onDeleteAdvisoryError = (_error: AxiosError) => {
+    pushNotification({
+      title: "Error occurred while deleting the advisory",
+      variant: "danger",
+    });
+  };
+
   const deleteAdvisoryByIdMutation = useDeleteAdvisoryMutation(
-    useNotifyErrorCallback("Error occurred while deleting the advisory")
+    onDeleteAdvisorySuccess,
+    onDeleteAdvisoryError
   );
 
   const tableControls = useTableControlProps({
@@ -292,7 +306,7 @@ export const AdvisoryList: React.FC = () => {
                         >
                           {item.average_severity && (
                             <SeverityShieldAndText
-                              value={item.average_severity}
+                              value={item.average_severity as Severity}
                             />
                           )}
                         </Td>

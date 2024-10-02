@@ -31,16 +31,11 @@ import QuestionCircleIcon from "@patternfly/react-icons/dist/esm/icons/question-
 import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
 
 import {
-  ALL_IMPORTER_TYPES,
-  Importer,
-  ImporterConfigurationValues,
-  ImporterType,
-} from "@app/api/models";
-import {
   useCreateImporterMutation,
   useUpdateImporterMutation,
 } from "@app/queries/importers";
 
+import { Importer, ImporterConfiguration, SbomImporter } from "@app/client";
 import {
   HookFormPFGroupController,
   HookFormPFSelect,
@@ -87,7 +82,7 @@ const PERIOD_UNIT_LIST: PeriodUnitProps = {
 type FormValues = {
   name: string;
   description: string;
-  type: ImporterType | "";
+  type: ImporterType;
   source: string;
   periodValue: number;
   periodUnit: PeriodUnitType;
@@ -97,7 +92,8 @@ type FormValues = {
   onlyPatterns: { value: string }[];
 };
 
-export const myImporters = ["sbom", "csaf", "osv", "cve", ""] as const;
+export const ALL_IMPORTERS = ["sbom", "csaf", "osv", "cve"] as const;
+type ImporterType = (typeof ALL_IMPORTERS)[number];
 
 export interface IImporterFormProps {
   importer: Importer | null;
@@ -127,7 +123,9 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
     importer?.configuration ?? {}
   )[0] as ImporterType;
 
-  const importerConfiguration = importer?.configuration[importerType];
+  const importerConfiguration = importer?.configuration
+    ? ((importer?.configuration as any)[importerType] as SbomImporter)
+    : undefined;
 
   const periodValue = getPeriodValue(importerConfiguration?.period);
   const periodUnit = getPeriodUnit(importerConfiguration?.period);
@@ -143,7 +141,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
     defaultValues: {
       name: importer?.name || "",
       description: importerConfiguration?.description || "",
-      type: importer ? importerType : "",
+      type: importer ? importerType : "sbom",
       source: importerConfiguration?.source || "",
       periodValue: periodValue || 60,
       periodUnit: periodUnit || "s",
@@ -166,7 +164,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
     name: "keys",
   });
 
-  const onCreateSuccess = (_: Importer) =>
+  const onCreateSuccess = () =>
     pushNotification({
       title: "Importer created",
       variant: "success",
@@ -184,7 +182,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
     onCreateError
   );
 
-  const onUpdateSuccess = (_: Importer) =>
+  const onUpdateSuccess = () =>
     pushNotification({
       title: "Importer updated",
       variant: "success",
@@ -202,7 +200,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
   );
 
   const onSubmit = (formValues: FormValues) => {
-    const configuration: ImporterConfigurationValues = {
+    const configuration: SbomImporter = {
       ...importerConfiguration!,
       description: formValues.description.trim(),
       source: formValues.source.trim(),
@@ -212,16 +210,21 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
       keys: formValues.keys.map((e) => e.value),
       onlyPatterns: formValues.onlyPatterns.map((e) => e.value),
     };
-    const payload: Importer = {
-      name: formValues.name.trim(),
-      configuration: {
-        [formValues.type]: configuration,
-      },
-    };
+
+    const payload = {
+      [formValues.type]: configuration,
+    } as ImporterConfiguration;
+
     if (importer) {
-      updateImporter(payload);
+      updateImporter({
+        importerName: formValues.name,
+        configuration: payload,
+      });
     } else {
-      createImporter(payload);
+      createImporter({
+        importerName: formValues.name,
+        configuration: payload,
+      });
     }
     onClose();
   };
@@ -256,7 +259,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
           fieldId="type"
           isRequired
         >
-          {myImporters.map((option, index) => (
+          {ALL_IMPORTERS.map((option, index) => (
             <FormSelectOption key={index} value={option} label={option} />
           ))}
         </HookFormPFSelect>

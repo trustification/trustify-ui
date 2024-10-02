@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AdvisoryIndex } from "@app/api/models";
+import { AdvisorySummary } from "@app/client";
 import { formatDate } from "@app/utils/utils";
 import {
   DescriptionList,
@@ -13,7 +13,7 @@ import {
 type FIELDS = "title" | "published" | "modified" | "withdrawn";
 
 interface AdvisoryGeneralViewProps {
-  advisory: AdvisoryIndex;
+  advisory: AdvisorySummary;
   excludedFields?: FIELDS[];
   descriptionListProps?: DescriptionListProps;
 }

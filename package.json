@@ -9,6 +9,9 @@
   },
   "scripts": {
     "format:check": "npx prettier --check './**/*.{ts,tsx,js,json}'",
+    "format:fix": "npx prettier --write './**/*.{ts,tsx,js,json}'",
+    "openapi:generate-client": "npm run openapi:generate-client -w client",
+    "generate": "npm run openapi:generate-client",
     "clean": "rimraf ./dist && npm run clean -ws --if-present",
     "clean:all": "npm run clean && rimraf ./node_modules ./**/node_modules/",
     "dist": "rimraf ./dist && copyfiles -e 'node_modules/**' entrypoint.sh '**/package.json' '*/dist/**/*' ./dist",
@@ -19,9 +22,7 @@
     "start:dev": "concurrently -n common,client -c 'white.bold.inverse,green.bold.inverse,blue.bold.inverse' 'npm:start:dev:common' 'npm:start:dev:client'",
     "start": "npm run build -w common -w client && npm run start -w server",
     "test": "npm run test -ws --if-present --",
-    "lint": "npm run lint -ws --if-present --",
-    "generate": "npm run generate -w client",
-    "prettier": "npx prettier --write './**/*.{ts,tsx,js,json}'"
+    "lint": "npm run lint -ws --if-present --"
   },
   "lint-staged": {
     "package-lock.json": "./scripts/verify_lock.mjs",
