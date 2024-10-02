@@ -232,6 +232,8 @@ export type DepSummary = {
   sbom_id: string;
 };
 
+export type Deprecation = "Ignore" | "Consider";
+
 /**
  * A hash/digest prefixed with its type.
  */
@@ -988,6 +990,7 @@ export type InfoError = unknown;
 
 export type ListAdvisoriesData = {
   query?: {
+    deprecated?: "Ignore" | "Consider";
     /**
      * The maximum number of entries to return.
      *
@@ -1662,6 +1665,9 @@ export type GetPurlData = {
      * opaque identifier for a fully-qualified PURL, or URL-encoded pURL itself
      */
     key: string;
+  };
+  query?: {
+    deprecated?: "Ignore" | "Consider";
   };
 };
 
