@@ -39,6 +39,7 @@ import {
   ToolbarProps,
 } from "@patternfly/react-core";
 import { IFilterToolbarProps } from "@app/components/FilterToolbar";
+import { IFilterPanelProps } from "@app/components/FilterPanel";
 import { IToolbarBulkSelectorProps } from "@app/components/ToolbarBulkSelector";
 import { IExpansionPropHelpersExternalArgs } from "./expansion/useExpansionPropHelpers";
 import { IColumnState } from "./column/useColumnState";
@@ -403,6 +404,10 @@ export type ITableControls<
      * Props for the FilterToolbar component.
      */
     filterToolbarProps: IFilterToolbarProps<TItem, TFilterCategoryKey>;
+    /**
+     * Props for the FilterPanel component.
+     */
+    filterPanelProps: IFilterPanelProps<TItem, TFilterCategoryKey>;
     /**
      * Props for the Pagination component.
      */

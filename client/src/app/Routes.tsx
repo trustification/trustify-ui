@@ -18,6 +18,7 @@ const PackageList = lazy(() => import("./pages/package-list"));
 const PackageDetails = lazy(() => import("./pages/package-details"));
 const SBOMList = lazy(() => import("./pages/sbom-list"));
 const SBOMDetails = lazy(() => import("./pages/sbom-details"));
+const Search = lazy(() => import("./pages/search"));
 const ImporterList = lazy(() => import("./pages/importer-list"));
 
 export enum PathParam {
@@ -52,6 +53,7 @@ export const AppRoutes = () => {
       path: `/packages/:${PathParam.PACKAGE_ID}`,
       element: <PackageDetails />,
     },
+    { path: "/search", element: <Search /> },
     { path: "/sboms", element: <SBOMList /> },
     {
       path: `/sboms/:${PathParam.SBOM_ID}`,
