@@ -20,6 +20,7 @@ import { decomposePurl } from "@app/utils/utils";
 
 import { SbomsByPackage } from "./sboms-by-package";
 import { VulnerabilitiesByPackage } from "./vulnerabilities-by-package";
+import { AIAssistant } from "../../components/ai-assistant";
 
 export const PackageDetails: React.FC = () => {
   const packageId = useRouteParams(PathParam.PACKAGE_ID);
@@ -31,6 +32,9 @@ export const PackageDetails: React.FC = () => {
 
   return (
     <>
+      <AIAssistant
+        viewing={`the details for package uuid: ${pkg?.uuid}, name: ${pkg?.purl}`}
+      />
       <PageSection variant="light">
         <DetailsPage
           breadcrumbs={

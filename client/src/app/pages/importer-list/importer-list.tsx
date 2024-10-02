@@ -59,6 +59,7 @@ import { useLocalTableControls } from "@app/hooks/table-controls";
 
 import { ImporterForm } from "./components/importer-form";
 import { ImporterStatusIcon } from "./components/importer-status-icon";
+import { AIAssistant } from "../../components/ai-assistant";
 
 export const ImporterList: React.FC = () => {
   const { pushNotification } = React.useContext(NotificationsContext);
@@ -277,6 +278,8 @@ export const ImporterList: React.FC = () => {
 
   return (
     <>
+      <AIAssistant viewing={`a list of importers`} />
+
       <PageSection variant={PageSectionVariants.light}>
         <TextContent>
           <Text component="h1">Importers</Text>

@@ -163,7 +163,7 @@ const config: Configuration = {
       {
         test: /\.css$/,
         include: [pathTo("../../node_modules/monaco-editor")],
-        use: ["style-loader", "css-loader"],
+        use: ["style-loader", "css-loader", "postcss-loader"],
       },
       {
         test: /\.ttf$/,
