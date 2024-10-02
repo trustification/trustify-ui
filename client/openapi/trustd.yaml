@@ -1335,6 +1335,10 @@ paths:
       responses:
         '201':
           description: Upload an SBOM
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestResult'
         '400':
           description: The file could not be parsed as an advisory
   /api/v1/sbom/by-package:
@@ -1440,7 +1444,30 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SbomDetails'
+                $ref: '#/components/schemas/SbomSummary'
+        '404':
+          description: Matching SBOM not found
+  /api/v1/sbom/{id}/advisory:
+    get:
+      tags:
+      - sbom
+      operationId: getSbomAdvisories
+      parameters:
+      - name: id
+        in: path
+        description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Matching SBOM
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SbomAdvisory'
         '404':
           description: Matching SBOM not found
   /api/v1/sbom/{id}/advisory:
