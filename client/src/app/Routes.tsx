@@ -30,7 +30,7 @@ export enum PathParam {
 
 export const AppRoutes = () => {
   const allRoutes = useRoutes([
-    { path: "/", element: <Home /> },   
+    { path: "/", element: <Home /> },
     { path: "/advisories", element: <AdvisoryList /> },
     {
       path: `/advisories/:${PathParam.ADVISORY_ID}`,

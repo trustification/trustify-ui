@@ -33,7 +33,7 @@ export const SidebarApp: React.FC = () => {
             >
               Search
             </NavLink>
-          </li>         
+          </li>
           <li className="pf-v5-c-nav__item">
             <NavLink
               to="/sboms"
