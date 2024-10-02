@@ -35,12 +35,12 @@ import {
 } from "@app/hooks/table-controls";
 import { useSelectionState } from "@app/hooks/useSelectionState";
 
+import { useNotifyErrorCallback } from "@app/hooks/useNotifyErrorCallback";
 import { useFetchOrganizations } from "@app/queries/organizations";
 import {
   useDeleteProductMutation,
   useFetchProducts,
 } from "@app/queries/products";
-import { useNotifyErrorCallback } from "@app/hooks/useNotifyErrorCallback";
 
 export const ProductList: React.FC = () => {
   const { result: organizations } = useFetchOrganizations({

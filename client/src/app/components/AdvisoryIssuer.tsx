@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AdvisoryIndex } from "@app/api/models";
+import { AdvisorySummary } from "@app/client";
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -9,7 +9,7 @@ import {
 } from "@patternfly/react-core";
 
 interface AdvisoryIssuerProps {
-  value: AdvisoryIndex;
+  value: AdvisorySummary;
 }
 
 export const AdvisoryIssuer: React.FC<AdvisoryIssuerProps> = ({ value }) => {

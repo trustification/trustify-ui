@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Severity } from "@app/api/models";
 import { VulnerabilityGallery } from "@app/components/VulnerabilityGallery";
+import { Severity } from "@app/client";
 
 type SeverityCount = { [key in Severity]: number };
 const defaultSeverityCount: SeverityCount = {

@@ -1,19 +1,22 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { HubRequestParams, SBOM } from "@app/api/models";
-import { useUpload } from "@app/hooks/useUpload";
+
+import { HubRequestParams } from "@app/api/models";
+import { client } from "@app/axios-config/apiInit";
 import {
   deleteSbom,
   downloadSbom,
   getSbom,
+  getSbomAdvisories,
   listRelatedSboms,
   listSboms,
+  SbomAdvisory,
   SbomDetails,
   SbomSummary,
   updateSbomLabels,
 } from "@app/client";
-import { client } from "@app/axios-config/apiInit";
-import { convertQuery, dataOf } from "@app/queries/dataOf";
+import { useUpload } from "@app/hooks/useUpload";
+
 import { uploadSbom } from "@app/api/rest";
 import { requestParamsQuery } from "../hooks/table-controls";
 
@@ -23,7 +26,7 @@ export const useFetchSBOMs = (
   params: HubRequestParams = {},
   refetchDisabled: boolean = false
 ) => {
-  const query = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: [SBOMsQueryKey, params],
     queryFn: () =>
       listSboms({
@@ -33,34 +36,40 @@ export const useFetchSBOMs = (
     refetchInterval: !refetchDisabled ? 5000 : false,
   });
   return {
-    ...convertQuery(query),
     result: {
-      data: query.data?.data.items || [],
-      total: query.data?.data.total ?? 0,
-      params: params,
+      data: data?.data?.items || [],
+      total: data?.data?.total ?? 0,
+      params: params ?? params,
     },
+    isFetching: isLoading,
+    fetchError: error as AxiosError,
+    refetch,
   };
 };
 
 export const useFetchSBOMById = (id: string) => {
-  const query = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: [SBOMsQueryKey, id],
-    queryFn: () => dataOf(getSbom({ client, path: { id } })),
+    queryFn: () => getSbom({ client, path: { id } }),
     enabled: id !== undefined,
   });
 
   return {
-    ...convertQuery(query),
-    sbom: query.data,
+    sbom: data?.data,
+    isFetching: isLoading,
+    fetchError: error as AxiosError,
   };
 };
 
 export const useDeleteSbomMutation = (
-  onError?: (err: AxiosError, id: string) => void,
-  onSuccess?: (payload: SbomDetails, id: string) => void
+  onSuccess?: (payload: SbomDetails, id: string) => void,
+  onError?: (err: AxiosError, id: string) => void
 ) => {
   return useMutation({
-    mutationFn: (id: string) => dataOf(deleteSbom({ client, path: { id } })),
+    mutationFn: async (id: string) => {
+      const response = await deleteSbom({ client, path: { id } });
+      return response.data as SbomDetails;
+    },
     mutationKey: [SBOMsQueryKey],
     onSuccess: onSuccess,
     onError: onError,
@@ -68,21 +77,22 @@ export const useDeleteSbomMutation = (
 };
 
 export const useFetchSBOMSourceById = (key: string) => {
-  const query = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: [SBOMsQueryKey, key, "source"],
-    queryFn: () => dataOf(downloadSbom({ client, path: { key } })),
+    queryFn: () => downloadSbom({ client, path: { key } }),
     enabled: key !== undefined,
   });
 
   return {
-    ...convertQuery(query),
-    source: query.data,
+    source: data,
+    isFetching: isLoading,
+    fetchError: error as AxiosError,
   };
 };
 
 export const useUploadSBOM = () => {
   const queryClient = useQueryClient();
-  return useUpload<SBOM, { message: string }>({
+  return useUpload<SbomDetails, { message: string }>({
     parallel: true,
     uploadFn: (formData, config) => {
       return uploadSbom(formData, config);
@@ -99,13 +109,19 @@ export const useUpdateSbomLabelsMutation = (
   onSuccess: () => void,
   onError: (err: AxiosError, payload: SbomSummary) => void
 ) => {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (obj) =>
-      dataOf(
-        updateSbomLabels({ client, path: { id: obj.id }, body: obj.labels })
-      ),
-    mutationKey: [SBOMsQueryKey],
-    onSuccess,
+    mutationFn: (obj) => {
+      return updateSbomLabels({
+        client,
+        path: { id: obj.id },
+        body: obj.labels,
+      });
+    },
+    onSuccess: () => {
+      onSuccess();
+      queryClient.invalidateQueries({ queryKey: [SBOMsQueryKey] });
+    },
     onError: onError,
   });
 };
@@ -114,22 +130,41 @@ export const useFetchSbomsByPackageId = (
   packageId: string,
   params: HubRequestParams = {}
 ) => {
-  const query = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: [SBOMsQueryKey, "by-package", packageId, params],
-    queryFn: () =>
-      dataOf(
-        listRelatedSboms({
-          client,
-          query: { id: packageId, ...requestParamsQuery(params) },
-        })
-      ),
+    queryFn: () => {
+      return listRelatedSboms({
+        client,
+        query: { id: packageId, ...requestParamsQuery(params) },
+      });
+    },
   });
   return {
-    ...convertQuery(query),
     result: {
-      data: query.data?.items || [],
-      total: query.data?.total ?? 0,
-      params,
+      data: data?.data?.items || [],
+      total: data?.data?.total ?? 0,
+      params: params ?? params,
     },
+    isFetching: isLoading,
+    fetchError: error,
+    refetch,
+  };
+};
+
+export const useFetchSbomsAdvisory = (sbomId: string) => {
+  const { data, isLoading, error } = useQuery({
+    queryKey: [SBOMsQueryKey, sbomId, "advisory"],
+    queryFn: () => {
+      return getSbomAdvisories({
+        client,
+        path: { id: sbomId },
+      });
+    },
+  });
+
+  return {
+    advisories: data?.data || [],
+    isFetching: isLoading,
+    fetchError: error,
   };
 };

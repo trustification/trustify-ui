@@ -22,8 +22,14 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { AdvisoryWithinSbom, VulnerabilityStatus } from "@app/api/models";
-import { getVulnerabilityById } from "@app/api/rest";
+import { VulnerabilityStatus } from "@app/api/models";
+import { client } from "@app/axios-config/apiInit";
+import {
+  getVulnerability,
+  SbomAdvisory,
+  SbomPackage,
+  VulnerabilityDetails,
+} from "@app/client";
 import { AdvisoryInDrawerInfo } from "@app/components/AdvisoryInDrawerInfo";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { PageDrawerContent } from "@app/components/PageDrawerContext";
@@ -36,18 +42,12 @@ import {
 } from "@app/components/TableControls";
 import { VulnerabilityInDrawerInfo } from "@app/components/VulnerabilityInDrawerInfo";
 import { useLocalTableControls } from "@app/hooks/table-controls";
-import { useFetchSBOMById } from "@app/queries/sboms";
+import { useFetchSbomsAdvisory } from "@app/queries/sboms";
 import { useWithUiId } from "@app/utils/query-utils";
-import {
-  getVulnerability,
-  SbomPackage,
-  VulnerabilityDetails,
-} from "@app/client";
-import { client } from "@app/axios-config/apiInit";
 
 interface TableData {
   vulnerabilityId: string;
-  advisory: AdvisoryWithinSbom;
+  advisory: SbomAdvisory;
   status: VulnerabilityStatus;
   context: { cpe: string };
   packages: SbomPackage[];
@@ -72,7 +72,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
   };
 
   //
-  const { sbom, isFetching, fetchError } = useFetchSBOMById(sbomId);
+  const { advisories, isFetching, fetchError } = useFetchSbomsAdvisory(sbomId);
 
   const [allVulnerabilities, setAllVulnerabilities] = React.useState<
     TableData[]
@@ -88,7 +88,11 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
   >(new Set());
 
   React.useEffect(() => {
-    const vulnerabilities = (sbom?.advisories ?? [])
+    if (advisories.length === 0) {
+      return;
+    }
+
+    const vulnerabilities = (advisories ?? [])
       .flatMap((advisory) => {
         return (advisory.status ?? []).map(
           (status) =>
@@ -151,7 +155,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
       setVulnerabilitiesById(vulnerabilitiesById);
       setIsFetchingVulnerabilities(false);
     });
-  }, [sbom]);
+  }, [advisories]);
 
   const tableData = React.useMemo(() => {
     return allVulnerabilities.map((item) => {

@@ -1,3 +1,4 @@
+import { ProgressProps } from "@patternfly/react-core";
 import {
   global_palette_purple_400 as criticalColor,
   global_danger_color_100 as importantColor,
@@ -6,9 +7,7 @@ import {
   global_palette_black_400 as noneColor,
 } from "@patternfly/react-tokens";
 
-import { ProgressProps } from "@patternfly/react-core";
-
-import { Severity } from "./models";
+import { Severity } from "@app/client";
 
 type ListType = {
   [key in Severity]: {

@@ -36,7 +36,6 @@ import {
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useDownload } from "@app/hooks/useDownload";
-import { useNotifyErrorCallback } from "@app/hooks/useNotifyErrorCallback";
 import {
   useDeleteSbomMutation,
   useUpdateSbomLabelsMutation,
@@ -76,8 +75,23 @@ export const SbomTable: React.FC = ({}) => {
     onUpdateLabelsError
   );
 
+  const onDeleteSbomSuccess = (sbom: SbomSummary) => {
+    pushNotification({
+      title: `The SBOM ${sbom.name} was deleted`,
+      variant: "danger",
+    });
+  };
+
+  const onDeleteAdvisoryError = (_error: AxiosError) => {
+    pushNotification({
+      title: "Error occurred while deleting the SBOM",
+      variant: "danger",
+    });
+  };
+
   const deleteSBOMByIdMutation = useDeleteSbomMutation(
-    useNotifyErrorCallback("Error occurred while deleting the SBOM")
+    onDeleteSbomSuccess,
+    onDeleteAdvisoryError
   );
 
   const execSaveLabels = (
