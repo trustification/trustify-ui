@@ -1470,27 +1470,6 @@ paths:
                   $ref: '#/components/schemas/SbomAdvisory'
         '404':
           description: Matching SBOM not found
-  /api/v1/sbom/{id}/advisory:
-    get:
-      tags:
-      - sbom
-      operationId: getSbomAdvisories
-      parameters:
-      - name: id
-        in: path
-        description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: Matching SBOM
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SbomDetails'
-        '404':
-          description: Matching SBOM not found
   /api/v1/sbom/{id}/label:
     put:
       tags:
