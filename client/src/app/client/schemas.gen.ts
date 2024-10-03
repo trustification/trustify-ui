@@ -657,6 +657,11 @@ export const DepSummarySchema = {
   },
 } as const;
 
+export const DeprecationSchema = {
+  type: "string",
+  enum: ["Ignore", "Consider"],
+} as const;
+
 export const IdSchema = {
   type: "string",
   description: "A hash/digest prefixed with its type.",
