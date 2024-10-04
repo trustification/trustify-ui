@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
+import { SbomsByPackageCount } from "@app/components/SbomsByPackageCount";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -85,7 +86,9 @@ export const PackageTable: React.FC = () => {
                       width={15}
                       {...getTdProps({ columnKey: "vulnerabilities" })}
                     ></Td>
-                    <Td width={15} {...getTdProps({ columnKey: "sboms" })}></Td>
+                    <Td width={15} {...getTdProps({ columnKey: "sboms" })}>
+                      <SbomsByPackageCount packageId={item.uuid} />
+                    </Td>
                   </TableRowContentWithControls>
                 </Tr>
               </Tbody>
