@@ -12,7 +12,7 @@ import {
   listSboms,
   SbomDetails,
   SbomSummary,
-  updateSbomLabels
+  updateSbomLabels,
 } from "@app/client";
 import { useUpload } from "@app/hooks/useUpload";
 
