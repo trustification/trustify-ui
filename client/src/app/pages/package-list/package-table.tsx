@@ -1,23 +1,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import {
-  DescriptionList,
-  DescriptionListDescription,
-  DescriptionListGroup,
-  DescriptionListTerm,
-} from "@patternfly/react-core";
-import {
-  ExpandableRowContent,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from "@patternfly/react-table";
+import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
-import { PackageQualifiers } from "@app/components/PackageQualifiers";
+import { SbomsByPackageCount } from "@app/components/SbomsByPackageCount";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -51,10 +37,10 @@ export const PackageTable: React.FC = () => {
           <Tr>
             <TableHeaderContentWithControls {...tableControls}>
               <Th {...getThProps({ columnKey: "name" })} />
-              <Th {...getThProps({ columnKey: "namespace" })} />
               <Th {...getThProps({ columnKey: "version" })} />
               <Th {...getThProps({ columnKey: "type" })} />
-              <Th {...getThProps({ columnKey: "qualifiers" })} />
+              <Th {...getThProps({ columnKey: "vulnerabilities" })} />
+              <Th {...getThProps({ columnKey: "sboms" })} />
             </TableHeaderContentWithControls>
           </Tr>
         </Thead>
@@ -73,7 +59,7 @@ export const PackageTable: React.FC = () => {
                     item={item}
                     rowIndex={rowIndex}
                   >
-                    <Td width={25} {...getTdProps({ columnKey: "name" })}>
+                    <Td width={40} {...getTdProps({ columnKey: "name" })}>
                       <NavLink
                         to={`/packages/${encodeURIComponent(item.uuid)}`}
                       >
@@ -83,14 +69,7 @@ export const PackageTable: React.FC = () => {
                       </NavLink>
                     </Td>
                     <Td
-                      width={10}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "namespace" })}
-                    >
-                      {item.decomposedPurl?.namespace}
-                    </Td>
-                    <Td
-                      width={15}
+                      width={20}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "version" })}
                     >
@@ -103,39 +82,15 @@ export const PackageTable: React.FC = () => {
                     >
                       {item.decomposedPurl?.type}
                     </Td>
-                    <Td width={40} {...getTdProps({ columnKey: "qualifiers" })}>
-                      {item.decomposedPurl?.qualifiers && (
-                        <PackageQualifiers
-                          value={item.decomposedPurl?.qualifiers}
-                        />
-                      )}
+                    <Td
+                      width={15}
+                      {...getTdProps({ columnKey: "vulnerabilities" })}
+                    ></Td>
+                    <Td width={15} {...getTdProps({ columnKey: "sboms" })}>
+                      <SbomsByPackageCount packageId={item.uuid} />
                     </Td>
                   </TableRowContentWithControls>
                 </Tr>
-                {isCellExpanded(item) ? (
-                  <Tr isExpanded>
-                    <Td colSpan={7}>
-                      <ExpandableRowContent>
-                        <div className="pf-v5-u-m-md">
-                          <DescriptionList>
-                            <DescriptionListGroup>
-                              <DescriptionListTerm>Purl</DescriptionListTerm>
-                              <DescriptionListDescription>
-                                {item.purl}
-                              </DescriptionListDescription>
-                            </DescriptionListGroup>
-                            <DescriptionListGroup>
-                              <DescriptionListTerm>Path</DescriptionListTerm>
-                              <DescriptionListDescription>
-                                {item.decomposedPurl?.path}
-                              </DescriptionListDescription>
-                            </DescriptionListGroup>
-                          </DescriptionList>
-                        </div>
-                      </ExpandableRowContent>
-                    </Td>
-                  </Tr>
-                ) : null}
               </Tbody>
             );
           })}
