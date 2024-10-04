@@ -23,7 +23,7 @@ interface PackageTableData extends PurlSummary {
 interface IPackageSearchContext {
   tableControls: ITableControls<
     PackageTableData,
-    "name" | "namespace" | "version" | "type" | "qualifiers",
+    "name" | "version" | "type" | "vulnerabilities" | "sboms",
     never,
     "" | "type",
     string
@@ -51,10 +51,10 @@ export const PackageSearchProvider: React.FunctionComponent<
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.packages,
     columnNames: {
       name: "Name",
-      namespace: "Namespace",
       version: "Version",
       type: "Type",
-      qualifiers: "Qualifiers",
+      vulnerabilities: "Vulnerabilities",
+      sboms: "SBOMs",
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
@@ -79,8 +79,7 @@ export const PackageSearchProvider: React.FunctionComponent<
         ],
       },
     ],
-    isExpansionEnabled: true,
-    expandableVariant: "single",
+    isExpansionEnabled: false,
   });
 
   const {
@@ -90,6 +89,7 @@ export const PackageSearchProvider: React.FunctionComponent<
   } = useFetchPackages(
     getHubRequestParams({
       ...tableControlState,
+      hubSortFieldKeys: {},
     })
   );
 
