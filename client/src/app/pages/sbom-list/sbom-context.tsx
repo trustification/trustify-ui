@@ -17,7 +17,12 @@ import { useFetchSBOMs } from "@app/queries/sboms";
 interface ISbomSearchContext {
   tableControls: ITableControls<
     SbomSummary,
-    "name" | "published" | "labels" | "packages",
+    | "name"
+    | "version"
+    | "packages"
+    | "published"
+    | "supplier"
+    | "vulnerabilities",
     "published",
     "",
     string
@@ -45,9 +50,11 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.sboms,
     columnNames: {
       name: "Name",
+      version: "Version",
+      supplier: "Supplier",
       published: "Published",
-      labels: "Labels",
       packages: "Packages",
+      vulnerabilities: "Vulnerabilities",
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
@@ -61,8 +68,7 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
         type: FilterType.search,
       },
     ],
-    isExpansionEnabled: true,
-    expandableVariant: "compound",
+    isExpansionEnabled: false,
   });
 
   const {
