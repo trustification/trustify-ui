@@ -84,6 +84,16 @@ export type AdvisoryVulnerabilitySummary = AdvisoryVulnerabilityHead & {
   cvss3_scores: Array<string>;
 };
 
+export type AiFlags = {
+  completions: boolean;
+};
+
+export type AiTool = {
+  description: string;
+  name: string;
+  parameters: unknown;
+};
+
 export type AnalysisStatus = {
   graph_count: number;
   sbom_count: number;
@@ -1106,6 +1116,28 @@ export type CompletionsData = {
 export type CompletionsResponse = ChatState;
 
 export type CompletionsError = unknown;
+
+export type AiFlagsResponse = AiFlags;
+
+export type AiFlagsError = unknown;
+
+export type AiToolsResponse = Array<AiTool>;
+
+export type AiToolsError = unknown;
+
+export type AiToolCallData = {
+  body: unknown;
+  path: {
+    /**
+     * Name of the tool to call
+     */
+    name: string;
+  };
+};
+
+export type AiToolCallResponse = string;
+
+export type AiToolCallError = unknown;
 
 export type SearchComponentDepsData = {
   query?: {

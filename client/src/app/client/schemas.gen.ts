@@ -211,6 +211,30 @@ May include several, varying by minor version of the CVSS3 vector.`,
     "Summary of information from this advisory regarding a single specific vulnerability.",
 } as const;
 
+export const AiFlagsSchema = {
+  type: "object",
+  required: ["completions"],
+  properties: {
+    completions: {
+      type: "boolean",
+    },
+  },
+} as const;
+
+export const AiToolSchema = {
+  type: "object",
+  required: ["name", "description", "parameters"],
+  properties: {
+    description: {
+      type: "string",
+    },
+    name: {
+      type: "string",
+    },
+    parameters: {},
+  },
+} as const;
+
 export const AnalysisStatusSchema = {
   type: "object",
   required: ["sbom_count", "graph_count"],

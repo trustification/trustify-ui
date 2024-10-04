@@ -32,6 +32,13 @@ import type {
   CompletionsData,
   CompletionsError,
   CompletionsResponse,
+  AiFlagsError,
+  AiFlagsResponse,
+  AiToolsError,
+  AiToolsResponse,
+  AiToolCallData,
+  AiToolCallError,
+  AiToolCallResponse,
   SearchComponentDepsData,
   SearchComponentDepsError,
   SearchComponentDepsResponse,
@@ -316,6 +323,45 @@ export const completions = <ThrowOnError extends boolean = false>(
   >({
     ...options,
     url: "/api/v1/ai/completions",
+  });
+};
+
+export const aiFlags = <ThrowOnError extends boolean = false>(
+  options?: Options<unknown, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    AiFlagsResponse,
+    AiFlagsError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/ai/flags",
+  });
+};
+
+export const aiTools = <ThrowOnError extends boolean = false>(
+  options?: Options<unknown, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    AiToolsResponse,
+    AiToolsError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/ai/tools",
+  });
+};
+
+export const aiToolCall = <ThrowOnError extends boolean = false>(
+  options: Options<AiToolCallData, ThrowOnError>
+) => {
+  return (options?.client ?? client).post<
+    AiToolCallResponse,
+    AiToolCallError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/ai/tools/{name}",
   });
 };
 
