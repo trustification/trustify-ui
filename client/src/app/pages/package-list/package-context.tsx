@@ -89,6 +89,7 @@ export const PackageSearchProvider: React.FunctionComponent<
   } = useFetchPackages(
     getHubRequestParams({
       ...tableControlState,
+      hubSortFieldKeys: {},
     })
   );
 

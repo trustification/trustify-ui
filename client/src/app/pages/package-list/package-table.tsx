@@ -58,7 +58,7 @@ export const PackageTable: React.FC = () => {
                     item={item}
                     rowIndex={rowIndex}
                   >
-                    <Td width={30} {...getTdProps({ columnKey: "name" })}>
+                    <Td width={40} {...getTdProps({ columnKey: "name" })}>
                       <NavLink
                         to={`/packages/${encodeURIComponent(item.uuid)}`}
                       >
@@ -81,11 +81,11 @@ export const PackageTable: React.FC = () => {
                     >
                       {item.decomposedPurl?.type}
                     </Td>
-                    <Td width={10} {...getTdProps({ columnKey: "sboms" })}></Td>
                     <Td
-                      width={10}
+                      width={15}
                       {...getTdProps({ columnKey: "vulnerabilities" })}
                     ></Td>
+                    <Td width={15} {...getTdProps({ columnKey: "sboms" })}></Td>
                   </TableRowContentWithControls>
                 </Tr>
               </Tbody>
