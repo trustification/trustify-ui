@@ -3,17 +3,9 @@ import { NavLink } from "react-router-dom";
 
 import { AxiosError } from "axios";
 
-import {
-  DescriptionList,
-  DescriptionListDescription,
-  DescriptionListGroup,
-  DescriptionListTerm,
-  List,
-  ListItem,
-} from "@patternfly/react-core";
+import { ButtonVariant } from "@patternfly/react-core";
 import {
   ActionsColumn,
-  ExpandableRowContent,
   Table,
   Tbody,
   Td,
@@ -22,10 +14,7 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { SbomPackage, SbomSummary } from "@app/client";
-import { EditLabelsModal } from "@app/components/EditLabelsModal";
-import { FilterType } from "@app/components/FilterToolbar";
-import { LabelsAsList } from "@app/components/LabelsAsList";
+import { SbomSummary } from "@app/client";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import { PackagesCount } from "@app/components/PackagesCount";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -34,14 +23,11 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
-import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useDownload } from "@app/hooks/useDownload";
-import {
-  useDeleteSbomMutation,
-  useUpdateSbomLabelsMutation,
-} from "@app/queries/sboms";
+import { useDeleteSbomMutation } from "@app/queries/sboms";
 import { formatDate } from "@app/utils/utils";
 
+import { ConfirmDialog } from "@app/components/ConfirmDialog";
 import { SbomSearchContext } from "./sbom-context";
 
 export const SbomTable: React.FC = ({}) => {
@@ -51,7 +37,7 @@ export const SbomTable: React.FC = ({}) => {
   const { pushNotification } = React.useContext(NotificationsContext);
 
   // Actions that each row can trigger
-  type RowAction = "editLabels";
+  type RowAction = "delete";
   const [selectedRowAction, setSelectedRowAction] =
     React.useState<RowAction | null>(null);
   const [selectedRow, setSelectedRow] = React.useState<SbomSummary | null>(
@@ -63,22 +49,10 @@ export const SbomTable: React.FC = ({}) => {
     setSelectedRow(row);
   };
 
-  const onUpdateLabelsError = (_error: AxiosError) => {
-    pushNotification({
-      title: "Error while updating labels",
-      variant: "danger",
-    });
-  };
-
-  const { mutate: updateSbomLabels } = useUpdateSbomLabelsMutation(
-    () => {},
-    onUpdateLabelsError
-  );
-
   const onDeleteSbomSuccess = (sbom: SbomSummary) => {
     pushNotification({
       title: `The SBOM ${sbom.name} was deleted`,
-      variant: "danger",
+      variant: "success",
     });
   };
 
@@ -89,17 +63,10 @@ export const SbomTable: React.FC = ({}) => {
     });
   };
 
-  const deleteSBOMByIdMutation = useDeleteSbomMutation(
+  const { mutate: deleteSbom } = useDeleteSbomMutation(
     onDeleteSbomSuccess,
     onDeleteAdvisoryError
   );
-
-  const execSaveLabels = (
-    row: SbomSummary,
-    labels: { [key: string]: string }
-  ) => {
-    updateSbomLabels({ ...row, labels });
-  };
 
   const {
     numRenderedColumns,
@@ -147,7 +114,7 @@ export const SbomTable: React.FC = ({}) => {
                     rowIndex={rowIndex}
                   >
                     <Td
-                      width={40}
+                      width={30}
                       {...getTdProps({
                         columnKey: "name",
                         isCompoundExpandToggle: true,
@@ -158,16 +125,22 @@ export const SbomTable: React.FC = ({}) => {
                       <NavLink to={`/sboms/${item.id}`}>{item.name}</NavLink>
                     </Td>
                     <Td
-                      width={10}
+                      width={15}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "version" })}
-                    ></Td>
+                    >
+                      {item.described_by
+                        .map((e) => e.version)
+                        .filter((e) => e)
+                        .join(", ")}
+                    </Td>
                     <Td
                       width={20}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "supplier" })}
-                    ></Td>
-
+                    >
+                      {item.authors.join(", ")}
+                    </Td>
                     <Td width={10} {...getTdProps({ columnKey: "published" })}>
                       {formatDate(item.published)}
                     </Td>
@@ -175,18 +148,12 @@ export const SbomTable: React.FC = ({}) => {
                       <PackagesCount sbomId={item.id} />
                     </Td>
                     <Td
-                      width={10}
+                      width={15}
                       {...getTdProps({ columnKey: "vulnerabilities" })}
                     ></Td>
                     <Td isActionCell>
                       <ActionsColumn
                         items={[
-                          {
-                            title: "Edit labels",
-                            onClick: () => {
-                              prepareActionOnRow("editLabels", item);
-                            },
-                          },
                           {
                             title: "Download",
                             onClick: () => {
@@ -195,8 +162,7 @@ export const SbomTable: React.FC = ({}) => {
                           },
                           {
                             title: "Delete",
-                            onClick: () =>
-                              deleteSBOMByIdMutation.mutate(item.id),
+                            onClick: () => prepareActionOnRow("delete", item),
                           },
                         ]}
                       />
@@ -215,19 +181,24 @@ export const SbomTable: React.FC = ({}) => {
         paginationProps={paginationProps}
       />
 
-      {selectedRowAction === "editLabels" && selectedRow && (
-        <EditLabelsModal
-          resourceName={selectedRow.name}
-          value={selectedRow.labels ?? {}}
-          onSave={(labels) => {
-            execSaveLabels(selectedRow, labels);
-
-            setSelectedRow(null);
-            setSelectedRowAction(null);
-          }}
-          onClose={() => setSelectedRowAction(null)}
-        />
-      )}
+      <ConfirmDialog
+        title={`Delete ${selectedRow?.name}`}
+        titleIconVariant="warning"
+        isOpen={selectedRowAction === "delete"}
+        message="Are you sure you want to delete this SBOM? This action cannot be undone."
+        aria-label="Delete SBOM"
+        confirmBtnVariant={ButtonVariant.danger}
+        confirmBtnLabel="Delete"
+        cancelBtnLabel="Cancel"
+        onCancel={() => setSelectedRowAction(null)}
+        onClose={() => setSelectedRowAction(null)}
+        onConfirm={() => {
+          if (selectedRow) {
+            deleteSbom(selectedRow.id);
+          }
+          setSelectedRowAction(null);
+        }}
+      />
     </>
   );
 };
