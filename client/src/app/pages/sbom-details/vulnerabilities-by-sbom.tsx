@@ -178,16 +178,16 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
     items: tableDataWithUiId,
     isLoading: false,
     columnNames: {
-      identifier: "Identifier",
-      title: "Title",
-      severity: "Severity",
+      name: "Name",
+      description: "Description",
+      cvss: "CVSS",
       advisory: "Advisory",
       context: "Context",
       status: "Status",
     },
     hasActionsColumn: false,
     isSortEnabled: true,
-    sortableColumns: ["identifier"],
+    sortableColumns: ["name"],
     isPaginationEnabled: true,
     isFilterEnabled: true,
     filterCategories: [
@@ -249,9 +249,9 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
         <Thead>
           <Tr>
             <TableHeaderContentWithControls {...tableControls}>
-              <Th {...getThProps({ columnKey: "identifier" })} />
-              <Th {...getThProps({ columnKey: "title" })} />
-              <Th {...getThProps({ columnKey: "severity" })} />
+              <Th {...getThProps({ columnKey: "name" })} />
+              <Th {...getThProps({ columnKey: "description" })} />
+              <Th {...getThProps({ columnKey: "cvss" })} />
               <Th {...getThProps({ columnKey: "advisory" })} />
               <Th {...getThProps({ columnKey: "context" })} />
               <Th {...getThProps({ columnKey: "status" })} />
@@ -273,7 +273,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                     item={item}
                     rowIndex={rowIndex}
                   >
-                    <Td width={15} {...getTdProps({ columnKey: "identifier" })}>
+                    <Td width={15} {...getTdProps({ columnKey: "name" })}>
                       <Button
                         size="sm"
                         variant={ButtonVariant.secondary}
@@ -285,11 +285,11 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                     <Td
                       width={35}
                       modifier="truncate"
-                      {...getTdProps({ columnKey: "title" })}
+                      {...getTdProps({ columnKey: "description" })}
                     >
                       {item.vulnerability?.title}
                     </Td>
-                    <Td width={10} {...getTdProps({ columnKey: "severity" })}>
+                    <Td width={10} {...getTdProps({ columnKey: "cvss" })}>
                       {item.vulnerability?.average_severity && (
                         <SeverityShieldAndText
                           value={item.vulnerability.average_severity}
