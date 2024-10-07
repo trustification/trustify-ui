@@ -43,9 +43,9 @@ export const Vulnerabilities: React.FC<VulnerabilitiesProps> = ({
     idProperty: "identifier",
     items: vulnerabilities,
     columnNames: {
-      identifier: "Identifier",
-      title: "Title",
-      severity: "Severity",
+      identifier: "Name",
+      title: "Description",
+      severity: "CVSS",
       discovered: "Discovered",
       released: "Released",
       cwe: "CWE",
