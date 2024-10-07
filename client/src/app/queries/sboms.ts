@@ -10,7 +10,6 @@ import {
   getSbomAdvisories,
   listRelatedSboms,
   listSboms,
-  SbomAdvisory,
   SbomDetails,
   SbomSummary,
   updateSbomLabels,
@@ -62,16 +61,19 @@ export const useFetchSBOMById = (id: string) => {
 };
 
 export const useDeleteSbomMutation = (
-  onSuccess?: (payload: SbomDetails, id: string) => void,
+  onSuccess: (payload: SbomDetails, id: string) => void,
   onError?: (err: AxiosError, id: string) => void
 ) => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
       const response = await deleteSbom({ client, path: { id } });
       return response.data as SbomDetails;
     },
-    mutationKey: [SBOMsQueryKey],
-    onSuccess: onSuccess,
+    onSuccess: (response, id) => {
+      onSuccess(response, id);
+      queryClient.invalidateQueries({ queryKey: [SBOMsQueryKey] });
+    },
     onError: onError,
   });
 };

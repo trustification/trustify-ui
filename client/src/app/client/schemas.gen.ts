@@ -449,6 +449,29 @@ export const ChatStateSchema = {
   },
 } as const;
 
+export const ClearlyDefinedCurationImporterSchema = {
+  allOf: [
+    {
+      $ref: "#/components/schemas/CommonImporter",
+    },
+    {
+      type: "object",
+      properties: {
+        source: {
+          type: "string",
+        },
+        types: {
+          type: "array",
+          items: {
+            $ref: "#/components/schemas/ClearlyDefinedPackageType",
+          },
+          uniqueItems: true,
+        },
+      },
+    },
+  ],
+} as const;
+
 export const ClearlyDefinedImporterSchema = {
   allOf: [
     {
@@ -754,6 +777,15 @@ export const ImporterConfigurationSchema = {
       properties: {
         clearlyDefined: {
           $ref: "#/components/schemas/ClearlyDefinedImporter",
+        },
+      },
+    },
+    {
+      type: "object",
+      required: ["clearlyDefinedCuration"],
+      properties: {
+        clearlyDefinedCuration: {
+          $ref: "#/components/schemas/ClearlyDefinedCurationImporter",
         },
       },
     },
