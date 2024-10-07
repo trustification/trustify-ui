@@ -164,6 +164,11 @@ export type ChatState = {
   messages: Array<ChatMessage>;
 };
 
+export type ClearlyDefinedCurationImporter = CommonImporter & {
+  source?: string;
+  types?: Array<ClearlyDefinedPackageType>;
+};
+
 export type ClearlyDefinedImporter = CommonImporter & {
   source?: string;
   types?: Array<ClearlyDefinedPackageType>;
@@ -268,6 +273,9 @@ export type ImporterConfiguration =
     }
   | {
       clearlyDefined: ClearlyDefinedImporter;
+    }
+  | {
+      clearlyDefinedCuration: ClearlyDefinedCurationImporter;
     }
   | {
       cwe: CweImporter;
@@ -1753,7 +1761,7 @@ export type UploadSbomError = unknown;
 export type ListRelatedSbomsData = {
   query?: {
     /**
-     * Find by a ID of a package
+     * Find by an ID of a package
      */
     id?: string | null;
     /**
