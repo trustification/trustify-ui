@@ -55,8 +55,5 @@ export const uploadAdvisory = (
 
 export const uploadSbom = (formData: FormData, config?: AxiosRequestConfig) => {
   const file = formData.get(FORM_DATA_FILE_KEY) as File;
-  return file.text().then((text) => {
-    const json = JSON.parse(text);
-    return axios.post<SbomDetails>(`${SBOMS}`, json, config);
-  });
+  return axios.post<SbomDetails>(`${SBOMS}`, file, config);
 };
