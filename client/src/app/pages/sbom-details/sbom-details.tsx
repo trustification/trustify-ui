@@ -62,8 +62,8 @@ export const SbomDetails: React.FC = () => {
           ]}
           tabs={[
             {
-              eventKey: "overview",
-              title: "Overview",
+              eventKey: "info",
+              title: "Info",
               children: (
                 <div className="pf-v5-u-m-md">
                   <LoadingWrapper
@@ -76,20 +76,20 @@ export const SbomDetails: React.FC = () => {
               ),
             },
             {
-              eventKey: "vulnerabilities",
-              title: "Vulnerabilities",
-              children: (
-                <div className="pf-v5-u-m-md">
-                  {sbomId && <VulnerabilitiesBySbom sbomId={sbomId} />}
-                </div>
-              ),
-            },
-            {
               eventKey: "packages",
               title: "Packages",
               children: (
                 <div className="pf-v5-u-m-md">
                   {sbomId && <PackagesBySbom sbomId={sbomId} />}
+                </div>
+              ),
+            },
+            {
+              eventKey: "vulnerabilities",
+              title: "Vulnerabilities",
+              children: (
+                <div className="pf-v5-u-m-md">
+                  {sbomId && <VulnerabilitiesBySbom sbomId={sbomId} />}
                 </div>
               ),
             },
