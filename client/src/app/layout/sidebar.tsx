@@ -66,16 +66,6 @@ export const SidebarApp: React.FC = () => {
           </li>
           <li className="pf-v5-c-nav__item">
             <NavLink
-              to="/advisories"
-              className={({ isActive }) => {
-                return css(LINK_CLASS, isActive ? ACTIVE_LINK_CLASS : "");
-              }}
-            >
-              Advisories
-            </NavLink>
-          </li>
-          <li className="pf-v5-c-nav__item">
-            <NavLink
               to="/importers"
               className={({ isActive }) => {
                 return css(LINK_CLASS, isActive ? ACTIVE_LINK_CLASS : "");
