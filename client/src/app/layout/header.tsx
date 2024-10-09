@@ -7,6 +7,7 @@ import {
   Brand,
   Button,
   ButtonVariant,
+  Divider,
   Dropdown,
   DropdownItem,
   DropdownList,
@@ -18,26 +19,26 @@ import {
   MenuToggle,
   MenuToggleElement,
   PageToggleButton,
+  Title,
   Toolbar,
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
 } from "@patternfly/react-core";
 
-import BarsIcon from "@patternfly/react-icons/dist/js/icons/bars-icon";
-import QuestionCircleIcon from "@patternfly/react-icons/dist/esm/icons/question-circle-icon";
 import EllipsisVIcon from "@patternfly/react-icons/dist/esm/icons/ellipsis-v-icon";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
+import BarsIcon from "@patternfly/react-icons/dist/js/icons/bars-icon";
 
 import { isAuthRequired } from "@app/Constants";
-
-import { AboutApp } from "./about";
-import imgAvatar from "../images/avatar.svg";
 import useBranding from "@app/hooks/useBranding";
+
+import imgAvatar from "../images/avatar.svg";
+import { AboutApp } from "./about";
 
 export const HeaderApp: React.FC = () => {
   const {
-    masthead: { leftBrand },
+    masthead: { leftBrand, leftTitle, rightBrand },
   } = useBranding();
 
   const auth = (isAuthRequired && useAuth()) || undefined;
@@ -48,20 +49,23 @@ export const HeaderApp: React.FC = () => {
   const [isKebabDropdownOpen, setIsKebabDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
 
-  const kebabDropdownItems = (
-    <>
-      <DropdownItem key="about" onClick={toggleIsAboutOpen}>
-        <HelpIcon /> About
-      </DropdownItem>
-    </>
-  );
-
   const onKebabDropdownToggle = () => {
     setIsKebabDropdownOpen(!isKebabDropdownOpen);
   };
 
   const onKebabDropdownSelect = () => {
     setIsKebabDropdownOpen(!isKebabDropdownOpen);
+  };
+
+  const logout = () => {
+    auth &&
+      auth
+        .signoutRedirect()
+        .then(() => {})
+        .catch((err) => {
+          console.error("Logout failed:", err);
+          navigate("/");
+        });
   };
 
   return (
@@ -83,36 +87,60 @@ export const HeaderApp: React.FC = () => {
                 heights={{ default: leftBrand.height }}
               />
             ) : null}
+            {leftTitle ? (
+              <Title
+                className="logo-pointer"
+                headingLevel={leftTitle?.heading ?? "h1"}
+                size={leftTitle?.size ?? "2xl"}
+              >
+                {leftTitle.text}
+              </Title>
+            ) : null}
           </MastheadBrand>
         </MastheadMain>
         <MastheadContent>
           <Toolbar id="toolbar" isFullHeight isStatic>
             <ToolbarContent>
+              {/* toolbar items to always show */}
               <ToolbarGroup
+                id="header-toolbar-tasks"
                 variant="icon-button-group"
                 align={{ default: "alignRight" }}
+              ></ToolbarGroup>
+
+              {/* toolbar items to show at desktop sizes */}
+              <ToolbarGroup
+                id="header-toolbar-desktop"
+                variant="icon-button-group"
                 spacer={{ default: "spacerNone", md: "spacerMd" }}
+                visibility={{
+                  default: "hidden",
+                  "2xl": "visible",
+                  xl: "visible",
+                  lg: "visible",
+                  md: "hidden",
+                }}
               >
-                <ToolbarGroup
-                  variant="icon-button-group"
-                  visibility={{ default: "hidden", lg: "visible" }}
-                >
-                  <ToolbarItem>
-                    <Button
-                      aria-label="About"
-                      variant={ButtonVariant.plain}
-                      icon={<QuestionCircleIcon />}
-                      onClick={toggleIsAboutOpen}
-                    />
-                  </ToolbarItem>
-                </ToolbarGroup>
-                <ToolbarItem
-                  visibility={{
-                    default: "hidden",
-                    md: "visible",
-                    lg: "hidden",
-                  }}
-                >
+                <ToolbarItem>
+                  <Button
+                    id="about-button"
+                    aria-label="about button"
+                    variant={ButtonVariant.plain}
+                    onClick={toggleIsAboutOpen}
+                  >
+                    <HelpIcon />
+                  </Button>
+                </ToolbarItem>
+              </ToolbarGroup>
+
+              {/* toolbar items to show at mobile sizes */}
+              <ToolbarGroup
+                id="header-toolbar-mobile"
+                variant="icon-button-group"
+                spacer={{ default: "spacerNone", md: "spacerMd" }}
+                visibility={{ lg: "hidden" }}
+              >
+                <ToolbarItem>
                   <Dropdown
                     isOpen={isKebabDropdownOpen}
                     onSelect={onKebabDropdownSelect}
@@ -132,9 +160,29 @@ export const HeaderApp: React.FC = () => {
                       </MenuToggle>
                     )}
                   >
-                    <DropdownList>{kebabDropdownItems}</DropdownList>
+                    <DropdownList>
+                      {auth && (
+                        <DropdownItem key="logout" onClick={logout}>
+                          Logout
+                        </DropdownItem>
+                      )}
+                      <Divider key="separator" component="li" />
+                      <DropdownItem key="about" onClick={toggleIsAboutOpen}>
+                        <HelpIcon /> About
+                      </DropdownItem>
+                    </DropdownList>
                   </Dropdown>
                 </ToolbarItem>
+              </ToolbarGroup>
+
+              {/* Show the SSO menu at desktop sizes */}
+              <ToolbarGroup
+                id="header-toolbar-sso"
+                visibility={{
+                  default: "hidden",
+                  md: "visible",
+                }}
+              >
                 {auth && (
                   <ToolbarItem
                     visibility={{ default: "hidden", md: "visible" }}
@@ -161,18 +209,7 @@ export const HeaderApp: React.FC = () => {
                       )}
                     >
                       <DropdownList>
-                        <DropdownItem
-                          key="logout"
-                          onClick={() => {
-                            auth
-                              .signoutRedirect()
-                              .then(() => {})
-                              .catch((err) => {
-                                console.error("Logout failed:", err);
-                                navigate("/");
-                              });
-                          }}
-                        >
+                        <DropdownItem key="logout" onClick={logout}>
                           Logout
                         </DropdownItem>
                       </DropdownList>
@@ -180,6 +217,18 @@ export const HeaderApp: React.FC = () => {
                   </ToolbarItem>
                 )}
               </ToolbarGroup>
+
+              {rightBrand ? (
+                <ToolbarGroup>
+                  <ToolbarItem>
+                    <Brand
+                      src={rightBrand.src}
+                      alt={rightBrand.alt}
+                      heights={{ default: rightBrand.height }}
+                    />
+                  </ToolbarItem>
+                </ToolbarGroup>
+              ) : null}
             </ToolbarContent>
           </Toolbar>
         </MastheadContent>

@@ -3,6 +3,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import { FORM_DATA_FILE_KEY } from "@app/Constants";
 import { AdvisoryDetails, SbomDetails } from "@app/client";
 import { serializeRequestParamsForHub } from "@app/hooks/table-controls/getHubRequestParams";
+
 import { HubPaginatedResult, HubRequestParams } from "./models";
 
 const API = "/api";
@@ -41,21 +42,31 @@ export const getHubPaginatedResult = <T>(
     }));
 };
 
+const getContentTypeFromFile = (file: File) => {
+  let contentType = "application/json";
+  if (file.name.endsWith(".bz2")) {
+    contentType = "application/json+bzip2";
+  } else if (file.name.endsWith(".gz")) {
+    contentType = "application/json+bzip2";
+  }
+  return contentType;
+};
+
 export const uploadAdvisory = (
   formData: FormData,
   config?: AxiosRequestConfig
 ) => {
   const file = formData.get(FORM_DATA_FILE_KEY) as File;
-  return file.text().then((text) => {
-    const json = JSON.parse(text);
-    return axios.post<AdvisoryDetails>(`${ADVISORIES}`, json, config);
+  return axios.post<AdvisoryDetails>(`${ADVISORIES}`, file, {
+    ...config,
+    headers: { "Content-Type": getContentTypeFromFile(file) },
   });
 };
 
 export const uploadSbom = (formData: FormData, config?: AxiosRequestConfig) => {
   const file = formData.get(FORM_DATA_FILE_KEY) as File;
-  return file.text().then((text) => {
-    const json = JSON.parse(text);
-    return axios.post<SbomDetails>(`${SBOMS}`, json, config);
+  return axios.post<SbomDetails>(`${SBOMS}`, file, {
+    ...config,
+    headers: { "Content-Type": getContentTypeFromFile(file) },
   });
 };
