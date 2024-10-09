@@ -1,3 +1,8 @@
+import * as React from "react";
+
+import { AxiosError, AxiosResponse, CancelTokenSource } from "axios";
+import { FileRejection } from "react-dropzone";
+
 import {
   DropEvent,
   HelperText,
@@ -9,21 +14,10 @@ import {
   MultipleFileUploadMain,
   MultipleFileUploadStatus,
   MultipleFileUploadStatusItem,
-  TextContent,
-  Title,
 } from "@patternfly/react-core";
-import * as React from "react";
-import { FileRejection } from "react-dropzone";
 
 import FileIcon from "@patternfly/react-icons/dist/esm/icons/file-code-icon";
 import UploadIcon from "@patternfly/react-icons/dist/esm/icons/upload-icon";
-import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
-
-import {
-  IPageDrawerContentProps,
-  PageDrawerContent,
-} from "@app/components/PageDrawerContext";
-import { AxiosError, AxiosResponse, CancelTokenSource } from "axios";
 
 interface Upload {
   progress: number;
@@ -34,9 +28,7 @@ interface Upload {
   cancelFn?: CancelTokenSource;
 }
 
-export interface IUploadFilesDrawerProps
-  extends Pick<IPageDrawerContentProps, "onCloseClick"> {
-  isExpanded: boolean;
+export interface IUploadFilesProps {
   uploads: Map<File, Upload>;
   handleUpload: (files: File[]) => void;
   handleRemoveUpload: (file: File) => void;
@@ -44,10 +36,8 @@ export interface IUploadFilesDrawerProps
   extractErrorMessage: (error: AxiosError) => string;
 }
 
-export const UploadFilesDrawer: React.FC<IUploadFilesDrawerProps> = ({
-  isExpanded,
+export const UploadFiles: React.FC<IUploadFilesProps> = ({
   uploads,
-  onCloseClick,
   handleUpload,
   handleRemoveUpload,
   extractSuccessMessage,
@@ -97,35 +87,22 @@ export const UploadFilesDrawer: React.FC<IUploadFilesDrawerProps> = ({
   ).length;
 
   return (
-    <PageDrawerContent
-      isExpanded={isExpanded}
-      onCloseClick={onCloseClick}
-      // focusKey={isExpanded}
-      pageKey="upload-files"
-      drawerPanelContentProps={{ defaultSize: "600px" }}
-      header={
-        <TextContent>
-          <Title headingLevel="h2" size="lg" className={spacing.mtXs}>
-            Upload files
-          </Title>
-        </TextContent>
-      }
-    >
+    <>
       <MultipleFileUpload
         onFileDrop={handleFileDrop}
         dropzoneProps={{
           accept: {
-            "application/xml": [".json"],
+            "application/xml": [".json", ".bz2", ".gz"],
           },
           onDropRejected: handleDropRejected,
+          useFsAccessApi: false, // Required to make playwright work
         }}
-        isHorizontal
       >
         <MultipleFileUploadMain
           titleIcon={<UploadIcon />}
           titleText="Drag and drop files here"
           titleTextSeparator="or"
-          infoText="Accepted file types: JSON"
+          infoText="Accepted file types: .json, .bz2, .gz"
         />
         {showStatus && (
           <MultipleFileUploadStatus
@@ -182,6 +159,6 @@ export const UploadFilesDrawer: React.FC<IUploadFilesDrawerProps> = ({
           </List>
         </Modal>
       </MultipleFileUpload>
-    </PageDrawerContent>
+    </>
   );
 };

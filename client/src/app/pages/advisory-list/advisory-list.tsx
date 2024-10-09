@@ -1,10 +1,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError } from "axios";
 
 import {
-  Button,
   Card,
   CardBody,
   CardTitle,
@@ -39,7 +38,6 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
-import { UploadFilesDrawer } from "@app/components/UploadFilesDrawer";
 import {
   getHubRequestParams,
   useTableControlProps,
@@ -51,7 +49,6 @@ import {
   useDeleteAdvisoryMutation,
   useFetchAdvisories,
   useUpdateAdvisoryLabelsMutation,
-  useUploadAdvisory,
 } from "@app/queries/advisories";
 
 import { EditLabelsModal } from "@app/components/EditLabelsModal";
@@ -68,9 +65,6 @@ import { VulnerabilitiesGalleryCount } from "./components/VulnerabilitiesGaleryC
 
 export const AdvisoryList: React.FC = () => {
   const { pushNotification } = React.useContext(NotificationsContext);
-
-  const [showUploadComponent, setShowUploadComponent] = React.useState(false);
-  const { uploads, handleUpload, handleRemoveUpload } = useUploadAdvisory();
 
   // Actions that each row can trigger
   type RowAction = "editLabels";
@@ -224,17 +218,6 @@ export const AdvisoryList: React.FC = () => {
           <Toolbar {...toolbarProps}>
             <ToolbarContent>
               <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
-              <ToolbarItem>
-                <Button
-                  type="button"
-                  id="upload"
-                  aria-label="Upload"
-                  variant="secondary"
-                  onClick={() => setShowUploadComponent(true)}
-                >
-                  Upload
-                </Button>
-              </ToolbarItem>
               <ToolbarItem {...paginationToolbarItemProps}>
                 <SimplePagination
                   idPrefix="advisory-table"
@@ -432,22 +415,6 @@ export const AdvisoryList: React.FC = () => {
           />
         </div>
       </PageSection>
-
-      <UploadFilesDrawer
-        isExpanded={showUploadComponent}
-        uploads={uploads}
-        handleUpload={handleUpload}
-        handleRemoveUpload={handleRemoveUpload}
-        extractSuccessMessage={(
-          response: AxiosResponse<{ document_id: string }>
-        ) => {
-          return `${response.data.document_id} uploaded`;
-        }}
-        extractErrorMessage={(error: AxiosError) =>
-          error.response?.data ? error.message : "Error while uploading file"
-        }
-        onCloseClick={() => setShowUploadComponent(false)}
-      />
 
       {selectedRowAction === "editLabels" && selectedRow && (
         <EditLabelsModal
