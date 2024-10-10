@@ -8,11 +8,14 @@ import {
   DescriptionListTerm,
   Grid,
   GridItem,
+  List,
+  ListItem,
 } from "@patternfly/react-core";
 
 import { compareBySeverityFn, severityList } from "@app/api/model-utils";
 import { SbomSummary, Severity } from "@app/client";
 import { formatDate } from "@app/utils/utils";
+import { LabelsAsList } from "@app/components/LabelsAsList";
 
 interface InfoProps {
   sbom: SbomSummary;
@@ -22,25 +25,40 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
   return (
     <Grid hasGutter>
       <GridItem md={6}>
-        <DescriptionList
-          columnModifier={{
-            default: "2Col",
-          }}
-        >
+        <DescriptionList>
           <DescriptionListGroup>
             <DescriptionListTerm>Name</DescriptionListTerm>
             <DescriptionListDescription>{sbom.name}</DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>
-            <DescriptionListTerm>Author</DescriptionListTerm>
+            <DescriptionListTerm>Version</DescriptionListTerm>
             <DescriptionListDescription>
-              {sbom.authors}
+              {sbom.described_by
+                .map((e) => e.version)
+                .filter((e) => e)
+                .join(", ")}
+            </DescriptionListDescription>
+          </DescriptionListGroup>
+          <DescriptionListGroup>
+            <DescriptionListTerm>Supplier</DescriptionListTerm>
+            <DescriptionListDescription>
+              <List>
+                {sbom.authors.map((item, index) => (
+                  <ListItem key={index}>{item}</ListItem>
+                ))}
+              </List>
             </DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>
             <DescriptionListTerm>Published</DescriptionListTerm>
             <DescriptionListDescription>
               {formatDate(sbom.published)}
+            </DescriptionListDescription>
+          </DescriptionListGroup>
+          <DescriptionListGroup>
+            <DescriptionListTerm>Labels</DescriptionListTerm>
+            <DescriptionListDescription>
+              <LabelsAsList value={sbom.labels} />
             </DescriptionListDescription>
           </DescriptionListGroup>
         </DescriptionList>
