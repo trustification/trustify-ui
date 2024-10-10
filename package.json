@@ -70,5 +70,9 @@
     "ts-node": "^10.9.1",
     "type-fest": "^3.13.0",
     "typescript": "^5.5.3"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.1.0",
+    "lucide-react": "^0.447.0"
   }
 }

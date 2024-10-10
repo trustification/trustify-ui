@@ -19,6 +19,7 @@ import { useFetchSBOMById } from "@app/queries/sboms";
 import { Overview } from "./overview";
 import { PackagesBySbom } from "./packages-by-sbom";
 import { VulnerabilitiesBySbom } from "./vulnerabilities-by-sbom";
+import { AIAssistant } from "../../components/ai-assistant";
 
 export const SbomDetails: React.FC = () => {
   const sbomId = useRouteParams(PathParam.SBOM_ID);
@@ -29,6 +30,10 @@ export const SbomDetails: React.FC = () => {
 
   return (
     <>
+      <AIAssistant
+        viewing={`the details for SBOM uuid: ${sbom?.id}, name: ${sbom?.name}`}
+      />
+
       <PageSection variant="light">
         <DetailsPage
           breadcrumbs={

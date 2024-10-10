@@ -14,6 +14,7 @@ import { useFetchProductById } from "@app/queries/products";
 
 import { Overview } from "./overview";
 import { ProductVersions } from "./product-versions";
+import { AIAssistant } from "../../components/ai-assistant";
 
 export const ProductDetails: React.FC = () => {
   const productId = useRouteParams(PathParam.PRODUCT_ID);
@@ -21,6 +22,9 @@ export const ProductDetails: React.FC = () => {
 
   return (
     <>
+      <AIAssistant
+        viewing={`the details for product UUID: ${product?.id}, name: ${product?.name}`}
+      />
       <PageSection variant="light">
         <DetailsPage
           breadcrumbs={

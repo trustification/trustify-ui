@@ -33,6 +33,7 @@ import { SbomSearchContext } from "../sbom-list/sbom-context";
 import { SbomTable } from "../sbom-list/sbom-table";
 import { VulnerabilitySearchContext } from "../vulnerability-list/vulnerability-context";
 import { VulnerabilityTable } from "../vulnerability-list/vulnerability-table";
+import { AIAssistant } from "../../components/ai-assistant";
 
 export const SearchPage: React.FC = () => {
   return (
@@ -124,6 +125,7 @@ export const Search: React.FC = () => {
 
   return (
     <>
+      <AIAssistant viewing={`a search page`} />
       <PageSection variant={PageSectionVariants.light}>
         <Toolbar isStatic>
           <ToolbarContent>

@@ -10,10 +10,12 @@ import {
 import { PackageSearchProvider } from "./package-context";
 import { PackageTable } from "./package-table";
 import { PackageToolbar } from "./package-toolbar";
+import { AIAssistant } from "../../components/ai-assistant";
 
 export const PackageList: React.FC = () => {
   return (
     <>
+      <AIAssistant viewing={`a list of packages`} />
       <PageSection variant={PageSectionVariants.light}>
         <TextContent>
           <Text component="h1">Packages</Text>

@@ -3,9 +3,6 @@ import { NavLink } from "react-router-dom";
 
 import {
   PageSection,
-  PageSectionVariants,
-  Text,
-  TextContent,
   Toolbar,
   ToolbarContent,
   ToolbarItem,
@@ -41,6 +38,7 @@ import {
   useDeleteProductMutation,
   useFetchProducts,
 } from "@app/queries/products";
+import { AIAssistant } from "../../components/ai-assistant";
 
 export const ProductList: React.FC = () => {
   const { result: organizations } = useFetchOrganizations({
@@ -131,6 +129,8 @@ export const ProductList: React.FC = () => {
 
   return (
     <>
+      <AIAssistant viewing={`the list of products`} />
+
       {/*<PageSection variant={PageSectionVariants.light}>*/}
       {/*  <TextContent>*/}
       {/*    <Text component="h1">Products</Text>*/}
