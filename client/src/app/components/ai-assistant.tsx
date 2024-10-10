@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -74,31 +74,39 @@ export function AIAssistant({ viewing }: { viewing?: string }) {
         content: VIEWING_MESSAGE_PREFIX + viewing,
       });
     }
-
-    messages.push({
+    const userMessage = {
       message_type: "human",
       content: input,
+    } as ChatMessage;
+    messages.push(userMessage);
+
+    setChatState({
+      messages: [...chatState.messages, userMessage],
     });
     setInput("");
 
     if (completionMutation) {
-      const newMessageState = (
-        await completionMutation.mutateAsync({ messages })
-      ).messages.filter((m: ChatMessage) => {
-        if (m.message_type == "human") {
-          if (m.content.startsWith(VIEWING_MESSAGE_PREFIX)) {
-            console.log("filtering out, ", m.content);
-            return false;
-          }
-          return true;
-        }
-        return m.message_type == "ai";
-      });
+      const newState = await completionMutation.mutateAsync({ messages });
+      const newMessageState = newState.messages.filter(
+        (m: ChatMessage) =>
+          !(
+            m.message_type == "human" &&
+            m.content.startsWith(VIEWING_MESSAGE_PREFIX)
+          )
+      );
       setChatState({
         messages: newMessageState,
       });
     }
   };
+
+  const messages = useMemo(() => {
+    return chatState.messages.filter(
+      (m) =>
+        (m.message_type == "human" || m.message_type == "ai") &&
+        m.content !== ""
+    );
+  }, [chatState]);
 
   const handleClose = () => {
     setIsOpen(false);
@@ -159,7 +167,7 @@ export function AIAssistant({ viewing }: { viewing?: string }) {
                   Hello there! How can I help you today?
                 </span>
               </div>
-              {chatState.messages.map((m, index) => (
+              {messages.map((m, index) => (
                 <div
                   key={index}
                   className={`mb-4 ${

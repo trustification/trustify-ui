@@ -4,7 +4,7 @@ import { AIAssistant } from "../../components/ai-assistant";
 export const Home: React.FC = () => {
   return (
     <>
-      <AIAssistant viewing={`the dashboard`} />
+      <AIAssistant />
       <div>Dashboard here</div>
     </>
   );
