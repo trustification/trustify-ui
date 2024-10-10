@@ -1,8 +1,20 @@
-# frontend
+# Trustify-ui
 
-[![CI](https://github.com/trustification/trustify-ui/actions/workflows/ci-actions.yaml/badge.svg)](https://github.com/trustification/trustify-ui/actions/workflows/ci-actions.yaml)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/trustification/trustify-ui/pulls)
 
-## dev-env
+Trustify UI Component
+
+# Build and Test Status
+
+| branch | last merge CI | last merge image build | nightly CI |
+| :----- | :------------ | :--------------------- | :--------- |
+| main   | [![CI (repo level)](https://github.com/trustification/trustify-ui/actions/workflows/ci-repo.yaml/badge.svg?branch=main&event=push)](https://github.com/trustification/trustify-ui/actions/workflows/ci-repo.yaml?query=branch%3Amain+event%3Apush)           | [![Multiple Architecture Image Build](https://github.com/trustification/trustify-ui/actions/workflows/image-build.yaml/badge.svg?branch=main&event=push)](https://github.com/trustification/trustify-ui/actions/workflows/image-build.yaml?query=branch%3Amain+event%3Apush)                    | [![Nightly CI (repo level @main)](https://github.com/trustification/trustify-ui/actions/workflows/nightly-ci-repo.yaml/badge.svg?branch=main&event=schedule)](https://github.com/trustification/trustify-ui/actions/workflows/nightly-ci-repo.yaml?query=branch%3Amain+event%3Aschedule)       |
+
+| branch | last merge e2e CI | nightly e2e CI |
+| :----- | :---------------- | :------------- |
+| main   | [![CI (global Trustify CI)](https://github.com/trustification/trustify-ui/actions/workflows/ci-global.yaml/badge.svg?branch=main&event=push)](https://github.com/trustification/trustify-ui/actions/workflows/ci-global.yaml?query=branch%3Amain+event%3Apush)               | [![Nightly CI (global trustify CI @main)](https://github.com/trustification/trustify-ui/actions/workflows/nightly-ci-global.yaml/badge.svg?branch=main&event=schedule)](https://github.com/trustification/trustify-ui/actions/workflows/nightly-ci-global.yaml?query=branch%3Amain+event%3Aschedule)            |
+
+## Development
 
 ### Requisites
 
@@ -54,23 +66,7 @@ Open browser at <http://localhost:3000>
 | ANALYTICS_ENABLED   | Enable/Disable analytics      | false                                   |
 | ANALYTICS_WRITE_KEY | Set Segment Write key         | null                                    |
 
-## Mock data
-
-Enable mocks:
-
-```shell
-export MOCK=stub
-```
-
-Start app:
-
-```shell
-npm run start:dev
-```
-
-Mock data is defined at `client/src/mocks`
-
-## crate
+## Crate
 
 > [!NOTE]
 > When using the crate it is expected to build the UI always in Prod mode
