@@ -5,13 +5,23 @@ import { AxiosError } from "axios";
 import {
   Button,
   ButtonVariant,
+  Form,
+  FormGroup,
+  FormSelect,
+  FormSelectOption,
   Label,
   Modal,
   ModalVariant,
   PageSection,
   PageSectionVariants,
+  Popover,
+  Tab,
+  Tabs,
+  TabTitleText,
   Text,
+  TextArea,
   TextContent,
+  TextInput,
   Toolbar,
   ToolbarContent,
   ToolbarItem,
@@ -22,11 +32,14 @@ import {
   ExpandableRowContent,
   Table,
   Tbody,
+  TbodyProps,
   Td,
   Th,
   Thead,
   Tr,
+  TrProps,
 } from "@patternfly/react-table";
+import styles from "@patternfly/react-styles/css/components/Table/table";
 
 import {
   ConfirmDialog,
@@ -61,225 +74,192 @@ import { ImporterForm } from "./components/importer-form";
 import { ImporterStatusIcon } from "./components/importer-status-icon";
 
 export const ImporterList: React.FC = () => {
-  const { pushNotification } = React.useContext(NotificationsContext);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
 
-  // Actions that each row can trigger
-  type RowAction = "enable" | "disable" | "run" | "delete";
-  const [selectedRowAction, setSelectedRowAction] =
-    React.useState<RowAction | null>(null);
-  const [selectedRow, setSelectedRow] = React.useState<Importer | null>(null);
-
-  const prepareActionOnRow = (action: RowAction, row: Importer) => {
-    setSelectedRowAction(action);
-    setSelectedRow(row);
+  const handleModalToggle = (_event: KeyboardEvent | React.MouseEvent) => {
+    setIsModalOpen(!isModalOpen);
   };
 
-  // Create/Update mangement
-  const [createUpdateModalState, setCreateUpdateModalState] = React.useState<
-    "create" | Importer | null
+  //
+
+  const [isModal2Open, setIsModal2Open] = React.useState(false);
+
+  const handleModal2Toggle = (_event: KeyboardEvent | React.MouseEvent) => {
+    setIsModal2Open(!isModal2Open);
+  };
+
+  //
+  const [draggedItemId, setDraggedItemId] = React.useState<string | null>(null);
+  const [draggingToItemIndex, setDraggingToItemIndex] = React.useState<
+    number | null
   >(null);
-  const isCreateUpdateModalOpen = createUpdateModalState !== null;
-  const entityToUpdate =
-    createUpdateModalState !== "create" ? createUpdateModalState : null;
+  const [isDragging, setIsDragging] = React.useState(false);
+  const [itemOrder, setItemOrder] = React.useState(["row1", "row2", "row3"]);
+  const [tempItemOrder, setTempItemOrder] = React.useState<string[]>([]);
 
-  const { importers, isFetching, fetchError, refetch } = useFetchImporters(
-    selectedRowAction == "delete" || createUpdateModalState !== null
-  );
+  const bodyRef = React.useRef<HTMLTableSectionElement>();
 
-  const closeCreateUpdateModal = () => {
-    setCreateUpdateModalState(null);
-    refetch;
+  const onDragStart: TrProps["onDragStart"] = (evt) => {
+    evt.dataTransfer.effectAllowed = "move";
+    evt.dataTransfer.setData("text/plain", evt.currentTarget.id);
+    const draggedItemId = evt.currentTarget.id;
+
+    evt.currentTarget.classList.add(styles.modifiers.ghostRow);
+    evt.currentTarget.setAttribute("aria-pressed", "true");
+
+    setDraggedItemId(draggedItemId);
+    setIsDragging(true);
   };
 
-  // Enable/Disable Importer
+  const moveItem = (arr: string[], i1: string, toIndex: number) => {
+    const fromIndex = arr.indexOf(i1);
+    if (fromIndex === toIndex) {
+      return arr;
+    }
+    const temp = arr.splice(fromIndex, 1);
+    arr.splice(toIndex, 0, temp[0]);
 
-  const onEnableDisableError = (_error: AxiosError) => {
-    pushNotification({
-      title: "Error while enabling/disabling the Importer",
-      variant: "danger",
+    return arr;
+  };
+
+  const move = (itemOrder: string[]) => {
+    const ulNode = bodyRef.current as any;
+    const nodes = Array.from(ulNode.children);
+    if (
+      nodes.map((node: any) => node.id).every((id, i) => id === itemOrder[i])
+    ) {
+      return;
+    }
+    while (ulNode.firstChild) {
+      ulNode.removeChild(ulNode.lastChild);
+    }
+
+    itemOrder.forEach((id) => {
+      ulNode.appendChild(nodes.find((n: any) => n.id === id));
     });
   };
 
-  const { mutate: updateImporter } = useUpdateImporterMutation(
-    () => {},
-    onEnableDisableError
-  );
-
-  const execEnableDisableImporter = (row: Importer, enable: boolean) => {
-    const importerType = Object.keys(row.configuration ?? {})[0];
-    const currentConfigValues = (row.configuration as any)[
-      importerType
-    ] as SbomImporter;
-
-    const newConfigValues: SbomImporter = {
-      ...currentConfigValues,
-      disabled: !enable,
-    };
-
-    const payload = {
-      [importerType]: newConfigValues,
-    } as ImporterConfiguration;
-
-    updateImporter({
-      importerName: row.name,
-      configuration: payload,
+  const onDragCancel = () => {
+    Array.from((bodyRef as any).current.children).forEach((el: any) => {
+      el.classList.remove(styles.modifiers.ghostRow);
+      el.setAttribute("aria-pressed", "false");
     });
+    setDraggedItemId(null);
+    setDraggingToItemIndex(null);
+    setIsDragging(false);
   };
 
-  // Run Importer
-
-  const onRunImporterSuccess = () => {
-    pushNotification({
-      title: "Importer scheduled to run as soon as possible",
-      variant: "success",
-    });
+  const onDragLeave: TbodyProps["onDragLeave"] = (evt) => {
+    if (!isValidDrop(evt)) {
+      move(itemOrder);
+      setDraggingToItemIndex(null);
+    }
   };
 
-  const onRunImporterError = (error: AxiosError) => {
-    pushNotification({
-      title: getAxiosErrorMessage(error),
-      variant: "danger",
-    });
+  const isValidDrop = (
+    evt: React.DragEvent<HTMLTableSectionElement | HTMLTableRowElement>
+  ) => {
+    const ulRect = (bodyRef as any).current.getBoundingClientRect();
+    return (
+      evt.clientX > ulRect.x &&
+      evt.clientX < ulRect.x + ulRect.width &&
+      evt.clientY > ulRect.y &&
+      evt.clientY < ulRect.y + ulRect.height
+    );
   };
 
-  const execRunImporter = (id: string) => {
-    forceRunImporter({ client, path: { name: id }, body: true })
-      .then(onRunImporterSuccess)
-      .catch(onRunImporterError);
+  const onDrop: TrProps["onDrop"] = (evt) => {
+    if (isValidDrop(evt)) {
+      setItemOrder(tempItemOrder);
+    } else {
+      onDragCancel();
+    }
   };
 
-  // Delete importer
+  const onDragOver: TbodyProps["onDragOver"] = (evt) => {
+    evt.preventDefault();
 
-  const onDeleteImporterSuccess = () => {
-    pushNotification({
-      title: "Importer deleted",
-      variant: "success",
-    });
+    const curListItem = (evt.target as HTMLTableSectionElement).closest("tr");
+    if (
+      !curListItem ||
+      !(bodyRef as any).current.contains(curListItem) ||
+      curListItem.id === draggedItemId
+    ) {
+      return null;
+    } else {
+      const dragId = curListItem.id;
+      const newDraggingToItemIndex = Array.from(
+        (bodyRef as any).current.children
+      ).findIndex((item: any) => item.id === dragId);
+      if (newDraggingToItemIndex !== draggingToItemIndex) {
+        const tempItemOrder = moveItem(
+          [...itemOrder],
+          draggedItemId!,
+          newDraggingToItemIndex
+        );
+        move(tempItemOrder);
+        setDraggingToItemIndex(newDraggingToItemIndex);
+        setTempItemOrder(tempItemOrder);
+      }
+    }
   };
 
-  const onDeleteImporterError = (error: AxiosError) => {
-    pushNotification({
-      title: getAxiosErrorMessage(error),
-      variant: "danger",
-    });
+  const onDragEnd: TrProps["onDragEnd"] = (evt) => {
+    const target = evt.target as HTMLTableRowElement;
+    target.classList.remove(styles.modifiers.ghostRow);
+    target.setAttribute("aria-pressed", "false");
+    setDraggedItemId(null);
+    setDraggingToItemIndex(null);
+    setIsDragging(false);
   };
 
-  const { mutate: execDeleteImporter } = useDeleteIporterMutation(
-    onDeleteImporterSuccess,
-    onDeleteImporterError
-  );
-
-  // Table config
-  const tableControls = useLocalTableControls({
-    tableName: "importers-table",
-    idProperty: "name",
-    items: importers,
-    columnNames: {
-      name: "Name",
-      type: "Type",
-      description: "Description",
-      source: "Source",
-      period: "Period",
-      state: "State",
+  const columns = ["Name", "Abbreviation", "Description", "Action"];
+  const rows = [
+    {
+      id: "row1",
+      name: "Red Hat",
+      abbreviation: "RH",
+      description: "CSAF Files provided by Red Hat",
     },
-    hasActionsColumn: true,
-    isSortEnabled: true,
-    sortableColumns: ["name"],
-    getSortValues: (item) => ({
-      name: item.name,
-    }),
-    isPaginationEnabled: true,
-    isExpansionEnabled: true,
-    expandableVariant: "single",
-    isFilterEnabled: true,
-    filterCategories: [
-      {
-        categoryKey: "name",
-        title: "Name",
-        type: FilterType.search,
-        placeholderText: "Search by name...",
-        getItemValue: (item) => item.name || "",
-      },
-    ],
-  });
-
-  const {
-    currentPageItems,
-    numRenderedColumns,
-    propHelpers: {
-      toolbarProps,
-      filterToolbarProps,
-      paginationToolbarItemProps,
-      paginationProps,
-      tableProps,
-      getThProps,
-      getTrProps,
-      getTdProps,
+    {
+      id: "row2",
+      name: "OSV",
+      abbreviation: "OSV",
+      description: "A distributed vulnerability database for Open Source",
     },
-    expansionDerivedState: { isCellExpanded },
-  } = tableControls;
+    {
+      id: "row3",
+      name: "CVE",
+      abbreviation: "CVE",
+      description: "Vulnerability database for https://www.cve.org/",
+    },
+  ];
 
-  // Dialog confirm config
-  let confirmDialogProps: Pick<
-    ConfirmDialogProps,
-    | "title"
-    | "titleIconVariant"
-    | "message"
-    | "confirmBtnVariant"
-    | "confirmBtnLabel"
-    | "cancelBtnLabel"
-  > | null;
-  switch (selectedRowAction) {
-    case "enable":
-      confirmDialogProps = {
-        title: "Enable Importer",
-        titleIconVariant: "info",
-        message: `Are you sure you want to enable the Importer ${selectedRow?.name}?`,
-        confirmBtnVariant: ButtonVariant.primary,
-        confirmBtnLabel: "Enable",
-        cancelBtnLabel: "Cancel",
-      };
-      break;
-    case "disable":
-      confirmDialogProps = {
-        title: "Disable Importer",
-        titleIconVariant: "info",
-        message: `Are you sure you want to disable the Importer ${selectedRow?.name}?`,
-        confirmBtnVariant: ButtonVariant.primary,
-        confirmBtnLabel: "Disable",
-        cancelBtnLabel: "Cancel",
-      };
-      break;
-    case "run":
-      confirmDialogProps = {
-        title: "Run Importer",
-        titleIconVariant: "info",
-        message: `Are you sure you want to run the Importer ${selectedRow?.name}?`,
-        confirmBtnVariant: ButtonVariant.primary,
-        confirmBtnLabel: "Run",
-        cancelBtnLabel: "Cancel",
-      };
-      break;
-    case "delete":
-      confirmDialogProps = {
-        title: "Delete Importer",
-        titleIconVariant: "warning",
-        message: `Are you sure you want to delete the Importer ${selectedRow?.name}?`,
-        confirmBtnVariant: ButtonVariant.danger,
-        confirmBtnLabel: "Delete",
-        cancelBtnLabel: "Cancel",
-      };
-      break;
-    default:
-      confirmDialogProps = null;
-      break;
-  }
+  //
+
+  const [option, setOption] = React.useState("choose");
+
+  const options = [
+    { value: "select one", label: "Select one", disabled: false },
+    { value: "git", label: "Git", disabled: false },
+  ];
+
+  const handleOptionChange = (
+    _event: React.FormEvent<HTMLSelectElement>,
+    value: string
+  ) => {
+    setOption(value);
+  };
 
   return (
     <>
       <PageSection variant={PageSectionVariants.light}>
         <TextContent>
-          <Text component="h1">Importers</Text>
+          <Text component="h1">Vulnerability Database</Text>
+          <Text component="p">
+            Order your Vendors according to your preferences. The top Vendor
+            represents the highest priority.
+          </Text>
         </TextContent>
       </PageSection>
       <PageSection>
@@ -288,364 +268,255 @@ export const ImporterList: React.FC = () => {
             backgroundColor: "var(--pf-v5-global--BackgroundColor--100)",
           }}
         >
-          <Toolbar {...toolbarProps}>
+          <Toolbar>
             <ToolbarContent>
-              <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
               <ToolbarItem>
                 <Button
                   type="button"
                   id="create-importer"
                   aria-label="Create new importer"
                   variant={ButtonVariant.primary}
-                  onClick={() => setCreateUpdateModalState("create")}
+                  onClick={() => setIsModalOpen(true)}
                 >
-                  Create Importer
+                  Create Vendor
                 </Button>
-              </ToolbarItem>
-              <ToolbarItem {...paginationToolbarItemProps}>
-                <SimplePagination
-                  idPrefix="importer-table"
-                  isTop
-                  paginationProps={paginationProps}
-                />
               </ToolbarItem>
             </ToolbarContent>
           </Toolbar>
 
-          <Table {...tableProps} aria-label="CVEs table">
+          <Table
+            aria-label="Draggable table"
+            className={isDragging ? styles.modifiers.dragOver : ""}
+            ref={bodyRef as any}
+          >
             <Thead>
               <Tr>
-                <TableHeaderContentWithControls {...tableControls}>
-                  <Th {...getThProps({ columnKey: "name" })} />
-                  <Th {...getThProps({ columnKey: "type" })} />
-                  <Th {...getThProps({ columnKey: "description" })} />
-                  <Th {...getThProps({ columnKey: "source" })} />
-                  <Th {...getThProps({ columnKey: "period" })} />
-                  <Th {...getThProps({ columnKey: "state" })} />
-                </TableHeaderContentWithControls>
+                <Th screenReaderText="Drag and drop" />
+                <Th screenReaderText="Row expansion" />
+                {columns.map((column, columnIndex) => (
+                  <Th key={columnIndex}>{column}</Th>
+                ))}
               </Tr>
             </Thead>
-            <ConditionalTableBody
-              isLoading={isFetching}
-              isError={!!fetchError}
-              isNoData={importers.length === 0}
-              numRenderedColumns={numRenderedColumns}
-            >
-              {currentPageItems?.map((item, rowIndex) => {
-                const importerType = Object.keys(item.configuration ?? {})[0];
-                const configValues = (item.configuration as any)[
-                  importerType
-                ] as SbomImporter;
-                const isImporterEnabled = configValues?.disabled === false;
 
+            <>
+              {/* <Tbody ref={bodyRef as any}> */}
+              {rows.map((row: any, rowIndex) => {
+                const rowCellsToBuild = Object.keys(row).filter(
+                  (rowCell) => rowCell !== "id"
+                );
                 return (
-                  <Tbody key={item.name}>
-                    <Tr {...getTrProps({ item })}>
-                      <TableRowContentWithControls
-                        {...tableControls}
-                        item={item}
-                        rowIndex={rowIndex}
-                      >
+                  <Tbody
+                    key={rowIndex}
+                    id={row.id}
+                    onDragOver={onDragOver}
+                    onDrop={onDragOver}
+                    onDragLeave={onDragLeave}
+                  >
+                    <Tr
+                      draggable
+                      onDrop={onDrop}
+                      onDragEnd={onDragEnd}
+                      onDragStart={onDragStart}
+                    >
+                      <Td
+                        draggableRow={{
+                          id: `draggable-row-${row.id}`,
+                        }}
+                      />
+                      <Td expand={{ isExpanded: rowIndex === 1, rowIndex }} />
+                      {rowCellsToBuild.map((key, keyIndex) => (
                         <Td
-                          width={15}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "name" })}
+                          key={`${rowIndex}_${keyIndex}`}
+                          dataLabel={columns[keyIndex]}
                         >
-                          {item.name}
+                          {row[key]}
                         </Td>
-                        <Td
-                          width={10}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "type" })}
+                      ))}
+                      <Td>
+                        <Button
+                          variant="secondary"
+                          onClick={() => setIsModal2Open(true)}
                         >
-                          {importerType}
-                        </Td>
-                        <Td
-                          width={25}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "description" })}
-                        >
-                          {configValues?.description}
-                        </Td>
-                        <Td
-                          width={30}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "source" })}
-                        >
-                          {configValues?.source}
-                        </Td>
-                        <Td
-                          width={10}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "period" })}
-                        >
-                          {configValues?.period}
-                        </Td>
-                        <Td
-                          width={10}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "state" })}
-                        >
-                          {item.state && isImporterEnabled ? (
-                            <ImporterStatusIcon state={item.state} />
-                          ) : (
-                            <Label color="orange">Disabled</Label>
-                          )}
-                        </Td>
-                        <Td isActionCell>
-                          <ActionsColumn
-                            items={[
-                              ...(isImporterEnabled
-                                ? [
-                                    {
-                                      title: "Run",
-                                      onClick: () => {
-                                        prepareActionOnRow("run", item);
-                                      },
-                                    },
-                                  ]
-                                : []),
-                              ...(!isImporterEnabled
-                                ? [
-                                    {
-                                      title: "Enable",
-                                      onClick: () => {
-                                        prepareActionOnRow("enable", item);
-                                      },
-                                    },
-                                  ]
-                                : [
-                                    {
-                                      title: "Disable",
-                                      onClick: () => {
-                                        prepareActionOnRow("disable", item);
-                                      },
-                                    },
-                                  ]),
-                              {
-                                isSeparator: true,
-                              },
-                              {
-                                title: "Edit",
-                                onClick: () => setCreateUpdateModalState(item),
-                              },
-                              {
-                                title: "Delete",
-                                onClick: () => {
-                                  prepareActionOnRow("delete", item);
-                                },
-                              },
-                            ]}
-                          />
-                        </Td>
-                      </TableRowContentWithControls>
+                          Add Source
+                        </Button>
+                      </Td>
                     </Tr>
-                    {isCellExpanded(item) ? (
-                      <Tr isExpanded>
-                        <Td colSpan={7}>
-                          <div className="pf-v5-u-m-md">
-                            <ExpandableRowContent>
-                              <ImporterExpandedArea importerId={item.name} />
-                            </ExpandableRowContent>
-                          </div>
+                    {rowIndex === 1 && (
+                      <Tr isExpanded={true}>
+                        {/* <Td /> */}
+                        <Td colSpan={8}>
+                          <ExpandableRowContent>
+                            <Table
+                              aria-label="Simple table"
+                              variant={"compact"}
+                            >
+                              <Thead>
+                                <Tr>
+                                  <Th>Type</Th>
+                                  <Th>Source</Th>
+                                  <Th>Execution Cron</Th>
+                                </Tr>
+                              </Thead>
+                              <Tbody>
+                                <Tr>
+                                  <Td>Git</Td>
+                                  <Td>
+                                    https://github.com/RConsortium/r-advisory-database
+                                  </Td>
+                                  <Td>Every monday at 00:00:00</Td>
+                                </Tr>
+                                <Tr>
+                                  <Td>Git</Td>
+                                  <Td>
+                                    https://github.com/rustsec/advisory-db
+                                  </Td>
+                                  <Td>Every monday at 00:00:00</Td>
+                                </Tr>
+                              </Tbody>
+                            </Table>
+                          </ExpandableRowContent>
                         </Td>
                       </Tr>
-                    ) : null}
+                    )}
                   </Tbody>
                 );
               })}
-            </ConditionalTableBody>
+            </>
           </Table>
-          <SimplePagination
-            idPrefix="importer-table"
-            isTop={false}
-            isCompact
-            paginationProps={paginationProps}
-          />
         </div>
-      </PageSection>
 
-      <Modal
-        id="create-edit-importer-modal"
-        title={entityToUpdate ? "Update Importer" : "New Importer"}
-        variant={ModalVariant.medium}
-        isOpen={isCreateUpdateModalOpen}
-        onClose={closeCreateUpdateModal}
-      >
-        <ImporterForm
-          importer={entityToUpdate}
-          onClose={closeCreateUpdateModal}
-        />
-      </Modal>
-
-      {selectedRowAction && confirmDialogProps && (
-        <ConfirmDialog
-          {...confirmDialogProps}
-          isOpen={true}
-          onCancel={() => setSelectedRowAction(null)}
-          onClose={() => setSelectedRowAction(null)}
-          onConfirm={() => {
-            if (selectedRow) {
-              switch (selectedRowAction) {
-                case "enable":
-                  execEnableDisableImporter(selectedRow, true);
-                  break;
-                case "disable":
-                  execEnableDisableImporter(selectedRow, false);
-                  break;
-                case "run":
-                  execRunImporter(selectedRow.name);
-                  break;
-                case "delete":
-                  execDeleteImporter(selectedRow.name);
-                  break;
-                default:
-                  break;
-              }
-            }
-
-            setSelectedRow(null);
-            setSelectedRowAction(null);
-          }}
-        />
-      )}
-    </>
-  );
-};
-
-interface ImporterExpandedAreaProps {
-  importerId: string;
-}
-
-export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
-  importerId,
-}) => {
-  const {
-    result: { data: importers },
-    isFetching,
-    fetchError,
-  } = useFetchImporterReports(importerId);
-
-  const tableControls = useLocalTableControls({
-    variant: "compact",
-    tableName: "report-table",
-    idProperty: "id",
-    items: importers,
-    columnNames: {
-      startDate: "Start date",
-      endDate: "End date",
-      numberOfItems: "Number of items",
-      error: "Error",
-    },
-    isPaginationEnabled: true,
-    initialItemsPerPage: 5,
-    isSortEnabled: true,
-    // sortableColumns: ["startDate", "endDate"],
-    sortableColumns: [],
-    getSortValues: (report) => ({
-      // startDate: dayjs(report.report.startDate).valueOf(),
-      // endDate: dayjs(report.report.endDate).valueOf(),
-    }),
-    isFilterEnabled: false,
-    isExpansionEnabled: false,
-  });
-
-  const {
-    currentPageItems,
-    numRenderedColumns,
-    propHelpers: {
-      toolbarProps,
-      tableProps,
-      paginationToolbarItemProps,
-      paginationProps,
-      getThProps,
-      getTrProps,
-      getTdProps,
-    },
-  } = tableControls;
-
-  return (
-    <>
-      <Toolbar {...toolbarProps}>
-        <ToolbarContent>
-          <ToolbarItem {...paginationToolbarItemProps}>
-            <SimplePagination
-              idPrefix="report-table"
-              isTop
-              paginationProps={paginationProps}
-            />
-          </ToolbarItem>
-        </ToolbarContent>
-      </Toolbar>
-
-      <Table {...tableProps} aria-label="Report table">
-        <Caption>Importer reports</Caption>
-        <Thead>
-          <Tr>
-            <TableHeaderContentWithControls {...tableControls}>
-              <Th {...getThProps({ columnKey: "startDate" })} />
-              <Th {...getThProps({ columnKey: "endDate" })} />
-              <Th {...getThProps({ columnKey: "numberOfItems" })} />
-              <Th {...getThProps({ columnKey: "error" })} />
-            </TableHeaderContentWithControls>
-          </Tr>
-        </Thead>
-        <ConditionalTableBody
-          isLoading={isFetching}
-          isError={!!fetchError}
-          isNoData={importers?.length === 0}
-          numRenderedColumns={numRenderedColumns}
+        <Modal
+          variant={ModalVariant.small}
+          title="Create Vendor"
+          isOpen={isModalOpen}
+          onClose={handleModalToggle}
+          actions={[
+            <Button key="confirm" variant="primary" onClick={handleModalToggle}>
+              Save
+            </Button>,
+            <Button key="cancel" variant="link" onClick={handleModalToggle}>
+              Cancel
+            </Button>,
+          ]}
         >
-          {currentPageItems?.map((item, rowIndex) => {
-            return (
-              <Tbody key={item.id}>
-                <Tr {...getTrProps({ item })}>
-                  <TableRowContentWithControls
-                    {...tableControls}
-                    item={item}
-                    rowIndex={rowIndex}
-                  >
-                    <Td
-                      width={15}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "startDate" })}
-                    >
-                      {"formatDateTime(item.report.startDate)"}
-                    </Td>
-                    <Td
-                      width={15}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "endDate" })}
-                    >
-                      {"formatDateTime(item.report.endDate)"}
-                    </Td>
-                    <Td
-                      width={10}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "numberOfItems" })}
-                    >
-                      {"item.report.numberOfItems"}
-                    </Td>
-                    <Td
-                      width={50}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "error" })}
-                    >
-                      {item.error}
-                    </Td>
-                  </TableRowContentWithControls>
-                </Tr>
-              </Tbody>
-            );
-          })}
-        </ConditionalTableBody>
-      </Table>
-      <SimplePagination
-        idPrefix="report-table"
-        isTop={false}
-        isCompact
-        paginationProps={paginationProps}
-      />
+          <Form>
+            <FormGroup label="Name" isRequired fieldId="simple-form-name-01">
+              <TextInput
+                isRequired
+                type="text"
+                id="simple-form-name-01"
+                name="simple-form-name-01"
+                aria-describedby="simple-form-name-01-helper"
+              />
+            </FormGroup>
+            <FormGroup
+              label="Abreviation"
+              isRequired
+              fieldId="simple-form-email-01"
+            >
+              <TextInput
+                isRequired
+                type="email"
+                id="simple-form-email-01"
+                name="simple-form-email-01"
+              />
+            </FormGroup>
+            <FormGroup
+              label="Description"
+              isRequired
+              fieldId="simple-form-phone-01"
+            >
+              <TextArea
+                isRequired
+                type="tel"
+                id="simple-form-phone-01"
+                name="simple-form-phone-01"
+                placeholder="555-555-5555"
+              />
+            </FormGroup>
+          </Form>
+        </Modal>
+
+        <Modal
+          variant={ModalVariant.small}
+          title="Create Source"
+          isOpen={isModal2Open}
+          onClose={handleModal2Toggle}
+          actions={[
+            <Button
+              key="confirm"
+              variant="primary"
+              onClick={handleModal2Toggle}
+            >
+              Save
+            </Button>,
+            <Button key="cancel" variant="link" onClick={handleModal2Toggle}>
+              Cancel
+            </Button>,
+          ]}
+        >
+          <Form>
+            <FormGroup label="Period" isRequired fieldId="simple-form-name-01">
+              <TextInput
+                isRequired
+                type="text"
+                id="simple-form-name-01"
+                name="simple-form-name-01"
+                aria-describedby="simple-form-name-01-helper"
+                value="*/5 * * * *"
+              />
+            </FormGroup>
+            <FormGroup label="Type" fieldId="horizontal-form-title">
+              <FormSelect
+                value={option}
+                onChange={handleOptionChange}
+                id="horizontal-form-title"
+                name="horizontal-form-title"
+                aria-label="Your title"
+              >
+                {options.map((option, index) => (
+                  <FormSelectOption
+                    isDisabled={option.disabled}
+                    key={index}
+                    value={option.value}
+                    label={option.label}
+                  />
+                ))}
+              </FormSelect>
+            </FormGroup>
+            {option === "git" && (
+              <>
+                <FormGroup
+                  label="Git URL"
+                  isRequired
+                  fieldId="simple-form-email-01"
+                >
+                  <TextInput
+                    isRequired
+                    type="email"
+                    id="simple-form-email-01"
+                    name="simple-form-email-01"
+                  />
+                </FormGroup>
+                <FormGroup
+                  label="Branch"
+                  isRequired
+                  fieldId="simple-form-phone-01"
+                >
+                  <TextInput
+                    isRequired
+                    type="tel"
+                    id="simple-form-phone-01"
+                    name="simple-form-phone-01"
+                    placeholder="main"
+                  />
+                </FormGroup>
+              </>
+            )}
+          </Form>
+        </Modal>
+      </PageSection>
     </>
   );
 };
