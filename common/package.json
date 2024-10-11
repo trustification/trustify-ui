@@ -29,6 +29,6 @@
   },
   "dependencies": {
     "ejs": "^3.1.10",
-    "http-proxy-middleware": "^3.0.0"
+    "http-proxy-middleware": "^2.0.6"
   }
 }

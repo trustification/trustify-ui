@@ -72,7 +72,7 @@ export const useFilterState = <
 
   if (isInitialLoad) {
     initialFilterValues = isFilterEnabled
-      ? args?.initialFilterValues ?? {}
+      ? (args?.initialFilterValues ?? {})
       : {};
   }
 
