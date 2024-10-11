@@ -16,7 +16,7 @@ export const proxyMap: Record<string, Options> = {
         );
       }
     },
-    onProxyReq: (proxyRes: any, req: any, res: any) => {
+    onProxyRes: (proxyRes: any, req: any, res: any) => {
       const includesJsonHeaders =
         req.headers.accept?.includes("application/json");
       if (
