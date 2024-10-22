@@ -146,7 +146,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
       periodValue: periodValue || 60,
       periodUnit: periodUnit || "s",
       v3Signatures: importerConfiguration?.v3Signatures ?? false,
-      enabled: !importerConfiguration?.disabled ?? true,
+      enabled: importerConfiguration?.disabled ?? true,
       keys: importerConfiguration?.keys?.map((e) => ({ value: e })) ?? [],
       onlyPatterns:
         importerConfiguration?.onlyPatterns?.map((e) => ({ value: e })) ?? [],
