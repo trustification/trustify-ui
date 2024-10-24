@@ -1,2 +1,4 @@
 # generating openapi client can generate error logs.
 *.log
+
+*storybook.log
