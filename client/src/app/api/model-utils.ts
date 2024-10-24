@@ -12,7 +12,7 @@ import { Severity } from "@app/client";
 type ListType = {
   [key in Severity]: {
     name: string;
-    shieldIconColor: { name: string; value: string; var: string };
+    color: { name: string; value: string; var: string };
     progressProps: Pick<ProgressProps, "variant">;
   };
 };
@@ -20,27 +20,27 @@ type ListType = {
 export const severityList: ListType = {
   none: {
     name: "None",
-    shieldIconColor: noneColor,
+    color: noneColor,
     progressProps: { variant: undefined },
   },
   low: {
     name: "Low",
-    shieldIconColor: lowColor,
+    color: lowColor,
     progressProps: { variant: undefined },
   },
   medium: {
     name: "Medium",
-    shieldIconColor: moderateColor,
+    color: moderateColor,
     progressProps: { variant: "warning" },
   },
   high: {
     name: "High",
-    shieldIconColor: importantColor,
+    color: importantColor,
     progressProps: { variant: "danger" },
   },
   critical: {
     name: "Critical",
-    shieldIconColor: criticalColor,
+    color: criticalColor,
     progressProps: { variant: "danger" },
   },
 };
