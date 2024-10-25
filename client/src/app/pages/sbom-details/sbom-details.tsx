@@ -22,6 +22,7 @@ import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
 import { PathParam, useRouteParams } from "@app/Routes";
 
+import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useDownload } from "@app/hooks/useDownload";
 import { useFetchSBOMById } from "@app/queries/sboms";
 
@@ -48,8 +49,7 @@ export const SbomDetails: React.FC = () => {
   //
 
   const sbomId = useRouteParams(PathParam.SBOM_ID);
-
-  const { sbom } = useFetchSBOMById(sbomId);
+  const { sbom, isFetching, fetchError } = useFetchSBOMById(sbomId);
 
   const { downloadSBOM } = useDownload();
 
@@ -65,30 +65,35 @@ export const SbomDetails: React.FC = () => {
                 </TextContent>
               </FlexItem>
               <FlexItem>
-                <Label color="blue">{sbom?.labels.type}</Label>
+                {sbom?.labels.type && (
+                  <Label color="blue">{sbom?.labels.type}</Label>
+                )}
               </FlexItem>
             </Flex>
           </SplitItem>
           <SplitItem>
-            <Button
-              variant="secondary"
-              icon={<DownloadIcon />}
-              onClick={() => {
-                if (sbomId) {
-                  downloadSBOM(
-                    sbomId,
-                    sbom?.name ? `${sbom?.name}.json` : sbomId
-                  );
-                }
-              }}
-            >
-              Download
-            </Button>
+            {!isFetching && (
+              <Button
+                variant="secondary"
+                icon={<DownloadIcon />}
+                onClick={() => {
+                  if (sbomId) {
+                    downloadSBOM(
+                      sbomId,
+                      sbom?.name ? `${sbom?.name}.json` : `${sbomId}.json`
+                    );
+                  }
+                }}
+              >
+                Download
+              </Button>
+            )}
           </SplitItem>
         </Split>
       </PageSection>
       <PageSection type="nav">
         <Tabs
+          mountOnEnter
           activeKey={activeTabKey}
           onSelect={handleTabClick}
           aria-label="Tabs that contain the SBOM information"
@@ -137,7 +142,9 @@ export const SbomDetails: React.FC = () => {
           ref={infoTabRef}
           aria-label="Information of the SBOM"
         >
-          {sbom && <Overview sbom={sbom} />}
+          <LoadingWrapper isFetching={isFetching} fetchError={fetchError}>
+            {sbom && <Overview sbom={sbom} />}
+          </LoadingWrapper>
         </TabContent>
         <TabContent
           eventKey={1}

@@ -37,6 +37,7 @@ import {
   Severity,
   VulnerabilityDetails,
 } from "@app/client";
+import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { PackageQualifiers } from "@app/components/PackageQualifiers";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -75,8 +76,16 @@ interface VulnerabilitiesBySbomProps {
 export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
   sbomId,
 }) => {
-  const { sbom } = useFetchSBOMById(sbomId);
-  const { advisories, isFetching, fetchError } = useFetchSbomsAdvisory(sbomId);
+  const {
+    sbom,
+    isFetching: isFetchingSbom,
+    fetchError: fetchErrorSbom,
+  } = useFetchSBOMById(sbomId);
+  const {
+    advisories,
+    isFetching: isFetchingAdvisories,
+    fetchError: fetchErrorAdvisories,
+  } = useFetchSbomsAdvisory(sbomId);
 
   const [allVulnerabilities, setAllVulnerabilities] = React.useState<
     TableData[]
@@ -172,7 +181,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
     tableName: "vulnerability-table",
     idProperty: "_ui_unique_id",
     items: tableDataWithUiId,
-    isLoading: false,
+    isLoading: isFetchingAdvisories || isFetchingVulnerabilities,
     columnNames: {
       id: "Id",
       description: "Description",
@@ -249,59 +258,67 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
         <StackItem>
           <Card>
             <CardBody>
-              <Grid hasGutter>
-                <GridItem md={6}>
-                  <div style={{ height: "230px", width: "350px" }}>
-                    <ChartDonut
-                      constrainToVisibleArea
-                      legendOrientation="vertical"
-                      legendPosition="right"
-                      padding={{
-                        bottom: 20,
-                        left: 20,
-                        right: 140,
-                        top: 20,
-                      }}
-                      title={`${donutChartData.total}`}
-                      subTitle="Total vulnerabilities"
-                      width={350}
-                      legendData={donutChart.map(({ label, count }) => ({
-                        name: `${label}: ${count}`,
-                      }))}
-                      data={donutChart.map(({ label, count }) => ({
-                        x: label,
-                        y: count,
-                      }))}
-                      labels={({ datum }) => `${datum.x}: ${datum.y}`}
-                      colorScale={donutChart.map(({ color }) => color)}
-                    />
-                  </div>
-                </GridItem>
-                <GridItem md={6}>
-                  <DescriptionList>
-                    <DescriptionListGroup>
-                      <DescriptionListTerm>Name</DescriptionListTerm>
-                      <DescriptionListDescription>
-                        {sbom?.name}
-                      </DescriptionListDescription>
-                    </DescriptionListGroup>
-                    <DescriptionListGroup>
-                      <DescriptionListTerm>Version</DescriptionListTerm>
-                      <DescriptionListDescription>
-                        {sbom?.described_by
-                          .map((item) => item.version)
-                          .join(", ")}
-                      </DescriptionListDescription>
-                    </DescriptionListGroup>
-                    <DescriptionListGroup>
-                      <DescriptionListTerm>Creation date</DescriptionListTerm>
-                      <DescriptionListDescription>
-                        {formatDate(sbom?.published)}
-                      </DescriptionListDescription>
-                    </DescriptionListGroup>
-                  </DescriptionList>
-                </GridItem>
-              </Grid>
+              <LoadingWrapper
+                isFetching={
+                  isFetchingAdvisories ||
+                  isFetchingVulnerabilities ||
+                  isFetchingSbom
+                }
+              >
+                <Grid hasGutter>
+                  <GridItem md={6}>
+                    <div style={{ height: "230px", width: "350px" }}>
+                      <ChartDonut
+                        constrainToVisibleArea
+                        legendOrientation="vertical"
+                        legendPosition="right"
+                        padding={{
+                          bottom: 20,
+                          left: 20,
+                          right: 140,
+                          top: 20,
+                        }}
+                        title={`${donutChartData.total}`}
+                        subTitle="Total vulnerabilities"
+                        width={350}
+                        legendData={donutChart.map(({ label, count }) => ({
+                          name: `${label}: ${count}`,
+                        }))}
+                        data={donutChart.map(({ label, count }) => ({
+                          x: label,
+                          y: count,
+                        }))}
+                        labels={({ datum }) => `${datum.x}: ${datum.y}`}
+                        colorScale={donutChart.map(({ color }) => color)}
+                      />
+                    </div>
+                  </GridItem>
+                  <GridItem md={6}>
+                    <DescriptionList>
+                      <DescriptionListGroup>
+                        <DescriptionListTerm>Name</DescriptionListTerm>
+                        <DescriptionListDescription>
+                          {sbom?.name}
+                        </DescriptionListDescription>
+                      </DescriptionListGroup>
+                      <DescriptionListGroup>
+                        <DescriptionListTerm>Version</DescriptionListTerm>
+                        <DescriptionListDescription>
+                          {sbom?.described_by
+                            .map((item) => item.version)
+                            .join(", ")}
+                        </DescriptionListDescription>
+                      </DescriptionListGroup>
+                      <DescriptionListGroup>
+                        <DescriptionListTerm>Creation date</DescriptionListTerm>
+                        <DescriptionListDescription>
+                          {formatDate(sbom?.published)}
+                        </DescriptionListDescription>
+                      </DescriptionListGroup>
+                    </DescriptionList>
+                  </GridItem>
+                </Grid>
+              </LoadingWrapper>
             </CardBody>
           </Card>
         </StackItem>
@@ -332,8 +349,8 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
               </Tr>
             </Thead>
             <ConditionalTableBody
-              isLoading={isFetching || isFetchingVulnerabilities}
-              isError={!!fetchError}
+              isLoading={isFetchingAdvisories || isFetchingVulnerabilities}
+              isError={!!fetchErrorAdvisories}
               isNoData={tableDataWithUiId.length === 0}
               numRenderedColumns={numRenderedColumns}
             >
