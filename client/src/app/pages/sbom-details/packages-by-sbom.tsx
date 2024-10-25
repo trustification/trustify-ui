@@ -23,7 +23,7 @@ import {
   Td,
   Th,
   Thead,
-  Tr
+  Tr,
 } from "@patternfly/react-table";
 
 import { DecomposedPurl } from "@app/api/models";
@@ -36,9 +36,7 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
-import {
-  useLocalTableControls
-} from "@app/hooks/table-controls";
+import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchPackagesBySbomId } from "@app/queries/packages";
 import { decomposePurl } from "@app/utils/utils";
 
