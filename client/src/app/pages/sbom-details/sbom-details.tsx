@@ -1,14 +1,24 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 import {
-  Breadcrumb,
-  BreadcrumbItem,
+  Button,
+  Flex,
+  FlexItem,
+  Label,
   PageSection,
+  Popover,
+  Split,
+  SplitItem,
+  Tab,
+  TabAction,
+  TabContent,
+  Tabs,
+  TabTitleText,
+  Text,
+  TextContent,
 } from "@patternfly/react-core";
-
-import DetailsPage from "@patternfly/react-component-groups/dist/dynamic/DetailsPage";
 import DownloadIcon from "@patternfly/react-icons/dist/esm/icons/download-icon";
+import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
 import { PathParam, useRouteParams } from "@app/Routes";
 
@@ -21,8 +31,24 @@ import { PackagesBySbom } from "./packages-by-sbom";
 import { VulnerabilitiesBySbom } from "./vulnerabilities-by-sbom";
 
 export const SbomDetails: React.FC = () => {
-  const sbomId = useRouteParams(PathParam.SBOM_ID);
+  const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
 
+  const handleTabClick = (
+    event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent,
+    tabIndex: string | number
+  ) => {
+    setActiveTabKey(tabIndex);
+  };
+
+  const infoTabRef = React.createRef<HTMLElement>();
+  const packagesTabRef = React.createRef<HTMLElement>();
+  const vulnerabilitiesTabRef = React.createRef<HTMLElement>();
+
+  const vulnerabilitiesTabPopoverRef = React.createRef<HTMLElement>();
+
+  //
+
+  const sbomId = useRouteParams(PathParam.SBOM_ID);
   const { sbom, isFetching, fetchError } = useFetchSBOMById(sbomId);
 
   const { downloadSBOM } = useDownload();
@@ -30,71 +56,114 @@ export const SbomDetails: React.FC = () => {
   return (
     <>
       <PageSection variant="light">
-        <DetailsPage
-          breadcrumbs={
-            <Breadcrumb>
-              <BreadcrumbItem key="advisories">
-                <Link to="/sboms">SBOMs</Link>
-              </BreadcrumbItem>
-              <BreadcrumbItem isActive>SBOM details</BreadcrumbItem>
-            </Breadcrumb>
-          }
-          pageHeading={{
-            title: sbom?.name ?? sbomId ?? "",
-          }}
-          actionButtons={[
-            {
-              children: (
-                <>
-                  <DownloadIcon /> Download
-                </>
-              ),
-              onClick: () => {
-                if (sbomId) {
-                  downloadSBOM(
-                    sbomId,
-                    sbom?.name ? `${sbom?.name}.json` : sbomId
-                  );
-                }
-              },
-              variant: "secondary",
-            },
-          ]}
-          tabs={[
-            {
-              eventKey: "overview",
-              title: "Overview",
-              children: (
-                <div className="pf-v5-u-m-md">
-                  <LoadingWrapper
-                    isFetching={isFetching}
-                    fetchError={fetchError}
-                  >
-                    {sbom && <Overview sbom={sbom} />}
-                  </LoadingWrapper>
-                </div>
-              ),
-            },
-            {
-              eventKey: "vulnerabilities",
-              title: "Vulnerabilities",
-              children: (
-                <div className="pf-v5-u-m-md">
-                  {sbomId && <VulnerabilitiesBySbom sbomId={sbomId} />}
-                </div>
-              ),
-            },
-            {
-              eventKey: "packages",
-              title: "Packages",
-              children: (
-                <div className="pf-v5-u-m-md">
-                  {sbomId && <PackagesBySbom sbomId={sbomId} />}
-                </div>
-              ),
-            },
-          ]}
-        />
+        <Split>
+          <SplitItem isFilled>
+            <Flex>
+              <FlexItem spacer={{ default: "spacerSm" }}>
+                <TextContent>
+                  <Text component="h1">{sbom?.name ?? sbomId ?? ""}</Text>
+                </TextContent>
+              </FlexItem>
+              <FlexItem>
+                {sbom?.labels.type && (
+                  <Label color="blue">{sbom?.labels.type}</Label>
+                )}
+              </FlexItem>
+            </Flex>
+          </SplitItem>
+          <SplitItem>
+            {!isFetching && (
+              <Button
+                variant="secondary"
+                icon={<DownloadIcon />}
+                onClick={() => {
+                  if (sbomId) {
+                    downloadSBOM(
+                      sbomId,
+                      sbom?.name ? `${sbom?.name}.json` : `${sbomId}.json`
+                    );
+                  }
+                }}
+              >
+                Download
+              </Button>
+            )}
+          </SplitItem>
+        </Split>
+      </PageSection>
+      <PageSection type="nav">
+        <Tabs
+          mountOnEnter
+          activeKey={activeTabKey}
+          onSelect={handleTabClick}
+          aria-label="Tabs that contain the SBOM information"
+          role="region"
+        >
+          <Tab
+            eventKey={0}
+            title={<TabTitleText>Info</TabTitleText>}
+            tabContentId="refTabInfoSection"
+            tabContentRef={infoTabRef}
+          />
+          <Tab
+            eventKey={1}
+            title={<TabTitleText>Packages</TabTitleText>}
+            tabContentId="refTabPackagesSection"
+            tabContentRef={packagesTabRef}
+          />
+          <Tab
+            eventKey={2}
+            title={<TabTitleText>Vulnerabilities</TabTitleText>}
+            tabContentId="refVulnerabilitiesSection"
+            tabContentRef={vulnerabilitiesTabRef}
+            actions={
+              <>
+                <TabAction ref={vulnerabilitiesTabPopoverRef}>
+                  <HelpIcon />
+                </TabAction>
+                <Popover
+                  triggerRef={vulnerabilitiesTabPopoverRef}
+                  bodyContent={
+                    <div>
+                      Any found vulnerabilities related to this SBOM. Fixed
+                      vulnerabilities are not listed.
+                    </div>
+                  }
+                />
+              </>
+            }
+          />
+        </Tabs>
+      </PageSection>
+      <PageSection>
+        <TabContent
+          eventKey={0}
+          id="refTabInfoSection"
+          ref={infoTabRef}
+          aria-label="Information of the SBOM"
+        >
+          <LoadingWrapper isFetching={isFetching} fetchError={fetchError}>
+            {sbom && <Overview sbom={sbom} />}
+          </LoadingWrapper>
+        </TabContent>
+        <TabContent
+          eventKey={1}
+          id="refTabPackagesSection"
+          ref={packagesTabRef}
+          aria-label="Packages within the SBOM"
+          hidden
+        >
+          {sbomId && <PackagesBySbom sbomId={sbomId} />}
+        </TabContent>
+        <TabContent
+          eventKey={2}
+          id="refVulnerabilitiesSection"
+          ref={vulnerabilitiesTabRef}
+          aria-label="Vulnerabilities within the SBOM"
+          hidden
+        >
+          {sbomId && <VulnerabilitiesBySbom sbomId={sbomId} />}
+        </TabContent>
       </PageSection>
     </>
   );

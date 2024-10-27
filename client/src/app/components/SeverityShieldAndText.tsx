@@ -28,10 +28,10 @@ export const SeverityShieldAndText: React.FC<SeverityShieldAndTextProps> = ({
       <FlexItem>
         {hideLabel ? (
           <Tooltip content={label}>
-            <ShieldIcon color={severityProps.shieldIconColor.value} />
+            <ShieldIcon color={severityProps.color.value} />
           </Tooltip>
         ) : (
-          <ShieldIcon color={severityProps.shieldIconColor.value} />
+          <ShieldIcon color={severityProps.color.value} />
         )}
       </FlexItem>
       {!hideLabel && <FlexItem>{label}</FlexItem>}

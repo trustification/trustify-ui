@@ -1,11 +1,24 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useMemo } from "react";
+import { Link } from "react-router-dom";
 
-import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
+import {
+  DescriptionList,
+  DescriptionListDescription,
+  DescriptionListGroup,
+  DescriptionListTerm,
+  Flex,
+  FlexItem,
+  Label,
+  List,
+  ListItem,
+  Toolbar,
+  ToolbarContent,
+  ToolbarItem,
+} from "@patternfly/react-core";
+import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
 import {
   ExpandableRowContent,
   Table,
-  TableProps,
   Tbody,
   Td,
   Th,
@@ -13,7 +26,8 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { TablePersistenceKeyPrefixes } from "@app/Constants";
+import { DecomposedPurl } from "@app/api/models";
+import { PurlSummary } from "@app/client";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { PackageQualifiers } from "@app/components/PackageQualifiers";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -22,42 +36,70 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
-import {
-  getHubRequestParams,
-  useLocalTableControls,
-  useTableControlProps,
-  useTableControlState,
-} from "@app/hooks/table-controls";
-import { useSelectionState } from "@app/hooks/useSelectionState";
+import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchPackagesBySbomId } from "@app/queries/packages";
 import { decomposePurl } from "@app/utils/utils";
 
+interface TableData extends PurlSummary {
+  decomposedPurl?: DecomposedPurl;
+}
+
 interface PackagesProps {
-  variant?: TableProps["variant"];
   sbomId: string;
 }
 
-export const PackagesBySbom: React.FC<PackagesProps> = ({
-  variant,
-  sbomId,
-}) => {
-  const tableControlState = useTableControlState({
-    tableName: "packages-table",
-    persistenceKeyPrefix: TablePersistenceKeyPrefixes.packages,
+export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
+  const {
+    result: { data: allPackages },
+    isFetching,
+    fetchError,
+  } = useFetchPackagesBySbomId(sbomId, {
+    page: { pageNumber: 1, itemsPerPage: 0 },
+  });
+
+  const tableData = useMemo(() => {
+    return allPackages
+      .flatMap((item) => item.purl)
+      .map((item) => {
+        const result: TableData = {
+          ...item,
+          decomposedPurl: decomposePurl(item.purl),
+        };
+        return result;
+      });
+  }, [allPackages]);
+
+  const tableControls = useLocalTableControls({
+    tableName: "package-table",
+    idProperty: "uuid",
+    items: tableData,
+    isLoading: isFetching,
     columnNames: {
       name: "Name",
       version: "Version",
+      qualifiers: "Qualifiers",
     },
-    isPaginationEnabled: true,
+    hasActionsColumn: false,
     isSortEnabled: true,
-    sortableColumns: [],
+    sortableColumns: ["name", "version"],
+    getSortValues: (item) => ({
+      name: `${item.decomposedPurl?.name}/${item.decomposedPurl?.namespace}`,
+      version: item.version.version,
+    }),
+    isPaginationEnabled: true,
     isFilterEnabled: true,
     filterCategories: [
       {
-        categoryKey: "",
+        categoryKey: "filterText",
         title: "Filter tex",
         type: FilterType.search,
-        placeholderText: "Search...",
+        placeholderText: "Filter",
+        getItemValue: (item) => {
+          return (
+            `${item.decomposedPurl?.name}/${item.decomposedPurl?.namespace}` ||
+            ""
+          );
+        },
       },
     ],
     isExpansionEnabled: true,
@@ -65,31 +107,8 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({
   });
 
   const {
-    result: { data: packages, total: totalItemCount },
-    isFetching,
-    fetchError,
-  } = useFetchPackagesBySbomId(
-    sbomId,
-    getHubRequestParams({
-      ...tableControlState,
-    })
-  );
-
-  const tableControls = useTableControlProps({
-    ...tableControlState,
-    idProperty: "id",
-    currentPageItems: packages,
-    totalItemCount,
-    isLoading: isFetching,
-    selectionState: useSelectionState({
-      items: packages,
-      isEqual: (a, b) => a.name === b.name,
-    }),
-  });
-
-  const {
-    numRenderedColumns,
     currentPageItems,
+    numRenderedColumns,
     propHelpers: {
       toolbarProps,
       filterToolbarProps,
@@ -99,6 +118,7 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({
       getThProps,
       getTrProps,
       getTdProps,
+      getExpandedContentTdProps,
     },
     expansionDerivedState: { isCellExpanded },
   } = tableControls;
@@ -124,40 +144,94 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({
             <TableHeaderContentWithControls {...tableControls}>
               <Th {...getThProps({ columnKey: "name" })} />
               <Th {...getThProps({ columnKey: "version" })} />
+              <Th {...getThProps({ columnKey: "qualifiers" })} />
             </TableHeaderContentWithControls>
           </Tr>
         </Thead>
         <ConditionalTableBody
           isLoading={isFetching}
           isError={!!fetchError}
-          isNoData={packages?.length === 0}
+          isNoData={tableData?.length === 0}
           numRenderedColumns={numRenderedColumns}
         >
           {currentPageItems?.map((item, rowIndex) => {
             return (
-              <Tbody key={item.id}>
+              <Tbody key={item.uuid}>
                 <Tr {...getTrProps({ item })}>
                   <TableRowContentWithControls
                     {...tableControls}
                     item={item}
                     rowIndex={rowIndex}
                   >
-                    <Td width={60} {...getTdProps({ columnKey: "name" })}>
-                      {item.name}
+                    <Td width={30} {...getTdProps({ columnKey: "name" })}>
+                      <Flex>
+                        <FlexItem
+                          spacer={{ default: "spacerSm" }}
+                        >{`${item.decomposedPurl?.name}/${item.decomposedPurl?.namespace}`}</FlexItem>
+                        <FlexItem>
+                          <Label isCompact color="blue">
+                            {item.decomposedPurl?.type}
+                          </Label>
+                        </FlexItem>
+                      </Flex>
                     </Td>
-                    <Td width={40} {...getTdProps({ columnKey: "version" })}>
-                      {item.version}
+                    <Td width={20} {...getTdProps({ columnKey: "version" })}>
+                      {item.decomposedPurl?.version}
+                    </Td>
+                    <Td width={50} {...getTdProps({ columnKey: "qualifiers" })}>
+                      {item.decomposedPurl?.qualifiers && (
+                        <PackageQualifiers
+                          value={item.decomposedPurl?.qualifiers}
+                        />
+                      )}
                     </Td>
                   </TableRowContentWithControls>
                 </Tr>
                 {isCellExpanded(item) ? (
                   <Tr isExpanded>
-                    <Td colSpan={7}>
-                      <div className="pf-v5-u-m-md">
-                        <ExpandableRowContent>
-                          <PackageExpandedArea purls={item.purl ?? []} />
-                        </ExpandableRowContent>
-                      </div>
+                    <Td />
+                    <Td
+                      {...getExpandedContentTdProps({
+                        item,
+                      })}
+                      className={spacing.pyLg}
+                    >
+                      <ExpandableRowContent>
+                        <DescriptionList
+                          columnModifier={{
+                            default: "3Col",
+                          }}
+                        >
+                          <DescriptionListGroup>
+                            <DescriptionListTerm>Packages</DescriptionListTerm>
+                            <DescriptionListDescription>
+                              <List>
+                                <ListItem>
+                                  <Link to={`/packages/${item.uuid}`}>
+                                    {item.purl}
+                                  </Link>
+                                </ListItem>
+                              </List>
+                            </DescriptionListDescription>
+                          </DescriptionListGroup>
+                          <DescriptionListGroup>
+                            <DescriptionListTerm>
+                              Base package
+                            </DescriptionListTerm>
+                            <DescriptionListDescription>
+                              {item.base.purl}
+                            </DescriptionListDescription>
+                          </DescriptionListGroup>
+                          <DescriptionListGroup>
+                            <DescriptionListTerm>Versions</DescriptionListTerm>
+                            <DescriptionListDescription>
+                              <List>
+                                <ListItem>{item.version.version}</ListItem>
+                              </List>
+                            </DescriptionListDescription>
+                          </DescriptionListGroup>
+                        </DescriptionList>
+                      </ExpandableRowContent>
                     </Td>
                   </Tr>
                 ) : null}
@@ -172,150 +246,6 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({
         isCompact
         paginationProps={paginationProps}
       />
-    </>
-  );
-};
-
-interface PackageExpandedAreaProps {
-  purls: {
-    uuid: string;
-    purl: string;
-  }[];
-}
-
-export const PackageExpandedArea: React.FC<PackageExpandedAreaProps> = ({
-  purls,
-}) => {
-  const packages = React.useMemo(() => {
-    return purls.map((purl) => {
-      return {
-        uuid: purl.uuid,
-        purl: purl.purl,
-        ...decomposePurl(purl.purl),
-      };
-    });
-  }, [purls]);
-
-  const tableControls = useLocalTableControls({
-    variant: "compact",
-    tableName: "purl-table",
-    idProperty: "purl",
-    items: packages,
-    columnNames: {
-      name: "Name",
-      namespace: "Namespace",
-      version: "Version",
-      type: "Type",
-      path: "Path",
-      qualifiers: "qualifiers",
-    },
-    isPaginationEnabled: false,
-    isSortEnabled: true,
-    sortableColumns: [],
-    isFilterEnabled: true,
-    filterCategories: [
-      {
-        categoryKey: "",
-        title: "Filter tex",
-        type: FilterType.search,
-        placeholderText: "Search...",
-        getItemValue: (item) => {
-          return item.purl;
-        },
-      },
-    ],
-    isExpansionEnabled: false,
-  });
-
-  const {
-    currentPageItems,
-    numRenderedColumns,
-    propHelpers: { tableProps, getThProps, getTrProps, getTdProps },
-  } = tableControls;
-
-  return (
-    <>
-      <Table {...tableProps} aria-label="Purl table">
-        <Thead>
-          <Tr>
-            <TableHeaderContentWithControls {...tableControls}>
-              <Th {...getThProps({ columnKey: "name" })} />
-              <Th {...getThProps({ columnKey: "namespace" })} />
-              <Th {...getThProps({ columnKey: "version" })} />
-              <Th {...getThProps({ columnKey: "type" })} />
-              <Th {...getThProps({ columnKey: "path" })} />
-              <Th {...getThProps({ columnKey: "qualifiers" })} />
-            </TableHeaderContentWithControls>
-          </Tr>
-        </Thead>
-        <ConditionalTableBody
-          isLoading={false}
-          isError={undefined}
-          isNoData={packages?.length === 0}
-          numRenderedColumns={numRenderedColumns}
-        >
-          {currentPageItems?.map((item, rowIndex) => {
-            return (
-              <Tbody key={item.purl}>
-                <Tr {...getTrProps({ item })}>
-                  <TableRowContentWithControls
-                    {...tableControls}
-                    item={item}
-                    rowIndex={rowIndex}
-                  >
-                    <Td
-                      width={20}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "name" })}
-                    >
-                      <NavLink to={`/packages/${item.uuid}`}>
-                        {item.name}
-                      </NavLink>
-                    </Td>
-                    <Td
-                      width={15}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "namespace" })}
-                    >
-                      {item.namespace}
-                    </Td>
-                    <Td
-                      width={15}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "version" })}
-                    >
-                      {item.version}
-                    </Td>
-                    <Td
-                      width={10}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "type" })}
-                    >
-                      {item.type}
-                    </Td>
-                    <Td
-                      width={10}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "path" })}
-                    >
-                      {item.path}
-                    </Td>
-                    <Td
-                      width={30}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "qualifiers" })}
-                    >
-                      {item.qualifiers && (
-                        <PackageQualifiers value={item.qualifiers} />
-                      )}
-                    </Td>
-                  </TableRowContentWithControls>
-                </Tr>
-              </Tbody>
-            );
-          })}
-        </ConditionalTableBody>
-      </Table>
     </>
   );
 };
