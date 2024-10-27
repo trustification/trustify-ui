@@ -139,6 +139,16 @@ export const getFilterHubRequestParams = <
           },
         });
       }
+      if (filterCategory.type === "dateRange") {
+        pushOrMergeFilter(filters, {
+          field: serverFilterField,
+          operator: "=",
+          value: {
+            list: serverFilterValue[0].split("/"),
+            operator: getFilterLogicOperator(filterCategory, "OR"),
+          },
+        });
+      }
     });
   }
   if (implicitFilters) {

@@ -45,7 +45,7 @@ export const FilterPanel = <TItem, TFilterCategoryKey extends string>({
           return (
             <Card key={category.categoryKey} isPlain>
               <CardTitle>{category.title}</CardTitle>
-              <CardBody>
+              <CardBody >
                 <FilterControl<TItem, TFilterCategoryKey>
                   category={category}
                   filterValue={filterValues[category.categoryKey]}

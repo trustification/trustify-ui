@@ -158,7 +158,7 @@ export const Search: React.FC = () => {
         <Grid hasGutter>
           <GridItem md={2}>
             <Card isFullHeight>
-              <CardBody>
+              <CardBody style={{ padding: 0 }}>
                 {activeTabKey === 0 ? (
                   <FilterPanel
                     ommitFilterCategoryKeys={[""]}

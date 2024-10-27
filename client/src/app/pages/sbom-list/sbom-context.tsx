@@ -24,7 +24,7 @@ interface ISbomSearchContext {
     | "supplier"
     | "vulnerabilities",
     "published",
-    "",
+    "" | "published",
     string
   >;
 
@@ -52,8 +52,8 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
       name: "Name",
       version: "Version",
       supplier: "Supplier",
-      published: "Published",
-      packages: "Packages",
+      published: "Created on",
+      packages: "Dependencies",
       vulnerabilities: "Vulnerabilities",
     },
     isPaginationEnabled: true,
@@ -66,6 +66,11 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
         title: "Filter text",
         placeholderText: "Search",
         type: FilterType.search,
+      },
+      {
+        categoryKey: "published",
+        title: "Created on",
+        type: FilterType.dateRange,
       },
     ],
     isExpansionEnabled: false,
