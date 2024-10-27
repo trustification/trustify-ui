@@ -158,20 +158,20 @@ export const Search: React.FC = () => {
         <Grid hasGutter>
           <GridItem md={2}>
             <Card isFullHeight>
-              <CardBody style={{ padding: 0 }}>
+              <CardBody>
                 {activeTabKey === 0 ? (
                   <FilterPanel
-                    ommitFilterCategoryKeys={[""]}
+                    omitFilterCategoryKeys={[""]}
                     {...sbomFilterPanelProps}
                   />
                 ) : activeTabKey === 1 ? (
                   <FilterPanel
-                    ommitFilterCategoryKeys={[""]}
+                    omitFilterCategoryKeys={[""]}
                     {...packageFilterPanelProps}
                   />
                 ) : activeTabKey === 2 ? (
                   <FilterPanel
-                    ommitFilterCategoryKeys={[""]}
+                    omitFilterCategoryKeys={[""]}
                     {...vulnerabilityFilterPanelProps}
                   />
                 ) : null}

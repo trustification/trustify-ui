@@ -49,24 +49,46 @@ export const DateRangeFilter = <TItem,>({
   const [from, setFrom] = useState<Date>();
   const [to, setTo] = useState<Date>();
 
+  // Update it if it changes externally
+  React.useEffect(() => {
+    if (filterValue?.[0]) {
+      const [from, to] = parseInterval(filterValue?.[0]);
+      setFrom(from.toDate());
+      setTo(to.toDate());
+    } else {
+      setFrom(undefined);
+      setTo(undefined);
+    }
+  }, [filterValue]);
+
   const rangeToOption = (range: string) => {
-    const [abbrRange, fullRange] = localizeInterval(range);
-    return {
-      key: range,
-      node: (
-        <Tooltip content={fullRange ?? range}>
-          <span>{abbrRange ?? ""}</span>
-        </Tooltip>
-      ),
-    };
+    const [, fullRange] = localizeInterval(range);
+    const [from, to] = fullRange.split("-");
+    return [
+      {
+        key: `${range}-from`,
+        node: (
+          <Tooltip content={from ?? range}>
+            <span>{from ?? ""}</span>
+          </Tooltip>
+        ),
+      },
+      {
+        key: `${range}-to`,
+        node: (
+          <Tooltip content={to ?? range}>
+            <span>{to ?? ""}</span>
+          </Tooltip>
+        ),
+      },
+    ];
   };
 
   const clearSingleRange = (
-    category: string | ToolbarChipGroup,
-    option: string | ToolbarChip
+    _category: string | ToolbarChipGroup,
+    _option: string | ToolbarChip
   ) => {
-    const target = (option as ToolbarChip)?.key;
-    setFilterValue([...validFilters.filter((range) => range !== target)]);
+    setFilterValue([]);
   };
 
   const onFromDateChange = (
@@ -84,12 +106,8 @@ export const DateRangeFilter = <TItem,>({
       const newTo = parseAmericanDate(value);
       setTo(newTo);
       const target = toISODateInterval(from, newTo);
-
       if (target) {
-        setFilterValue([
-          ...validFilters.filter((range) => range !== target),
-          target,
-        ]);
+        setFilterValue([target]);
       }
     }
   };
@@ -97,7 +115,7 @@ export const DateRangeFilter = <TItem,>({
   return (
     <ToolbarFilter
       key={category.categoryKey}
-      chips={validFilters.map(rangeToOption)}
+      chips={validFilters.flatMap(rangeToOption)}
       deleteChip={clearSingleRange}
       deleteChipGroup={() => setFilterValue([])}
       categoryName={category.title}

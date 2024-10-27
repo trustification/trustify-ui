@@ -5,6 +5,7 @@ import {
   getFilterLogicOperator,
 } from "@app/components/FilterToolbar";
 import { IFilterState } from "./useFilterState";
+import { parseInterval } from "@app/components/FilterToolbar/dateUtils";
 
 /**
  * Helper function for getFilterHubRequestParams
@@ -140,14 +141,21 @@ export const getFilterHubRequestParams = <
         });
       }
       if (filterCategory.type === "dateRange") {
-        pushOrMergeFilter(filters, {
-          field: serverFilterField,
-          operator: "=",
-          value: {
-            list: serverFilterValue[0].split("/"),
-            operator: getFilterLogicOperator(filterCategory, "OR"),
-          },
-        });
+        const [start, end] = parseInterval(serverFilterValue[0]);
+        if (start) {
+          pushOrMergeFilter(filters, {
+            field: serverFilterField,
+            operator: ">",
+            value: start.toISOString(),
+          });
+        }
+        if (end) {
+          pushOrMergeFilter(filters, {
+            field: serverFilterField,
+            operator: "<",
+            value: end.toISOString(),
+          });
+        }
       }
     });
   }

@@ -44,6 +44,18 @@ export const DateRangeFilter = <TItem,>({
   const [from, setFrom] = useState<Date>();
   const [to, setTo] = useState<Date>();
 
+  // Update it if it changes externally
+  React.useEffect(() => {
+    if (filterValue?.[0]) {
+      const [from, to] = parseInterval(filterValue?.[0]);
+      setFrom(from.toDate());
+      setTo(to.toDate());
+    } else {
+      setFrom(undefined);
+      setTo(undefined);
+    }
+  }, [filterValue]);
+
   const onFromDateChange = (
     event: FormEvent<HTMLInputElement>,
     value: string
@@ -60,10 +72,7 @@ export const DateRangeFilter = <TItem,>({
       setTo(newTo);
       const target = toISODateInterval(from, newTo);
       if (target) {
-        setFilterValue([
-          ...validFilters.filter((range) => range !== target),
-          target,
-        ]);
+        setFilterValue([target]);
       }
     }
   };
