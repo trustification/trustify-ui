@@ -24,6 +24,7 @@ module.exports = {
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "prettier",
+    "plugin:storybook/recommended",
   ],
 
   // eslint-disable-next-line prettier/prettier
@@ -77,7 +78,7 @@ module.exports = {
     "node_modules/",
   ],
 
-  // this is a hack to make sure eslint will look at all of the file extensions we
+  // this is a hack to make sure eslint will look at all the file extensions we
   // care about without having to put it on the command line
   overrides: [
     {

@@ -31,3 +31,6 @@ npm-debug.log*
 
 crate/target
 crate/Cargo.lock
+
+*storybook.log
+storybook-static
