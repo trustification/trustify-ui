@@ -28,15 +28,7 @@ import {
 } from "@patternfly/react-table";
 
 import { compareBySeverityFn, severityList } from "@app/api/model-utils";
-import { VulnerabilityStatus } from "@app/api/models";
-import { client } from "@app/axios-config/apiInit";
-import {
-  getVulnerability,
-  SbomAdvisory,
-  SbomPackage,
-  Severity,
-  VulnerabilityDetails,
-} from "@app/client";
+import { Severity } from "@app/client";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { PackageQualifiers } from "@app/components/PackageQualifiers";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
@@ -47,27 +39,10 @@ import {
   TableRowContentWithControls,
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
-import { useFetchSBOMById, useFetchSbomsAdvisory } from "@app/queries/sboms";
+import { useFetchSBOMById } from "@app/queries/sboms";
 import { useWithUiId } from "@app/utils/query-utils";
 import { decomposePurl, formatDate } from "@app/utils/utils";
-
-interface DonutChartData {
-  total: number;
-  summary: { [key in Severity]: number };
-}
-
-const DEFAULT_DONUT_CHART_DATA: DonutChartData = {
-  total: 0,
-  summary: { none: 0, low: 0, medium: 0, high: 0, critical: 0 },
-};
-
-interface TableData {
-  vulnerabilityId: string;
-  advisory: SbomAdvisory;
-  status: VulnerabilityStatus;
-  packages: SbomPackage[];
-  vulnerability?: VulnerabilityDetails;
-}
+import { useSbomVulnerabilities } from "@app/hooks/useSbomVulnerabilities";
 
 interface VulnerabilitiesBySbomProps {
   sbomId: string;
@@ -82,98 +57,14 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
     fetchError: fetchErrorSbom,
   } = useFetchSBOMById(sbomId);
   const {
-    advisories,
-    isFetching: isFetchingAdvisories,
-    fetchError: fetchErrorAdvisories,
-  } = useFetchSbomsAdvisory(sbomId);
-
-  const [allVulnerabilities, setAllVulnerabilities] = React.useState<
-    TableData[]
-  >([]);
-  const [vulnerabilitiesById, setVulnerabilitiesById] = React.useState<
-    Map<string, VulnerabilityDetails>
-  >(new Map());
-  const [isFetchingVulnerabilities, setIsFetchingVulnerabilities] =
-    React.useState(false);
-
-  React.useEffect(() => {
-    if (advisories.length === 0) {
-      return;
-    }
-
-    const vulnerabilities = (advisories ?? [])
-      .flatMap((advisory) => {
-        return (advisory.status ?? []).map((status) => {
-          const result: TableData = {
-            vulnerabilityId: status.vulnerability_id,
-            status: status.status as VulnerabilityStatus,
-            packages: status.packages || [],
-            advisory: { ...advisory },
-          };
-          return result;
-        });
-      })
-      // Take only "affected"
-      .filter((item) => item.status === "affected")
-      // Remove dupplicates if exists
-      .reduce((prev, current) => {
-        const exists = prev.find(
-          (item) =>
-            item.vulnerabilityId === current.vulnerabilityId &&
-            item.advisory.uuid === current.advisory.uuid
-        );
-        if (!exists) {
-          return [...prev, current];
-        } else {
-          return prev;
-        }
-      }, [] as TableData[]);
-
-    setAllVulnerabilities(vulnerabilities);
-    setIsFetchingVulnerabilities(true);
-
-    Promise.all(
-      vulnerabilities
-        .map(async (item) => {
-          const response = await getVulnerability({
-            client,
-            path: { id: item.vulnerabilityId },
-          });
-          return response.data;
-        })
-        .map((vulnerability) => vulnerability.catch(() => null))
-    ).then((vulnerabilities) => {
-      const validVulnerabilities = vulnerabilities.reduce((prev, current) => {
-        if (current) {
-          return [...prev, current];
-        } else {
-          // Filter out error responses
-          return prev;
-        }
-      }, [] as VulnerabilityDetails[]);
-
-      const vulnerabilitiesById = new Map<string, VulnerabilityDetails>();
-      validVulnerabilities.forEach((vulnerability) => {
-        vulnerabilitiesById.set(vulnerability.identifier, vulnerability);
-      });
-
-      setVulnerabilitiesById(vulnerabilitiesById);
-      setIsFetchingVulnerabilities(false);
-    });
-  }, [advisories]);
-
-  const tableData = React.useMemo(() => {
-    return allVulnerabilities.map((item) => {
-      const result: TableData = {
-        ...item,
-        vulnerability: vulnerabilitiesById.get(item.vulnerabilityId),
-      };
-      return result;
-    });
-  }, [allVulnerabilities, vulnerabilitiesById]);
+    vulnerabilities: vulnerabilities,
+    summary: vulnerabilitiesSummary,
+    isFetching: isFetchingVulnerabilities,
+    fetchError: fetchErrorVulnerabilities,
+  } = useSbomVulnerabilities(sbomId);
 
   const tableDataWithUiId = useWithUiId(
-    tableData,
+    vulnerabilities,
     (d) => `${d.vulnerabilityId}-${d.advisory.identifier}-${d.advisory.uuid}`
   );
 
@@ -181,7 +72,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
     tableName: "vulnerability-table",
     idProperty: "_ui_unique_id",
     items: tableDataWithUiId,
-    isLoading: isFetchingAdvisories || isFetchingVulnerabilities,
+    isLoading: isFetchingVulnerabilities,
     columnNames: {
       id: "Id",
       description: "Description",
@@ -218,29 +109,11 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
 
   //
 
-  const donutChartData = React.useMemo(() => {
-    return tableData.reduce((prev, current) => {
-      if (current.vulnerability?.average_severity) {
-        const severity = current.vulnerability?.average_severity;
-        return {
-          ...prev,
-          total: prev.total + 1,
-          summary: {
-            ...prev.summary,
-            [severity]: prev.summary[severity] + 1,
-          },
-        };
-      } else {
-        return prev;
-      }
-    }, DEFAULT_DONUT_CHART_DATA);
-  }, [tableData]);
-
   const donutChart = React.useMemo(() => {
-    return Object.keys(donutChartData.summary)
+    return Object.keys(vulnerabilitiesSummary.severities)
       .map((item) => {
         const severity = item as Severity;
-        const count = donutChartData.summary[severity];
+        const count = vulnerabilitiesSummary.severities[severity];
         const severityProps = severityList[severity];
         return {
           severity,
@@ -250,7 +123,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
         };
       })
       .sort(compareBySeverityFn((item) => item.severity));
-  }, [donutChartData]);
+  }, [vulnerabilitiesSummary]);
 
   return (
     <>
@@ -259,11 +132,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
           <Card>
             <CardBody>
               <LoadingWrapper
-                isFetching={
-                  isFetchingAdvisories ||
-                  isFetchingVulnerabilities ||
-                  isFetchingSbom
-                }
+                isFetching={isFetchingVulnerabilities || isFetchingSbom}
               >
                 <Grid hasGutter>
                   <GridItem md={6}>
@@ -278,7 +147,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                           right: 140,
                           top: 20,
                         }}
-                        title={`${donutChartData.total}`}
+                        title={`${vulnerabilitiesSummary.total}`}
                         subTitle="Total vulnerabilities"
                         width={350}
                         legendData={donutChart.map(({ label, count }) => ({
@@ -349,8 +218,8 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
               </Tr>
             </Thead>
             <ConditionalTableBody
-              isLoading={isFetchingAdvisories || isFetchingVulnerabilities}
-              isError={!!fetchErrorAdvisories}
+              isLoading={isFetchingVulnerabilities}
+              isError={!!fetchErrorVulnerabilities}
               isNoData={tableDataWithUiId.length === 0}
               numRenderedColumns={numRenderedColumns}
             >
@@ -439,18 +308,22 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                                     {item.packages
                                       .flatMap((item) => item.purl)
                                       .map((purl, index) => {
-                                        const props = decomposePurl(purl.purl);
+                                        const decomposedPurl = decomposePurl(
+                                          purl.purl
+                                        );
                                         return (
                                           <Tr key={index}>
-                                            <Td>{props?.type}</Td>
-                                            <Td>{props?.namespace}</Td>
-                                            <Td>{props?.name}</Td>
-                                            <Td>{props?.version}</Td>
-                                            <Td>{props?.path}</Td>
+                                            <Td>{decomposedPurl?.type}</Td>
+                                            <Td>{decomposedPurl?.namespace}</Td>
+                                            <Td>{decomposedPurl?.name}</Td>
+                                            <Td>{decomposedPurl?.version}</Td>
+                                            <Td>{decomposedPurl?.path}</Td>
                                             <Td>
-                                              {props?.qualifiers && (
+                                              {decomposedPurl?.qualifiers && (
                                                 <PackageQualifiers
-                                                  value={props?.qualifiers}
+                                                  value={
+                                                    decomposedPurl?.qualifiers
+                                                  }
                                                 />
                                               )}
                                             </Td>

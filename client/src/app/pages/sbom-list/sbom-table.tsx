@@ -26,9 +26,10 @@ import {
 import { useDownload } from "@app/hooks/useDownload";
 import { useDeleteSbomMutation } from "@app/queries/sboms";
 import { formatDate } from "@app/utils/utils";
-
 import { ConfirmDialog } from "@app/components/ConfirmDialog";
+
 import { SbomSearchContext } from "./sbom-context";
+import { SBOMVulnerabilities } from "./components/SbomVulnerabilities";
 
 export const SbomTable: React.FC = ({}) => {
   const { isFetching, fetchError, totalItemCount, tableControls } =
@@ -114,7 +115,7 @@ export const SbomTable: React.FC = ({}) => {
                     rowIndex={rowIndex}
                   >
                     <Td
-                      width={30}
+                      width={25}
                       {...getTdProps({
                         columnKey: "name",
                         isCompoundExpandToggle: true,
@@ -148,9 +149,11 @@ export const SbomTable: React.FC = ({}) => {
                       <PackagesCount sbomId={item.id} />
                     </Td>
                     <Td
-                      width={15}
+                      width={20}
                       {...getTdProps({ columnKey: "vulnerabilities" })}
-                    ></Td>
+                    >
+                      <SBOMVulnerabilities sbomId={item.id} />
+                    </Td>
                     <Td isActionCell>
                       <ActionsColumn
                         items={[
