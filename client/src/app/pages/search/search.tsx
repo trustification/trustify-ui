@@ -161,17 +161,17 @@ export const Search: React.FC = () => {
               <CardBody>
                 {activeTabKey === 0 ? (
                   <FilterPanel
-                    ommitFilterCategoryKeys={[""]}
+                    omitFilterCategoryKeys={[""]}
                     {...sbomFilterPanelProps}
                   />
                 ) : activeTabKey === 1 ? (
                   <FilterPanel
-                    ommitFilterCategoryKeys={[""]}
+                    omitFilterCategoryKeys={[""]}
                     {...packageFilterPanelProps}
                   />
                 ) : activeTabKey === 2 ? (
                   <FilterPanel
-                    ommitFilterCategoryKeys={[""]}
+                    omitFilterCategoryKeys={[""]}
                     {...vulnerabilityFilterPanelProps}
                   />
                 ) : null}

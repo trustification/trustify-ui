@@ -6,17 +6,21 @@ import { StateError } from "./StateError";
 
 export const LoadingWrapper = (props: {
   isFetching: boolean;
-  fetchError?: Error;
+  fetchError?: Error | null;
+  isFetchingState?: React.ReactNode;
+  fetchErrorState?: React.ReactNode;
   children: React.ReactNode;
 }) => {
   if (props.isFetching) {
     return (
-      <Bullseye>
-        <Spinner />
-      </Bullseye>
+      props.isFetchingState || (
+        <Bullseye>
+          <Spinner />
+        </Bullseye>
+      )
     );
   } else if (props.fetchError) {
-    return <StateError />;
+    return props.fetchErrorState || <StateError />;
   } else {
     return props.children;
   }
