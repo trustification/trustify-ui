@@ -8,12 +8,12 @@ import {
   TextContent,
 } from "@patternfly/react-core";
 
-import { FilterControl } from "./FilterControl";
 import {
   FilterCategory,
   FilterValue,
   IFilterValues,
 } from "../FilterToolbar/FilterToolbar";
+import { FilterControl } from "./FilterControl";
 
 export interface IFilterPanelProps<TItem, TFilterCategoryKey extends string> {
   filterCategories: FilterCategory<TItem, TFilterCategoryKey>[];
@@ -60,18 +60,18 @@ export const FilterPanel = <TItem, TFilterCategoryKey extends string>({
             Clear all filters
           </Button>
         </StackItem>
-        <StackItem>
-          {filterCategories
-            .filter((filterCategory) => {
-              return (
-                omitFilterCategoryKeys.find(
-                  (categoryKey) => categoryKey === filterCategory.categoryKey
-                ) === undefined
-              );
-            })
-            .map((category) => {
-              return (
-                <Stack key={category.categoryKey} hasGutter>
+        {filterCategories
+          .filter((filterCategory) => {
+            return (
+              omitFilterCategoryKeys.find(
+                (categoryKey) => categoryKey === filterCategory.categoryKey
+              ) === undefined
+            );
+          })
+          .map((category) => {
+            return (
+              <StackItem key={category.categoryKey}>
+                <Stack hasGutter>
                   <StackItem>
                     <TextContent>
                       <Text component="h4">{category.title}</Text>
@@ -89,9 +89,9 @@ export const FilterPanel = <TItem, TFilterCategoryKey extends string>({
                     />
                   </StackItem>
                 </Stack>
-              );
-            })}
-        </StackItem>
+              </StackItem>
+            );
+          })}
       </Stack>
     </>
   );
