@@ -1,0 +1,33 @@
+name: Storybook - PR Preview Build
+
+on:
+  pull_request:
+    paths:
+      - "**/*.stories.tsx"
+
+jobs:
+  build-storybook-pr-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm clean-install --ignore-scripts
+      - name: Build
+        run: npm run build
+      - name: Build storybook
+        run: npm run build-storybook
+      - name: Save PR number
+        run: |
+          mkdir -p ./pr
+          echo ${{ github.event.number }} > ./pr/NR
+      - uses: actions/upload-artifact@v4
+        with:
+          name: storybook-static
+          path: storybook-static/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr
+          path: pr/
