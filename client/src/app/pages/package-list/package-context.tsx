@@ -23,7 +23,13 @@ interface PackageTableData extends PurlSummary {
 interface IPackageSearchContext {
   tableControls: ITableControls<
     PackageTableData,
-    "name" | "namespace" | "version" | "type" | "path" | "qualifiers",
+    | "name"
+    | "namespace"
+    | "version"
+    | "type"
+    | "path"
+    | "qualifiers"
+    | "vulnerabilities",
     never,
     "" | "type" | "arch",
     string
@@ -56,6 +62,7 @@ export const PackageSearchProvider: React.FunctionComponent<
       type: "Type",
       path: "Path",
       qualifiers: "Qualifiers",
+      vulnerabilities: "Vulnerabilities",
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
