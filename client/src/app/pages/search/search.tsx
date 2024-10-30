@@ -179,67 +179,64 @@ export const Search: React.FC = () => {
             </Card>
           </GridItem>
           <GridItem md={10}>
-            <Card>
-              <CardBody>
-                <Tabs
-                  activeKey={activeTabKey}
-                  onSelect={handleTabClick}
-                  aria-label="Tabs"
-                  role="region"
-                >
-                  <Tab
-                    eventKey={0}
-                    title={
-                      <TabTitleText>
-                        SBOMs{"  "}
-                        <Badge screenReaderText="Search Result Count">
-                          {sbomTotalCount}
-                        </Badge>
-                      </TabTitleText>
-                    }
-                    actions={
-                      <>
-                        <TabAction
-                          aria-label={`SBOM help popover`}
-                          ref={sbomPopoverRef}
-                        >
-                          <HelpIcon />
-                        </TabAction>
-                        {sbomPopover(sbomPopoverRef)}
-                      </>
-                    }
-                  >
-                    <SbomTable />
-                  </Tab>
-                  <Tab
-                    eventKey={1}
-                    title={
-                      <TabTitleText>
-                        Packages{"  "}
-                        <Badge screenReaderText="Search Result Count">
-                          {packageTotalCount}
-                        </Badge>
-                      </TabTitleText>
-                    }
-                  >
-                    <PackageTable />
-                  </Tab>
-                  <Tab
-                    eventKey={2}
-                    title={
-                      <TabTitleText>
-                        Vulnerabilities{"  "}
-                        <Badge screenReaderText="Search Result Count">
-                          {vulnerabilityTotalCount}
-                        </Badge>
-                      </TabTitleText>
-                    }
-                  >
-                    <VulnerabilityTable />
-                  </Tab>
-                </Tabs>
-              </CardBody>
-            </Card>
+            <Tabs
+              isBox
+              activeKey={activeTabKey}
+              onSelect={handleTabClick}
+              aria-label="Tabs"
+              role="region"
+            >
+              <Tab
+                eventKey={0}
+                title={
+                  <TabTitleText>
+                    SBOMs{"  "}
+                    <Badge screenReaderText="Search Result Count">
+                      {sbomTotalCount}
+                    </Badge>
+                  </TabTitleText>
+                }
+                actions={
+                  <>
+                    <TabAction
+                      aria-label={`SBOM help popover`}
+                      ref={sbomPopoverRef}
+                    >
+                      <HelpIcon />
+                    </TabAction>
+                    {sbomPopover(sbomPopoverRef)}
+                  </>
+                }
+              >
+                <SbomTable />
+              </Tab>
+              <Tab
+                eventKey={1}
+                title={
+                  <TabTitleText>
+                    Packages{"  "}
+                    <Badge screenReaderText="Search Result Count">
+                      {packageTotalCount}
+                    </Badge>
+                  </TabTitleText>
+                }
+              >
+                <PackageTable />
+              </Tab>
+              <Tab
+                eventKey={2}
+                title={
+                  <TabTitleText>
+                    Vulnerabilities{"  "}
+                    <Badge screenReaderText="Search Result Count">
+                      {vulnerabilityTotalCount}
+                    </Badge>
+                  </TabTitleText>
+                }
+              >
+                <VulnerabilityTable />
+              </Tab>
+            </Tabs>
           </GridItem>
         </Grid>
       </PageSection>

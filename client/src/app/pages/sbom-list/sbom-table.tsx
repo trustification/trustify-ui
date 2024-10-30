@@ -15,6 +15,7 @@ import {
 } from "@patternfly/react-table";
 
 import { SbomSummary } from "@app/client";
+import { ConfirmDialog } from "@app/components/ConfirmDialog";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import { PackagesCount } from "@app/components/PackagesCount";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -23,13 +24,12 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
-import { useDownload } from "@app/hooks/useDownload";
+import { useDownload } from "@app/hooks/domain-controls/useDownload";
 import { useDeleteSbomMutation } from "@app/queries/sboms";
 import { formatDate } from "@app/utils/utils";
-import { ConfirmDialog } from "@app/components/ConfirmDialog";
 
-import { SbomSearchContext } from "./sbom-context";
 import { SBOMVulnerabilities } from "./components/SbomVulnerabilities";
+import { SbomSearchContext } from "./sbom-context";
 
 export const SbomTable: React.FC = ({}) => {
   const { isFetching, fetchError, totalItemCount, tableControls } =
