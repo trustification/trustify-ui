@@ -1,6 +1,7 @@
+import { saveAs } from "file-saver";
+
 import { client } from "@app/axios-config/apiInit";
 import { downloadAdvisory, downloadSbom } from "@app/client";
-import { saveAs } from "file-saver";
 
 export const useDownload = () => {
   const onDownloadAdvisory = (id: string, filename?: string) => {

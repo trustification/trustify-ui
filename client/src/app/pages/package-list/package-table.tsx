@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
+import { PackageQualifiers } from "@app/components/PackageQualifiers";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -10,7 +11,7 @@ import {
   TableRowContentWithControls,
 } from "@app/components/TableControls";
 
-import { PackageQualifiers } from "@app/components/PackageQualifiers";
+import { PackageVulnerabilities } from "./components/PackageVulnerabilities";
 import { PackageSearchContext } from "./package-context";
 
 export const PackageTable: React.FC = () => {
@@ -42,6 +43,7 @@ export const PackageTable: React.FC = () => {
               <Th {...getThProps({ columnKey: "type" })} />
               <Th {...getThProps({ columnKey: "path" })} />
               <Th {...getThProps({ columnKey: "qualifiers" })} />
+              <Th {...getThProps({ columnKey: "vulnerabilities" })} />
             </TableHeaderContentWithControls>
           </Tr>
         </Thead>
@@ -75,7 +77,7 @@ export const PackageTable: React.FC = () => {
                       {item.decomposedPurl?.namespace}
                     </Td>
                     <Td
-                      width={15}
+                      width={10}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "version" })}
                     >
@@ -95,12 +97,18 @@ export const PackageTable: React.FC = () => {
                     >
                       {item.decomposedPurl?.path}
                     </Td>
-                    <Td width={40} {...getTdProps({ columnKey: "path" })}>
+                    <Td width={20} {...getTdProps({ columnKey: "qualifiers" })}>
                       {item.decomposedPurl?.qualifiers && (
                         <PackageQualifiers
                           value={item.decomposedPurl?.qualifiers}
                         />
                       )}
+                    </Td>
+                    <Td
+                      width={20}
+                      {...getTdProps({ columnKey: "vulnerabilities" })}
+                    >
+                      <PackageVulnerabilities packageId={item.uuid} />
                     </Td>
                   </TableRowContentWithControls>
                 </Tr>

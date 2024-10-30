@@ -38,11 +38,11 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
+import { useSbomVulnerabilities } from "@app/hooks/domain-controls/useSbomVulnerabilities";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchSBOMById } from "@app/queries/sboms";
 import { useWithUiId } from "@app/utils/query-utils";
 import { decomposePurl, formatDate } from "@app/utils/utils";
-import { useSbomVulnerabilities } from "@app/hooks/useSbomVulnerabilities";
 
 interface VulnerabilitiesBySbomProps {
   sbomId: string;
