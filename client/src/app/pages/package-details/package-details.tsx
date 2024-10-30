@@ -1,20 +1,20 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 import {
-  Breadcrumb,
-  BreadcrumbItem,
+  Flex,
+  FlexItem,
   PageSection,
-  Popover,
-  TabAction,
+  Stack,
+  StackItem,
+  Tab,
+  Tabs,
+  TabTitleText,
   Text,
   TextContent,
 } from "@patternfly/react-core";
-import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
-
-import DetailsPage from "@patternfly/react-component-groups/dist/dynamic/DetailsPage";
 
 import { PathParam, useRouteParams } from "@app/Routes";
+import { PackageQualifiers } from "@app/components/PackageQualifiers";
 import { useFetchPackageById } from "@app/queries/packages";
 import { decomposePurl } from "@app/utils/utils";
 
@@ -32,86 +32,43 @@ export const PackageDetails: React.FC = () => {
   return (
     <>
       <PageSection variant="light">
-        <DetailsPage
-          breadcrumbs={
-            <Breadcrumb>
-              <BreadcrumbItem key="packages">
-                <Link to="/packages">Packages</Link>
-              </BreadcrumbItem>
-              <BreadcrumbItem isActive>Package details</BreadcrumbItem>
-            </Breadcrumb>
-          }
-          pageHeading={{
-            title: decomposedPurl?.name ?? packageId ?? "",
-            iconAfterTitle: pkg ? (
-              <TextContent>
-                <Text component="pre">{`version: ${decomposedPurl?.version}`}</Text>
-              </TextContent>
-            ) : undefined,
-            label: pkg
-              ? {
-                  children: pkg ? `type=${decomposedPurl?.type}` : "",
-                  isCompact: true,
-                }
-              : undefined,
-          }}
-          actionButtons={[]}
-          tabs={[
-            {
-              eventKey: "vulnerabilities",
-              title: "Vulnerabilities",
-              children: (
-                <div className="pf-v5-u-m-md">
-                  {packageId && (
-                    <VulnerabilitiesByPackage packageId={packageId} />
-                  )}
-                </div>
-              ),
-              actions: (
-                <>
-                  <Popover
-                    bodyContent={
-                      <div>
-                        Vulnerabilities <strong>associated</strong> to the
-                        current package.
-                      </div>
-                    }
-                    position="top"
-                  >
-                    <TabAction>
-                      <HelpIcon />
-                    </TabAction>
-                  </Popover>
-                </>
-              ),
-            },
-            {
-              eventKey: "sboms",
-              title: "SBOMs",
-              children: (
-                <div className="pf-v5-u-m-md">
-                  {packageId && <SbomsByPackage packageId={packageId} />}
-                </div>
-              ),
-              actions: (
-                <>
-                  <Popover
-                    bodyContent={
-                      <div>
-                        SBOMs that <strong>contain</strong> the current package.
-                      </div>
-                    }
-                    position="top"
-                  >
-                    <TabAction>
-                      <HelpIcon />
-                    </TabAction>
-                  </Popover>
-                </>
-              ),
-            },
-          ]}
-        />
+        <Stack>
+          <StackItem>
+            <TextContent>
+              <Text component="h1">
+                {decomposedPurl?.name ?? packageId ?? ""}
+              </Text>
+            </TextContent>
+          </StackItem>
+          <StackItem>
+            <Flex>
+              <FlexItem spacer={{ default: "spacerSm" }}>
+                <p>version: {decomposedPurl?.version}</p>{" "}
+              </FlexItem>
+              <FlexItem>
+                {decomposedPurl?.qualifiers && (
+                  <PackageQualifiers value={decomposedPurl?.qualifiers} />
+                )}
+              </FlexItem>
+            </Flex>
+          </StackItem>
+        </Stack>
+      </PageSection>
+      <PageSection>
+        <Tabs isBox defaultActiveKey={0} role="region">
+          <Tab
+            eventKey={0}
+            title={<TabTitleText>Vulnerabilities</TabTitleText>}
+          >
+            {packageId && <VulnerabilitiesByPackage packageId={packageId} />}
+          </Tab>
+          <Tab
+            eventKey={1}
+            title={<TabTitleText>Products using package</TabTitleText>}
+          >
+            {packageId && <SbomsByPackage packageId={packageId} />}
+          </Tab>
+        </Tabs>
       </PageSection>
     </>
   );

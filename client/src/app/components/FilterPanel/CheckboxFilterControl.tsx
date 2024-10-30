@@ -59,7 +59,7 @@ export const CheckboxFilterControl = <TItem,>({
         return (
           <Checkbox
             key={index}
-            id={`checkbox-${index}`}
+            id={`checkbox-${index}-${category.categoryKey}`}
             isLabelWrapped
             label={label}
             isChecked={filterValue?.includes(value)}
