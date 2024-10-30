@@ -23,9 +23,9 @@ interface PackageTableData extends PurlSummary {
 interface IPackageSearchContext {
   tableControls: ITableControls<
     PackageTableData,
-    "name" | "version" | "type" | "vulnerabilities" | "sboms",
+    "name" | "namespace" | "version" | "type" | "path" | "qualifiers",
     never,
-    "" | "type",
+    "" | "type" | "arch",
     string
   >;
 
@@ -51,10 +51,11 @@ export const PackageSearchProvider: React.FunctionComponent<
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.packages,
     columnNames: {
       name: "Name",
+      namespace: "Namespace",
       version: "Version",
       type: "Type",
-      vulnerabilities: "Vulnerabilities",
-      sboms: "SBOMs",
+      path: "Path",
+      qualifiers: "Qualifiers",
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
@@ -76,6 +77,20 @@ export const PackageSearchProvider: React.FunctionComponent<
           { value: "maven", label: "Maven" },
           { value: "rpm", label: "RPM" },
           { value: "npm", label: "NPM" },
+          { value: "oci", label: "OCI" },
+        ],
+      },
+      {
+        categoryKey: "arch",
+        title: "Architecture",
+        placeholderText: "Architecture",
+        type: FilterType.multiselect,
+        selectOptions: [
+          { value: "x86_64", label: "AMD 64bit" },
+          { value: "aarch64", label: "ARM 64bit" },
+          { value: "ppc64le", label: "PowerPC" },
+          { value: "s390x", label: "S390" },
+          { value: "noarch", label: "No Arch" },
         ],
       },
     ],

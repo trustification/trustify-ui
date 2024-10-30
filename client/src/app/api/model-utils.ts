@@ -45,7 +45,7 @@ export const severityList: ListType = {
   },
 };
 
-const getSeverityPriority = (val: Severity) => {
+export const getSeverityPriority = (val: Severity) => {
   switch (val) {
     case "low":
       return 1;
