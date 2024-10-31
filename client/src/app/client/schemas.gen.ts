@@ -519,6 +519,9 @@ export const CsafImporterSchema = {
           type: ["integer", "null"],
           minimum: 0,
         },
+        ignoreMissing: {
+          type: "boolean",
+        },
         onlyPatterns: {
           type: "array",
           items: {
@@ -1808,9 +1811,23 @@ export const SbomAdvisorySchema = {
 
 export const SbomHeadSchema = {
   type: "object",
-  required: ["id", "document_id", "labels", "published", "authors", "name"],
+  required: [
+    "id",
+    "document_id",
+    "labels",
+    "data_licenses",
+    "published",
+    "authors",
+    "name",
+  ],
   properties: {
     authors: {
+      type: "array",
+      items: {
+        type: "string",
+      },
+    },
+    data_licenses: {
       type: "array",
       items: {
         type: "string",
@@ -1847,6 +1864,9 @@ export const SbomImporterSchema = {
         fetchRetries: {
           type: ["integer", "null"],
           minimum: 0,
+        },
+        ignoreMissing: {
+          type: "boolean",
         },
         keys: {
           type: "array",
@@ -1996,7 +2016,7 @@ Described in CVSS v3.1 Specification: Section 5:
 
 export const SourceDocumentSchema = {
   type: "object",
-  required: ["sha256", "sha384", "sha512"],
+  required: ["sha256", "sha384", "sha512", "size"],
   properties: {
     sha256: {
       type: "string",
@@ -2006,6 +2026,11 @@ export const SourceDocumentSchema = {
     },
     sha512: {
       type: "string",
+    },
+    size: {
+      type: "integer",
+      format: "int64",
+      minimum: 0,
     },
   },
 } as const;
