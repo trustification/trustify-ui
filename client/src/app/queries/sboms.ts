@@ -8,9 +8,9 @@ import {
   downloadSbom,
   getSbom,
   getSbomAdvisories,
+  IngestResult,
   listRelatedSboms,
   listSboms,
-  SbomDetails,
   SbomSummary,
   updateSbomLabels,
 } from "@app/client";
@@ -61,14 +61,14 @@ export const useFetchSBOMById = (id: string) => {
 };
 
 export const useDeleteSbomMutation = (
-  onSuccess: (payload: SbomDetails, id: string) => void,
+  onSuccess: (payload: SbomSummary, id: string) => void,
   onError?: (err: AxiosError, id: string) => void
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
       const response = await deleteSbom({ client, path: { id } });
-      return response.data as SbomDetails;
+      return response.data as SbomSummary;
     },
     onSuccess: (response, id) => {
       onSuccess(response, id);
@@ -94,7 +94,7 @@ export const useFetchSBOMSourceById = (key: string) => {
 
 export const useUploadSBOM = () => {
   const queryClient = useQueryClient();
-  return useUpload<SbomDetails, { message: string }>({
+  return useUpload<IngestResult, { message: string }>({
     parallel: true,
     uploadFn: (formData, config) => {
       return uploadSbom(formData, config);

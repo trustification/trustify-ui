@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 
 import { FORM_DATA_FILE_KEY } from "@app/Constants";
-import { AdvisoryDetails, SbomDetails } from "@app/client";
+import { AdvisoryDetails, IngestResult } from "@app/client";
 import { serializeRequestParamsForHub } from "@app/hooks/table-controls/getHubRequestParams";
 
 import { HubPaginatedResult, HubRequestParams } from "./models";
@@ -65,7 +65,7 @@ export const uploadAdvisory = (
 
 export const uploadSbom = (formData: FormData, config?: AxiosRequestConfig) => {
   const file = formData.get(FORM_DATA_FILE_KEY) as File;
-  return axios.post<SbomDetails>(`${SBOMS}`, file, {
+  return axios.post<IngestResult>(`${SBOMS}`, file, {
     ...config,
     headers: { "Content-Type": getContentTypeFromFile(file) },
   });

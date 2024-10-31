@@ -61,12 +61,12 @@ import type {
   GetImporterData,
   GetImporterError,
   GetImporterResponse,
-  CreateImporterData,
-  CreateImporterError,
-  CreateImporterResponse,
   UpdateImporterData,
   UpdateImporterError,
   UpdateImporterResponse,
+  CreateImporterData,
+  CreateImporterError,
+  CreateImporterResponse,
   DeleteImporterData,
   DeleteImporterError,
   DeleteImporterResponse,
@@ -147,6 +147,9 @@ import type {
   ListRelatedSbomsData,
   ListRelatedSbomsError,
   ListRelatedSbomsResponse,
+  CountRelatedSbomsData,
+  CountRelatedSbomsError,
+  CountRelatedSbomsResponse,
   GetSbomData,
   GetSbomError,
   GetSbomResponse,
@@ -483,22 +486,6 @@ export const getImporter = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Create a new importer configuration
- */
-export const createImporter = <ThrowOnError extends boolean = false>(
-  options: Options<CreateImporterData, ThrowOnError>
-) => {
-  return (options?.client ?? client).post<
-    CreateImporterResponse,
-    CreateImporterError,
-    ThrowOnError
-  >({
-    ...options,
-    url: "/api/v1/importer/{name}",
-  });
-};
-
-/**
  * Update an existing importer configuration
  */
 export const updateImporter = <ThrowOnError extends boolean = false>(
@@ -507,6 +494,22 @@ export const updateImporter = <ThrowOnError extends boolean = false>(
   return (options?.client ?? client).put<
     UpdateImporterResponse,
     UpdateImporterError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/importer/{name}",
+  });
+};
+
+/**
+ * Create a new importer configuration
+ */
+export const createImporter = <ThrowOnError extends boolean = false>(
+  options: Options<CreateImporterData, ThrowOnError>
+) => {
+  return (options?.client ?? client).post<
+    CreateImporterResponse,
+    CreateImporterError,
     ThrowOnError
   >({
     ...options,
@@ -933,6 +936,24 @@ export const listRelatedSboms = <ThrowOnError extends boolean = false>(
   >({
     ...options,
     url: "/api/v1/sbom/by-package",
+  });
+};
+
+/**
+ * Count all SBOMs containing the provided packages.
+ * The packages can be provided either via a PURL or using the ID of a package as returned by
+ * other APIs, but not both.
+ */
+export const countRelatedSboms = <ThrowOnError extends boolean = false>(
+  options: Options<CountRelatedSbomsData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    CountRelatedSbomsResponse,
+    CountRelatedSbomsError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/sbom/count-by-package",
   });
 };
 
