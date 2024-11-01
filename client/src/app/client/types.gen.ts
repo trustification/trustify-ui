@@ -431,7 +431,11 @@ export type PaginatedResults_ImporterReport = {
     error?: string | null;
     id: string;
     importer: string;
-    report: unknown;
+    report: {
+      startDate: string,
+      endDate: string,
+      numberOfItems: number,
+    };
   }>;
   total: number;
 };
