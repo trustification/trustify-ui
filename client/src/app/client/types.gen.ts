@@ -209,6 +209,7 @@ export type CommonImporter = {
 
 export type CsafImporter = CommonImporter & {
   fetchRetries?: number | null;
+  ignoreMissing?: boolean;
   onlyPatterns?: Array<string>;
   source: string;
   v3Signatures?: boolean;
@@ -661,6 +662,7 @@ export type SbomAdvisory = AdvisoryHead & {
 
 export type SbomHead = {
   authors: Array<string>;
+  data_licenses: Array<string>;
   document_id: string;
   id: string;
   labels: Labels;
@@ -670,6 +672,7 @@ export type SbomHead = {
 
 export type SbomImporter = CommonImporter & {
   fetchRetries?: number | null;
+  ignoreMissing?: boolean;
   keys?: Array<string>;
   onlyPatterns?: Array<string>;
   sizeLimit?: null | BinaryByteSize;
@@ -717,6 +720,7 @@ export type SourceDocument = {
   sha256: string;
   sha384: string;
   sha512: string;
+  size: number;
 };
 
 export type SpdxLicenseDetails = SpdxLicenseSummary & {
