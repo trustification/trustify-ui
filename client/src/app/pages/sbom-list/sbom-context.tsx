@@ -23,7 +23,7 @@ interface ISbomSearchContext {
     | "published"
     | "supplier"
     | "vulnerabilities",
-    "published",
+    "name" | "published",
     "" | "published",
     string
   >;
@@ -58,7 +58,7 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
-    sortableColumns: ["published"],
+    sortableColumns: ["name", "published"],
     isFilterEnabled: true,
     filterCategories: [
       {
@@ -84,6 +84,7 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
     getHubRequestParams({
       ...tableControlState,
       hubSortFieldKeys: {
+        name: "name",
         published: "published",
       },
     })
