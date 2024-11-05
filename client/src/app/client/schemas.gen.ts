@@ -2383,6 +2383,7 @@ export const VulnerabilityHeadSchema = {
     "identifier",
     "title",
     "description",
+    "reserved",
     "published",
     "modified",
     "withdrawn",
@@ -2434,6 +2435,12 @@ CVE identifier.`,
       format: "date-time",
       description:
         "The date (in RFC3339 format) of when software containing the vulnerability first released, if known.",
+    },
+    reserved: {
+      type: ["string", "null"],
+      format: "date-time",
+      description:
+        "The date (in RFC3339 format) of when the vulnerability identifier was reserved, if any.",
     },
     title: {
       type: ["string", "null"],
