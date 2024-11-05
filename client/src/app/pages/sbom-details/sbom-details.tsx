@@ -23,7 +23,7 @@ import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 import { PathParam, useRouteParams } from "@app/Routes";
 
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
-import { useDownload } from "@app/hooks/useDownload";
+import { useDownload } from "@app/hooks/domain-controls/useDownload";
 import { useFetchSBOMById } from "@app/queries/sboms";
 
 import { Overview } from "./overview";

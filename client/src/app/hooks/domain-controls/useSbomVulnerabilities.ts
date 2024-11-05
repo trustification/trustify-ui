@@ -1,3 +1,6 @@
+import React from "react";
+
+import { VulnerabilityStatus } from "@app/api/models";
 import { client } from "@app/axios-config/apiInit";
 import {
   getVulnerability,
@@ -7,8 +10,6 @@ import {
   VulnerabilityDetails,
 } from "@app/client";
 import { useFetchSbomsAdvisory } from "@app/queries/sboms";
-import React from "react";
-import { VulnerabilityStatus } from "@app/api/models";
 
 interface SbomVulnerability {
   vulnerabilityId: string;

@@ -4,16 +4,17 @@ import { Label, Skeleton } from "@patternfly/react-core";
 
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { VulnerabilityGallery } from "@app/components/VulnerabilityGallery";
-import { useSbomVulnerabilities } from "@app/hooks/domain-controls/useSbomVulnerabilities";
+import { usePackageVulnerabilities } from "@app/hooks/domain-controls/usePackageVulnerabilities";
 
-interface SBOMVulnerabilitiesProps {
-  sbomId: string;
+interface PackageVulnerabilitiesProps {
+  packageId: string;
 }
 
-export const SBOMVulnerabilities: React.FC<SBOMVulnerabilitiesProps> = ({
-  sbomId,
+export const PackageVulnerabilities: React.FC<PackageVulnerabilitiesProps> = ({
+  packageId,
 }) => {
-  const { summary, isFetching, fetchError } = useSbomVulnerabilities(sbomId);
+  const { summary, isFetching, fetchError } =
+    usePackageVulnerabilities(packageId);
 
   return (
     <LoadingWrapper

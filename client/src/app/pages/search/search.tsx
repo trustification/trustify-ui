@@ -33,6 +33,8 @@ import { SbomSearchContext } from "../sbom-list/sbom-context";
 import { SbomTable } from "../sbom-list/sbom-table";
 import { VulnerabilitySearchContext } from "../vulnerability-list/vulnerability-context";
 import { VulnerabilityTable } from "../vulnerability-list/vulnerability-table";
+import { AdvisorySearchContext } from "../advisory-list/advisory-context";
+import { AdvisoryTable } from "../advisory-list/advisory-table";
 
 export const SearchPage: React.FC = () => {
   return (
@@ -49,6 +51,9 @@ export const Search: React.FC = () => {
     React.useContext(PackageSearchContext);
   const { tableControls: vulnerabilityTableControls } = React.useContext(
     VulnerabilitySearchContext
+  );
+  const { tableControls: advisoryTableControls } = React.useContext(
+    AdvisorySearchContext
   );
 
   const {
@@ -71,6 +76,13 @@ export const Search: React.FC = () => {
       propHelpers: { filterPanelProps: vulnerabilityFilterPanelProps },
     },
   } = React.useContext(VulnerabilitySearchContext);
+
+  const {
+    totalItemCount: advisoryTotalCount,
+    tableControls: {
+      propHelpers: { filterPanelProps: advisoryFilterPanelProps },
+    },
+  } = React.useContext(AdvisorySearchContext);
 
   // Search
 
@@ -95,6 +107,10 @@ export const Search: React.FC = () => {
     });
     vulnerabilityTableControls.filterState.setFilterValues({
       ...vulnerabilityTableControls.filterState.filterValues,
+      "": [searchValue],
+    });
+    advisoryTableControls.filterState.setFilterValues({
+      ...advisoryTableControls.filterState.filterValues,
       "": [searchValue],
     });
   };
@@ -174,72 +190,87 @@ export const Search: React.FC = () => {
                     omitFilterCategoryKeys={[""]}
                     {...vulnerabilityFilterPanelProps}
                   />
+                ) : activeTabKey === 3 ? (
+                  <FilterPanel
+                    omitFilterCategoryKeys={[""]}
+                    {...advisoryFilterPanelProps}
+                  />
                 ) : null}
               </CardBody>
             </Card>
           </GridItem>
           <GridItem md={10}>
-            <Card>
-              <CardBody>
-                <Tabs
-                  activeKey={activeTabKey}
-                  onSelect={handleTabClick}
-                  aria-label="Tabs"
-                  role="region"
-                >
-                  <Tab
-                    eventKey={0}
-                    title={
-                      <TabTitleText>
-                        SBOMs{"  "}
-                        <Badge screenReaderText="Search Result Count">
-                          {sbomTotalCount}
-                        </Badge>
-                      </TabTitleText>
-                    }
-                    actions={
-                      <>
-                        <TabAction
-                          aria-label={`SBOM help popover`}
-                          ref={sbomPopoverRef}
-                        >
-                          <HelpIcon />
-                        </TabAction>
-                        {sbomPopover(sbomPopoverRef)}
-                      </>
-                    }
-                  >
-                    <SbomTable />
-                  </Tab>
-                  <Tab
-                    eventKey={1}
-                    title={
-                      <TabTitleText>
-                        Packages{"  "}
-                        <Badge screenReaderText="Search Result Count">
-                          {packageTotalCount}
-                        </Badge>
-                      </TabTitleText>
-                    }
-                  >
-                    <PackageTable />
-                  </Tab>
-                  <Tab
-                    eventKey={2}
-                    title={
-                      <TabTitleText>
-                        Vulnerabilities{"  "}
-                        <Badge screenReaderText="Search Result Count">
-                          {vulnerabilityTotalCount}
-                        </Badge>
-                      </TabTitleText>
-                    }
-                  >
-                    <VulnerabilityTable />
-                  </Tab>
-                </Tabs>
-              </CardBody>
-            </Card>
+            <Tabs
+              isBox
+              activeKey={activeTabKey}
+              onSelect={handleTabClick}
+              aria-label="Tabs"
+              role="region"
+            >
+              <Tab
+                eventKey={0}
+                title={
+                  <TabTitleText>
+                    SBOMs{"  "}
+                    <Badge screenReaderText="Search Result Count">
+                      {sbomTotalCount}
+                    </Badge>
+                  </TabTitleText>
+                }
+                actions={
+                  <>
+                    <TabAction
+                      aria-label={`SBOM help popover`}
+                      ref={sbomPopoverRef}
+                    >
+                      <HelpIcon />
+                    </TabAction>
+                    {sbomPopover(sbomPopoverRef)}
+                  </>
+                }
+              >
+                <SbomTable />
+              </Tab>
+              <Tab
+                eventKey={1}
+                title={
+                  <TabTitleText>
+                    Packages{"  "}
+                    <Badge screenReaderText="Search Result Count">
+                      {packageTotalCount}
+                    </Badge>
+                  </TabTitleText>
+                }
+              >
+                <PackageTable />
+              </Tab>
+              <Tab
+                eventKey={2}
+                title={
+                  <TabTitleText>
+                    Vulnerabilities{"  "}
+                    <Badge screenReaderText="Search Result Count">
+                      {vulnerabilityTotalCount}
+                    </Badge>
+                  </TabTitleText>
+                }
+              >
+                <VulnerabilityTable />
+              </Tab>
+              <Tab
+                eventKey={3}
+                title={
+                  <TabTitleText>
+                    Advisories{"  "}
+                    <Badge screenReaderText="Advisory Result Count">
+                      {vulnerabilityTotalCount}
+                    </Badge>
+                  </TabTitleText>
+                }
+              >
+                <AdvisoryTable />
+              </Tab>
+            </Tabs>
           </GridItem>
         </Grid>
       </PageSection>
