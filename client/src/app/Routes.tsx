@@ -14,6 +14,7 @@ const PackageList = lazy(() => import("./pages/package-list"));
 const PackageDetails = lazy(() => import("./pages/package-details"));
 const SBOMList = lazy(() => import("./pages/sbom-list"));
 const SBOMDetails = lazy(() => import("./pages/sbom-details"));
+const AdvisoryList = lazy(() => import("./pages/advisory-list"));
 const Search = lazy(() => import("./pages/search"));
 const ImporterList = lazy(() => import("./pages/importer-list"));
 const Upload = lazy(() => import("./pages/upload"));
@@ -46,6 +47,7 @@ export const AppRoutes = () => {
       path: `/sboms/:${PathParam.SBOM_ID}`,
       element: <SBOMDetails />,
     },
+    { path: "/advisories", element: <AdvisoryList /> },
     {
       path: `/importers`,
       element: <ImporterList />,
