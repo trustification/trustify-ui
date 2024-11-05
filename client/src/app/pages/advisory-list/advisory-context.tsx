@@ -17,9 +17,9 @@ import { useFetchAdvisories } from "@app/queries/advisories";
 interface IAdvisorySearchContext {
   tableControls: ITableControls<
     AdvisorySummary,
-    "identifier" | "title" | "severity" | "revision" | "vulnerabilities",
-    "identifier" | "severity",
-    "" | "average_severity" | "revision",
+    "identifier" | "title" | "severity" | "modified" | "vulnerabilities",
+    "identifier" | "severity" | "modified",
+    "" | "average_severity" | "modified",
     string
   >;
 
@@ -47,12 +47,12 @@ export const AdvisorySearchProvider: React.FunctionComponent<
       identifier: "ID",
       title: "Title",
       severity: "Aggregated Severity",
-      revision: "Revision",
+      modified: "Revision",
       vulnerabilities: "Vulnerabilities",
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
-    sortableColumns: ["identifier", "severity"],
+    sortableColumns: ["identifier", "severity", "modified"],
     isFilterEnabled: true,
     filterCategories: [
       {
@@ -75,7 +75,7 @@ export const AdvisorySearchProvider: React.FunctionComponent<
         ],
       },
       {
-        categoryKey: "revision",
+        categoryKey: "modified",
         title: "Revision",
         type: FilterType.dateRange,
       },
@@ -93,6 +93,7 @@ export const AdvisorySearchProvider: React.FunctionComponent<
       hubSortFieldKeys: {
         identifier: "identifier",
         severity: "average_score",
+        modified: "modified",
       },
     })
   );
