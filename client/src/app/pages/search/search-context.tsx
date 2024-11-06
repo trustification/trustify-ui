@@ -2,6 +2,7 @@ import React from "react";
 import { PackageSearchProvider } from "../package-list/package-context";
 import { SbomSearchProvider } from "../sbom-list/sbom-context";
 import { VulnerabilitySearchProvider } from "../vulnerability-list/vulnerability-context";
+import { AdvisorySearchProvider } from "../advisory-list/advisory-context";
 
 interface Provider<TProps> {
   Component: React.ComponentType<React.PropsWithChildren<TProps>>;
@@ -38,6 +39,7 @@ const allSearchProviders = [
   createProvider(SbomSearchProvider, {}),
   createProvider(PackageSearchProvider, {}),
   createProvider(VulnerabilitySearchProvider, {}),
+  createProvider(AdvisorySearchProvider, {}),
 ];
 
 export const SearchProvider = composeProviders(allSearchProviders);

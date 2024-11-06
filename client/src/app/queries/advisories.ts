@@ -47,7 +47,7 @@ export const useFetchAdvisories = (
       params: params ?? params,
     },
     isFetching: isLoading,
-    fetchError: error,
+    fetchError: error ? (error as AxiosError) : null,
     refetch,
   };
 };
