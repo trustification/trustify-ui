@@ -523,8 +523,8 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
       id: "root",
       startDate: undefined,
       endDate: undefined,
-      duration: importer.progress?.estimated_seconds_remaining
-        ? importer.progress?.estimated_seconds_remaining * 1000
+      duration: importer.progress?.estimatedSecondsRemaining
+        ? importer.progress?.estimatedSecondsRemaining * 1000
         : undefined,
       numberOfItems: importer.progress?.current,
       error: undefined,
@@ -532,7 +532,7 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
 
     const reportsMapped = reports.map((item) => {
       let duration: number | undefined;
-      if (item.report.startDate && item.report.endDate) {
+      if (item.report?.startDate && item.report.endDate) {
         const fromDate = dayjs(item.report.startDate);
         const toDate = dayjs(item.report.endDate);
         duration = toDate.diff(fromDate);
@@ -541,10 +541,10 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
       const result: TableReportData = {
         isRunning: false,
         id: item.id,
-        startDate: item.report.startDate,
-        endDate: item.report.endDate,
+        startDate: item.report?.startDate,
+        endDate: item.report?.endDate,
         duration: duration,
-        numberOfItems: item.report.numberOfItems,
+        numberOfItems: item.report?.numberOfItems,
         error: item.error ?? undefined,
       };
       return result;
