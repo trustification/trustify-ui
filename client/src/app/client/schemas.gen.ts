@@ -1364,13 +1364,19 @@ export const PaginatedResults_SbomSummarySchema = {
           },
           {
             type: "object",
-            required: ["described_by"],
+            required: ["described_by", "number_of_packages"],
             properties: {
               described_by: {
                 type: "array",
                 items: {
                   $ref: "#/components/schemas/SbomPackage",
                 },
+              },
+              number_of_packages: {
+                type: "integer",
+                format: "int64",
+                description: "The number of packages this SBOM has",
+                minimum: 0,
               },
             },
           },
@@ -2075,13 +2081,19 @@ export const SbomSummarySchema = {
     },
     {
       type: "object",
-      required: ["described_by"],
+      required: ["described_by", "number_of_packages"],
       properties: {
         described_by: {
           type: "array",
           items: {
             $ref: "#/components/schemas/SbomPackage",
           },
+        },
+        number_of_packages: {
+          type: "integer",
+          format: "int64",
+          description: "The number of packages this SBOM has",
+          minimum: 0,
         },
       },
     },

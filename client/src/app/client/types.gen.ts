@@ -529,6 +529,10 @@ export type PaginatedResults_SbomSummary = {
     SbomHead &
       (null | SourceDocument) & {
         described_by: Array<SbomPackage>;
+        /**
+         * The number of packages this SBOM has
+         */
+        number_of_packages: number;
       }
   >;
   total: number;
@@ -761,6 +765,10 @@ export type SbomStatus = {
 export type SbomSummary = SbomHead &
   (null | SourceDocument) & {
     described_by: Array<SbomPackage>;
+    /**
+     * The number of packages this SBOM has
+     */
+    number_of_packages: number;
   };
 
 /**
@@ -1905,6 +1913,59 @@ export type DownloadSbomData = {
 export type DownloadSbomResponse = Blob | File;
 
 export type DownloadSbomError = unknown;
+
+export type GetUserPreferencesData = {
+  path: {
+    /**
+     * The key to the user preferences
+     */
+    key: string;
+  };
+};
+
+export type GetUserPreferencesResponse = unknown;
+
+export type GetUserPreferencesError = unknown;
+
+export type SetUserPreferencesData = {
+  body: unknown;
+  headers?: {
+    /**
+     * The revision to update
+     */
+    "if-match"?: string | null;
+  };
+  path: {
+    /**
+     * The key to the user preferences
+     */
+    key: string;
+  };
+};
+
+export type SetUserPreferencesResponse = string;
+
+export type SetUserPreferencesError = unknown;
+
+export type DeleteUserPreferencesData = {
+  body: unknown;
+  headers?: {
+    /**
+     * The revision to delete
+     */
+    "if-match"?: string | null;
+  };
+  path: {
+    /**
+     * The key to the user preferences
+     */
+    key: string;
+  };
+};
+
+export type DeleteUserPreferencesResponse = unknown;
+
+export type DeleteUserPreferencesError = unknown;
 
 export type ListVulnerabilitiesData = {
   query?: {
