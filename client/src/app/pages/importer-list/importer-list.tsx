@@ -664,9 +664,7 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
                       {item.isRunning ? (
                         <ImporterStatusIcon state="running" />
                       ) : item.error ? (
-                        <Button variant="link" size="sm" isInline>
-                          <IconedStatus status="danger" label={item.error} />
-                        </Button>
+                        <IconedStatus status="danger" label={item.error} />
                       ) : (
                         <IconedStatus
                           status="success"
