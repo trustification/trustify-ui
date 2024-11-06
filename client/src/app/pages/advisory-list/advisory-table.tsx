@@ -118,9 +118,11 @@ export const AdvisoryTable: React.FC = ({}) => {
                       modifier="truncate"
                       {...getTdProps({ columnKey: "severity" })}
                     >
-                      <SeverityShieldAndText
-                        value={item.average_severity as Severity}
-                      />
+                      {item.average_severity && (
+                        <SeverityShieldAndText
+                          value={item.average_severity as Severity}
+                        />
+                      )}
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "modified" })}>
                       {formatDate(item.modified)}
