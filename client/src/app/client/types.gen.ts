@@ -861,6 +861,10 @@ export type VulnerabilityHead = {
    */
   released: string | null;
   /**
+   * The date (in RFC3339 format) of when the vulnerability identifier was reserved, if any.
+   */
+  reserved: string | null;
+  /**
    * The title of the vulnerability, if known.
    */
   title: string | null;
