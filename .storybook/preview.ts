@@ -7,7 +7,7 @@ import "@patternfly/patternfly/utilities/Spacing/spacing.css";
 import React from "react";
 
 import type { Preview } from "@storybook/react";
-import {BrowserRouter as Router}  from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 
 const preview: Preview = {
   parameters: {
