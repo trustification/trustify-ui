@@ -798,22 +798,36 @@ export const ImporterDataSchema = {
 
 export const ImporterReportSchema = {
   type: "object",
-  required: ["id", "importer", "creation", "report"],
+  required: ["id", "importer", "creation"],
   properties: {
     creation: {
       type: "string",
       format: "date-time",
+      description: "The time the report was created",
     },
     error: {
       type: ["string", "null"],
+      description: "Errors captured by the report",
     },
     id: {
       type: "string",
+      description: "The ID of the report",
     },
     importer: {
       type: "string",
+      description: "The name of the importer this report belongs to",
     },
-    report: {},
+    report: {
+      oneOf: [
+        {
+          type: "null",
+        },
+        {
+          $ref: "#/components/schemas/Report",
+          description: "Detailed report information",
+        },
+      ],
+    },
   },
 } as const;
 
@@ -879,6 +893,21 @@ export const LicenseSummarySchema = {
       items: {
         type: "string",
       },
+    },
+  },
+} as const;
+
+export const MessageSchema = {
+  type: "object",
+  required: ["severity", "message"],
+  properties: {
+    message: {
+      type: "string",
+      description: "The message",
+    },
+    severity: {
+      $ref: "#/components/schemas/Severity",
+      description: "The severity of the message",
     },
   },
 } as const;
@@ -1065,22 +1094,36 @@ export const PaginatedResults_ImporterReportSchema = {
       type: "array",
       items: {
         type: "object",
-        required: ["id", "importer", "creation", "report"],
+        required: ["id", "importer", "creation"],
         properties: {
           creation: {
             type: "string",
             format: "date-time",
+            description: "The time the report was created",
           },
           error: {
             type: ["string", "null"],
+            description: "Errors captured by the report",
           },
           id: {
             type: "string",
+            description: "The ID of the report",
           },
           importer: {
             type: "string",
+            description: "The name of the importer this report belongs to",
           },
-          report: {},
+          report: {
+            oneOf: [
+              {
+                type: "null",
+              },
+              {
+                $ref: "#/components/schemas/Report",
+                description: "Detailed report information",
+              },
+            ],
+          },
         },
       },
     },
@@ -1554,8 +1597,8 @@ export const ProgressSchema = {
     "total",
     "percent",
     "rate",
-    "estimated_seconds_remaining",
-    "estimated_completion",
+    "estimatedSecondsRemaining",
+    "estimatedCompletion",
   ],
   properties: {
     current: {
@@ -1564,12 +1607,12 @@ export const ProgressSchema = {
       description: "The current processed items.",
       minimum: 0,
     },
-    estimated_completion: {
+    estimatedCompletion: {
       type: "string",
       format: "date-time",
       description: "The estimated time of completion.",
     },
-    estimated_seconds_remaining: {
+    estimatedSecondsRemaining: {
       type: "integer",
       format: "int64",
       description: "The estimated remaining time in seconds.",
@@ -1754,6 +1797,49 @@ export const RelationshipSchema = {
     "described_by",
     "package_of",
   ],
+} as const;
+
+export const ReportSchema = {
+  type: "object",
+  required: ["startDate", "endDate"],
+  properties: {
+    endDate: {
+      type: "string",
+      format: "date-time",
+      description: "End of the import run",
+    },
+    messages: {
+      type: "object",
+      description: "Messages emitted during processing",
+      additionalProperties: {
+        type: "object",
+        additionalProperties: {
+          type: "array",
+          items: {
+            $ref: "#/components/schemas/Message",
+          },
+        },
+        propertyNames: {
+          type: "string",
+        },
+      },
+      propertyNames: {
+        type: "string",
+        description: "The phase of processing",
+        enum: ["retrieval", "validation", "upload"],
+      },
+    },
+    numberOfItems: {
+      type: "integer",
+      description: "Number of processes items",
+      minimum: 0,
+    },
+    startDate: {
+      type: "string",
+      format: "date-time",
+      description: "Start of the import run",
+    },
+  },
 } as const;
 
 export const Revisioned_ImporterSchema = {
