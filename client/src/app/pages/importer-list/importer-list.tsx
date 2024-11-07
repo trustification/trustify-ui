@@ -4,8 +4,10 @@ import { AxiosError } from "axios";
 import dayjs from "dayjs";
 
 import {
+  Button,
   ButtonVariant,
   Label,
+  Modal,
   PageSection,
   PageSectionVariants,
   Text,
@@ -14,6 +16,7 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core";
+import { LogViewer, LogViewerSearch } from "@patternfly/react-log-viewer";
 import {
   ActionsColumn,
   Caption,
@@ -43,6 +46,7 @@ import {
   forceRunImporter,
   Importer,
   ImporterConfiguration,
+  Message,
   SbomImporter,
 } from "@app/client";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
@@ -55,6 +59,7 @@ import {
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 
+import { ANSICOLOR } from "@app/Constants";
 import { ImporterProgress } from "./components/importer-progress";
 import { ImporterStatusIcon } from "./components/importer-status-icon";
 
@@ -445,6 +450,50 @@ export const ImporterList: React.FC = () => {
   );
 };
 
+const messagesToLogData = (messages: {
+  [key: string]: {
+    [key: string]: Array<Message>;
+  };
+}) => {
+  return Object.entries(messages).map(([groupKey, value]) => {
+    return Object.entries(value)
+      .map(([objectKey, objectValue]) => {
+        return {
+          title: `${groupKey.charAt(0).toUpperCase() + groupKey.slice(1)}: "${objectKey}"`,
+          body: objectValue
+            .map((item) => {
+              let color;
+              switch (item.severity) {
+                case "none":
+                  color = ANSICOLOR.green;
+                  break;
+                case "low":
+                  color = ANSICOLOR.cyan;
+                  break;
+                case "medium":
+                  color = ANSICOLOR.yellow;
+                  break;
+                case "high":
+                  color = ANSICOLOR.lightBlue;
+                  break;
+                case "critical":
+                  color = ANSICOLOR.red;
+                  break;
+                default:
+                  break;
+              }
+              return `${color ?? ""}${item.severity.charAt(0).toUpperCase() + item.severity.slice(1)}: ${ANSICOLOR.defaultForegroundColorAtStartup} ${item.message}`;
+            })
+            .join(ANSICOLOR.endLine),
+        };
+      })
+      .map((item) => {
+        return `${ANSICOLOR.underline}${item.title}${ANSICOLOR.reset}${ANSICOLOR.endLine}${item.body}`;
+      })
+      .join(`${ANSICOLOR.endLine}${ANSICOLOR.endLine}`);
+  });
+};
+
 interface TableReportData {
   isRunning: boolean;
   id: string;
@@ -453,6 +502,11 @@ interface TableReportData {
   duration?: number;
   numberOfItems?: number;
   error?: string;
+  messages?: {
+    [key: string]: {
+      [key: string]: Array<Message>;
+    };
+  };
 }
 
 interface ImporterExpandedAreaProps {
@@ -462,6 +516,10 @@ interface ImporterExpandedAreaProps {
 export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
   importer,
 }) => {
+  const [logData, setLogData] = React.useState<string[]>([]);
+  const [isLogModalOpen, setIsLogModalOpen] = React.useState(false);
+  const toggleLogModal = () => setIsLogModalOpen(!isLogModalOpen);
+
   const {
     result: { data: reports },
     isFetching,
@@ -479,6 +537,7 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
         : undefined,
       numberOfItems: importer.progress?.current,
       error: undefined,
+      messages: undefined,
     };
 
     const reportsMapped = reports.map((item) => {
@@ -497,6 +556,7 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
         duration: duration,
         numberOfItems: item.report?.numberOfItems,
         error: item.error ?? undefined,
+        messages: item.report?.messages,
       };
       return result;
     });
@@ -578,6 +638,25 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
           numRenderedColumns={numRenderedColumns}
         >
           {currentPageItems?.map((item, rowIndex) => {
+            const LogButton = ({ children }: { children: React.ReactNode }) => {
+              if (item.messages) {
+                return (
+                  <Button
+                    variant="link"
+                    onClick={() => {
+                      const newLogData = messagesToLogData(item.messages ?? {});
+                      setLogData(newLogData);
+                      toggleLogModal();
+                    }}
+                  >
+                    {children}
+                  </Button>
+                );
+              } else {
+                return children;
+              }
+            };
+
             return (
               <Tbody key={item.id}>
                 <Tr {...getTrProps({ item })}>
@@ -614,13 +693,17 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
                     >
                       {item.isRunning ? (
                         <ImporterStatusIcon state="running" />
-                      ) : item.error ? (
-                        <IconedStatus status="danger" label={item.error} />
                       ) : (
-                        <IconedStatus
-                          status="success"
-                          label="Finished successfully"
-                        />
+                        <LogButton>
+                          {item.error ? (
+                            <IconedStatus status="danger" label={item.error} />
+                          ) : (
+                            <IconedStatus
+                              status="success"
+                              label="Finished successfully"
+                            />
+                          )}
+                        </LogButton>
                       )}
                     </Td>
                     <Td
@@ -647,6 +730,37 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
         isCompact
         paginationProps={paginationProps}
       />
+
+      <Modal
+        title="Log"
+        variant="large"
+        isOpen={isLogModalOpen}
+        onClose={toggleLogModal}
+        actions={[
+          <Button key="cancel" variant="link" onClick={toggleLogModal}>
+            Close
+          </Button>,
+        ]}
+      >
+        <LogViewer
+          hasLineNumbers={false}
+          height={400}
+          data={logData}
+          theme="dark"
+          toolbar={
+            <Toolbar>
+              <ToolbarContent>
+                <ToolbarItem>
+                  <LogViewerSearch
+                    placeholder="Search value"
+                    minSearchChars={1}
+                  />
+                </ToolbarItem>
+              </ToolbarContent>
+            </Toolbar>
+          }
+        />
+      </Modal>
     </>
   );
 };
