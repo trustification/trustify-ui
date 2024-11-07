@@ -873,6 +873,10 @@ export type VulnerabilityAdvisorySummary = VulnerabilityAdvisoryHead & {
    * CVSS3 scores from this advisory regarding the vulnerability.
    */
   cvss3_scores: Array<string>;
+  /**
+   * The total number of vulnerabilities described by this advisory
+   */
+  number_of_vulnerabilities: number;
   purls: {
     [key: string]: Array<VulnerabilityAdvisoryStatus>;
   };
