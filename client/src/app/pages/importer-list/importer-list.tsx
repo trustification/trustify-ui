@@ -1,15 +1,11 @@
 import React from "react";
 
 import { AxiosError } from "axios";
+import dayjs from "dayjs";
 
 import {
-  Button,
   ButtonVariant,
-  Flex,
-  FlexItem,
   Label,
-  Modal,
-  ModalVariant,
   PageSection,
   PageSectionVariants,
   Text,
@@ -36,7 +32,6 @@ import {
 } from "@app/components/ConfirmDialog";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import {
-  useDeleteIporterMutation,
   useFetchImporterReports,
   useFetchImporters,
   useUpdateImporterMutation,
@@ -51,6 +46,7 @@ import {
   SbomImporter,
 } from "@app/client";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
+import { IconedStatus } from "@app/components/IconedStatus";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -59,20 +55,17 @@ import {
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 
-import { ImporterForm } from "./components/importer-form";
-import { ImporterStatusIcon } from "./components/importer-status-icon";
 import { ImporterProgress } from "./components/importer-progress";
-import dayjs from "dayjs";
-import { IconedStatus } from "@app/components/IconedStatus";
+import { ImporterStatusIcon } from "./components/importer-status-icon";
 
 export const ImporterList: React.FC = () => {
   const { pushNotification } = React.useContext(NotificationsContext);
 
   // Actions that each row can trigger
-  type RowAction = "enable" | "disable" | "run" | "delete";
+  type RowAction = "enable" | "disable" | "run";
+  const [selectedRow, setSelectedRow] = React.useState<Importer | null>(null);
   const [selectedRowAction, setSelectedRowAction] =
     React.useState<RowAction | null>(null);
-  const [selectedRow, setSelectedRow] = React.useState<Importer | null>(null);
 
   const prepareActionOnRow = (action: RowAction, row: Importer) => {
     setSelectedRowAction(action);
@@ -80,11 +73,12 @@ export const ImporterList: React.FC = () => {
   };
 
   const [refetchInterval, setRefetchInterval] = React.useState(10000);
-  const { importers, isFetching, fetchError, refetch } = useFetchImporters(
-    selectedRowAction == "delete",
+  const { importers, isFetching, fetchError } = useFetchImporters(
+    false,
     refetchInterval
   );
 
+  // Fetch importers with more frecuency in case any is "running"
   React.useEffect(() => {
     const isSomeTaskRunning = importers.some(
       (item) => item.state === "running"
@@ -152,27 +146,6 @@ export const ImporterList: React.FC = () => {
       .then(onRunImporterSuccess)
       .catch(onRunImporterError);
   };
-
-  // Delete importer
-
-  const onDeleteImporterSuccess = () => {
-    pushNotification({
-      title: "Importer deleted",
-      variant: "success",
-    });
-  };
-
-  const onDeleteImporterError = (error: AxiosError) => {
-    pushNotification({
-      title: getAxiosErrorMessage(error),
-      variant: "danger",
-    });
-  };
-
-  const { mutate: execDeleteImporter } = useDeleteIporterMutation(
-    onDeleteImporterSuccess,
-    onDeleteImporterError
-  );
 
   // Table config
   const tableControls = useLocalTableControls({
@@ -262,16 +235,6 @@ export const ImporterList: React.FC = () => {
         message: `Are you sure you want to run the Importer ${selectedRow?.name}?`,
         confirmBtnVariant: ButtonVariant.primary,
         confirmBtnLabel: "Run",
-        cancelBtnLabel: "Cancel",
-      };
-      break;
-    case "delete":
-      confirmDialogProps = {
-        title: "Delete Importer",
-        titleIconVariant: "warning",
-        message: `Are you sure you want to delete the Importer ${selectedRow?.name}?`,
-        confirmBtnVariant: ButtonVariant.danger,
-        confirmBtnLabel: "Delete",
         cancelBtnLabel: "Cancel",
       };
       break;
@@ -420,15 +383,6 @@ export const ImporterList: React.FC = () => {
                                       },
                                     },
                                   ]),
-                              {
-                                isSeparator: true,
-                              },
-                              {
-                                title: "Delete",
-                                onClick: () => {
-                                  prepareActionOnRow("delete", item);
-                                },
-                              },
                             ]}
                           />
                         </Td>
@@ -476,9 +430,6 @@ export const ImporterList: React.FC = () => {
                   break;
                 case "run":
                   execRunImporter(selectedRow.name);
-                  break;
-                case "delete":
-                  execDeleteImporter(selectedRow.name);
                   break;
                 default:
                   break;
