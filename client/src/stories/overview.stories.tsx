@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Overview } from "./overview";
+import { Overview } from "../app/pages/vulnerability-details/overview";
 
 const meta = {
-  title: "Components/vulnerability-details/overview.tsx",
+  title: "v2/Vulnerability Details",
   component: Overview,
   parameters: {
     layout: "fullscreen",
