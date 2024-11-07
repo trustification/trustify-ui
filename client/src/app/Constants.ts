@@ -31,3 +31,15 @@ export const uploadLimit = "500m";
 export const UI_UNIQUE_ID = "_ui_unique_id";
 
 export const FORM_DATA_FILE_KEY = "file";
+
+export const ANSICOLOR = {
+  reset: "\x1b[0m",
+  underline: "\x1b[4;1m",
+  endLine: "\n",
+  defaultForegroundColorAtStartup: "\x1b[39m",
+  green: "\x1b[32m",
+  cyan: "\x1b[36m",
+  yellow: "\x1b[33m",
+  lightBlue: "\x1b[94m",
+  red: "\x1b[31m",
+};

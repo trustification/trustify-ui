@@ -14,11 +14,14 @@ import {
 
 export const ImportersQueryKey = "importers";
 
-export const useFetchImporters = (refetchDisabled: boolean = false) => {
+export const useFetchImporters = (
+  refetchDisabled: boolean = false,
+  interval = 5000
+) => {
   const { isLoading, error, refetch, data } = useQuery({
     queryKey: [ImportersQueryKey],
     queryFn: () => listImporters({ client }),
-    refetchInterval: !refetchDisabled ? 5000 : false,
+    refetchInterval: !refetchDisabled ? interval : false,
   });
 
   return {
