@@ -529,6 +529,10 @@ export type PaginatedResults_SbomSummary = {
     SbomHead &
       (null | SourceDocument) & {
         described_by: Array<SbomPackage>;
+        /**
+         * The number of packages this SBOM has
+         */
+        number_of_packages: number;
       }
   >;
   total: number;
@@ -761,6 +765,10 @@ export type SbomStatus = {
 export type SbomSummary = SbomHead &
   (null | SourceDocument) & {
     described_by: Array<SbomPackage>;
+    /**
+     * The number of packages this SBOM has
+     */
+    number_of_packages: number;
   };
 
 /**
