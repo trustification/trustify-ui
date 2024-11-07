@@ -2400,7 +2400,7 @@ export const VulnerabilityAdvisorySummarySchema = {
     },
     {
       type: "object",
-      required: ["cvss3_scores", "purls", "sboms"],
+      required: ["cvss3_scores", "purls", "sboms", "number_of_vulnerabilities"],
       properties: {
         cvss3_scores: {
           type: "array",
@@ -2409,6 +2409,13 @@ export const VulnerabilityAdvisorySummarySchema = {
           },
           description:
             "CVSS3 scores from this advisory regarding the vulnerability.",
+        },
+        number_of_vulnerabilities: {
+          type: "integer",
+          format: "int64",
+          description:
+            "The total number of vulnerabilities described by this advisory",
+          minimum: 0,
         },
         purls: {
           type: "object",
