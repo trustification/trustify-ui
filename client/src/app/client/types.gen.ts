@@ -299,7 +299,10 @@ export type ImporterData = {
    * The last successful run
    */
   lastSuccess?: string | null;
-  progress?: null | Progress;
+  /**
+   * The current progress.
+   */
+  progress?: Progress;
   /**
    * The current state of the importer
    */
@@ -590,7 +593,11 @@ export type ProductVersionHead = {
   version: string;
 };
 
-export type Progress = {
+export type Progress = (null | ProgressDetails) & {
+  message?: string | null;
+};
+
+export type ProgressDetails = {
   /**
    * The current processed items.
    */
