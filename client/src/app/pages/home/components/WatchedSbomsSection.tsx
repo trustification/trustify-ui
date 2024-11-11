@@ -13,7 +13,7 @@ import {
 import { WatchedSbomsContext } from "../watched-sboms-context";
 import { WatchedSbom } from "./WatchedSbom";
 
-export const WatchedSboms: React.FC = () => {
+export const WatchedSbomsSection: React.FC = () => {
   const { sboms, isFetching, fetchError } =
     React.useContext(WatchedSbomsContext);
 
