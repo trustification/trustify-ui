@@ -582,9 +582,10 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
     initialItemsPerPage: 5,
     isSortEnabled: true,
     sortableColumns: ["startDate", "endDate"],
+    initialSort: { columnKey: "startDate", direction: "desc" },
     getSortValues: (report) => ({
-      startDate: report.startDate ? dayjs(report.startDate).valueOf() : 0,
-      endDate: report.endDate ? dayjs(report.endDate).valueOf() : 0,
+      startDate: report.startDate ? dayjs(report.startDate).valueOf() : true,
+      endDate: report.endDate ? dayjs(report.endDate).valueOf() : true,
     }),
     isFilterEnabled: false,
     isExpansionEnabled: false,
@@ -642,6 +643,7 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
               if (item.messages) {
                 return (
                   <Button
+                    isInline
                     variant="link"
                     onClick={() => {
                       const newLogData = messagesToLogData(item.messages ?? {});
