@@ -1,7 +1,7 @@
-import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-import { HubRequestParams, VulnerabilityStatus } from "@app/api/models";
+import { HubRequestParams } from "@app/api/models";
 import { client } from "@app/axios-config/apiInit";
 import {
   deleteVulnerability,
@@ -10,7 +10,6 @@ import {
   VulnerabilityDetails,
 } from "@app/client";
 import { requestParamsQuery } from "@app/hooks/table-controls";
-import { useFetchSbomsAdvisory } from "./sboms";
 
 export const VulnerabilitiesQueryKey = "vulnerabilities";
 
@@ -64,37 +63,5 @@ export const useDeleteVulnerabilityMutation = (
     mutationKey: [VulnerabilitiesQueryKey],
     onSuccess,
     onError,
-  });
-};
-
-export const useFetchVulnerabilitiesFromSbom = (sbomId: string) => {
-  const {
-    advisories,
-    isFetching: isFetchingAdvisories,
-    fetchError: fetchErrorAdvisories,
-  } = useFetchSbomsAdvisory(sbomId);
-
-  const usersMessages = useQueries({
-    queries: (advisories ?? [])
-      .flatMap((advisory) => {
-        return (advisory.status ?? []).map((status) => {
-          const result = {
-            vulnerabilityId: status.vulnerability_id,
-            status: status.status as VulnerabilityStatus,
-          };
-          return result;
-        });
-      })
-      .map((item) => {
-        return {
-          queryKey: ["messages", "id"],
-          queryFn: () => {
-            return getVulnerability({
-              client,
-              path: { id: item.vulnerabilityId },
-            });
-          },
-        };
-      }),
   });
 };

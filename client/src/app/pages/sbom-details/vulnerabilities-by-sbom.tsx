@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { ChartDonut } from "@patternfly/react-charts";
 import {
   Card,
   CardBody,
@@ -27,10 +26,9 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { compareBySeverityFn, severityList } from "@app/api/model-utils";
-import { Severity } from "@app/client";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { PackageQualifiers } from "@app/components/PackageQualifiers";
+import { SbomVulnerabilitiesDonutChart } from "@app/components/SbomVulnerabilitiesDonutChart";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
@@ -107,24 +105,6 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
     expansionDerivedState: { isCellExpanded },
   } = tableControls;
 
-  //
-
-  const donutChart = React.useMemo(() => {
-    return Object.keys(vulnerabilitiesSummary.severities)
-      .map((item) => {
-        const severity = item as Severity;
-        const count = vulnerabilitiesSummary.severities[severity];
-        const severityProps = severityList[severity];
-        return {
-          severity,
-          count,
-          label: severityProps.name,
-          color: severityProps.color.value,
-        };
-      })
-      .sort(compareBySeverityFn((item) => item.severity));
-  }, [vulnerabilitiesSummary]);
-
   return (
     <>
       <Stack hasGutter>
@@ -136,31 +116,9 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
               >
                 <Grid hasGutter>
                   <GridItem md={6}>
-                    <div style={{ height: "230px", width: "350px" }}>
-                      <ChartDonut
-                        constrainToVisibleArea
-                        legendOrientation="vertical"
-                        legendPosition="right"
-                        padding={{
-                          bottom: 20,
-                          left: 20,
-                          right: 140,
-                          top: 20,
-                        }}
-                        title={`${vulnerabilitiesSummary.total}`}
-                        subTitle="Total vulnerabilities"
-                        width={350}
-                        legendData={donutChart.map(({ label, count }) => ({
-                          name: `${label}: ${count}`,
-                        }))}
-                        data={donutChart.map(({ label, count }) => ({
-                          x: label,
-                          y: count,
-                        }))}
-                        labels={({ datum }) => `${datum.x}: ${datum.y}`}
-                        colorScale={donutChart.map(({ color }) => color)}
-                      />
-                    </div>
+                    <SbomVulnerabilitiesDonutChart
+                      vulnerabilitiesSummary={vulnerabilitiesSummary}
+                    />
                   </GridItem>
                   <GridItem md={6}>
                     <DescriptionList>

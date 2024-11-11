@@ -46,10 +46,14 @@ export const useFetchSBOMs = (
   };
 };
 
-export const useFetchSBOMById = (id: string) => {
+export const useFetchSBOMById = (id?: string) => {
   const { data, isLoading, error } = useQuery({
     queryKey: [SBOMsQueryKey, id],
-    queryFn: () => getSbom({ client, path: { id } }),
+    queryFn: () => {
+      return id === undefined
+        ? Promise.resolve(undefined)
+        : getSbom({ client, path: { id: id! } });
+    },
     enabled: id !== undefined,
   });
 

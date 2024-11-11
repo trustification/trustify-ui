@@ -12,7 +12,6 @@ import {
   ChartTooltip,
 } from "@patternfly/react-charts";
 import {
-  Bullseye,
   Card,
   CardBody,
   CardTitle,
@@ -28,11 +27,13 @@ import {
   TextContent,
 } from "@patternfly/react-core";
 
+import { severityList } from "@app/api/model-utils";
 import { Severity } from "@app/client";
 import { useFetchSBOMs } from "@app/queries/sboms";
 import { useFetchVulnerabilities } from "@app/queries/vulnerabilities";
 import { formatDate } from "@app/utils/utils";
-import { severityList } from "@app/api/model-utils";
+import { WatchedSboms } from "./components/WatchedSboms";
+import { WatchedSbomsProvider } from "./watched-sboms-context";
 
 interface Legend {
   severity: Severity;
@@ -48,9 +49,9 @@ const LEGENDS: Legend[] = [
 
 export const Home: React.FC = () => {
   const {
-    result: { data: sboms, total: totalSboms },
-    isFetching: isFetchingSboms,
-    fetchError: fetchErrorSboms,
+    result: { data: barchartSboms, total: totalSboms },
+    isFetching: isFetchingBarchartSboms,
+    fetchError: fetchErrorBarchartSboms,
   } = useFetchSBOMs(
     {
       page: { pageNumber: 1, itemsPerPage: 10 },
@@ -214,11 +215,11 @@ export const Home: React.FC = () => {
                             <DescriptionListDescription>
                               <Stack>
                                 <StackItem>
-                                  {formatDate(sboms?.[0]?.published)}
+                                  {formatDate(barchartSboms?.[0]?.published)}
                                 </StackItem>
                                 <StackItem>
-                                  <Link to={`/sboms/${sboms?.[0]?.id}`}>
-                                    {sboms?.[0]?.name}
+                                  <Link to={`/sboms/${barchartSboms?.[0]?.id}`}>
+                                    {barchartSboms?.[0]?.name}
                                   </Link>
                                 </StackItem>
                               </Stack>
@@ -276,9 +277,9 @@ export const Home: React.FC = () => {
             </Card>
           </StackItem>
           <StackItem>
-            <Card>
-              <CardBody>sdf</CardBody>
-            </Card>
+            <WatchedSbomsProvider>
+              <WatchedSboms />
+            </WatchedSbomsProvider>
           </StackItem>
         </Stack>
       </PageSection>

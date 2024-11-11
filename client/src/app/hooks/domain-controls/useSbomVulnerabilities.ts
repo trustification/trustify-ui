@@ -19,7 +19,7 @@ interface SbomVulnerability {
   vulnerability?: VulnerabilityDetails;
 }
 
-interface SbomVulnerabilitySummary {
+export interface SbomVulnerabilitySummary {
   total: number;
   severities: { [key in Severity]: number };
 }
