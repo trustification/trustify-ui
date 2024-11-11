@@ -23,6 +23,8 @@ import { useDownload } from "@app/hooks/domain-controls/useDownload";
 
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { VulnerabilityGallery } from "@app/components/VulnerabilityGallery";
+import { formatDate } from "@app/utils/utils";
+
 import { AdvisorySearchContext } from "./advisory-context";
 
 export const AdvisoryTable: React.FC = ({}) => {
@@ -55,7 +57,7 @@ export const AdvisoryTable: React.FC = ({}) => {
               <Th {...getThProps({ columnKey: "identifier" })} />
               <Th {...getThProps({ columnKey: "title" })} />
               <Th {...getThProps({ columnKey: "severity" })} />
-              <Th {...getThProps({ columnKey: "revision" })} />
+              <Th {...getThProps({ columnKey: "modified" })} />
               <Th {...getThProps({ columnKey: "vulnerabilities" })} />
             </TableHeaderContentWithControls>
           </Tr>
@@ -116,14 +118,14 @@ export const AdvisoryTable: React.FC = ({}) => {
                       modifier="truncate"
                       {...getTdProps({ columnKey: "severity" })}
                     >
-                      <SeverityShieldAndText
-                        value={item.average_severity as Severity}
-                      />
+                      {item.average_severity && (
+                        <SeverityShieldAndText
+                          value={item.average_severity as Severity}
+                        />
+                      )}
                     </Td>
-                    <Td width={10} {...getTdProps({ columnKey: "revision" })}>
-                      <a href="https://github.com/trustification/trustify/issues/967">
-                        issue-967
-                      </a>
+                    <Td width={10} {...getTdProps({ columnKey: "modified" })}>
+                      {formatDate(item.modified)}
                     </Td>
                     <Td
                       width={20}

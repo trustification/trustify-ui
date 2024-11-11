@@ -1,13 +1,13 @@
 import React from "react";
 
 import { AxiosError } from "axios";
+import dayjs from "dayjs";
 
 import {
   Button,
   ButtonVariant,
   Label,
   Modal,
-  ModalVariant,
   PageSection,
   PageSectionVariants,
   Text,
@@ -16,6 +16,7 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core";
+import { LogViewer, LogViewerSearch } from "@patternfly/react-log-viewer";
 import {
   ActionsColumn,
   Caption,
@@ -34,21 +35,22 @@ import {
 } from "@app/components/ConfirmDialog";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import {
-  useDeleteIporterMutation,
   useFetchImporterReports,
   useFetchImporters,
   useUpdateImporterMutation,
 } from "@app/queries/importers";
-import { getAxiosErrorMessage } from "@app/utils/utils";
+import { formatDateTime, getAxiosErrorMessage } from "@app/utils/utils";
 
 import { client } from "@app/axios-config/apiInit";
 import {
   forceRunImporter,
   Importer,
   ImporterConfiguration,
+  Message,
   SbomImporter,
 } from "@app/client";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
+import { IconedStatus } from "@app/components/IconedStatus";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -57,39 +59,41 @@ import {
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 
-import { ImporterForm } from "./components/importer-form";
+import { ANSICOLOR } from "@app/Constants";
+import { ImporterProgress } from "./components/importer-progress";
 import { ImporterStatusIcon } from "./components/importer-status-icon";
 
 export const ImporterList: React.FC = () => {
   const { pushNotification } = React.useContext(NotificationsContext);
 
   // Actions that each row can trigger
-  type RowAction = "enable" | "disable" | "run" | "delete";
+  type RowAction = "enable" | "disable" | "run";
+  const [selectedRow, setSelectedRow] = React.useState<Importer | null>(null);
   const [selectedRowAction, setSelectedRowAction] =
     React.useState<RowAction | null>(null);
-  const [selectedRow, setSelectedRow] = React.useState<Importer | null>(null);
 
   const prepareActionOnRow = (action: RowAction, row: Importer) => {
     setSelectedRowAction(action);
     setSelectedRow(row);
   };
 
-  // Create/Update mangement
-  const [createUpdateModalState, setCreateUpdateModalState] = React.useState<
-    "create" | Importer | null
-  >(null);
-  const isCreateUpdateModalOpen = createUpdateModalState !== null;
-  const entityToUpdate =
-    createUpdateModalState !== "create" ? createUpdateModalState : null;
-
-  const { importers, isFetching, fetchError, refetch } = useFetchImporters(
-    selectedRowAction == "delete" || createUpdateModalState !== null
+  const [refetchInterval, setRefetchInterval] = React.useState(10000);
+  const { importers, isFetching, fetchError } = useFetchImporters(
+    false,
+    refetchInterval
   );
 
-  const closeCreateUpdateModal = () => {
-    setCreateUpdateModalState(null);
-    refetch;
-  };
+  // Fetch importers with more frecuency in case any is "running"
+  React.useEffect(() => {
+    const isSomeTaskRunning = importers.some(
+      (item) => item.state === "running"
+    );
+    if (isSomeTaskRunning) {
+      setRefetchInterval(5000);
+    } else if (refetchInterval !== 10000) {
+      setRefetchInterval(10000);
+    }
+  }, [importers]);
 
   // Enable/Disable Importer
 
@@ -147,27 +151,6 @@ export const ImporterList: React.FC = () => {
       .then(onRunImporterSuccess)
       .catch(onRunImporterError);
   };
-
-  // Delete importer
-
-  const onDeleteImporterSuccess = () => {
-    pushNotification({
-      title: "Importer deleted",
-      variant: "success",
-    });
-  };
-
-  const onDeleteImporterError = (error: AxiosError) => {
-    pushNotification({
-      title: getAxiosErrorMessage(error),
-      variant: "danger",
-    });
-  };
-
-  const { mutate: execDeleteImporter } = useDeleteIporterMutation(
-    onDeleteImporterSuccess,
-    onDeleteImporterError
-  );
 
   // Table config
   const tableControls = useLocalTableControls({
@@ -260,16 +243,6 @@ export const ImporterList: React.FC = () => {
         cancelBtnLabel: "Cancel",
       };
       break;
-    case "delete":
-      confirmDialogProps = {
-        title: "Delete Importer",
-        titleIconVariant: "warning",
-        message: `Are you sure you want to delete the Importer ${selectedRow?.name}?`,
-        confirmBtnVariant: ButtonVariant.danger,
-        confirmBtnLabel: "Delete",
-        cancelBtnLabel: "Cancel",
-      };
-      break;
     default:
       confirmDialogProps = null;
       break;
@@ -291,17 +264,6 @@ export const ImporterList: React.FC = () => {
           <Toolbar {...toolbarProps}>
             <ToolbarContent>
               <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
-              <ToolbarItem>
-                <Button
-                  type="button"
-                  id="create-importer"
-                  aria-label="Create new importer"
-                  variant={ButtonVariant.primary}
-                  onClick={() => setCreateUpdateModalState("create")}
-                >
-                  Create Importer
-                </Button>
-              </ToolbarItem>
               <ToolbarItem {...paginationToolbarItemProps}>
                 <SimplePagination
                   idPrefix="importer-table"
@@ -361,14 +323,14 @@ export const ImporterList: React.FC = () => {
                           {importerType}
                         </Td>
                         <Td
-                          width={25}
+                          width={20}
                           modifier="truncate"
                           {...getTdProps({ columnKey: "description" })}
                         >
                           {configValues?.description}
                         </Td>
                         <Td
-                          width={30}
+                          width={20}
                           modifier="truncate"
                           {...getTdProps({ columnKey: "source" })}
                         >
@@ -387,7 +349,11 @@ export const ImporterList: React.FC = () => {
                           {...getTdProps({ columnKey: "state" })}
                         >
                           {item.state && isImporterEnabled ? (
-                            <ImporterStatusIcon state={item.state} />
+                            item.state === "running" && item.progress ? (
+                              <ImporterProgress value={item.progress} />
+                            ) : (
+                              <ImporterStatusIcon state={item.state} />
+                            )
                           ) : (
                             <Label color="orange">Disabled</Label>
                           )}
@@ -422,19 +388,6 @@ export const ImporterList: React.FC = () => {
                                       },
                                     },
                                   ]),
-                              {
-                                isSeparator: true,
-                              },
-                              {
-                                title: "Edit",
-                                onClick: () => setCreateUpdateModalState(item),
-                              },
-                              {
-                                title: "Delete",
-                                onClick: () => {
-                                  prepareActionOnRow("delete", item);
-                                },
-                              },
                             ]}
                           />
                         </Td>
@@ -445,7 +398,7 @@ export const ImporterList: React.FC = () => {
                         <Td colSpan={7}>
                           <div className="pf-v5-u-m-md">
                             <ExpandableRowContent>
-                              <ImporterExpandedArea importerId={item.name} />
+                              <ImporterExpandedArea importer={item} />
                             </ExpandableRowContent>
                           </div>
                         </Td>
@@ -465,19 +418,6 @@ export const ImporterList: React.FC = () => {
         </div>
       </PageSection>
 
-      <Modal
-        id="create-edit-importer-modal"
-        title={entityToUpdate ? "Update Importer" : "New Importer"}
-        variant={ModalVariant.medium}
-        isOpen={isCreateUpdateModalOpen}
-        onClose={closeCreateUpdateModal}
-      >
-        <ImporterForm
-          importer={entityToUpdate}
-          onClose={closeCreateUpdateModal}
-        />
-      </Modal>
-
       {selectedRowAction && confirmDialogProps && (
         <ConfirmDialog
           {...confirmDialogProps}
@@ -496,9 +436,6 @@ export const ImporterList: React.FC = () => {
                 case "run":
                   execRunImporter(selectedRow.name);
                   break;
-                case "delete":
-                  execDeleteImporter(selectedRow.name);
-                  break;
                 default:
                   break;
               }
@@ -513,38 +450,141 @@ export const ImporterList: React.FC = () => {
   );
 };
 
+const messagesToLogData = (messages: {
+  [key: string]: {
+    [key: string]: Array<Message>;
+  };
+}) => {
+  return Object.entries(messages).map(([groupKey, value]) => {
+    return Object.entries(value)
+      .map(([objectKey, objectValue]) => {
+        return {
+          title: `${groupKey.charAt(0).toUpperCase() + groupKey.slice(1)}: "${objectKey}"`,
+          body: objectValue
+            .map((item) => {
+              let color;
+              switch (item.severity) {
+                case "none":
+                  color = ANSICOLOR.green;
+                  break;
+                case "low":
+                  color = ANSICOLOR.cyan;
+                  break;
+                case "medium":
+                  color = ANSICOLOR.yellow;
+                  break;
+                case "high":
+                  color = ANSICOLOR.lightBlue;
+                  break;
+                case "critical":
+                  color = ANSICOLOR.red;
+                  break;
+                default:
+                  break;
+              }
+              return `${color ?? ""}${item.severity.charAt(0).toUpperCase() + item.severity.slice(1)}: ${ANSICOLOR.defaultForegroundColorAtStartup} ${item.message}`;
+            })
+            .join(ANSICOLOR.endLine),
+        };
+      })
+      .map((item) => {
+        return `${ANSICOLOR.underline}${item.title}${ANSICOLOR.reset}${ANSICOLOR.endLine}${item.body}`;
+      })
+      .join(`${ANSICOLOR.endLine}${ANSICOLOR.endLine}`);
+  });
+};
+
+interface TableReportData {
+  isRunning: boolean;
+  id: string;
+  startDate?: string;
+  endDate?: string;
+  duration?: number;
+  numberOfItems?: number;
+  error?: string;
+  messages?: {
+    [key: string]: {
+      [key: string]: Array<Message>;
+    };
+  };
+}
+
 interface ImporterExpandedAreaProps {
-  importerId: string;
+  importer: Importer;
 }
 
 export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
-  importerId,
+  importer,
 }) => {
+  const [logData, setLogData] = React.useState<string[]>([]);
+  const [isLogModalOpen, setIsLogModalOpen] = React.useState(false);
+  const toggleLogModal = () => setIsLogModalOpen(!isLogModalOpen);
+
   const {
-    result: { data: importers },
+    result: { data: reports },
     isFetching,
     fetchError,
-  } = useFetchImporterReports(importerId);
+  } = useFetchImporterReports(importer.name);
+
+  const tableData = React.useMemo(() => {
+    const currentTask: TableReportData = {
+      isRunning: true,
+      id: "root",
+      startDate: undefined,
+      endDate: undefined,
+      duration: importer.progress?.estimatedSecondsRemaining
+        ? importer.progress?.estimatedSecondsRemaining * 1000
+        : undefined,
+      numberOfItems: importer.progress?.current,
+      error: undefined,
+      messages: undefined,
+    };
+
+    const reportsMapped = reports.map((item) => {
+      let duration: number | undefined;
+      if (item.report?.startDate && item.report.endDate) {
+        const fromDate = dayjs(item.report.startDate);
+        const toDate = dayjs(item.report.endDate);
+        duration = toDate.diff(fromDate);
+      }
+
+      const result: TableReportData = {
+        isRunning: false,
+        id: item.id,
+        startDate: item.report?.startDate,
+        endDate: item.report?.endDate,
+        duration: duration,
+        numberOfItems: item.report?.numberOfItems,
+        error: item.error ?? undefined,
+        messages: item.report?.messages,
+      };
+      return result;
+    });
+    return [
+      ...(importer.state === "running" ? [currentTask] : []),
+      ...reportsMapped,
+    ];
+  }, [importer, reports]);
 
   const tableControls = useLocalTableControls({
     variant: "compact",
     tableName: "report-table",
     idProperty: "id",
-    items: importers,
+    items: tableData,
     columnNames: {
       startDate: "Start date",
       endDate: "End date",
       numberOfItems: "Number of items",
-      error: "Error",
+      output: "Output",
+      duration: "Duration",
     },
     isPaginationEnabled: true,
     initialItemsPerPage: 5,
     isSortEnabled: true,
-    // sortableColumns: ["startDate", "endDate"],
-    sortableColumns: [],
+    sortableColumns: ["startDate", "endDate"],
     getSortValues: (report) => ({
-      // startDate: dayjs(report.report.startDate).valueOf(),
-      // endDate: dayjs(report.report.endDate).valueOf(),
+      startDate: report.startDate ? dayjs(report.startDate).valueOf() : 0,
+      endDate: report.endDate ? dayjs(report.endDate).valueOf() : 0,
     }),
     isFilterEnabled: false,
     isExpansionEnabled: false,
@@ -586,17 +626,37 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
               <Th {...getThProps({ columnKey: "startDate" })} />
               <Th {...getThProps({ columnKey: "endDate" })} />
               <Th {...getThProps({ columnKey: "numberOfItems" })} />
-              <Th {...getThProps({ columnKey: "error" })} />
+              <Th {...getThProps({ columnKey: "output" })} />
+              <Th {...getThProps({ columnKey: "duration" })} />
             </TableHeaderContentWithControls>
           </Tr>
         </Thead>
         <ConditionalTableBody
           isLoading={isFetching}
           isError={!!fetchError}
-          isNoData={importers?.length === 0}
+          isNoData={tableData?.length === 0}
           numRenderedColumns={numRenderedColumns}
         >
           {currentPageItems?.map((item, rowIndex) => {
+            const LogButton = ({ children }: { children: React.ReactNode }) => {
+              if (item.messages) {
+                return (
+                  <Button
+                    variant="link"
+                    onClick={() => {
+                      const newLogData = messagesToLogData(item.messages ?? {});
+                      setLogData(newLogData);
+                      toggleLogModal();
+                    }}
+                  >
+                    {children}
+                  </Button>
+                );
+              } else {
+                return children;
+              }
+            };
+
             return (
               <Tbody key={item.id}>
                 <Tr {...getTrProps({ item })}>
@@ -610,28 +670,52 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
                       modifier="truncate"
                       {...getTdProps({ columnKey: "startDate" })}
                     >
-                      {"formatDateTime(item.report.startDate)"}
+                      {formatDateTime(item.startDate)}
                     </Td>
                     <Td
                       width={15}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "endDate" })}
                     >
-                      {"formatDateTime(item.report.endDate)"}
+                      {formatDateTime(item.endDate)}
                     </Td>
                     <Td
                       width={10}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "numberOfItems" })}
                     >
-                      {"item.report.numberOfItems"}
+                      {item.numberOfItems}
                     </Td>
                     <Td
-                      width={50}
+                      width={40}
                       modifier="truncate"
-                      {...getTdProps({ columnKey: "error" })}
+                      {...getTdProps({ columnKey: "output" })}
                     >
-                      {item.error}
+                      {item.isRunning ? (
+                        <ImporterStatusIcon state="running" />
+                      ) : (
+                        <LogButton>
+                          {item.error ? (
+                            <IconedStatus status="danger" label={item.error} />
+                          ) : (
+                            <IconedStatus
+                              status="success"
+                              label="Finished successfully"
+                            />
+                          )}
+                        </LogButton>
+                      )}
+                    </Td>
+                    <Td
+                      width={20}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "duration" })}
+                    >
+                      {item.duration
+                        ? item.isRunning
+                          ? `Time remaining: ${dayjs.duration(item.duration).humanize()}`
+                          : `Run for: ${dayjs.duration(item.duration).humanize()}`
+                        : ""}
                     </Td>
                   </TableRowContentWithControls>
                 </Tr>
@@ -646,6 +730,37 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
         isCompact
         paginationProps={paginationProps}
       />
+
+      <Modal
+        title="Log"
+        variant="large"
+        isOpen={isLogModalOpen}
+        onClose={toggleLogModal}
+        actions={[
+          <Button key="cancel" variant="link" onClick={toggleLogModal}>
+            Close
+          </Button>,
+        ]}
+      >
+        <LogViewer
+          hasLineNumbers={false}
+          height={400}
+          data={logData}
+          theme="dark"
+          toolbar={
+            <Toolbar>
+              <ToolbarContent>
+                <ToolbarItem>
+                  <LogViewerSearch
+                    placeholder="Search value"
+                    minSearchChars={1}
+                  />
+                </ToolbarItem>
+              </ToolbarContent>
+            </Toolbar>
+          }
+        />
+      </Modal>
     </>
   );
 };

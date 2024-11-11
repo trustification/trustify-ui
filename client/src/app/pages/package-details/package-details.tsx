@@ -64,7 +64,7 @@ export const PackageDetails: React.FC = () => {
           </Tab>
           <Tab
             eventKey={1}
-            title={<TabTitleText>Products using package</TabTitleText>}
+            title={<TabTitleText>SBOMs using package</TabTitleText>}
           >
             {packageId && <SbomsByPackage packageId={packageId} />}
           </Tab>

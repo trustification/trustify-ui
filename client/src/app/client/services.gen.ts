@@ -174,6 +174,15 @@ import type {
   DownloadSbomData,
   DownloadSbomError,
   DownloadSbomResponse,
+  GetUserPreferencesData,
+  GetUserPreferencesError,
+  GetUserPreferencesResponse,
+  SetUserPreferencesData,
+  SetUserPreferencesError,
+  SetUserPreferencesResponse,
+  DeleteUserPreferencesData,
+  DeleteUserPreferencesError,
+  DeleteUserPreferencesResponse,
   ListVulnerabilitiesData,
   ListVulnerabilitiesError,
   ListVulnerabilitiesResponse,
@@ -1070,6 +1079,54 @@ export const downloadSbom = <ThrowOnError extends boolean = false>(
   >({
     ...options,
     url: "/api/v1/sbom/{key}/download",
+  });
+};
+
+/**
+ * Get user preferences
+ */
+export const getUserPreferences = <ThrowOnError extends boolean = false>(
+  options: Options<GetUserPreferencesData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetUserPreferencesResponse,
+    GetUserPreferencesError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/userPreference/{key}",
+  });
+};
+
+/**
+ * Set user preferences
+ */
+export const setUserPreferences = <ThrowOnError extends boolean = false>(
+  options: Options<SetUserPreferencesData, ThrowOnError>
+) => {
+  return (options?.client ?? client).put<
+    SetUserPreferencesResponse,
+    SetUserPreferencesError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/userPreference/{key}",
+  });
+};
+
+/**
+ * Delete user preferences
+ */
+export const deleteUserPreferences = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteUserPreferencesData, ThrowOnError>
+) => {
+  return (options?.client ?? client).delete<
+    DeleteUserPreferencesResponse,
+    DeleteUserPreferencesError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/userPreference/{key}",
   });
 };
 

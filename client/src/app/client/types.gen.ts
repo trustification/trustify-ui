@@ -307,11 +307,23 @@ export type ImporterData = {
 };
 
 export type ImporterReport = {
+  /**
+   * The time the report was created
+   */
   creation: string;
+  /**
+   * Errors captured by the report
+   */
   error?: string | null;
+  /**
+   * The ID of the report
+   */
   id: string;
+  /**
+   * The name of the importer this report belongs to
+   */
   importer: string;
-  report: unknown;
+  report?: null | Report;
 };
 
 /**
@@ -342,6 +354,17 @@ export type LicenseSummary = {
   purls: number;
   spdx_license_exceptions: Array<string>;
   spdx_licenses: Array<string>;
+};
+
+export type Message = {
+  /**
+   * The message
+   */
+  message: string;
+  /**
+   * The severity of the message
+   */
+  severity: Severity;
 };
 
 export type MessageType = "human" | "system" | "ai" | "tool";
@@ -427,11 +450,23 @@ export type PaginatedResults_BasePurlSummary = {
 
 export type PaginatedResults_ImporterReport = {
   items: Array<{
+    /**
+     * The time the report was created
+     */
     creation: string;
+    /**
+     * Errors captured by the report
+     */
     error?: string | null;
+    /**
+     * The ID of the report
+     */
     id: string;
+    /**
+     * The name of the importer this report belongs to
+     */
     importer: string;
-    report: unknown;
+    report?: null | Report;
   }>;
   total: number;
 };
@@ -494,6 +529,10 @@ export type PaginatedResults_SbomSummary = {
     SbomHead &
       (null | SourceDocument) & {
         described_by: Array<SbomPackage>;
+        /**
+         * The number of packages this SBOM has
+         */
+        number_of_packages: number;
       }
   >;
   total: number;
@@ -559,11 +598,11 @@ export type Progress = {
   /**
    * The estimated time of completion.
    */
-  estimated_completion: string;
+  estimatedCompletion: string;
   /**
    * The estimated remaining time in seconds.
    */
-  estimated_seconds_remaining: number;
+  estimatedSecondsRemaining: number;
   /**
    * Progress in percent (0..=1)
    */
@@ -638,6 +677,29 @@ export type Relationship =
   | "described_by"
   | "package_of";
 
+export type Report = {
+  /**
+   * End of the import run
+   */
+  endDate: string;
+  /**
+   * Messages emitted during processing
+   */
+  messages?: {
+    [key: string]: {
+      [key: string]: Array<Message>;
+    };
+  };
+  /**
+   * Number of processes items
+   */
+  numberOfItems?: number;
+  /**
+   * Start of the import run
+   */
+  startDate: string;
+};
+
 /**
  * A struct wrapping an item with a revision.
  *
@@ -703,6 +765,10 @@ export type SbomStatus = {
 export type SbomSummary = SbomHead &
   (null | SourceDocument) & {
     described_by: Array<SbomPackage>;
+    /**
+     * The number of packages this SBOM has
+     */
+    number_of_packages: number;
   };
 
 /**
@@ -807,6 +873,10 @@ export type VulnerabilityAdvisorySummary = VulnerabilityAdvisoryHead & {
    * CVSS3 scores from this advisory regarding the vulnerability.
    */
   cvss3_scores: Array<string>;
+  /**
+   * The total number of vulnerabilities described by this advisory
+   */
+  number_of_vulnerabilities: number;
   purls: {
     [key: string]: Array<VulnerabilityAdvisoryStatus>;
   };
@@ -860,6 +930,10 @@ export type VulnerabilityHead = {
    * The date (in RFC3339 format) of when software containing the vulnerability first released, if known.
    */
   released: string | null;
+  /**
+   * The date (in RFC3339 format) of when the vulnerability identifier was reserved, if any.
+   */
+  reserved: string | null;
   /**
    * The title of the vulnerability, if known.
    */
@@ -1843,6 +1917,59 @@ export type DownloadSbomData = {
 export type DownloadSbomResponse = Blob | File;
 
 export type DownloadSbomError = unknown;
+
+export type GetUserPreferencesData = {
+  path: {
+    /**
+     * The key to the user preferences
+     */
+    key: string;
+  };
+};
+
+export type GetUserPreferencesResponse = unknown;
+
+export type GetUserPreferencesError = unknown;
+
+export type SetUserPreferencesData = {
+  body: unknown;
+  headers?: {
+    /**
+     * The revision to update
+     */
+    "if-match"?: string | null;
+  };
+  path: {
+    /**
+     * The key to the user preferences
+     */
+    key: string;
+  };
+};
+
+export type SetUserPreferencesResponse = string;
+
+export type SetUserPreferencesError = unknown;
+
+export type DeleteUserPreferencesData = {
+  body: unknown;
+  headers?: {
+    /**
+     * The revision to delete
+     */
+    "if-match"?: string | null;
+  };
+  path: {
+    /**
+     * The key to the user preferences
+     */
+    key: string;
+  };
+};
+
+export type DeleteUserPreferencesResponse = unknown;
+
+export type DeleteUserPreferencesError = unknown;
 
 export type ListVulnerabilitiesData = {
   query?: {
