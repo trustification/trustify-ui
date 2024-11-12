@@ -279,7 +279,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                           modifier="truncate"
                           {...getTdProps({ columnKey: "updated" })}
                         >
-                          CREATE_ISSUE
+                          {formatDate(item.vulnerability?.modified)}
                         </Td>
                       </TableRowContentWithControls>
                     </Tr>
