@@ -779,15 +779,8 @@ export const ImporterDataSchema = {
       description: "The last successful run",
     },
     progress: {
-      oneOf: [
-        {
-          type: "null",
-        },
-        {
-          $ref: "#/components/schemas/Progress",
-          description: "The current progress, if available.",
-        },
-      ],
+      $ref: "#/components/schemas/Progress",
+      description: "The current progress.",
     },
     state: {
       $ref: "#/components/schemas/State",
@@ -1597,6 +1590,29 @@ export const ProductVersionHeadSchema = {
 } as const;
 
 export const ProgressSchema = {
+  allOf: [
+    {
+      oneOf: [
+        {
+          type: "null",
+        },
+        {
+          $ref: "#/components/schemas/ProgressDetails",
+        },
+      ],
+    },
+    {
+      type: "object",
+      properties: {
+        message: {
+          type: ["string", "null"],
+        },
+      },
+    },
+  ],
+} as const;
+
+export const ProgressDetailsSchema = {
   type: "object",
   required: [
     "current",
