@@ -1,4 +1,4 @@
-import { type RestHandler } from "msw";
+import { type RequestHandler } from "msw";
 import { config } from "../config";
 
 const enableMe = (me: string) =>
@@ -8,6 +8,6 @@ const enableMe = (me: string) =>
 /**
  * Return the stub-new-work handlers that are enabled by config.
  */
-const enabledStubs: RestHandler[] = [].filter(Boolean);
+const enabledStubs: RequestHandler[] = [].filter(Boolean);
 
 export default enabledStubs;

@@ -1,4 +1,5 @@
-import { type RestHandler, setupWorker, rest } from "msw";
+import { setupWorker } from "msw/browser";
+import { http, passthrough, RequestHandler } from "msw";
 
 import config from "./config";
 import stubNewWork from "./stub-new-work";
@@ -8,14 +9,14 @@ import stubNewWork from "./stub-new-work";
  * server to handle.  This is useful to see traffic, in the console logs, that is not
  * being mocked elsewhere.
  */
-const passthroughHandler: RestHandler = rest.all("/api/*", (req) => {
+const passthroughHandler: RequestHandler = http.all("/api/*", (req) => {
   console.log(
     "%cmsw passthrough%c \u{1fa83} %s",
     "font-weight: bold",
     "font-weight: normal",
-    req.url
+    req.request.url
   );
-  return req.passthrough();
+  return passthrough();
 });
 
 const handlers = [
