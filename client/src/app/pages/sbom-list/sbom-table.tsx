@@ -17,7 +17,6 @@ import {
 import { SbomSummary } from "@app/client";
 import { ConfirmDialog } from "@app/components/ConfirmDialog";
 import { NotificationsContext } from "@app/components/NotificationsContext";
-import { PackagesCount } from "@app/components/PackagesCount";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -28,6 +27,7 @@ import { useDownload } from "@app/hooks/domain-controls/useDownload";
 import { useDeleteSbomMutation } from "@app/queries/sboms";
 import { formatDate } from "@app/utils/utils";
 
+import { PackagesCount } from "./components/PackagesCount";
 import { SBOMVulnerabilities } from "./components/SbomVulnerabilities";
 import { SbomSearchContext } from "./sbom-context";
 
