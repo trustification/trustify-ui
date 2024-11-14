@@ -1,5 +1,5 @@
 # Builder image
-FROM registry.access.redhat.com/ubi9/nodejs-20:latest as builder
+FROM registry.access.redhat.com/ubi9/nodejs-20:latest AS builder
 
 USER 1001
 COPY --chown=1001 . .

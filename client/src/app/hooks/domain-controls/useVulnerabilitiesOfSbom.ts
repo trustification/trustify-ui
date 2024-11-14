@@ -4,38 +4,40 @@ import { VulnerabilityStatus } from "@app/api/models";
 import { client } from "@app/axios-config/apiInit";
 import {
   getVulnerability,
-  PurlAdvisory,
+  SbomAdvisory,
+  SbomPackage,
   Severity,
   VulnerabilityDetails,
 } from "@app/client";
-import { useFetchPackageById } from "@app/queries/packages";
+import { useFetchSbomsAdvisory } from "@app/queries/sboms";
 
-interface PackageVulnerability {
+interface VulnerabilityOfSbom {
   vulnerabilityId: string;
-  advisory: PurlAdvisory;
+  advisory: SbomAdvisory;
   status: VulnerabilityStatus;
+  packages: SbomPackage[];
   vulnerability?: VulnerabilityDetails;
 }
 
-interface PackageVulnerabilitySummary {
+export interface VulnerabilityOfSbomSummary {
   total: number;
   severities: { [key in Severity]: number };
 }
 
-const DEFAULT_SBOM_VULNERABILITY_SUMMARY: PackageVulnerabilitySummary = {
+const DEFAULT_SUMMARY: VulnerabilityOfSbomSummary = {
   total: 0,
   severities: { none: 0, low: 0, medium: 0, high: 0, critical: 0 },
 };
 
-export const usePackageVulnerabilities = (packageId: string) => {
+export const useVulnerabilitiesOfSbom = (sbomId: string) => {
   const {
-    pkg,
-    isFetching: isFetchingPackage,
-    fetchError: fetchErrorPackage,
-  } = useFetchPackageById(packageId);
+    advisories,
+    isFetching: isFetchingAdvisories,
+    fetchError: fetchErrorAdvisories,
+  } = useFetchSbomsAdvisory(sbomId);
 
   const [allVulnerabilities, setAllVulnerabilities] = React.useState<
-    PackageVulnerability[]
+    VulnerabilityOfSbom[]
   >([]);
   const [vulnerabilitiesById, setVulnerabilitiesById] = React.useState<
     Map<string, VulnerabilityDetails>
@@ -44,17 +46,18 @@ export const usePackageVulnerabilities = (packageId: string) => {
     React.useState(false);
 
   React.useEffect(() => {
-    if (!pkg || pkg.advisories.length === 0) {
+    if (advisories.length === 0) {
       return;
     }
 
-    const vulnerabilities = (pkg?.advisories ?? [])
+    const vulnerabilities = (advisories ?? [])
       .flatMap((advisory) => {
         return (advisory.status ?? []).map((status) => {
-          const result: PackageVulnerability = {
-            vulnerabilityId: status.vulnerability.identifier,
+          const result: VulnerabilityOfSbom = {
+            vulnerabilityId: status.vulnerability_id,
             status: status.status as VulnerabilityStatus,
-            advisory: advisory,
+            packages: status.packages || [],
+            advisory: { ...advisory },
           };
           return result;
         });
@@ -73,7 +76,7 @@ export const usePackageVulnerabilities = (packageId: string) => {
         } else {
           return prev;
         }
-      }, [] as PackageVulnerability[]);
+      }, [] as VulnerabilityOfSbom[]);
 
     setAllVulnerabilities(vulnerabilities);
     setIsFetchingVulnerabilities(true);
@@ -106,11 +109,11 @@ export const usePackageVulnerabilities = (packageId: string) => {
       setVulnerabilitiesById(vulnerabilitiesById);
       setIsFetchingVulnerabilities(false);
     });
-  }, [pkg]);
+  }, [advisories]);
 
   const allVulnerabilitiesWithMappedData = React.useMemo(() => {
     return allVulnerabilities.map((item) => {
-      const result: PackageVulnerability = {
+      const result: VulnerabilityOfSbom = {
         ...item,
         vulnerability: vulnerabilitiesById.get(item.vulnerabilityId),
       };
@@ -135,12 +138,12 @@ export const usePackageVulnerabilities = (packageId: string) => {
       } else {
         return prev;
       }
-    }, DEFAULT_SBOM_VULNERABILITY_SUMMARY);
+    }, DEFAULT_SUMMARY);
   }, [allVulnerabilitiesWithMappedData]);
 
   return {
-    isFetching: isFetchingPackage || isFetchingVulnerabilities,
-    fetchError: fetchErrorPackage,
+    isFetching: isFetchingAdvisories || isFetchingVulnerabilities,
+    fetchError: fetchErrorAdvisories,
     vulnerabilities: allVulnerabilitiesWithMappedData,
     summary: vulnerabilitiesSummary,
   };

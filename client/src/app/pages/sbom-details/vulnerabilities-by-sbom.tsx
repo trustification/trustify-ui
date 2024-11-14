@@ -36,7 +36,7 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
-import { useSbomVulnerabilities } from "@app/hooks/domain-controls/useSbomVulnerabilities";
+import { useVulnerabilitiesOfSbom } from "@app/hooks/domain-controls/useVulnerabilitiesOfSbom";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchSBOMById } from "@app/queries/sboms";
 import { useWithUiId } from "@app/utils/query-utils";
@@ -59,7 +59,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
     summary: vulnerabilitiesSummary,
     isFetching: isFetchingVulnerabilities,
     fetchError: fetchErrorVulnerabilities,
-  } = useSbomVulnerabilities(sbomId);
+  } = useVulnerabilitiesOfSbom(sbomId);
 
   const tableDataWithUiId = useWithUiId(
     vulnerabilities,
@@ -237,7 +237,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                           modifier="truncate"
                           {...getTdProps({ columnKey: "updated" })}
                         >
-                          CREATE_ISSUE
+                          {formatDate(item.vulnerability?.modified)}
                         </Td>
                       </TableRowContentWithControls>
                     </Tr>
