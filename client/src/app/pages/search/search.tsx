@@ -248,7 +248,7 @@ export const Search: React.FC = () => {
                 eventKey={2}
                 title={
                   <TabTitleText>
-                    Vulnerabilities{"  "}
+                    CVEs{"  "}
                     <Badge screenReaderText="Search Result Count">
                       {vulnerabilityTotalCount}
                     </Badge>
