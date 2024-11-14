@@ -4,10 +4,10 @@ import { ChartDonut } from "@patternfly/react-charts";
 
 import { compareBySeverityFn, severityList } from "@app/api/model-utils";
 import { Severity } from "@app/client";
-import { SbomVulnerabilitySummary } from "@app/hooks/domain-controls/useSbomVulnerabilities";
+import { VulnerabilityOfSbomSummary } from "@app/hooks/domain-controls/useVulnerabilitiesOfSbom";
 
 export interface SbomVulnerabilitiesDonutChartProps {
-  vulnerabilitiesSummary: SbomVulnerabilitySummary;
+  vulnerabilitiesSummary: VulnerabilityOfSbomSummary;
 }
 
 export const SbomVulnerabilitiesDonutChart: React.FC<
