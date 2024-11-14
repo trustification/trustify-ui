@@ -8,7 +8,8 @@ import "@patternfly/patternfly/utilities/Spacing/spacing.css";
 import type { Preview } from "@storybook/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { initialize, mswLoader } from "msw-storybook-addon";
-
+import { MemoryRouter } from "react-router";
+import { handlers } from "@mocks/handlers";
 const queryClient = new QueryClient();
 
 /*
@@ -34,6 +35,9 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+    msw: {
+      handlers: handlers
+    }
   },
 };
 

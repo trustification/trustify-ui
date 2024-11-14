@@ -24,7 +24,8 @@
     "test": "npm run test -ws --if-present --",
     "lint": "npm run lint -ws --if-present --",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test:generate-output": "jest --json --outputFile=.jest-test-results.json"
   },
   "lint-staged": {
     "package-lock.json": "./scripts/verify_lock.mjs",
@@ -50,12 +51,12 @@
     "@storybook/addon-essentials": "^8.3.6",
     "@storybook/addon-interactions": "^8.3.6",
     "@storybook/addon-links": "^8.3.6",
-    "@storybook/addon-queryparams": "^7.0.1",
     "@storybook/addon-webpack5-compiler-swc": "^1.0.5",
     "@storybook/blocks": "^8.3.6",
     "@storybook/react": "^8.3.6",
     "@storybook/react-webpack5": "^8.3.6",
     "@storybook/test": "^8.3.6",
+    "@storybook/test-runner": "^0.19.1",
     "@tanstack/eslint-plugin-query": "^4.34.1",
     "@types/jest": "^29.5.4",
     "@types/node": "^20.11.25",

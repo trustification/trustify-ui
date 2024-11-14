@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-
 import { HubRequestParams } from "@app/api/models";
 import { client } from "@app/axios-config/apiInit";
 import {
