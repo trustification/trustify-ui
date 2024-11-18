@@ -232,6 +232,7 @@ export type DepNode = {
   name: string;
   node_id: string;
   purl: string;
+  relationship: string;
   sbom_id: string;
   version: string;
 };
