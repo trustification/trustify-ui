@@ -594,7 +594,15 @@ export const CweImporterSchema = {
 
 export const DepNodeSchema = {
   type: "object",
-  required: ["sbom_id", "node_id", "purl", "name", "version", "deps"],
+  required: [
+    "sbom_id",
+    "node_id",
+    "relationship",
+    "purl",
+    "name",
+    "version",
+    "deps",
+  ],
   properties: {
     deps: {
       type: "array",
@@ -609,6 +617,9 @@ export const DepNodeSchema = {
       type: "string",
     },
     purl: {
+      type: "string",
+    },
+    relationship: {
       type: "string",
     },
     sbom_id: {
