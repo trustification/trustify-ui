@@ -145,7 +145,7 @@ export const Search: React.FC = () => {
           <ToolbarContent>
             <ToolbarGroup align={{ default: "alignLeft" }}>
               <TextContent>
-                <Text component="h1">Search</Text>
+                <Text component="h1">Search Results</Text>
               </TextContent>
             </ToolbarGroup>
             <ToolbarGroup
