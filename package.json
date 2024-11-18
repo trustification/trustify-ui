@@ -24,8 +24,7 @@
     "test": "npm run test -ws --if-present --",
     "lint": "npm run lint -ws --if-present --",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "test:generate-output": "jest --json --outputFile=.jest-test-results.json"
+    "build-storybook": "storybook build"
   },
   "lint-staged": {
     "package-lock.json": "./scripts/verify_lock.mjs",
@@ -88,10 +87,5 @@
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "type-fest": "^3.13.0",
     "typescript": "^5.5.3"
-  },
-  "msw": {
-    "workerDirectory": [
-      "public"
-    ]
   }
 }

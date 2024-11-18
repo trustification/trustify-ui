@@ -110,5 +110,16 @@
   },
   "msw": {
     "workerDirectory": "public"
+  },
+  "imports": {
+    "#useSbomsOfVulnerability": {
+      "storybook": "./src/app/hooks/domain-controls/useSbomsOfVulnerability.mock.ts",
+      "default": "./src/app/hooks/domain-controls/useSbomsOfVulnerability.ts"
+    },
+    "#*": [
+      "./*",
+      "./*.ts",
+      "./*.tsx"
+    ]
   }
 }

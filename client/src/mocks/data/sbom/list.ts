@@ -1,7 +1,7 @@
 // import sbom1 from "./sbom1.json";
 // import sbom2 from "./sbom2.json";
 
-export const sbomsPopulated = {
+export const sbomList = {
   advisories: [
     {
       uuid: "advisory1",

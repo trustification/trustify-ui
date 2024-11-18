@@ -26,9 +26,6 @@ const config: StorybookConfig = {
     name: getAbsolutePath("@storybook/react-webpack5"),
     options: {},
   },
-  docs: {
-    autodocs: "tag",
-  },
   staticDirs: ["../public"],
   typescript: {
     reactDocgen: "react-docgen-typescript",
@@ -44,7 +41,7 @@ const config: StorybookConfig = {
       config.resolve.plugins = [
         ...(config.resolve.plugins || []),
         new TsconfigPathsPlugin({
-          configFile: "client/tsconfig.json",
+          configFile: path.resolve(__dirname, "../client/tsconfig.json"),
           extensions: config.resolve.extensions,
         }),
       ];

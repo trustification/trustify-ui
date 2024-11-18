@@ -1,29 +1,23 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "include": [
-    "src/**/*",
-    "config/**/*",
-    "types/**/*"
-  ],
+  "include": ["src/**/*", "config/**/*", "types/**/*"],
   "compilerOptions": {
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "@app/*": [
-        "src/app/*"
-      ],
+      "@app/*": ["src/app/*"],
       "@assets/*": [
         "../node_modules/@patternfly/react-core/dist/styles/assets/*"
       ],
-      "@mocks/*": [
-        "src/mocks/*"
+      "@mocks/*": ["src/mocks/*"],
+      "#useSbomsOfVulnerability": [
+        "src/app/hooks/domain-controls/useSbomsOfVulnerability.ts"
       ],
+      "#useSbomsOfVulnerability.mock": [
+        "src/app/hooks/domain-controls/useSbomsOfVulnerability.mock.ts"
+      ]
     },
-    "typeRoots": [
-      "types/",
-      "node_modules/@types",
-      "../node_modules/@types"
-    ],
+    "typeRoots": ["types/", "node_modules/@types", "../node_modules/@types"],
     "target": "es2020",
     "module": "es2020",
     "moduleResolution": "bundler",

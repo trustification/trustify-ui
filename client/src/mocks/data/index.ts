@@ -9,7 +9,7 @@ export const MOCK_VULNERABILITIES = {
 };
 
 // SBOMs populated data
-export { sbomsPopulated } from "./sboms/populated";
+export { sbomList } from "./sbom/list";
 
 // Individual vulnerability mocks
 // export { default as MOCK_VULN1 } from "./vulnerabilities/vuln1.json";
