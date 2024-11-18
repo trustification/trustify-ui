@@ -1,5 +1,7 @@
 import ENV from "./env";
 
+export const FILTER_TEXT_CATEGORY_KEY = "";
+
 export const RENDER_DATE_FORMAT = "MMM DD, YYYY";
 export const RENDER_DATETIME_FORMAT = "MMM DD, YYYY | HH:mm:ss";
 export const FILTER_DATE_FORMAT = "YYYY-MM-DD";
@@ -11,7 +13,6 @@ export const TablePersistenceKeyPrefixes = {
   sboms: "sb",
   sboms_by_package: "sbk",
   packages: "pk",
-  sbom_packages: "spk",
 };
 
 // URL param prefixes: should be short, must be unique for each table that uses one

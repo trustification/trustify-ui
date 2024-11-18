@@ -4,7 +4,10 @@ import { AxiosError } from "axios";
 
 import { AdvisorySummary } from "@app/client";
 import { FilterType } from "@app/components/FilterToolbar";
-import { TablePersistenceKeyPrefixes } from "@app/Constants";
+import {
+  FILTER_TEXT_CATEGORY_KEY,
+  TablePersistenceKeyPrefixes,
+} from "@app/Constants";
 import {
   getHubRequestParams,
   ITableControls,
@@ -43,6 +46,7 @@ export const AdvisorySearchProvider: React.FunctionComponent<
   const tableControlState = useTableControlState({
     tableName: "advisory",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.advisories,
+    persistTo: "urlParams",
     columnNames: {
       identifier: "ID",
       title: "Title",
@@ -56,7 +60,7 @@ export const AdvisorySearchProvider: React.FunctionComponent<
     isFilterEnabled: true,
     filterCategories: [
       {
-        categoryKey: "",
+        categoryKey: FILTER_TEXT_CATEGORY_KEY,
         title: "Filter text",
         placeholderText: "Search",
         type: FilterType.search,

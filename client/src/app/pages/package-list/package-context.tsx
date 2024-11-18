@@ -5,7 +5,10 @@ import { AxiosError } from "axios";
 import { DecomposedPurl } from "@app/api/models";
 import { PurlSummary } from "@app/client";
 import { FilterType } from "@app/components/FilterToolbar";
-import { TablePersistenceKeyPrefixes } from "@app/Constants";
+import {
+  FILTER_TEXT_CATEGORY_KEY,
+  TablePersistenceKeyPrefixes,
+} from "@app/Constants";
 import {
   getHubRequestParams,
   ITableControls,
@@ -55,6 +58,7 @@ export const PackageSearchProvider: React.FunctionComponent<
   const tableControlState = useTableControlState({
     tableName: "packages",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.packages,
+    persistTo: "urlParams",
     columnNames: {
       name: "Name",
       namespace: "Namespace",
@@ -70,7 +74,7 @@ export const PackageSearchProvider: React.FunctionComponent<
     isFilterEnabled: true,
     filterCategories: [
       {
-        categoryKey: "",
+        categoryKey: FILTER_TEXT_CATEGORY_KEY,
         title: "Filter text",
         placeholderText: "Search",
         type: FilterType.search,
