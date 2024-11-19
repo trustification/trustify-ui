@@ -38,6 +38,7 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
+import { VulnerabilityDescription } from "@app/components/VulnerabilityDescription";
 import { useVulnerabilitiesOfSbom } from "@app/hooks/domain-controls/useVulnerabilitiesOfSbom";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchSBOMById } from "@app/queries/sboms";
@@ -245,8 +246,11 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                           modifier="truncate"
                           {...getTdProps({ columnKey: "description" })}
                         >
-                          {item.vulnerability?.title ||
-                            item.vulnerability?.description}
+                          {item.vulnerability && (
+                            <VulnerabilityDescription
+                              vulnerability={item.vulnerability}
+                            />
+                          )}
                         </Td>
                         <Td width={10} {...getTdProps({ columnKey: "cvss" })}>
                           {item.vulnerability?.average_severity && (
