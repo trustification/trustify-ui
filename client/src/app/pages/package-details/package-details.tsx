@@ -7,6 +7,7 @@ import {
   Stack,
   StackItem,
   Tab,
+  TabContent,
   Tabs,
   TabTitleText,
   Text,
@@ -28,6 +29,19 @@ export const PackageDetails: React.FC = () => {
   const decomposedPurl = React.useMemo(() => {
     return pkg ? decomposePurl(pkg.purl) : undefined;
   }, [pkg]);
+
+  // Tabs
+  const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
+
+  const handleTabClick = (
+    event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent,
+    tabIndex: string | number
+  ) => {
+    setActiveTabKey(tabIndex);
+  };
+
+  const vulnerabilitiesTabRef = React.createRef<HTMLElement>();
+  const sbomsTabRef = React.createRef<HTMLElement>();
 
   return (
     <>
@@ -54,21 +68,46 @@ export const PackageDetails: React.FC = () => {
           </StackItem>
         </Stack>
       </PageSection>
-      <PageSection>
-        <Tabs isBox defaultActiveKey={0} role="region">
+      <PageSection type="nav">
+        <Tabs
+          mountOnEnter
+          activeKey={activeTabKey}
+          onSelect={handleTabClick}
+          aria-label="Tabs that contain the SBOM information"
+          role="region"
+        >
           <Tab
             eventKey={0}
             title={<TabTitleText>Vulnerabilities</TabTitleText>}
-          >
-            {packageId && <VulnerabilitiesByPackage packageId={packageId} />}
-          </Tab>
+            tabContentId="refTabVulnerabilitiesSection"
+            tabContentRef={vulnerabilitiesTabRef}
+          />
           <Tab
             eventKey={1}
             title={<TabTitleText>SBOMs using package</TabTitleText>}
-          >
-            {packageId && <SbomsByPackage packageId={packageId} />}
-          </Tab>
+            tabContentId="refTabSbomsSection"
+            tabContentRef={sbomsTabRef}
+          />
         </Tabs>
+      </PageSection>
+      <PageSection>
+        <TabContent
+          eventKey={0}
+          id="refTabVulnerabilitiesSection"
+          ref={vulnerabilitiesTabRef}
+          aria-label="Vulnerabilities of the Package"
+        >
+          {packageId && <VulnerabilitiesByPackage packageId={packageId} />}
+        </TabContent>
+        <TabContent
+          eventKey={1}
+          id="refTabSbomsSection"
+          ref={sbomsTabRef}
+          aria-label="SBOMs using the Package"
+          hidden
+        >
+          {packageId && <SbomsByPackage packageId={packageId} />}
+        </TabContent>
       </PageSection>
     </>
   );
