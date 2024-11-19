@@ -43,6 +43,12 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
                   {sbom.document_id}
                 </DescriptionListDescription>
               </DescriptionListGroup>
+              <DescriptionListGroup>
+                <DescriptionListTerm>Data License</DescriptionListTerm>
+                <DescriptionListDescription>
+                  {sbom.data_licenses.join(", ")}
+                </DescriptionListDescription>
+              </DescriptionListGroup>
             </DescriptionList>
           </CardBody>
         </Card>
@@ -56,12 +62,6 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
                 <DescriptionListTerm>Created</DescriptionListTerm>
                 <DescriptionListDescription>
                   {formatDate(sbom.published)}
-                </DescriptionListDescription>
-              </DescriptionListGroup>
-              <DescriptionListGroup>
-                <DescriptionListTerm>License List Version</DescriptionListTerm>
-                <DescriptionListDescription>
-                  {sbom.data_licenses.join(", ")}
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
@@ -89,6 +89,44 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
                 <DescriptionListTerm>Packages</DescriptionListTerm>
                 <DescriptionListDescription>
                   {sbom.number_of_packages}
+                </DescriptionListDescription>
+              </DescriptionListGroup>
+            </DescriptionList>
+          </CardBody>
+        </Card>
+      </GridItem>
+      <GridItem md={12}>
+        <Card isFullHeight>
+          <CardTitle>Package</CardTitle>
+          <CardBody>
+            <DescriptionList>
+              <DescriptionListGroup>
+                <DescriptionListTerm>Name</DescriptionListTerm>
+                <DescriptionListDescription>
+                  {sbom.name}
+                </DescriptionListDescription>
+              </DescriptionListGroup>
+              <DescriptionListGroup>
+                <DescriptionListTerm>Version</DescriptionListTerm>
+                <DescriptionListDescription>
+                  {sbom.described_by.map((e) => e.version).join(", ")}
+                </DescriptionListDescription>
+              </DescriptionListGroup>
+              <DescriptionListGroup>
+                <DescriptionListTerm>External References</DescriptionListTerm>
+                <DescriptionListDescription>
+                  <List>
+                    {sbom.described_by
+                      .flatMap((e) => e.cpe)
+                      .map((e) => (
+                        <ListItem>{e}</ListItem>
+                      ))}
+                    <ListItem>
+                      {sbom.described_by
+                        .flatMap((e) => e.purl)
+                        .map((e) => e.purl)}
+                    </ListItem>
+                  </List>
                 </DescriptionListDescription>
               </DescriptionListGroup>
             </DescriptionList>
