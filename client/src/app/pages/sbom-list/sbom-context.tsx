@@ -4,7 +4,10 @@ import { AxiosError } from "axios";
 
 import { SbomSummary } from "@app/client";
 import { FilterType } from "@app/components/FilterToolbar";
-import { TablePersistenceKeyPrefixes } from "@app/Constants";
+import {
+  FILTER_TEXT_CATEGORY_KEY,
+  TablePersistenceKeyPrefixes,
+} from "@app/Constants";
 import {
   getHubRequestParams,
   ITableControls,
@@ -48,6 +51,7 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
   const tableControlState = useTableControlState({
     tableName: "sbom",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.sboms,
+    persistTo: "urlParams",
     columnNames: {
       name: "Name",
       version: "Version",
@@ -62,7 +66,7 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
     isFilterEnabled: true,
     filterCategories: [
       {
-        categoryKey: "",
+        categoryKey: FILTER_TEXT_CATEGORY_KEY,
         title: "Filter text",
         placeholderText: "Search",
         type: FilterType.search,

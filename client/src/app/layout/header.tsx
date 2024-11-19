@@ -204,7 +204,8 @@ export const HeaderApp: React.FC = () => {
                           isExpanded={isUserDropdownOpen}
                           icon={<Avatar src={imgAvatar} alt="" />}
                         >
-                          {auth.user?.profile.preferred_username}
+                          {auth.user?.profile.preferred_username ||
+                            auth.user?.profile.sub}
                         </MenuToggle>
                       )}
                     >

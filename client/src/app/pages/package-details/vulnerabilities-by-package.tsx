@@ -21,6 +21,7 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
+import { VulnerabilityDescription } from "@app/components/VulnerabilityDescription";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchPackageById } from "@app/queries/packages";
 import { useWithUiId } from "@app/utils/query-utils";
@@ -226,8 +227,11 @@ export const VulnerabilitiesByPackage: React.FC<
                       modifier="truncate"
                       {...getTdProps({ columnKey: "description" })}
                     >
-                      {item.vulnerability?.title ||
-                        item.vulnerability?.description}
+                      {item.vulnerability && (
+                        <VulnerabilityDescription
+                          vulnerability={item.vulnerability}
+                        />
+                      )}
                     </Td>
                     <Td width={15} {...getTdProps({ columnKey: "severity" })}>
                       {item.vulnerability?.average_severity && (
