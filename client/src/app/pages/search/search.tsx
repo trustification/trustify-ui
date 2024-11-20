@@ -4,12 +4,12 @@ import {
   Badge,
   Card,
   CardBody,
-  Grid,
-  GridItem,
   PageSection,
   PageSectionVariants,
   Popover,
   SearchInput,
+  Split,
+  SplitItem,
   Tab,
   TabAction,
   TabTitleText,
@@ -175,10 +175,10 @@ export const Search: React.FC = () => {
         </Toolbar>
       </PageSection>
       <PageSection>
-        <Grid hasGutter>
-          <GridItem md={2}>
+        <Split hasGutter>
+          <SplitItem>
             <Card isFullHeight>
-              <CardBody>
+              <CardBody style={{ width: 241 }}>
                 {activeTabKey === 0 ? (
                   <FilterPanel
                     omitFilterCategoryKeys={[""]}
@@ -202,8 +202,8 @@ export const Search: React.FC = () => {
                 ) : null}
               </CardBody>
             </Card>
-          </GridItem>
-          <GridItem md={10}>
+          </SplitItem>
+          <SplitItem isFilled>
             <Tabs
               isBox
               activeKey={activeTabKey}
@@ -275,8 +275,8 @@ export const Search: React.FC = () => {
                 <AdvisoryTable />
               </Tab>
             </Tabs>
-          </GridItem>
-        </Grid>
+          </SplitItem>
+        </Split>
       </PageSection>
     </>
   );
