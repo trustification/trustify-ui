@@ -1,8 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-
   "include": ["src/**/*", "config/**/*", "types/**/*"],
-
   "compilerOptions": {
     "outDir": "dist",
     "baseUrl": ".",
@@ -10,14 +8,19 @@
       "@app/*": ["src/app/*"],
       "@assets/*": [
         "../node_modules/@patternfly/react-core/dist/styles/assets/*"
+      ],
+      "@mocks/*": ["src/mocks/*"],
+      "#useSbomsOfVulnerability": [
+        "src/app/hooks/domain-controls/useSbomsOfVulnerability.ts"
+      ],
+      "#useSbomsOfVulnerability.mock": [
+        "src/app/hooks/domain-controls/useSbomsOfVulnerability.mock.ts"
       ]
     },
     "typeRoots": ["types/", "node_modules/@types", "../node_modules/@types"],
-
     "target": "es2020",
     "module": "es2020",
     "moduleResolution": "bundler",
-
     "allowJs": true,
     "checkJs": false,
     "esModuleInterop": true,
@@ -27,10 +30,8 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-
     "noEmit": true
   },
-
   "ts-node": {
     "compilerOptions": {
       "module": "commonjs" // node16 == commonjs or es2020 depending on package.json/type

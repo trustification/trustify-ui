@@ -21,14 +21,10 @@ const config: StorybookConfig = {
     getAbsolutePath("@storybook/addon-essentials"),
     getAbsolutePath("@chromatic-com/storybook"),
     getAbsolutePath("@storybook/addon-interactions"),
-    getAbsolutePath("@storybook/addon-queryparams"),
   ],
   framework: {
     name: getAbsolutePath("@storybook/react-webpack5"),
     options: {},
-  },
-  docs: {
-    autodocs: "tag",
   },
   staticDirs: ["../public"],
   typescript: {
@@ -45,7 +41,7 @@ const config: StorybookConfig = {
       config.resolve.plugins = [
         ...(config.resolve.plugins || []),
         new TsconfigPathsPlugin({
-          configFile: "client/tsconfig.json",
+          configFile: path.resolve(__dirname, "../client/tsconfig.json"),
           extensions: config.resolve.extensions,
         }),
       ];
