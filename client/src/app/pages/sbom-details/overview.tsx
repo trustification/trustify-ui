@@ -118,8 +118,8 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
                   <List>
                     {sbom.described_by
                       .flatMap((e) => e.cpe)
-                      .map((e) => (
-                        <ListItem>{e}</ListItem>
+                      .map((e, index) => (
+                        <ListItem key={index}>{e}</ListItem>
                       ))}
                     <ListItem>
                       {sbom.described_by

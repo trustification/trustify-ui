@@ -2245,7 +2245,6 @@ components:
       - node_id
       - purl
       - name
-      - version
       properties:
         name:
           type: string
@@ -2255,8 +2254,6 @@ components:
           type: string
         sbom_id:
           type: string
-        version:
-          type: string
     AncestorSummary:
       type: object
       required:
@@ -2264,7 +2261,6 @@ components:
       - node_id
       - purl
       - name
-      - version
       - published
       - document_id
       - product_name
@@ -2290,8 +2286,6 @@ components:
         purl:
           type: string
         sbom_id:
-          type: string
-        version:
           type: string
     BasePurlDetails:
       allOf:
@@ -2457,10 +2451,8 @@ components:
       required:
       - sbom_id
       - node_id
-      - relationship
       - purl
       - name
-      - version
       - deps
       properties:
         deps:
@@ -2473,11 +2465,7 @@ components:
           type: string
         purl:
           type: string
-        relationship:
-          type: string
         sbom_id:
-          type: string
-        version:
           type: string
     DepSummary:
       type: object
@@ -2486,7 +2474,6 @@ components:
       - node_id
       - purl
       - name
-      - version
       - published
       - document_id
       - product_name
@@ -2512,8 +2499,6 @@ components:
         purl:
           type: string
         sbom_id:
-          type: string
-        version:
           type: string
     Id:
       type: string
@@ -3517,7 +3502,7 @@ components:
     SbomStatus:
       type: object
       required:
-      - vulnerability_id
+      - vulnerability
       - status
       - packages
       properties:
@@ -3529,10 +3514,14 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SbomPackage'
+        severity:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Severity'
         status:
           type: string
-        vulnerability_id:
-          type: string
+        vulnerability:
+          $ref: '#/components/schemas/VulnerabilityHead'
     SbomSummary:
       allOf:
       - $ref: '#/components/schemas/SbomHead'

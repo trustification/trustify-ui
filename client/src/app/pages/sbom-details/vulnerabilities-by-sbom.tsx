@@ -211,10 +211,8 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                           )}
                         </Td>
                         <Td width={10} {...getTdProps({ columnKey: "cvss" })}>
-                          {item.vulnerability?.average_severity && (
-                            <SeverityShieldAndText
-                              value={item.vulnerability.average_severity}
-                            />
+                          {item.severity && (
+                            <SeverityShieldAndText value={item.severity} />
                           )}
                         </Td>
                         <Td

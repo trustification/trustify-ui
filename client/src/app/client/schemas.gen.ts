@@ -276,7 +276,7 @@ export const AnalysisStatusSchema = {
 
 export const AncNodeSchema = {
   type: "object",
-  required: ["sbom_id", "node_id", "purl", "name", "version"],
+  required: ["sbom_id", "node_id", "purl", "name"],
   properties: {
     name: {
       type: "string",
@@ -290,9 +290,6 @@ export const AncNodeSchema = {
     sbom_id: {
       type: "string",
     },
-    version: {
-      type: "string",
-    },
   },
 } as const;
 
@@ -303,7 +300,6 @@ export const AncestorSummarySchema = {
     "node_id",
     "purl",
     "name",
-    "version",
     "published",
     "document_id",
     "product_name",
@@ -339,9 +335,6 @@ export const AncestorSummarySchema = {
       type: "string",
     },
     sbom_id: {
-      type: "string",
-    },
-    version: {
       type: "string",
     },
   },
@@ -594,15 +587,7 @@ export const CweImporterSchema = {
 
 export const DepNodeSchema = {
   type: "object",
-  required: [
-    "sbom_id",
-    "node_id",
-    "relationship",
-    "purl",
-    "name",
-    "version",
-    "deps",
-  ],
+  required: ["sbom_id", "node_id", "purl", "name", "deps"],
   properties: {
     deps: {
       type: "array",
@@ -619,13 +604,7 @@ export const DepNodeSchema = {
     purl: {
       type: "string",
     },
-    relationship: {
-      type: "string",
-    },
     sbom_id: {
-      type: "string",
-    },
-    version: {
       type: "string",
     },
   },
@@ -638,7 +617,6 @@ export const DepSummarySchema = {
     "node_id",
     "purl",
     "name",
-    "version",
     "published",
     "document_id",
     "product_name",
@@ -674,9 +652,6 @@ export const DepSummarySchema = {
       type: "string",
     },
     sbom_id: {
-      type: "string",
-    },
-    version: {
       type: "string",
     },
   },
@@ -2078,7 +2053,7 @@ export const SbomPackageRelationSchema = {
 
 export const SbomStatusSchema = {
   type: "object",
-  required: ["vulnerability_id", "status", "packages"],
+  required: ["vulnerability", "status", "packages"],
   properties: {
     context: {
       oneOf: [
@@ -2096,11 +2071,21 @@ export const SbomStatusSchema = {
         $ref: "#/components/schemas/SbomPackage",
       },
     },
+    severity: {
+      oneOf: [
+        {
+          type: "null",
+        },
+        {
+          $ref: "#/components/schemas/Severity",
+        },
+      ],
+    },
     status: {
       type: "string",
     },
-    vulnerability_id: {
-      type: "string",
+    vulnerability: {
+      $ref: "#/components/schemas/VulnerabilityHead",
     },
   },
 } as const;

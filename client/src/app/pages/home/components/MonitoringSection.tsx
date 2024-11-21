@@ -28,6 +28,7 @@ import {
 
 import { severityList } from "@app/api/model-utils";
 import { Severity } from "@app/client";
+import { useVulnerabilitiesOfSboms } from "@app/hooks/domain-controls/useVulnerabilitiesOfSbom";
 import { useFetchSBOMs } from "@app/queries/sboms";
 import { useFetchVulnerabilities } from "@app/queries/vulnerabilities";
 import { formatDate } from "@app/utils/utils";
@@ -67,6 +68,10 @@ export const MonitoringSection: React.FC = () => {
       sort: { field: "published", direction: "desc" },
     },
     true
+  );
+
+  const { summary, isFetching, fetchError } = useVulnerabilitiesOfSboms(
+    barchartSboms.map((e) => e.id)
   );
 
   return (
@@ -172,18 +177,17 @@ export const MonitoringSection: React.FC = () => {
                             labelComponent={
                               <ChartTooltip constrainToVisibleArea />
                             }
-                            // data={props.map((sbom) => {
-                            //   const severityKey = legend.severity;
-                            //   const count = sbom.vulnerabilities[
-                            //     severityKey
-                            //   ] as number;
-                            //   return {
-                            //     name: legend.name,
-                            //     x: sbom.sbom_name,
-                            //     y: count,
-                            //     label: `${legend.name}: ${count}`,
-                            //   };
-                            // })}
+                            data={summary.map((item, index) => {
+                              const sbom = barchartSboms[index];
+                              const severityKey = legend.severity;
+                              const count = item.severities[severityKey];
+                              return {
+                                name: severityKey,
+                                x: sbom.name,
+                                y: count,
+                                label: `${severity.name}: ${count}`,
+                              };
+                            })}
                           />
                         );
                       })}
