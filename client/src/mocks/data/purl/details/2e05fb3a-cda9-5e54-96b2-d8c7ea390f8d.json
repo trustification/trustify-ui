@@ -1,0 +1,54 @@
+{
+  "uuid": "2e05fb3a-cda9-5e54-96b2-d8c7ea390f8d",
+  "purl": "pkg:oci/cnv-containernetworking-plugins-rhel9@sha256:fae3d9f5dfd142a132fd94f80e8814207aa497459d8942037c383202852ceddd?arch=arm64&repository_url=registry.redhat.io/container-native-virtualization/cnv-containernetworking-plugins-rhel9&tag=v4.13.5-prerelease-2023-120566",
+  "version": {
+    "uuid": "0001cfdb-b847-50a7-8020-4086591a07cb",
+    "purl": "pkg:oci/cnv-containernetworking-plugins-rhel9@sha256:fae3d9f5dfd142a132fd94f80e8814207aa497459d8942037c383202852ceddd",
+    "version": "sha256:fae3d9f5dfd142a132fd94f80e8814207aa497459d8942037c383202852ceddd"
+  },
+  "base": {
+    "uuid": "cfb8390e-3e70-5af4-b015-4149593baf68",
+    "purl": "pkg:oci/cnv-containernetworking-plugins-rhel9"
+  },
+  "advisories": [
+    {
+      "uuid": "urn:uuid:5b98f727-1145-4eca-8176-d3f2a32e0fce",
+      "identifier": "https://www.redhat.com/#CVE-2023-44487",
+      "issuer": {
+        "id": "5e9c87c9-2e6b-453b-8b27-6c80dfc7d7ff",
+        "name": "Red Hat Product Security",
+        "cpe_key": null,
+        "website": null
+      },
+      "published": "2023-10-10T00:00:00Z",
+      "modified": "2023-11-21T11:59:10Z",
+      "withdrawn": null,
+      "title": "HTTP/2: Multiple HTTP/2 enabled web servers are vulnerable to a DDoS attack (Rapid Reset Attack)",
+      "labels": {
+        "type": "csaf"
+      },
+      "status": [
+        {
+          "vulnerability": {
+            "normative": true,
+            "identifier": "CVE-2023-44487",
+            "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+            "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+            "reserved": "2023-09-29T00:00:00Z",
+            "published": "2023-10-10T00:00:00Z",
+            "modified": "2024-08-19T07:48:04.546Z",
+            "withdrawn": null,
+            "discovered": null,
+            "released": null,
+            "cwes": []
+          },
+          "status": "not_affected",
+          "context": {
+            "cpe": "cpe:/a:redhat:container_native_virtualization:4.13:*:el9:*"
+          }
+        }
+      ]
+    }
+  ],
+  "licenses": []
+}

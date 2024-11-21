@@ -26,7 +26,7 @@ const config: StorybookConfig = {
     name: getAbsolutePath("@storybook/react-webpack5"),
     options: {},
   },
-  staticDirs: ["../public"],
+  staticDirs: ["../public", "../client/public", "../client/src/app/images"],
   typescript: {
     reactDocgen: "react-docgen-typescript",
     reactDocgenTypescriptOptions: {
@@ -45,6 +45,12 @@ const config: StorybookConfig = {
           extensions: config.resolve.extensions,
         }),
       ];
+    }
+    if (config.module) {
+      config.module.rules?.push({
+        test: /\.svg$/,
+        use: ["@svgr/webpack"],
+      });
     }
     return config;
   },

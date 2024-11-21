@@ -1,0 +1,275 @@
+{
+  "items": [
+    {
+      "id": "urn:uuid:01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9",
+      "document_id": "https://access.redhat.com/security/data/sbom/beta/spdx/quarkus-bom-d6ecbbd9-31bf-46fd-afda-8082120f5260",
+      "labels": {
+        "type": "spdx"
+      },
+      "data_licenses": ["CC0-1.0"],
+      "published": "2023-11-22T14:00:00Z",
+      "authors": [
+        "Organization: Red Hat Product Security (secalert@redhat.com)"
+      ],
+      "name": "quarkus-bom",
+      "sha256": "sha256:4087ad9b170efe11192ff2dd28ec11c3c07e0d859dba42685d2665aa4086bcf8",
+      "sha384": "sha384:c30e74cb3bb4111476b86b580fc994e8113d1c3f1d128561d79fd12d3b5097f2b7dbd6bc0e5ed7aaaf00a71e1a2d874e",
+      "sha512": "sha512:47ed78d3f6d37f28df9bd3beb86c609d4e235ff154bdd64f03582970a6d6e9e23a2350a8c55941548a434f92294a0de5f3e416d98212bd18107671feec7b64dd",
+      "size": 1174356,
+      "described_by": [
+        {
+          "id": "SPDXRef-d6ecbbd9-31bf-46fd-afda-8082120f5260",
+          "name": "quarkus-bom",
+          "version": "2.13.8.Final-redhat-00004",
+          "purl": [
+            {
+              "uuid": "269366bb-0d1a-5058-a752-d2cc434431c6",
+              "purl": "pkg:maven/com.redhat.quarkus.platform/quarkus-bom@2.13.8.Final-redhat-00004?repository_url=https://maven.repository.redhat.com/ga/&type=pom",
+              "base": {
+                "uuid": "eb87eb3b-0dbf-5f1b-9198-94f453fd74f7",
+                "purl": "pkg:maven/com.redhat.quarkus.platform/quarkus-bom"
+              },
+              "version": {
+                "uuid": "c0201f09-3d0a-5739-9cf3-8ad19dd177f7",
+                "purl": "pkg:maven/com.redhat.quarkus.platform/quarkus-bom@2.13.8.Final-redhat-00004",
+                "version": "2.13.8.Final-redhat-00004"
+              },
+              "qualifiers": {
+                "repository_url": "https://maven.repository.redhat.com/ga/",
+                "type": "pom"
+              }
+            }
+          ],
+          "cpe": ["cpe:/a:redhat:quarkus:2.13:*:el8:*"]
+        }
+      ],
+      "number_of_packages": 880
+    },
+    {
+      "id": "urn:uuid:01932ff3-0fc4-7bf2-8201-5d5e9dc471bd",
+      "document_id": "https://access.redhat.com/security/data/sbom/beta/spdx/ubi8-container-1e7fb966-cc2a-41e2-8e9d-ab6fb97d67d6",
+      "labels": {
+        "type": "spdx"
+      },
+      "data_licenses": ["CC0-1.0"],
+      "published": "2023-11-22T13:31:00Z",
+      "authors": [
+        "Organization: Red Hat Product Security (secalert@redhat.com)"
+      ],
+      "name": "ubi8-container",
+      "sha256": "sha256:046d27ab116a37333847bc8648ce0af78d36caf719f8a8fa0a3ef2cd8d0fab89",
+      "sha384": "sha384:c79bcc144882959118e0c0a13abfd0ea8e950165b6c34167d6e72e50e1549af32ff1c4632609b26ec94416dfaa788372",
+      "sha512": "sha512:9bdad125ff68a887d644c0bf5f1fd72ae60678a26ff9aff7d54632c5275b30be647716fe7345552e2b1ed7356555c2435ca864a0aaf751bd4ab1de37a50acb86",
+      "size": 839011,
+      "described_by": [
+        {
+          "id": "SPDXRef-1e7fb966-cc2a-41e2-8e9d-ab6fb97d67d6",
+          "name": "ubi8-container",
+          "version": "8.8-1067",
+          "purl": [
+            {
+              "uuid": "ae4b53ac-e653-5266-a4ac-8747a65546ea",
+              "purl": "pkg:oci/ubi8-container@sha256:269e9753043a4066af12649e921c6ad3201702fda5b2652f7a4aa010c2ed4c1a?repository_url=registry.redhat.io/ubi8&tag=8.8-1067",
+              "base": {
+                "uuid": "8398bfda-460e-5757-998b-7d23a72bd047",
+                "purl": "pkg:oci/ubi8-container"
+              },
+              "version": {
+                "uuid": "fc9f9a35-608e-583c-b839-20b91b752b8b",
+                "purl": "pkg:oci/ubi8-container@sha256:269e9753043a4066af12649e921c6ad3201702fda5b2652f7a4aa010c2ed4c1a",
+                "version": "sha256:269e9753043a4066af12649e921c6ad3201702fda5b2652f7a4aa010c2ed4c1a"
+              },
+              "qualifiers": {
+                "repository_url": "registry.redhat.io/ubi8",
+                "tag": "8.8-1067"
+              }
+            }
+          ],
+          "cpe": ["cpe:/a:redhat:enterprise_linux:8:*:appstream:*"]
+        }
+      ],
+      "number_of_packages": 645
+    },
+    {
+      "id": "urn:uuid:01932ff3-0f06-74e0-b673-f92bac24a6b0",
+      "document_id": "https://access.redhat.com/security/data/sbom/beta/spdx/ubi8-micro-container-0ca57f3b-b0e7-4251-b32b-d2929a52f05c",
+      "labels": {
+        "type": "spdx"
+      },
+      "data_licenses": ["CC0-1.0"],
+      "published": "2023-11-22T13:31:00Z",
+      "authors": [
+        "Organization: Red Hat Product Security (secalert@redhat.com)"
+      ],
+      "name": "ubi8-micro-container",
+      "sha256": "sha256:53619d29f5f5c6d732cf8a5704a845b790f49121edcc33e8c74fc4f42ad77f04",
+      "sha384": "sha384:bc7eeaf2cf73e0d428465328eadf4d11ff2290538c8b8f546938dfcc2a1d0956eb33bc9055ea1e901efd103ee14b69bd",
+      "sha512": "sha512:b203fca0e404ce23c61e42d8f34b272793a1ff5d9352452803b0b45566b6e4231f8606c95092c8c394bfa2b3440bb1987abbba7cdeabe3501d34ad45a00cef48",
+      "size": 84562,
+      "described_by": [
+        {
+          "id": "SPDXRef-0ca57f3b-b0e7-4251-b32b-d2929a52f05c",
+          "name": "ubi8-micro-container",
+          "version": "8.8-7.1696517612",
+          "purl": [
+            {
+              "uuid": "69a66ad3-0da9-58e3-93e4-e29841671a67",
+              "purl": "pkg:oci/ubi-micro@sha256:2c15d47056a573b30e608c4df43d20f79b064a8c10cb8b0c020912edf00c2399?repository_url=registry.redhat.io/ubi8/ubi-micro&tag=8.8-7.1696517612",
+              "base": {
+                "uuid": "82b864d4-b3f0-5190-a914-ac7d6c0fd7bc",
+                "purl": "pkg:oci/ubi-micro"
+              },
+              "version": {
+                "uuid": "84a4afa6-fcf2-5cae-b02a-fbb75fc70b8e",
+                "purl": "pkg:oci/ubi-micro@sha256:2c15d47056a573b30e608c4df43d20f79b064a8c10cb8b0c020912edf00c2399",
+                "version": "sha256:2c15d47056a573b30e608c4df43d20f79b064a8c10cb8b0c020912edf00c2399"
+              },
+              "qualifiers": {
+                "repository_url": "registry.redhat.io/ubi8/ubi-micro",
+                "tag": "8.8-7.1696517612"
+              }
+            }
+          ],
+          "cpe": ["cpe:/a:redhat:enterprise_linux:8:*:appstream:*"]
+        }
+      ],
+      "number_of_packages": 69
+    },
+    {
+      "id": "urn:uuid:01932ff3-0f91-7543-af38-c399c1e9a923",
+      "document_id": "https://access.redhat.com/security/data/sbom/beta/spdx/ubi8-minimal-container-5b43ae22-cbf0-4626-8ec5-4ae0765a3d4b",
+      "labels": {
+        "type": "spdx"
+      },
+      "data_licenses": ["CC0-1.0"],
+      "published": "2023-11-22T13:31:00Z",
+      "authors": [
+        "Organization: Red Hat Product Security (secalert@redhat.com)"
+      ],
+      "name": "ubi8-minimal-container",
+      "sha256": "sha256:3d99f13040baaa0e682e6e3e1500907a78babe741ab3d3c2bacc13963e1d3646",
+      "sha384": "sha384:8e7d353114b4eb696d3981a453811b4fd28ab4de438387b1c60dd4f34821c9915d9bb4e0f64408cc81332da260d30f41",
+      "sha512": "sha512:abe0838c67359c1d643b0b38fbc1c2b1acca28ffb27558f14b789f7e3739790469b3d8dce9bf6aef0fdbb3fe3c409ddec3bd63d5047537073dfad21974e1979e",
+      "size": 420890,
+      "described_by": [
+        {
+          "id": "SPDXRef-5b43ae22-cbf0-4626-8ec5-4ae0765a3d4b",
+          "name": "ubi8-minimal-container",
+          "version": "8.8-1072.1697626218",
+          "purl": [
+            {
+              "uuid": "28bd647c-feb4-5095-b884-9caf9e9c7571",
+              "purl": "pkg:oci/ubi8-minimal-container@sha256:b93deceb59a58588d5b16429fc47f98920f84740a1f2ed6454e33275f0701b59?repository_url=registry.redhat.io/ubi8-minimal&tag=8.8-1072.1697626218",
+              "base": {
+                "uuid": "9255a4ba-01ae-5b7b-ac97-45b92a86d41e",
+                "purl": "pkg:oci/ubi8-minimal-container"
+              },
+              "version": {
+                "uuid": "b322f8ca-2eb4-519e-971a-d9f32e345206",
+                "purl": "pkg:oci/ubi8-minimal-container@sha256:b93deceb59a58588d5b16429fc47f98920f84740a1f2ed6454e33275f0701b59",
+                "version": "sha256:b93deceb59a58588d5b16429fc47f98920f84740a1f2ed6454e33275f0701b59"
+              },
+              "qualifiers": {
+                "repository_url": "registry.redhat.io/ubi8-minimal",
+                "tag": "8.8-1072.1697626218"
+              }
+            }
+          ],
+          "cpe": ["cpe:/a:redhat:enterprise_linux:8:*:appstream:*"]
+        }
+      ],
+      "number_of_packages": 379
+    },
+    {
+      "id": "urn:uuid:01932ff3-0fbc-7b82-b9c2-18044dbbb574",
+      "document_id": "https://access.redhat.com/security/data/sbom/beta/spdx/ubi9-container-f8098ef8-eee0-4ee6-b5d1-b00d992adef5",
+      "labels": {
+        "type": "spdx"
+      },
+      "data_licenses": ["CC0-1.0"],
+      "published": "2023-11-22T13:30:00Z",
+      "authors": [
+        "Organization: Red Hat Product Security (secalert@redhat.com)"
+      ],
+      "name": "ubi9-container",
+      "sha256": "sha256:7223f4c6cba2cf641a317561344d3c0ff7f1e72e7c6d73f8dc2c65e3e059d0c5",
+      "sha384": "sha384:bc69d293726196cd86a9294446d2ac62eecf25685a6cc2cff2e149f9246c5a26a281290711cda34f944456eb90727232",
+      "sha512": "sha512:d9c8ceab620535c61b4b6eddd1e1d540f0fe4555e88b58aefe42bd9af9ac17527b24de32fcc456fcc0554bafaa612f25f9ed9c01385373eb4d08dcf5f6483ad0",
+      "size": 663420,
+      "described_by": [
+        {
+          "id": "SPDXRef-f8098ef8-eee0-4ee6-b5d1-b00d992adef5",
+          "name": "ubi9-container",
+          "version": "9.3-782",
+          "purl": [
+            {
+              "uuid": "2e4716ae-ffb3-5c8b-bddb-46aff9404fc7",
+              "purl": "pkg:oci/ubi9-container@sha256:faffa0771902053b7eede41486e8980cb1b170c2e4a7849d43269f65b499e875?repository_url=registry.redhat.io/ubi9&tag=9.3-782",
+              "base": {
+                "uuid": "28cc6afe-df3b-5630-93d3-8c088e14f71f",
+                "purl": "pkg:oci/ubi9-container"
+              },
+              "version": {
+                "uuid": "237e655c-08df-5033-9552-da181e3f91a7",
+                "purl": "pkg:oci/ubi9-container@sha256:faffa0771902053b7eede41486e8980cb1b170c2e4a7849d43269f65b499e875",
+                "version": "sha256:faffa0771902053b7eede41486e8980cb1b170c2e4a7849d43269f65b499e875"
+              },
+              "qualifiers": {
+                "repository_url": "registry.redhat.io/ubi9",
+                "tag": "9.3-782"
+              }
+            }
+          ],
+          "cpe": []
+        }
+      ],
+      "number_of_packages": 606
+    },
+    {
+      "id": "urn:uuid:01932ff3-0f90-7e51-9c9d-1fac54a371f3",
+      "document_id": "https://access.redhat.com/security/data/sbom/beta/spdx/ubi9-minimal-container-9b954617-943f-43ab-bd5b-3df62a706ed6",
+      "labels": {
+        "type": "spdx"
+      },
+      "data_licenses": ["CC0-1.0"],
+      "published": "2023-11-22T13:31:00Z",
+      "authors": [
+        "Organization: Red Hat Product Security (secalert@redhat.com)"
+      ],
+      "name": "ubi9-minimal-container",
+      "sha256": "sha256:d93579688d949922eadaec35692b27ed464004333c05ca71b61239d8f8ea6cec",
+      "sha384": "sha384:c10b1185f950cd6f3e66aece37a013ba2130a89e77325d1bedee15940d7e24948a2ce589f5a0898a02e1455a2259ed81",
+      "sha512": "sha512:5fbf35f3bdc0f0c6397407dd6368c485ec3ff51d66674ce4d8c8ea3828e8dfd457720aa25daf90039045b320d8490bb80db0a636ffde76b9dc8cf2b3476c8bcf",
+      "size": 399839,
+      "described_by": [
+        {
+          "id": "SPDXRef-9b954617-943f-43ab-bd5b-3df62a706ed6",
+          "name": "ubi9-minimal-container",
+          "version": "9.3-1361",
+          "purl": [
+            {
+              "uuid": "539b867e-b7f2-5d73-af5e-4501cc02e070",
+              "purl": "pkg:oci/ubi9-minimal-container@sha256:b330d9e6aa681d5fe2b11fcfe0ca51e1801d837dd26804b0ead9a09ca8246c40?repository_url=registry.redhat.io/ubi9-minimal&tag=9.3-1361",
+              "base": {
+                "uuid": "d69b29ab-e759-57aa-82ff-934f64ddd76d",
+                "purl": "pkg:oci/ubi9-minimal-container"
+              },
+              "version": {
+                "uuid": "6e42107a-f155-5e39-b73b-01aa172a3c21",
+                "purl": "pkg:oci/ubi9-minimal-container@sha256:b330d9e6aa681d5fe2b11fcfe0ca51e1801d837dd26804b0ead9a09ca8246c40",
+                "version": "sha256:b330d9e6aa681d5fe2b11fcfe0ca51e1801d837dd26804b0ead9a09ca8246c40"
+              },
+              "qualifiers": {
+                "repository_url": "registry.redhat.io/ubi9-minimal",
+                "tag": "9.3-1361"
+              }
+            }
+          ],
+          "cpe": []
+        }
+      ],
+      "number_of_packages": 367
+    }
+  ],
+  "total": 6
+}
