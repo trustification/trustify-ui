@@ -120,6 +120,7 @@ export type AncNode = {
   node_id: string;
   purl: string;
   sbom_id: string;
+  version: string;
 };
 
 export type AncestorSummary = {
@@ -132,6 +133,7 @@ export type AncestorSummary = {
   published: string;
   purl: string;
   sbom_id: string;
+  version: string;
 };
 
 export type BasePurlDetails = BasePurlHead & {
@@ -230,7 +232,9 @@ export type DepNode = {
   name: string;
   node_id: string;
   purl: string;
+  relationship: string;
   sbom_id: string;
+  version: string;
 };
 
 export type DepSummary = {
@@ -243,6 +247,7 @@ export type DepSummary = {
   published: string;
   purl: string;
   sbom_id: string;
+  version: string;
 };
 
 /**

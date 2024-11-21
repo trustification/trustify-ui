@@ -77,7 +77,6 @@
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.5.2",
     "monaco-editor-webpack-plugin": "^7.0.1",
-    "msw": "^1.2.3",
     "raw-loader": "^4.0.2",
     "react-refresh": "^0.14.0",
     "react-refresh-typescript": "^2.0.9",
@@ -111,5 +110,16 @@
   },
   "msw": {
     "workerDirectory": "public"
+  },
+  "imports": {
+    "#useSbomsOfVulnerability": {
+      "storybook": "./src/app/hooks/domain-controls/useSbomsOfVulnerability.mock.ts",
+      "default": "./src/app/hooks/domain-controls/useSbomsOfVulnerability.ts"
+    },
+    "#*": [
+      "./*",
+      "./*.ts",
+      "./*.tsx"
+    ]
   }
 }

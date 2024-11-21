@@ -4,12 +4,12 @@ import {
   Badge,
   Card,
   CardBody,
-  Grid,
-  GridItem,
   PageSection,
   PageSectionVariants,
   Popover,
   SearchInput,
+  Split,
+  SplitItem,
   Tab,
   TabAction,
   TabTitleText,
@@ -24,17 +24,18 @@ import {
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
 import { FilterPanel } from "@app/components/FilterPanel";
+import { FILTER_TEXT_CATEGORY_KEY } from "@app/Constants";
 
 import { SearchProvider } from "./search-context";
 
+import { AdvisorySearchContext } from "../advisory-list/advisory-context";
+import { AdvisoryTable } from "../advisory-list/advisory-table";
 import { PackageSearchContext } from "../package-list/package-context";
 import { PackageTable } from "../package-list/package-table";
 import { SbomSearchContext } from "../sbom-list/sbom-context";
 import { SbomTable } from "../sbom-list/sbom-table";
 import { VulnerabilitySearchContext } from "../vulnerability-list/vulnerability-context";
 import { VulnerabilityTable } from "../vulnerability-list/vulnerability-table";
-import { AdvisorySearchContext } from "../advisory-list/advisory-context";
-import { AdvisoryTable } from "../advisory-list/advisory-table";
 
 export const SearchPage: React.FC = () => {
   return (
@@ -86,7 +87,10 @@ export const Search: React.FC = () => {
 
   // Search
 
-  const [searchValue, setSearchValue] = React.useState("");
+  const [searchValue, setSearchValue] = React.useState(
+    sbomTableControls.filterState.filterValues[FILTER_TEXT_CATEGORY_KEY]?.[0] ||
+      ""
+  );
 
   const onChangeSearchValue = (value: string) => {
     setSearchValue(value);
@@ -99,19 +103,19 @@ export const Search: React.FC = () => {
   const onChangeContextSearchValue = () => {
     sbomTableControls.filterState.setFilterValues({
       ...sbomTableControls.filterState.filterValues,
-      "": [searchValue],
+      [FILTER_TEXT_CATEGORY_KEY]: [searchValue],
     });
     packageTableControls.filterState.setFilterValues({
       ...packageTableControls.filterState.filterValues,
-      "": [searchValue],
+      [FILTER_TEXT_CATEGORY_KEY]: [searchValue],
     });
     vulnerabilityTableControls.filterState.setFilterValues({
       ...vulnerabilityTableControls.filterState.filterValues,
-      "": [searchValue],
+      [FILTER_TEXT_CATEGORY_KEY]: [searchValue],
     });
     advisoryTableControls.filterState.setFilterValues({
       ...advisoryTableControls.filterState.filterValues,
-      "": [searchValue],
+      [FILTER_TEXT_CATEGORY_KEY]: [searchValue],
     });
   };
 
@@ -145,7 +149,7 @@ export const Search: React.FC = () => {
           <ToolbarContent>
             <ToolbarGroup align={{ default: "alignLeft" }}>
               <TextContent>
-                <Text component="h1">Search</Text>
+                <Text component="h1">Search Results</Text>
               </TextContent>
             </ToolbarGroup>
             <ToolbarGroup
@@ -171,10 +175,10 @@ export const Search: React.FC = () => {
         </Toolbar>
       </PageSection>
       <PageSection>
-        <Grid hasGutter>
-          <GridItem md={2}>
+        <Split hasGutter>
+          <SplitItem>
             <Card isFullHeight>
-              <CardBody>
+              <CardBody style={{ width: 241 }}>
                 {activeTabKey === 0 ? (
                   <FilterPanel
                     omitFilterCategoryKeys={[""]}
@@ -198,8 +202,8 @@ export const Search: React.FC = () => {
                 ) : null}
               </CardBody>
             </Card>
-          </GridItem>
-          <GridItem md={10}>
+          </SplitItem>
+          <SplitItem isFilled>
             <Tabs
               isBox
               activeKey={activeTabKey}
@@ -271,8 +275,8 @@ export const Search: React.FC = () => {
                 <AdvisoryTable />
               </Tab>
             </Tabs>
-          </GridItem>
-        </Grid>
+          </SplitItem>
+        </Split>
       </PageSection>
     </>
   );

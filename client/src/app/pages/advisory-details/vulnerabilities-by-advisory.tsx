@@ -14,6 +14,7 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
+import { VulnerabilityDescription } from "@app/components/VulnerabilityDescription";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { formatDate } from "@app/utils/utils";
 
@@ -116,7 +117,7 @@ export const VulnerabilitiesByAdvisory: React.FC<
                       modifier="truncate"
                       {...getTdProps({ columnKey: "title" })}
                     >
-                      {item.title || item.description}
+                      <VulnerabilityDescription vulnerability={item} />
                     </Td>
                     <Td width={15} {...getTdProps({ columnKey: "discovery" })}>
                       {formatDate(item.discovered)}

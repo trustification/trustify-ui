@@ -1,9 +1,22 @@
 import React, { Suspense } from "react";
+
 import { AuthProvider, useAuth } from "react-oidc-context";
-import { oidcClientSettings } from "@app/oidc";
-import ENV from "@app/env";
-import { AppPlaceholder } from "./AppPlaceholder";
+
 import { initInterceptors } from "@app/axios-config";
+import ENV from "@app/env";
+import { oidcClientSettings } from "@app/oidc";
+import {
+  Bullseye,
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateIcon,
+  EmptyStateVariant,
+  Title,
+} from "@patternfly/react-core";
+import ExclamationCircleIcon from "@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon";
+import { global_danger_color_200 as globalDangerColor200 } from "@patternfly/react-tokens";
+
+import { AppPlaceholder } from "./AppPlaceholder";
 
 interface IOidcProviderProps {
   children: React.ReactNode;
@@ -35,10 +48,10 @@ const AuthEnabledOidcProvider: React.FC<IOidcProviderProps> = ({
   const auth = useAuth();
 
   React.useEffect(() => {
-    if (!auth.isAuthenticated && !auth.isLoading) {
+    if (!auth.isAuthenticated && !auth.isLoading && !auth.error) {
       auth.signinRedirect();
     }
-  }, [auth.isAuthenticated, auth.isLoading]);
+  }, [auth.isAuthenticated, auth.isLoading, auth.error]);
 
   React.useEffect(() => {
     initInterceptors();
@@ -48,6 +61,24 @@ const AuthEnabledOidcProvider: React.FC<IOidcProviderProps> = ({
     return <Suspense fallback={<AppPlaceholder />}>{children}</Suspense>;
   } else if (auth.isLoading) {
     return <AppPlaceholder />;
+  } else if (auth.error) {
+    return (
+      <Bullseye>
+        <EmptyState variant={EmptyStateVariant.sm}>
+          <EmptyStateIcon
+            icon={ExclamationCircleIcon}
+            color={globalDangerColor200.value}
+          />
+          <Title headingLevel="h2" size="lg">
+            Auth Error
+          </Title>
+          <EmptyStateBody>
+            {`${auth.error.name}: ${auth.error.message}`}. Revisit your OIDC
+            configuration or contact your admin.
+          </EmptyStateBody>
+        </EmptyState>
+      </Bullseye>
+    );
   } else {
     return <p>Login in...</p>;
   }

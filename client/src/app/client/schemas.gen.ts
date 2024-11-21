@@ -276,7 +276,7 @@ export const AnalysisStatusSchema = {
 
 export const AncNodeSchema = {
   type: "object",
-  required: ["sbom_id", "node_id", "purl", "name"],
+  required: ["sbom_id", "node_id", "purl", "name", "version"],
   properties: {
     name: {
       type: "string",
@@ -290,6 +290,9 @@ export const AncNodeSchema = {
     sbom_id: {
       type: "string",
     },
+    version: {
+      type: "string",
+    },
   },
 } as const;
 
@@ -300,6 +303,7 @@ export const AncestorSummarySchema = {
     "node_id",
     "purl",
     "name",
+    "version",
     "published",
     "document_id",
     "product_name",
@@ -335,6 +339,9 @@ export const AncestorSummarySchema = {
       type: "string",
     },
     sbom_id: {
+      type: "string",
+    },
+    version: {
       type: "string",
     },
   },
@@ -587,7 +594,15 @@ export const CweImporterSchema = {
 
 export const DepNodeSchema = {
   type: "object",
-  required: ["sbom_id", "node_id", "purl", "name", "deps"],
+  required: [
+    "sbom_id",
+    "node_id",
+    "relationship",
+    "purl",
+    "name",
+    "version",
+    "deps",
+  ],
   properties: {
     deps: {
       type: "array",
@@ -604,7 +619,13 @@ export const DepNodeSchema = {
     purl: {
       type: "string",
     },
+    relationship: {
+      type: "string",
+    },
     sbom_id: {
+      type: "string",
+    },
+    version: {
       type: "string",
     },
   },
@@ -617,6 +638,7 @@ export const DepSummarySchema = {
     "node_id",
     "purl",
     "name",
+    "version",
     "published",
     "document_id",
     "product_name",
@@ -652,6 +674,9 @@ export const DepSummarySchema = {
       type: "string",
     },
     sbom_id: {
+      type: "string",
+    },
+    version: {
       type: "string",
     },
   },
