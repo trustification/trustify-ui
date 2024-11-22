@@ -1,5 +1,7 @@
 import { http, HttpResponse } from "msw";
-import { sbomList } from "./data/sbom/list";
+import getAdvisories from "@mocks/data/advisory/list.json";
+import getPurls from "@mocks/data/purl/list.json";
+import getSboms from "@mocks/data/sbom/list.json";
 import getVulnerabilities from "@mocks/data/vulnerability/list.json";
 
 // DATA IMPORTS
@@ -18,6 +20,12 @@ import cve202326464 from "@mocks/data/vulnerability/details/CVE-2023-26464.json"
 import sbom1 from "@mocks/data/sbom/details/urn%3Auuid%3A01932ff3-0fc4-7bf2-8201-5d5e9dc471bd.json";
 import sbom2 from "@mocks/data/sbom/details/urn%3Auuid%3A01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9.json";
 
+import purl1 from "@mocks/data/purl/details/2e05fb3a-cda9-5e54-96b2-d8c7ea390f8d.json";
+import purl2 from "@mocks/data/purl/details/e0b74cfd-e0b0-512b-8814-947f868bc50e.json";
+import purl3 from "@mocks/data/purl/details/f4f6b460-82e5-59f0-a7f6-da5f226a9b24.json";
+import purl4 from "@mocks/data/purl/details/f357b0cc-75d5-532e-b7d9-2233f6f752c8.json";
+
+import imgAvatar from "@app/images/avatar.svg";
 import { VulnerabilityHead } from "@app/client";
 
 export const cveDetails: { [identifier: string]: Partial<VulnerabilityHead> } =
@@ -35,8 +43,15 @@ export const cveDetails: { [identifier: string]: Partial<VulnerabilityHead> } =
   };
 
 export const sbomDetails: { [identifier: string]: any } = {
-  "urn%3Auuid%3A01932ff3-0fc4-7bf2-8201-5d5e9dc471bd": sbom1,
-  "urn%3Auuid%3A01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9": sbom2,
+  "urn:uuid:01932ff3-0fc4-7bf2-8201-5d5e9dc471bd": sbom1,
+  "urn:uuid:01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9": sbom2,
+};
+
+export const purlDetails: { [identifier: string]: any } = {
+  "2e05fb3a-cda9-5e54-96b2-d8c7ea390f8d": purl1,
+  "e0b74cfd-e0b0-512b-8814-947f868bc50e": purl2,
+  "f4f6b460-82e5-59f0-a7f6-da5f226a9b24": purl3,
+  "f357b0cc-75d5-532e-b7d9-2233f6f752c8": purl4,
 };
 
 /**
@@ -48,7 +63,9 @@ export const sbomDetails: { [identifier: string]: any } = {
 
 const advisoryHandlers = [
   // list advisories
-  http.get("/api/v1/advisory", () => {}),
+  http.get("/api/v1/advisory", ({ request }) => {
+    return HttpResponse.json(getAdvisories);
+  }),
 
   // upload a new advisory
   http.post("/api/v1/advisory", () => {}),
@@ -86,6 +103,14 @@ const analysisHandlers = [
   http.get("/api/v1/analysis/root-component", () => {}),
   http.get("/api/v1/analysis/root-component/:key", () => {}),
   http.get("/api/v1/analysis/status", () => {}),
+];
+
+// ASSET HANDLERS
+
+const assetHandlers = [
+  http.get("/branding/images/masthead-logo.svg", () => {
+    return new HttpResponse(imgAvatar);
+  }),
 ];
 
 // DATASET HANDLERS
@@ -170,13 +195,28 @@ const productHandlers = [
 
 const purlHandlers = [
   // list fully qualified purls
-  http.get("/api/v1/purl", () => {}),
+  http.get("/api/v1/purl", ({ request }) => {
+    const url = new URL(request.url);
+    return HttpResponse.json(getPurls);
+  }),
 
   // retrieve versioned pURL details of a type
   http.get("/api/v1/purl/type/:type/:namespace_and_name@:version", () => {}),
 
   // retrieve details of a fully qualified purl
-  http.get("/api/v1/purl/:key", () => {}),
+  http.get("/api/v1/purl/:key", ({ params }) => {
+    const { key } = params;
+
+    if (!key) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    const data = purlDetails[key as string];
+    if (!data) {
+      return new HttpResponse("Purl not found", { status: 404 });
+    }
+    return HttpResponse.json(data);
+  }),
 ];
 
 // BASE PURL HANDLERS
@@ -214,7 +254,7 @@ const versionedPurlHandlers = [
 const sbomHandlers = [
   // get ALL SBOMs
   http.get("/api/v1/sbom", () => {
-    return HttpResponse.json(sbomList);
+    return HttpResponse.json(getSboms);
   }),
 
   // upload a new SBOM
@@ -224,12 +264,12 @@ const sbomHandlers = [
   // NOTE: The package can be provided either via a PURL or
   // using the ID of a package as returned by other APIs, but not both.
   http.get("/api/v1/sbom/by-package", () => {
-    return HttpResponse.json(sbomList);
+    return HttpResponse.json(getSboms);
   }),
 
   // count all SBOMs containing the provided packages
   http.get("/api/v1/sbom/count-by-package", () => {
-    return HttpResponse.json(sbomList);
+    return HttpResponse.json(getSboms);
   }),
 
   // get an SBOM by its ID
@@ -264,31 +304,6 @@ const sbomHandlers = [
   http.get("/api/v1/sbom/:id/related", () => {}),
 
   http.get("/api/v1/sbom/:key/download", () => {}),
-
-  //
-
-  // http.get("/api/v1/sbom/urn%3Auuid%3A:id", () => {
-  //
-  //   return HttpResponse.json(sbomList);
-  // }),
-  // http.get(
-  //   "/api/v1/sbom/urn%3Auuid%3A0193013f-1b8a-7152-8857-8b8f4238b8ba",
-  //   () => {
-  //     return HttpResponse.json(sbom2);
-  //   }
-  // ),
-  // http.get(
-  //   "/api/v1/sbom/urn%3Auuid%3A0193013f-0f00-77e1-afe4-b7d7f8585b7a",
-  //   () => {
-  //     return HttpResponse.json(sbom1);
-  //   }
-  // ),
-  // http.get(
-  //   "/api/v1/sbom/urn%3Auuid%3A0193013f-1b8a-7152-8857-8b8f4238b8ba",
-  //   () => {
-  //     return HttpResponse.json(sbom2);
-  //   }
-  // ),
 ];
 
 // USER PREFERENCES HANDLERS
@@ -351,6 +366,7 @@ export {
   advisoryHandlers,
   aiHandlers,
   analysisHandlers,
+  assetHandlers,
   basePurlHandlers,
   datasetHandlers,
   importerHandlers,
@@ -372,6 +388,7 @@ export const handlers = [
   ...advisoryHandlers,
   ...aiHandlers,
   ...analysisHandlers,
+  ...assetHandlers,
   ...basePurlHandlers,
   ...datasetHandlers,
   ...importerHandlers,
