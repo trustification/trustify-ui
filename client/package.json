@@ -57,6 +57,7 @@
   "devDependencies": {
     "@hey-api/openapi-ts": "^0.53.5",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
+    "@svgr/webpack": "^8.1.0",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.4.3",
@@ -110,16 +111,5 @@
   },
   "msw": {
     "workerDirectory": "public"
-  },
-  "imports": {
-    "#useSbomsOfVulnerability": {
-      "storybook": "./src/app/hooks/domain-controls/useSbomsOfVulnerability.mock.ts",
-      "default": "./src/app/hooks/domain-controls/useSbomsOfVulnerability.ts"
-    },
-    "#*": [
-      "./*",
-      "./*.ts",
-      "./*.tsx"
-    ]
   }
 }
