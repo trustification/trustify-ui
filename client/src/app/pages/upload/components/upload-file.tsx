@@ -14,6 +14,8 @@ import {
   MultipleFileUploadMain,
   MultipleFileUploadStatus,
   MultipleFileUploadStatusItem,
+  Spinner,
+  Text,
 } from "@patternfly/react-core";
 
 import FileIcon from "@patternfly/react-icons/dist/esm/icons/file-code-icon";
@@ -111,6 +113,11 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
           >
             {Array.from(uploads.entries()).map(([file, upload], index) => (
               <MultipleFileUploadStatusItem
+                className={
+                  upload.progress < 100 || !upload.response
+                    ? "multiple-file-upload-status-item-force-blue"
+                    : undefined
+                }
                 fileIcon={<FileIcon />}
                 file={file}
                 key={`${file.name}-${index}`}
@@ -128,6 +135,13 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
                     <HelperText isLiveRegion>
                       <HelperTextItem variant="error">
                         {extractErrorMessage(upload.error)}
+                      </HelperTextItem>
+                    </HelperText>
+                  ) : upload.progress === 100 && !upload.response ? (
+                    <HelperText isLiveRegion>
+                      <HelperTextItem variant="warning">
+                        <Spinner isInline />
+                        File uploaded. Waiting for the server to process it.
                       </HelperTextItem>
                     </HelperText>
                   ) : upload.response ? (
