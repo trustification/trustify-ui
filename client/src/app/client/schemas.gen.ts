@@ -276,7 +276,7 @@ export const AnalysisStatusSchema = {
 
 export const AncNodeSchema = {
   type: "object",
-  required: ["sbom_id", "node_id", "purl", "name", "version"],
+  required: ["sbom_id", "node_id", "relationship", "purl", "name", "version"],
   properties: {
     name: {
       type: "string",
@@ -285,6 +285,9 @@ export const AncNodeSchema = {
       type: "string",
     },
     purl: {
+      type: "string",
+    },
+    relationship: {
       type: "string",
     },
     sbom_id: {
@@ -1382,19 +1385,13 @@ export const PaginatedResults_SbomSummarySchema = {
           },
           {
             type: "object",
-            required: ["described_by", "number_of_packages"],
+            required: ["described_by"],
             properties: {
               described_by: {
                 type: "array",
                 items: {
                   $ref: "#/components/schemas/SbomPackage",
                 },
-              },
-              number_of_packages: {
-                type: "integer",
-                format: "int64",
-                description: "The number of packages this SBOM has",
-                minimum: 0,
               },
             },
           },
@@ -1843,6 +1840,7 @@ export const RelationshipSchema = {
     "dev_tool_of",
     "described_by",
     "package_of",
+    "undefined",
   ],
 } as const;
 
@@ -1952,6 +1950,7 @@ export const SbomHeadSchema = {
     "published",
     "authors",
     "name",
+    "number_of_packages",
   ],
   properties: {
     authors: {
@@ -1977,6 +1976,12 @@ export const SbomHeadSchema = {
     },
     name: {
       type: "string",
+    },
+    number_of_packages: {
+      type: "integer",
+      format: "int64",
+      description: "The number of packages this SBOM has",
+      minimum: 0,
     },
     published: {
       type: ["string", "null"],
@@ -2077,32 +2082,39 @@ export const SbomPackageRelationSchema = {
 } as const;
 
 export const SbomStatusSchema = {
-  type: "object",
-  required: ["vulnerability_id", "status", "packages"],
-  properties: {
-    context: {
-      oneOf: [
-        {
-          type: "null",
-        },
-        {
-          $ref: "#/components/schemas/StatusContext",
-        },
-      ],
+  allOf: [
+    {
+      $ref: "#/components/schemas/VulnerabilityHead",
     },
-    packages: {
-      type: "array",
-      items: {
-        $ref: "#/components/schemas/SbomPackage",
+    {
+      type: "object",
+      required: ["average_severity", "status", "packages"],
+      properties: {
+        average_severity: {
+          $ref: "#/components/schemas/Severity",
+        },
+        context: {
+          oneOf: [
+            {
+              type: "null",
+            },
+            {
+              $ref: "#/components/schemas/StatusContext",
+            },
+          ],
+        },
+        packages: {
+          type: "array",
+          items: {
+            $ref: "#/components/schemas/SbomPackage",
+          },
+        },
+        status: {
+          type: "string",
+        },
       },
     },
-    status: {
-      type: "string",
-    },
-    vulnerability_id: {
-      type: "string",
-    },
-  },
+  ],
 } as const;
 
 export const SbomSummarySchema = {
@@ -2122,19 +2134,13 @@ export const SbomSummarySchema = {
     },
     {
       type: "object",
-      required: ["described_by", "number_of_packages"],
+      required: ["described_by"],
       properties: {
         described_by: {
           type: "array",
           items: {
             $ref: "#/components/schemas/SbomPackage",
           },
-        },
-        number_of_packages: {
-          type: "integer",
-          format: "int64",
-          description: "The number of packages this SBOM has",
-          minimum: 0,
         },
       },
     },

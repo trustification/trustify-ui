@@ -1,32 +1,83 @@
 import React from "react";
 
 import { VulnerabilityStatus } from "@app/api/models";
-import { client } from "@app/axios-config/apiInit";
+import { SbomAdvisory, SbomPackage, SbomStatus, Severity } from "@app/client";
 import {
-  getVulnerability,
-  SbomAdvisory,
-  SbomPackage,
-  Severity,
-  VulnerabilityDetails,
-} from "@app/client";
-import { useFetchSbomsAdvisory } from "@app/queries/sboms";
+  useFetchSbomsAdvisory,
+  useFetchSbomsAdvisoryBatch,
+} from "@app/queries/sboms";
 
 interface VulnerabilityOfSbom {
-  vulnerabilityId: string;
+  vulnerability: SbomStatus;
   advisory: SbomAdvisory;
-  status: VulnerabilityStatus;
+  vulnerabilityStatus: VulnerabilityStatus;
   packages: SbomPackage[];
-  vulnerability?: VulnerabilityDetails;
 }
 
-interface VulnerabilityOfSbomSummary {
+export type SeveritySummary = {
   total: number;
   severities: { [key in Severity]: number };
+};
+
+export interface VulnerabilityOfSbomSummary {
+  vulnerabilityStatus: {
+    [key in VulnerabilityStatus]: SeveritySummary;
+  };
 }
 
-const DEFAULT_SUMMARY: VulnerabilityOfSbomSummary = {
+const DEFAULT_SEVERITY: SeveritySummary = {
   total: 0,
   severities: { none: 0, low: 0, medium: 0, high: 0, critical: 0 },
+};
+
+const DEFAULT_SUMMARY: VulnerabilityOfSbomSummary = {
+  vulnerabilityStatus: {
+    affected: { ...DEFAULT_SEVERITY },
+    fixed: { ...DEFAULT_SEVERITY },
+    not_affected: { ...DEFAULT_SEVERITY },
+    known_not_affected: { ...DEFAULT_SEVERITY },
+  },
+};
+
+const advisoryStatusToModels = (advisories: SbomAdvisory[]) => {
+  const vulnerabilities = advisories.flatMap((advisory) => {
+    return (advisory.status ?? []).map((sbomStatus) => {
+      const result: VulnerabilityOfSbom = {
+        vulnerability: sbomStatus,
+        advisory: advisory,
+        vulnerabilityStatus: sbomStatus.status as VulnerabilityStatus,
+        packages: sbomStatus.packages || [],
+      };
+      return result;
+    });
+  });
+
+  const summary = vulnerabilities.reduce((prev, current) => {
+    const vulnStatus = current.vulnerabilityStatus;
+    const severity = current.vulnerability.average_severity;
+
+    const prevVulnStatusValue = prev.vulnerabilityStatus[vulnStatus];
+
+    const result: VulnerabilityOfSbomSummary = {
+      ...prev,
+      vulnerabilityStatus: {
+        ...prev.vulnerabilityStatus,
+        [vulnStatus]: {
+          total: prevVulnStatusValue.total + 1,
+          severities: {
+            ...prevVulnStatusValue.severities,
+            [severity]: prevVulnStatusValue.severities[severity] + 1,
+          },
+        },
+      },
+    };
+    return result;
+  }, DEFAULT_SUMMARY);
+
+  return {
+    vulnerabilities,
+    summary,
+  };
 };
 
 export const useVulnerabilitiesOfSbom = (sbomId: string) => {
@@ -36,115 +87,30 @@ export const useVulnerabilitiesOfSbom = (sbomId: string) => {
     fetchError: fetchErrorAdvisories,
   } = useFetchSbomsAdvisory(sbomId);
 
-  const [allVulnerabilities, setAllVulnerabilities] = React.useState<
-    VulnerabilityOfSbom[]
-  >([]);
-  const [vulnerabilitiesById, setVulnerabilitiesById] = React.useState<
-    Map<string, VulnerabilityDetails>
-  >(new Map());
-  const [isFetchingVulnerabilities, setIsFetchingVulnerabilities] =
-    React.useState(false);
+  const result = React.useMemo(() => {
+    return advisoryStatusToModels(advisories || []);
+  }, [advisories]);
 
-  React.useEffect(() => {
-    if (advisories.length === 0) {
-      return;
-    }
+  return {
+    data: result,
+    isFetching: isFetchingAdvisories,
+    fetchError: fetchErrorAdvisories,
+  };
+};
 
-    const vulnerabilities = (advisories ?? [])
-      .flatMap((advisory) => {
-        return (advisory.status ?? []).map((status) => {
-          const result: VulnerabilityOfSbom = {
-            vulnerabilityId: status.vulnerability_id,
-            status: status.status as VulnerabilityStatus,
-            packages: status.packages || [],
-            advisory: { ...advisory },
-          };
-          return result;
-        });
-      })
-      // Take only "affected"
-      .filter((item) => item.status === "affected")
-      // Remove duplicates if exists
-      .reduce((prev, current) => {
-        const exists = prev.find(
-          (item) =>
-            item.vulnerabilityId === current.vulnerabilityId &&
-            item.advisory.uuid === current.advisory.uuid
-        );
-        if (!exists) {
-          return [...prev, current];
-        } else {
-          return prev;
-        }
-      }, [] as VulnerabilityOfSbom[]);
+export const useVulnerabilitiesOfSboms = (sbomIds: string[]) => {
+  const { advisories, isFetching, fetchError } =
+    useFetchSbomsAdvisoryBatch(sbomIds);
 
-    setAllVulnerabilities(vulnerabilities);
-    setIsFetchingVulnerabilities(true);
-
-    Promise.all(
-      vulnerabilities
-        .map(async (item) => {
-          const response = await getVulnerability({
-            client,
-            path: { id: item.vulnerabilityId },
-          });
-          return response.data;
-        })
-        .map((vulnerability) => vulnerability.catch(() => null))
-    ).then((vulnerabilities) => {
-      const validVulnerabilities = vulnerabilities.reduce((prev, current) => {
-        if (current) {
-          return [...prev, current];
-        } else {
-          // Filter out error responses
-          return prev;
-        }
-      }, [] as VulnerabilityDetails[]);
-
-      const vulnerabilitiesById = new Map<string, VulnerabilityDetails>();
-      validVulnerabilities.forEach((vulnerability) => {
-        vulnerabilitiesById.set(vulnerability.identifier, vulnerability);
-      });
-
-      setVulnerabilitiesById(vulnerabilitiesById);
-      setIsFetchingVulnerabilities(false);
+  const result = React.useMemo(() => {
+    return (advisories ?? []).map((item) => {
+      return advisoryStatusToModels(item || []);
     });
   }, [advisories]);
 
-  const allVulnerabilitiesWithMappedData = React.useMemo(() => {
-    return allVulnerabilities.map((item) => {
-      const result: VulnerabilityOfSbom = {
-        ...item,
-        vulnerability: vulnerabilitiesById.get(item.vulnerabilityId),
-      };
-      return result;
-    });
-  }, [allVulnerabilities, vulnerabilitiesById]);
-
-  // Summary
-
-  const vulnerabilitiesSummary = React.useMemo(() => {
-    return allVulnerabilitiesWithMappedData.reduce((prev, current) => {
-      if (current.vulnerability?.average_severity) {
-        const severity = current.vulnerability?.average_severity;
-        return {
-          ...prev,
-          total: prev.total + 1,
-          severities: {
-            ...prev.severities,
-            [severity]: prev.severities[severity] + 1,
-          },
-        };
-      } else {
-        return prev;
-      }
-    }, DEFAULT_SUMMARY);
-  }, [allVulnerabilitiesWithMappedData]);
-
   return {
-    isFetching: isFetchingAdvisories || isFetchingVulnerabilities,
-    fetchError: fetchErrorAdvisories,
-    vulnerabilities: allVulnerabilitiesWithMappedData,
-    summary: vulnerabilitiesSummary,
+    data: result,
+    isFetching: isFetching,
+    fetchError: fetchError,
   };
 };
