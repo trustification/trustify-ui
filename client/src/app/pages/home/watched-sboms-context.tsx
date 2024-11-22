@@ -29,9 +29,9 @@ interface IWatchedSbomsProvider {
 export const WatchedSbomsProvider: React.FunctionComponent<
   IWatchedSbomsProvider
 > = ({ children }) => {
-  const { sboms, isFetching, fetchError } = useFetchWatchedSboms();
-
   const { pushNotification } = React.useContext(NotificationsContext);
+
+  const { sboms, isFetching, fetchError } = useFetchWatchedSboms();
 
   const onUpdateSuccess = () => {};
   const onUpdateError = (_error: AxiosError) => {
@@ -53,7 +53,12 @@ export const WatchedSbomsProvider: React.FunctionComponent<
 
   return (
     <WatchedSbomsContext.Provider
-      value={{ sboms, isFetching, fetchError, patch }}
+      value={{
+        sboms,
+        isFetching,
+        fetchError,
+        patch,
+      }}
     >
       {children}
     </WatchedSbomsContext.Provider>

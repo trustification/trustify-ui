@@ -56,15 +56,15 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
     fetchError: fetchErrorSbom,
   } = useFetchSBOMById(sbomId);
   const {
-    vulnerabilities: vulnerabilities,
-    summary: vulnerabilitiesSummary,
+    data: { vulnerabilities, summary: vulnerabilitiesSummary },
     isFetching: isFetchingVulnerabilities,
     fetchError: fetchErrorVulnerabilities,
   } = useVulnerabilitiesOfSbom(sbomId);
 
   const tableDataWithUiId = useWithUiId(
     vulnerabilities,
-    (d) => `${d.vulnerabilityId}-${d.advisory.identifier}-${d.advisory.uuid}`
+    (d) =>
+      `${d.vulnerability.identifier}-${d.advisory.identifier}-${d.advisory.uuid}`
   );
 
   const tableControls = useLocalTableControls({
@@ -118,7 +118,9 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                 <Grid hasGutter>
                   <GridItem md={6}>
                     <SbomVulnerabilitiesDonutChart
-                      vulnerabilitiesSummary={vulnerabilitiesSummary}
+                      vulnerabilitiesSummary={
+                        vulnerabilitiesSummary.vulnerabilityStatus.affected
+                      }
                     />
                   </GridItem>
                   <GridItem md={6}>
@@ -195,8 +197,10 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                         rowIndex={rowIndex}
                       >
                         <Td width={15} {...getTdProps({ columnKey: "id" })}>
-                          <Link to={`/vulnerabilities/${item.vulnerabilityId}`}>
-                            {item.vulnerabilityId}
+                          <Link
+                            to={`/vulnerabilities/${item.vulnerability.identifier}`}
+                          >
+                            {item.vulnerability.identifier}
                           </Link>
                         </Td>
                         <Td
@@ -211,8 +215,10 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                           )}
                         </Td>
                         <Td width={10} {...getTdProps({ columnKey: "cvss" })}>
-                          {item.severity && (
-                            <SeverityShieldAndText value={item.severity} />
+                          {item.vulnerability.average_severity && (
+                            <SeverityShieldAndText
+                              value={item.vulnerability.average_severity}
+                            />
                           )}
                         </Td>
                         <Td

@@ -180,7 +180,7 @@ export const useFetchSbomsAdvisory = (sbomId: string) => {
   };
 };
 
-export const useFetchSbomsAdvisory2 = (sbomIds: string[]) => {
+export const useFetchSbomsAdvisoryBatch = (sbomIds: string[]) => {
   const userQueries = useQueries({
     queries: sbomIds.map((sbomId) => {
       return {

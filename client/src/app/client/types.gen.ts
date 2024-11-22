@@ -119,7 +119,9 @@ export type AncNode = {
   name: string;
   node_id: string;
   purl: string;
+  relationship: string;
   sbom_id: string;
+  version: string;
 };
 
 export type AncestorSummary = {
@@ -132,6 +134,7 @@ export type AncestorSummary = {
   published: string;
   purl: string;
   sbom_id: string;
+  version: string;
 };
 
 export type BasePurlDetails = BasePurlHead & {
@@ -230,7 +233,9 @@ export type DepNode = {
   name: string;
   node_id: string;
   purl: string;
+  relationship: string;
   sbom_id: string;
+  version: string;
 };
 
 export type DepSummary = {
@@ -243,6 +248,7 @@ export type DepSummary = {
   published: string;
   purl: string;
   sbom_id: string;
+  version: string;
 };
 
 /**
@@ -532,10 +538,6 @@ export type PaginatedResults_SbomSummary = {
     SbomHead &
       (null | SourceDocument) & {
         described_by: Array<SbomPackage>;
-        /**
-         * The number of packages this SBOM has
-         */
-        number_of_packages: number;
       }
   >;
   total: number;
@@ -682,7 +684,8 @@ export type Relationship =
   | "build_tool_of"
   | "dev_tool_of"
   | "described_by"
-  | "package_of";
+  | "package_of"
+  | "undefined";
 
 export type Report = {
   /**
@@ -736,6 +739,10 @@ export type SbomHead = {
   id: string;
   labels: Labels;
   name: string;
+  /**
+   * The number of packages this SBOM has
+   */
+  number_of_packages: number;
   published: string | null;
 };
 
@@ -762,21 +769,16 @@ export type SbomPackageRelation = {
   relationship: Relationship;
 };
 
-export type SbomStatus = {
+export type SbomStatus = VulnerabilityHead & {
+  average_severity: Severity;
   context?: null | StatusContext;
   packages: Array<SbomPackage>;
-  severity?: null | Severity;
   status: string;
-  vulnerability: VulnerabilityHead;
 };
 
 export type SbomSummary = SbomHead &
   (null | SourceDocument) & {
     described_by: Array<SbomPackage>;
-    /**
-     * The number of packages this SBOM has
-     */
-    number_of_packages: number;
   };
 
 /**

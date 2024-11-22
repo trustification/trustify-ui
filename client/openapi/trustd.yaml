@@ -5,7 +5,7 @@ info:
   license:
     name: Apache License, Version 2.0
     identifier: Apache-2.0
-  version: 0.1.0-alpha.23
+  version: 0.1.0-alpha.24
 paths:
   /.well-known/trustify:
     get:
@@ -2243,8 +2243,10 @@ components:
       required:
       - sbom_id
       - node_id
+      - relationship
       - purl
       - name
+      - version
       properties:
         name:
           type: string
@@ -2252,7 +2254,11 @@ components:
           type: string
         purl:
           type: string
+        relationship:
+          type: string
         sbom_id:
+          type: string
+        version:
           type: string
     AncestorSummary:
       type: object
@@ -2261,6 +2267,7 @@ components:
       - node_id
       - purl
       - name
+      - version
       - published
       - document_id
       - product_name
@@ -2286,6 +2293,8 @@ components:
         purl:
           type: string
         sbom_id:
+          type: string
+        version:
           type: string
     BasePurlDetails:
       allOf:
@@ -2451,8 +2460,10 @@ components:
       required:
       - sbom_id
       - node_id
+      - relationship
       - purl
       - name
+      - version
       - deps
       properties:
         deps:
@@ -2465,7 +2476,11 @@ components:
           type: string
         purl:
           type: string
+        relationship:
+          type: string
         sbom_id:
+          type: string
+        version:
           type: string
     DepSummary:
       type: object
@@ -2474,6 +2489,7 @@ components:
       - node_id
       - purl
       - name
+      - version
       - published
       - document_id
       - product_name
@@ -2499,6 +2515,8 @@ components:
         purl:
           type: string
         sbom_id:
+          type: string
+        version:
           type: string
     Id:
       type: string
@@ -3019,17 +3037,11 @@ components:
             - type: object
               required:
               - described_by
-              - number_of_packages
               properties:
                 described_by:
                   type: array
                   items:
                     $ref: '#/components/schemas/SbomPackage'
-                number_of_packages:
-                  type: integer
-                  format: int64
-                  description: The number of packages this SBOM has
-                  minimum: 0
         total:
           type: integer
           format: int64
@@ -3329,6 +3341,7 @@ components:
       - dev_tool_of
       - described_by
       - package_of
+      - undefined
     Report:
       type: object
       required:
@@ -3412,6 +3425,7 @@ components:
       - published
       - authors
       - name
+      - number_of_packages
       properties:
         authors:
           type: array
@@ -3429,6 +3443,11 @@ components:
           $ref: '#/components/schemas/Labels'
         name:
           type: string
+        number_of_packages:
+          type: integer
+          format: int64
+          description: The number of packages this SBOM has
+          minimum: 0
         published:
           type:
           - string
@@ -3500,28 +3519,26 @@ components:
         relationship:
           $ref: '#/components/schemas/Relationship'
     SbomStatus:
-      type: object
-      required:
-      - vulnerability
-      - status
-      - packages
-      properties:
-        context:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/StatusContext'
-        packages:
-          type: array
-          items:
-            $ref: '#/components/schemas/SbomPackage'
-        severity:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/Severity'
-        status:
-          type: string
-        vulnerability:
-          $ref: '#/components/schemas/VulnerabilityHead'
+      allOf:
+      - $ref: '#/components/schemas/VulnerabilityHead'
+      - type: object
+        required:
+        - average_severity
+        - status
+        - packages
+        properties:
+          average_severity:
+            $ref: '#/components/schemas/Severity'
+          context:
+            oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/StatusContext'
+          packages:
+            type: array
+            items:
+              $ref: '#/components/schemas/SbomPackage'
+          status:
+            type: string
     SbomSummary:
       allOf:
       - $ref: '#/components/schemas/SbomHead'
@@ -3531,17 +3548,11 @@ components:
       - type: object
         required:
         - described_by
-        - number_of_packages
         properties:
           described_by:
             type: array
             items:
               $ref: '#/components/schemas/SbomPackage'
-          number_of_packages:
-            type: integer
-            format: int64
-            description: The number of packages this SBOM has
-            minimum: 0
     Severity:
       type: string
       description: |-

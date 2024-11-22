@@ -20,7 +20,7 @@ import {
   StackItem,
   TextInputGroup,
   TextInputGroupMain,
-  TextInputGroupUtilities,
+  TextInputGroupUtilities
 } from "@patternfly/react-core";
 import TimesIcon from "@patternfly/react-icons/dist/esm/icons/times-icon";
 
@@ -121,11 +121,11 @@ export const WatchedSbom: React.FC<WatchedSbomProps> = ({
         <CardBody>
           {sbomId ? (
             <Stack>
-              <StackItem>
+              <StackItem isFilled>
                 <WatchedSbomDonutChart sbomId={sbomId} />
               </StackItem>
               <StackItem>
-                <Link to={`/sboms/${currentSbom?.id}`}>View Details</Link>
+                <Link to={`/sboms/${sbomId}`}>View Details</Link>
               </StackItem>
             </Stack>
           ) : (
