@@ -13,7 +13,7 @@ interface SBOMVulnerabilitiesProps {
 export const SBOMVulnerabilities: React.FC<SBOMVulnerabilitiesProps> = ({
   sbomId,
 }) => {
-  const { summary, isFetching, fetchError } = useVulnerabilitiesOfSbom(sbomId);
+  const { data, isFetching, fetchError } = useVulnerabilitiesOfSbom(sbomId);
 
   return (
     <LoadingWrapper
@@ -22,7 +22,9 @@ export const SBOMVulnerabilities: React.FC<SBOMVulnerabilitiesProps> = ({
       isFetchingState={<Skeleton screenreaderText="Loading contents" />}
       fetchErrorState={<Label color="red">Error</Label>}
     >
-      <VulnerabilityGallery severities={summary.severities} />
+      <VulnerabilityGallery
+        severities={data.summary.vulnerabilityStatus.affected.severities}
+      />
     </LoadingWrapper>
   );
 };

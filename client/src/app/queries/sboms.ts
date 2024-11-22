@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueries,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 import { HubRequestParams } from "@app/api/models";
@@ -46,10 +51,14 @@ export const useFetchSBOMs = (
   };
 };
 
-export const useFetchSBOMById = (id: string) => {
+export const useFetchSBOMById = (id?: string) => {
   const { data, isLoading, error } = useQuery({
     queryKey: [SBOMsQueryKey, id],
-    queryFn: () => getSbom({ client, path: { id } }),
+    queryFn: () => {
+      return id === undefined
+        ? Promise.resolve(undefined)
+        : getSbom({ client, path: { id: id! } });
+    },
     enabled: id !== undefined,
   });
 
@@ -133,7 +142,7 @@ export const useFetchSbomsByPackageId = (
   params: HubRequestParams = {}
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: [SBOMsQueryKey, "by-package", packageId, params],
+    queryKey: ["SBOMsQueryKeysss", "by-package", packageId, params],
     queryFn: () => {
       return listRelatedSboms({
         client,
@@ -167,6 +176,28 @@ export const useFetchSbomsAdvisory = (sbomId: string) => {
   return {
     advisories: data?.data || [],
     isFetching: isLoading,
-    fetchError: error,
+    fetchError: error as AxiosError | null,
+  };
+};
+
+export const useFetchSbomsAdvisoryBatch = (sbomIds: string[]) => {
+  const userQueries = useQueries({
+    queries: sbomIds.map((sbomId) => {
+      return {
+        queryKey: [SBOMsQueryKey, sbomId, "advisory"],
+        queryFn: () => {
+          return getSbomAdvisories({
+            client,
+            path: { id: sbomId },
+          });
+        },
+      };
+    }),
+  });
+
+  return {
+    advisories: userQueries.map(({ data }) => data?.data || []),
+    isFetching: userQueries.some(({ isLoading }) => isLoading),
+    fetchError: userQueries.map(({ error }) => error as AxiosError | null),
   };
 };

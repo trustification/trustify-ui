@@ -51,3 +51,12 @@ export interface DecomposedPurl {
   qualifiers?: Labels;
   path?: string;
 }
+
+// User preferences
+
+export interface WatchedSboms {
+  sbom1Id: string | null;
+  sbom2Id: string | null;
+  sbom3Id: string | null;
+  sbom4Id: string | null;
+}
