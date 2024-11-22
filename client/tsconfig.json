@@ -9,13 +9,7 @@
       "@assets/*": [
         "../node_modules/@patternfly/react-core/dist/styles/assets/*"
       ],
-      "@mocks/*": ["src/mocks/*"],
-      "#useSbomsOfVulnerability": [
-        "src/app/hooks/domain-controls/useSbomsOfVulnerability.ts"
-      ],
-      "#useSbomsOfVulnerability.mock": [
-        "src/app/hooks/domain-controls/useSbomsOfVulnerability.mock.ts"
-      ]
+      "@mocks/*": ["src/mocks/*"]
     },
     "typeRoots": ["types/", "node_modules/@types", "../node_modules/@types"],
     "target": "es2020",
