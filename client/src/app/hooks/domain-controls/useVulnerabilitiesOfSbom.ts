@@ -7,11 +7,30 @@ import {
   useFetchSbomsAdvisoryBatch,
 } from "@app/queries/sboms";
 
+const areEqualVulnerabilityOfSbomEqual = (
+  a: VulnerabilityOfSbom,
+  b: VulnerabilityOfSbom | FlatVulnerabilityOfSbom
+) => {
+  return (
+    a.vulnerability.identifier === b.vulnerability.identifier &&
+    a.vulnerabilityStatus === b.vulnerabilityStatus
+  );
+};
+
+interface FlatVulnerabilityOfSbom {
+  vulnerability: SbomStatus;
+  vulnerabilityStatus: VulnerabilityStatus;
+  advisory: SbomAdvisory;
+  packages: SbomPackage[];
+}
+
 interface VulnerabilityOfSbom {
   vulnerability: SbomStatus;
-  advisory: SbomAdvisory;
   vulnerabilityStatus: VulnerabilityStatus;
-  packages: SbomPackage[];
+  relatedPackages: {
+    advisory: SbomAdvisory;
+    packages: SbomPackage[];
+  }[];
 }
 
 export type SeveritySummary = {
@@ -41,15 +60,55 @@ const DEFAULT_SUMMARY: VulnerabilityOfSbomSummary = {
 
 const advisoryStatusToModels = (advisories: SbomAdvisory[]) => {
   const vulnerabilities = advisories.flatMap((advisory) => {
-    return (advisory.status ?? []).map((sbomStatus) => {
-      const result: VulnerabilityOfSbom = {
-        vulnerability: sbomStatus,
-        advisory: advisory,
-        vulnerabilityStatus: sbomStatus.status as VulnerabilityStatus,
-        packages: sbomStatus.packages || [],
-      };
-      return result;
-    });
+    return (
+      (advisory.status ?? [])
+        .map((sbomStatus) => {
+          const result: FlatVulnerabilityOfSbom = {
+            vulnerability: sbomStatus,
+            vulnerabilityStatus: sbomStatus.status as VulnerabilityStatus,
+            advisory: advisory,
+            packages: sbomStatus.packages,
+          };
+          return result;
+        })
+        // group
+        .reduce((prev, current) => {
+          const existingElement = prev.find((item) => {
+            return areEqualVulnerabilityOfSbomEqual(item, current);
+          });
+
+          if (existingElement) {
+            const arrayWithoutExistingItem = prev.filter(
+              (item) => !areEqualVulnerabilityOfSbomEqual(item, existingElement)
+            );
+
+            const updatedItemInArray: VulnerabilityOfSbom = {
+              ...existingElement,
+              relatedPackages: [
+                ...existingElement.relatedPackages,
+                {
+                  advisory: current.advisory,
+                  packages: current.packages,
+                },
+              ],
+            };
+
+            return [...arrayWithoutExistingItem, updatedItemInArray];
+          } else {
+            const newItemInArray: VulnerabilityOfSbom = {
+              vulnerability: current.vulnerability,
+              vulnerabilityStatus: current.vulnerabilityStatus,
+              relatedPackages: [
+                {
+                  advisory: current.advisory,
+                  packages: current.packages,
+                },
+              ],
+            };
+            return [...prev, newItemInArray];
+          }
+        }, [] as VulnerabilityOfSbom[])
+    );
   });
 
   const summary = vulnerabilities.reduce((prev, current) => {
