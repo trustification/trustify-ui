@@ -1,6 +1,5 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { BrowserRouter } from "react-router-dom";
 import { AdvisoryTable } from "./advisory-table";
 import { AdvisorySearchContext } from "./advisory-context";
 import listResponse from "@mocks/data/advisory/list.json";
@@ -222,11 +221,9 @@ const meta = {
     (Story, { parameters }) => {
       const { contextDefaultValue } = parameters;
       return (
-        <BrowserRouter>
-          <AdvisorySearchContext.Provider value={contextDefaultValue}>
-            <Story />
-          </AdvisorySearchContext.Provider>
-        </BrowserRouter>
+        <AdvisorySearchContext.Provider value={contextDefaultValue}>
+          <Story />
+        </AdvisorySearchContext.Provider>
       );
     },
   ],

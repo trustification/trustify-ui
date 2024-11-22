@@ -48,7 +48,7 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        order: ["v1.2x", "v2.1", "v2.x"],
+        order: ["v1", "v1.2x", "v2", "v2.1", "v2.x"],
       },
     },
   },

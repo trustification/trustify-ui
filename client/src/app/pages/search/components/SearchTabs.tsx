@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement, ReactNode } from "react";
 
 import {
   Badge,
@@ -21,21 +21,29 @@ import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 import { FilterPanel } from "@app/components/FilterPanel";
 
 export interface SearchTabsProps {
+  advisoryTable?: ReactNode;
   filterPanelProps: {
     advisoryFilterPanelProps?: any;
     packageFilterPanelProps?: any;
     sbomFilterPanelProps?: any;
     vulnerabilityFilterPanelProps?: any;
   };
+  packageTable?: ReactElement;
   packageTotalCount: number;
+  sbomTable?: ReactElement;
   sbomTotalCount: number;
+  vulnerabilityTable?: ReactElement;
   vulnerabilityTotalCount: number;
 }
 
 export const SearchTabs: React.FC<SearchTabsProps> = ({
+  advisoryTable,
   filterPanelProps,
+  packageTable,
   packageTotalCount,
+  sbomTable,
   sbomTotalCount,
+  vulnerabilityTable,
   vulnerabilityTotalCount,
 }) => {
   const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
@@ -124,7 +132,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
               </>
             }
           >
-            <SbomTable />
+            {sbomTable ?? <SbomTable />}
           </Tab>
           <Tab
             eventKey={1}
@@ -137,7 +145,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
               </TabTitleText>
             }
           >
-            <PackageTable />
+            {packageTable ?? <PackageTable />}
           </Tab>
           <Tab
             eventKey={2}
@@ -150,7 +158,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
               </TabTitleText>
             }
           >
-            <VulnerabilityTable />
+            {vulnerabilityTable ?? <VulnerabilityTable />}
           </Tab>
           <Tab
             eventKey={3}
@@ -163,7 +171,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
               </TabTitleText>
             }
           >
-            <AdvisoryTable />
+            {advisoryTable ?? <AdvisoryTable />}
           </Tab>
         </Tabs>
       </SplitItem>

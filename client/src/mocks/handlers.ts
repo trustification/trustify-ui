@@ -6,16 +6,16 @@ import getVulnerabilities from "@mocks/data/vulnerability/list.json";
 
 // DATA IMPORTS
 
-import cve202245787 from "@mocks/data/vulnerability/details/CVE-2022-45787.json";
-import cve20230044 from "@mocks/data/vulnerability/details/CVE-2023-0044.json";
-import cve20230481 from "@mocks/data/vulnerability/details/CVE-2023-0481.json";
-import cve20230482 from "@mocks/data/vulnerability/details/CVE-2023-0482.json";
-import cve20231370 from "@mocks/data/vulnerability/details/CVE-2023-1370.json";
-import cve20231436 from "@mocks/data/vulnerability/details/CVE-2023-1436.json";
-import cve202320861 from "@mocks/data/vulnerability/details/CVE-2023-20861.json";
-import cve202324815 from "@mocks/data/vulnerability/details/CVE-2023-24815.json";
-import cve202324998 from "@mocks/data/vulnerability/details/CVE-2023-24998.json";
-import cve202326464 from "@mocks/data/vulnerability/details/CVE-2023-26464.json";
+import cve202245787 from "@mocks/data/vulnerability/CVE-2022-45787/details.json";
+import cve20230044 from "@mocks/data/vulnerability/CVE-2023-0044/details.json";
+import cve20230481 from "@mocks/data/vulnerability/CVE-2023-0481/details.json";
+import cve20230482 from "@mocks/data/vulnerability/CVE-2023-0482/details.json";
+import cve20231370 from "@mocks/data/vulnerability/CVE-2023-1370/details.json";
+import cve20231436 from "@mocks/data/vulnerability/CVE-2023-1436/details.json";
+import cve202320861 from "@mocks/data/vulnerability/CVE-2023-20861/details.json";
+import cve202324815 from "@mocks/data/vulnerability/CVE-2023-24815/details.json";
+import cve202324998 from "@mocks/data/vulnerability/CVE-2023-24998/details.json";
+import cve202326464 from "@mocks/data/vulnerability/CVE-2023-26464/details.json";
 
 import sbom1 from "@mocks/data/sbom/details/urn%3Auuid%3A01932ff3-0fc4-7bf2-8201-5d5e9dc471bd.json";
 import sbom2 from "@mocks/data/sbom/details/urn%3Auuid%3A01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9.json";
@@ -289,7 +289,14 @@ const sbomHandlers = [
 
   http.delete("/api/v1/sbom/:id", () => {}),
 
-  http.get("/api/v1/sbom/:id/advisory", () => {}),
+  http.get("/api/v1/sbom/:id/advisory", ({ params }) => {
+    const { id } = params;
+    if (!id) {
+      return new HttpResponse("Advisory for SBOM not found", { status: 404 });
+    } else {
+      return HttpResponse.json({});
+    }
+  }),
 
   // replace labels of an SBOM
   http.put("/api/v1/sbom/:id/label", () => {}),
@@ -298,7 +305,14 @@ const sbomHandlers = [
   http.patch("/api/v1/sbom/:id/label", () => {}),
 
   // search for packages of an SBOM
-  http.get("/api/v1/sbom/:id/packages", () => {}),
+  http.get("/api/v1/sbom/:id/packages", ({ params }) => {
+    const { id } = params;
+    if (!id) {
+      return new HttpResponse("Packages for SBOM not found", { status: 404 });
+    } else {
+      return HttpResponse.json({});
+    }
+  }),
 
   // search for related packages in an SBOM
   http.get("/api/v1/sbom/:id/related", () => {}),

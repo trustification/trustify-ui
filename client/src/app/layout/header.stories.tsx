@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import React from "react";
 import { HeaderApp } from "@app/layout/header";
-import { MemoryRouter } from "react-router-dom";
 import { fn } from "@storybook/test";
 import * as actual from "@app/hooks/useBranding";
 
@@ -12,13 +10,6 @@ import { BrandingStrings } from "@trustify-ui/common";
 const meta = {
   title: "Components/Layout/HeaderApp",
   component: HeaderApp,
-  decorators: [
-    (Story) => (
-      <MemoryRouter initialEntries={["/"]}>
-        <Story />
-      </MemoryRouter>
-    ),
-  ],
 } satisfies Meta<typeof HeaderApp>;
 
 export default meta;
