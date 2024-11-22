@@ -5,6 +5,10 @@ import { MemoryRouter } from "react-router";
 import { NotificationsProvider } from "@app/components/NotificationsContext";
 import { DefaultLayout } from "@app/layout";
 
+const CustomBody: React.FC = () => {
+  return <div>Custom body for search page</div>;
+};
+
 const meta = {
   title: "v1/Search",
   component: SearchPage,
@@ -24,6 +28,10 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = {
-  args: {},
+export const Primary: Story = {};
+
+export const WithCustomBody: Story = {
+  args: {
+    searchBodyOverride: <CustomBody />,
+  },
 };

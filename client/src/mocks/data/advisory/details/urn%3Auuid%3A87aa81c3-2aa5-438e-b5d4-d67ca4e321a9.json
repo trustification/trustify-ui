@@ -1,0 +1,41 @@
+{
+  "uuid": "urn:uuid:87aa81c3-2aa5-438e-b5d4-d67ca4e321a9",
+  "identifier": "CVE-2023-1584",
+  "issuer": {
+    "id": "4aa82c3b-fc6e-41d7-ba55-e1c37853831a",
+    "name": "redhat",
+    "cpe_key": null,
+    "website": null
+  },
+  "published": "2023-10-04T10:47:37.831Z",
+  "modified": "2024-08-02T05:57:23.278Z",
+  "withdrawn": null,
+  "title": "Quarkus-oidc: id and access tokens leak via the authorization code flow",
+  "labels": {
+    "type": "cve"
+  },
+  "sha256": "sha256:b0d46c1f88f3edc59ace6252b3e5a7efad091934e1efd5fc24b0da7ef70375c1",
+  "sha384": "sha384:8a21b85944b6ead2d35df69691a28040b4b5ba280f1c195045792445214dc400d140a7748c62e385a3beb7647006c54a",
+  "sha512": "sha512:0c7ed4fb25fc88a12218aa4f979615793825c38750b040be063130921f8def0e7d130d69393637c1e265801b7a9526a9ff0b622014c72a3fd295bcebddb683aa",
+  "size": 9029,
+  "vulnerabilities": [
+    {
+      "normative": true,
+      "identifier": "CVE-2023-1584",
+      "title": "Quarkus-oidc: id and access tokens leak via the authorization code flow",
+      "description": "A flaw was found in Quarkus. Quarkus OIDC can leak both ID and access tokens in the authorization code flow when an insecure HTTP protocol is used, which can allow attackers to access sensitive user data directly from the ID token or by using the access token to access user data from OIDC provider services. Please note that passwords are not stored in access tokens.",
+      "reserved": "2023-03-22T20:15:15.323Z",
+      "published": "2023-10-04T10:47:37.831Z",
+      "modified": "2024-08-02T05:57:23.278Z",
+      "withdrawn": null,
+      "discovered": null,
+      "released": null,
+      "cwes": ["CWE-200"],
+      "severity": "none",
+      "score": 0.0,
+      "cvss3_scores": []
+    }
+  ],
+  "average_severity": null,
+  "average_score": null
+}

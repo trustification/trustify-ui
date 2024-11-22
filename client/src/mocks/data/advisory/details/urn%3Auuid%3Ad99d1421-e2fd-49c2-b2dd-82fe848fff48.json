@@ -1,0 +1,41 @@
+{
+  "uuid": "urn:uuid:d99d1421-e2fd-49c2-b2dd-82fe848fff48",
+  "identifier": "CVE-2023-1370",
+  "issuer": {
+    "id": "5b88a47d-03d5-4117-8657-d611a0ce432b",
+    "name": "JFROG",
+    "cpe_key": null,
+    "website": null
+  },
+  "published": "2023-03-13T09:04:36.365Z",
+  "modified": "2024-08-02T05:49:10.25Z",
+  "withdrawn": null,
+  "title": "Stack exhaustion in json-smart leads to denial of service when parsing malformed JSON",
+  "labels": {
+    "type": "cve"
+  },
+  "sha256": "sha256:cf24f4f6a00bb7af358f026ffcaaf89a0f55f44c93f5bb8b717d48b0a7bcb527",
+  "sha384": "sha384:55c10b2e628574cf1102903fbe48faa164a09f70837d15221d86b9de637eee1d319db54a48c5d3402ed9261a23188849",
+  "sha512": "sha512:4fb885b39a5c34f935ea7a5736eb054df1db402368a89e0199299a2930c5195b4e54591a233e9339400cce8a085de6064944d19aeee8b480a6cbd5ce636cb90b",
+  "size": 5555,
+  "vulnerabilities": [
+    {
+      "normative": true,
+      "identifier": "CVE-2023-1370",
+      "title": "Stack exhaustion in json-smart leads to denial of service when parsing malformed JSON",
+      "description": "[Json-smart](https://netplex.github.io/json-smart/) is a performance focused, JSON processor lib.\n\nWhen reaching a ‘[‘ or ‘{‘ character in the JSON input, the code parses an array or an object respectively.\n\nIt was discovered that the code does not have any limit to the nesting of such arrays or objects. Since the parsing of nested arrays and objects is done recursively, nesting too many of them can cause a stack exhaustion (stack overflow) and crash the software.\n\n",
+      "reserved": "2023-03-13T08:35:00.695Z",
+      "published": "2023-03-13T09:04:36.365Z",
+      "modified": "2024-08-02T05:49:10.25Z",
+      "withdrawn": null,
+      "discovered": null,
+      "released": null,
+      "cwes": ["CWE-674"],
+      "severity": "none",
+      "score": 0.0,
+      "cvss3_scores": []
+    }
+  ],
+  "average_severity": null,
+  "average_score": null
+}
