@@ -20,7 +20,7 @@ import { VulnerabilityTable } from "@app/pages/vulnerability-list/vulnerability-
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 import { FilterPanel } from "@app/components/FilterPanel";
 
-interface SearchTabsProps {
+export interface SearchTabsProps {
   filterPanelProps: {
     advisoryFilterPanelProps?: any;
     packageFilterPanelProps?: any;
