@@ -30,7 +30,12 @@ import {
 
 import { getSeverityPriority } from "@app/api/model-utils";
 import { VulnerabilityStatus } from "@app/api/models";
-import { SbomAdvisory, SbomPackage, SbomStatus } from "@app/client";
+import {
+  PurlSummary,
+  SbomAdvisory,
+  SbomPackage,
+  SbomStatus,
+} from "@app/client";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { PackageQualifiers } from "@app/components/PackageQualifiers";
 import { SbomVulnerabilitiesDonutChart } from "@app/components/SbomVulnerabilitiesDonutChart";
@@ -328,29 +333,76 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                                   </Thead>
                                   <Tbody>
                                     {item.summary.allPackages
-                                      .flatMap((item) => item.purl)
+                                      .flatMap((item) => {
+                                        // Workaround against https://github.com/trustification/trustify/issues/1043
+                                        // Some packages do not have purl neither ID. So we render only the parent name meanwhile
+                                        type EnrichedPurlSummary = {
+                                          parentName: string;
+                                          purlSummary?: PurlSummary;
+                                        };
+
+                                        const hasNoPurlsButOnlyName =
+                                          item.name && item.purl.length == 0;
+
+                                        if (hasNoPurlsButOnlyName) {
+                                          const result: EnrichedPurlSummary = {
+                                            parentName: item.name,
+                                          };
+                                          return [result];
+                                        } else {
+                                          return item.purl.map((i) => {
+                                            const result: EnrichedPurlSummary =
+                                              {
+                                                ...i,
+                                                parentName: item.name,
+                                              };
+                                            return result;
+                                          });
+                                        }
+                                      })
                                       .map((purl, index) => {
-                                        const decomposedPurl = decomposePurl(
-                                          purl.purl
-                                        );
-                                        return (
-                                          <Tr key={index}>
-                                            <Td>{decomposedPurl?.type}</Td>
-                                            <Td>{decomposedPurl?.namespace}</Td>
-                                            <Td>{decomposedPurl?.name}</Td>
-                                            <Td>{decomposedPurl?.version}</Td>
-                                            <Td>{decomposedPurl?.path}</Td>
-                                            <Td>
-                                              {decomposedPurl?.qualifiers && (
-                                                <PackageQualifiers
-                                                  value={
-                                                    decomposedPurl?.qualifiers
-                                                  }
-                                                />
-                                              )}
-                                            </Td>
-                                          </Tr>
-                                        );
+                                        if (purl.purlSummary) {
+                                          const decomposedPurl = decomposePurl(
+                                            purl.purlSummary.purl
+                                          );
+                                          return (
+                                            <Tr key={`${index}-purl`}>
+                                              <Td>{decomposedPurl?.type}</Td>
+                                              <Td>
+                                                {decomposedPurl?.namespace}
+                                              </Td>
+                                              <Td>
+                                                <Link
+                                                  to={`/packages/${purl.purlSummary.uuid}`}
+                                                >
+                                                  {decomposedPurl?.name}
+                                                </Link>
+                                              </Td>
+                                              <Td>{decomposedPurl?.version}</Td>
+                                              <Td>{decomposedPurl?.path}</Td>
+                                              <Td>
+                                                {decomposedPurl?.qualifiers && (
+                                                  <PackageQualifiers
+                                                    value={
+                                                      decomposedPurl?.qualifiers
+                                                    }
+                                                  />
+                                                )}
+                                              </Td>
+                                            </Tr>
+                                          );
+                                        } else {
+                                          return (
+                                            <Tr key={`${index}-name`}>
+                                              <Td></Td>
+                                              <Td></Td>
+                                              <Td>{purl.parentName}</Td>
+                                              <Td></Td>
+                                              <Td></Td>
+                                              <Td></Td>
+                                            </Tr>
+                                          );
+                                        }
                                       })}
                                   </Tbody>
                                 </Table>
