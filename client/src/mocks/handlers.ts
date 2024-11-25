@@ -19,10 +19,6 @@ import cve_202326464 from "@mocks/data/vulnerability/CVE-2023-26464/details.json
 
 import sbom_5d5e9dc471bd from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fc4-7bf2-8201-5d5e9dc471bd/details.json";
 import sbom_c26de2fe81d9 from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9/details.json";
-// import sbom_f92bac24a6b0 from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f06-74e0-b673-f92bac24a6b0/details.json";
-// import sbom_1fac54a371f3 from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f90-7e51-9c9d-1fac54a371f3/details.json";
-// import sbom_c399c1e9a923 from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f91-7543-af38-c399c1e9a923/details.json";
-// import sbom_18044dbbb574 from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fbc-7b82-b9c2-18044dbbb574/details.json";
 
 import sbom_5d5e9dc471bd_advisory from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fc4-7bf2-8201-5d5e9dc471bd/advisory.json";
 import sbom_c26de2fe81d9_advisory from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9/advisory.json";
@@ -39,6 +35,12 @@ import sbom_c399c1e9a923_packages from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0
 import sbom_18044dbbb574_packages from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fbc-7b82-b9c2-18044dbbb574/packages.json";
 
 import purl_2e05fb3a from "@mocks/data/purl/details/2e05fb3a-cda9-5e54-96b2-d8c7ea390f8d.json";
+import purl_14c5c61d from "@mocks/data/purl/details/14c5c61d-c4cc-56fb-9db6-f62541076b80.json";
+import purl_25ddc770 from "@mocks/data/purl/details/25ddc770-5fde-53a8-8451-41091d5fcb3b.json";
+import purl_62c9cfab from "@mocks/data/purl/details/62c9cfab-997b-5126-ad5c-90bc277e048f.json";
+import purl_81293bba from "@mocks/data/purl/details/81293bba-1ab5-5524-8444-0bd55d19b9b3.json";
+import purl_b9a43108 from "@mocks/data/purl/details/b9a43108-525d-59ea-bc31-ff217d4c7925.json";
+import purl_d6dea366 from "@mocks/data/purl/details/d6dea366-e8a6-5500-9aef-14464b717295.json";
 import purl_e0b74cfd from "@mocks/data/purl/details/e0b74cfd-e0b0-512b-8814-947f868bc50e.json";
 import purl_f4f6b460 from "@mocks/data/purl/details/f4f6b460-82e5-59f0-a7f6-da5f226a9b24.json";
 import purl_f357b0cc from "@mocks/data/purl/details/f357b0cc-75d5-532e-b7d9-2233f6f752c8.json";
@@ -85,6 +87,12 @@ export const sbomAdvisory: { [identifier: string]: any } = {
 
 export const purlDetails: { [identifier: string]: any } = {
   "2e05fb3a-cda9-5e54-96b2-d8c7ea390f8d": purl_2e05fb3a,
+  "14c5c61d-c4cc-56fb-9db6-f62541076b80": purl_14c5c61d,
+  "25ddc770-5fde-53a8-8451-41091d5fcb3b": purl_25ddc770,
+  "62c9cfab-997b-5126-ad5c-90bc277e048f": purl_62c9cfab,
+  "81293bba-1ab5-5524-8444-0bd55d19b9b3": purl_81293bba,
+  "b9a43108-525d-59ea-bc31-ff217d4c7925": purl_b9a43108,
+  "d6dea366-e8a6-5500-9aef-14464b717295": purl_d6dea366,
   "e0b74cfd-e0b0-512b-8814-947f868bc50e": purl_e0b74cfd,
   "f4f6b460-82e5-59f0-a7f6-da5f226a9b24": purl_f4f6b460,
   "f357b0cc-75d5-532e-b7d9-2233f6f752c8": purl_f357b0cc,

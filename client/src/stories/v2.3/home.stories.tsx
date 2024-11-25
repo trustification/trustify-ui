@@ -1,20 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
-import SearchPage from "@app/pages/search";
 import { MemoryRouter } from "react-router";
+import Home from "@app/pages/home";
 import { NotificationsProvider } from "@app/components/NotificationsContext";
 import { DefaultLayout } from "@app/layout";
 
-const CustomBody: React.FC = () => {
-  return <div>Custom body for search page</div>;
-};
-
 const meta = {
-  title: "v1/Search",
-  component: SearchPage,
+  title: "v2.3/Home",
+  component: () => {
+    return <>An example custom homepage for v2.3</>;
+  },
   decorators: [
     (Story) => (
-      <MemoryRouter initialEntries={["/search"]}>
+      <MemoryRouter initialEntries={["/"]}>
         <NotificationsProvider>
           <DefaultLayout>
             <Story />
@@ -23,15 +21,11 @@ const meta = {
       </MemoryRouter>
     ),
   ],
-} satisfies Meta<typeof SearchPage>;
+} satisfies Meta<typeof Home>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = {};
-
-export const WithCustomBody: Story = {
-  args: {
-    searchBodyOverride: <CustomBody />,
-  },
+export const Primary: Story = {
+  args: {},
 };

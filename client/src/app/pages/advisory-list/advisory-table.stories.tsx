@@ -3,20 +3,43 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { AdvisoryTable } from "./advisory-table";
 import { AdvisorySearchContext } from "./advisory-context";
 import listResponse from "@mocks/data/advisory/list.json";
+import { BrowserRouter } from "react-router-dom";
+
+const meta = {
+  title: "Components/AdvisoryList/AdvisoryTable",
+  component: AdvisoryTable,
+  tags: ["autodocs"],
+  decorators: [
+    (Story, { parameters }) => {
+      const { contextDefaultValue } = parameters;
+      return (
+        <BrowserRouter>
+          <AdvisorySearchContext.Provider value={contextDefaultValue}>
+            <Story />
+          </AdvisorySearchContext.Provider>
+        </BrowserRouter>
+      );
+    },
+  ],
+} satisfies Meta<typeof AdvisoryTable>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 const tableControlsCustom = {
   tableName: "advisory",
-  persistenceKeyPrefix: "vn",
+  persistenceKeyPrefix: "ad",
+  persistTo: "urlParams",
   columnNames: {
     identifier: "ID",
-    title: "Description",
-    severity: "CVSS",
-    published: "Date published",
-    sboms: "Related documents",
+    title: "Title",
+    severity: "Aggregated Severity",
+    modified: "Revision",
+    vulnerabilities: "Vulnerabilities",
   },
   isPaginationEnabled: true,
   isSortEnabled: true,
-  sortableColumns: ["published", "sboms"],
+  sortableColumns: ["identifier", "severity", "modified"],
   isFilterEnabled: true,
   filterCategories: [
     {
@@ -27,8 +50,8 @@ const tableControlsCustom = {
     },
     {
       categoryKey: "average_severity",
-      title: "CVSS",
-      placeholderText: "CVSS",
+      title: "Severity",
+      placeholderText: "Severity",
       type: "multiselect",
       selectOptions: [
         {
@@ -53,15 +76,19 @@ const tableControlsCustom = {
         },
       ],
     },
+    {
+      categoryKey: "modified",
+      title: "Revision",
+      type: "dateRange",
+    },
   ],
-  isExpansionEnabled: true,
-  expandableVariant: "compound",
+  isExpansionEnabled: false,
   filterState: {
     filterValues: {},
   },
   sortState: {
     activeSort: {
-      columnKey: "modified",
+      columnKey: "identifier",
       direction: "asc",
     },
   },
@@ -84,22 +111,22 @@ const tableControlsCustom = {
       },
       {
         id: "title",
-        label: "Description",
+        label: "Title",
         isVisible: true,
       },
       {
         id: "severity",
-        label: "CVSS",
+        label: "Aggregated Severity",
         isVisible: true,
       },
       {
-        id: "published",
-        label: "Date published",
+        id: "modified",
+        label: "Revision",
         isVisible: true,
       },
       {
-        id: "sboms",
-        label: "Related documents",
+        id: "vulnerabilities",
+        label: "Vulnerabilities",
         isVisible: true,
       },
     ],
@@ -123,89 +150,27 @@ const tableControlsCustom = {
   },
   propHelpers: {
     toolbarProps: {
+      className: "",
       collapseListedFiltersBreakpoint: "xl",
       clearFiltersButtonText: "Clear all filters",
     },
     tableProps: {
       isExpandable: false,
     },
-    filterToolbarProps: {
-      filterCategories: [
-        {
-          categoryKey: "",
-          title: "Filter text",
-          placeholderText: "Search",
-          type: "search",
-        },
-        {
-          categoryKey: "average_severity",
-          title: "CVSS",
-          placeholderText: "CVSS",
-          type: "multiselect",
-          selectOptions: [
-            {
-              value: "none",
-              label: "None",
-            },
-            {
-              value: "low",
-              label: "Low",
-            },
-            {
-              value: "medium",
-              label: "Medium",
-            },
-            {
-              value: "high",
-              label: "High",
-            },
-            {
-              value: "critical",
-              label: "Critical",
-            },
-          ],
-        },
-      ],
-      filterValues: {},
+    filterToolbarProps: {},
+    paginationProps: {
+      itemCount: 58,
+      perPage: 10,
+      page: 1,
     },
-    filterPanelProps: {
-      filterCategories: [
-        {
-          categoryKey: "",
-          title: "Filter text",
-          placeholderText: "Search",
-          type: "search",
-        },
-        {
-          categoryKey: "average_severity",
-          title: "CVSS",
-          placeholderText: "CVSS",
-          type: "multiselect",
-          selectOptions: [
-            {
-              value: "none",
-              label: "None",
-            },
-            {
-              value: "low",
-              label: "Low",
-            },
-            {
-              value: "medium",
-              label: "Medium",
-            },
-            {
-              value: "high",
-              label: "High",
-            },
-            {
-              value: "critical",
-              label: "Critical",
-            },
-          ],
-        },
-      ],
-      filterValues: {},
+    paginationToolbarItemProps: {
+      variant: "pagination",
+      align: {
+        default: "alignRight",
+      },
+    },
+    toolbarBulkSelectorProps: {
+      areAllSelected: false,
     },
     getThProps: () => {},
     getTrProps: () => {},
@@ -213,34 +178,13 @@ const tableControlsCustom = {
   },
 };
 
-const meta = {
-  title: "Components/AdvisoryList/AdvisoryTable",
-  component: AdvisoryTable,
-  tags: ["autodocs"],
-  decorators: [
-    (Story, { parameters }) => {
-      const { contextDefaultValue } = parameters;
-      return (
-        <AdvisorySearchContext.Provider value={contextDefaultValue}>
-          <Story />
-        </AdvisorySearchContext.Provider>
-      );
-    },
-  ],
-} satisfies Meta<typeof AdvisoryTable>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
 export const PrimaryState: Story = {
   parameters: {
     contextDefaultValue: {
       isFetching: false,
-      fetchError: "",
+      fetchError: null,
       tableControls: { ...tableControlsCustom },
-      totalItemCount: 3,
-      currentPageItems: 10,
-      numRenderedColumns: 3,
+      totalItemCount: 58,
     },
   },
 };

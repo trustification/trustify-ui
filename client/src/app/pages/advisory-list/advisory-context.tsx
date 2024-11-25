@@ -17,7 +17,7 @@ import {
 import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchAdvisories } from "@app/queries/advisories";
 
-export interface IAdvisorySearchContext {
+interface IAdvisorySearchContext {
   tableControls: ITableControls<
     AdvisorySummary,
     "identifier" | "title" | "severity" | "modified" | "vulnerabilities",

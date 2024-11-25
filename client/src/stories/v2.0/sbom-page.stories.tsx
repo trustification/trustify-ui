@@ -5,7 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 // import { http, HttpResponse } from "msw";
 
 const meta = {
-  title: "v1/SBOMs/SBOM List",
+  title: "v2.0/SBOMs/SBOM List",
   component: SbomList,
   decorators: [
     (Story) => (

@@ -6,10 +6,8 @@ import { NotificationsProvider } from "@app/components/NotificationsContext";
 import { DefaultLayout } from "@app/layout";
 
 const meta = {
-  title: "v2.1/Home",
-  component: () => {
-    return <>An example custom homepage for v2.1</>;
-  },
+  title: "v2.0/Home",
+  component: Home,
   decorators: [
     (Story) => (
       <MemoryRouter initialEntries={["/"]}>

@@ -6,9 +6,9 @@ import { NotificationsProvider } from "@app/components/NotificationsContext";
 import { DefaultLayout } from "@app/layout";
 
 const meta = {
-  title: "v2.x/Home",
+  title: "v2.2/Home",
   component: () => {
-    return <>A custom homepage for v2.x</>;
+    return <>An example custom homepage for v2.2</>;
   },
   decorators: [
     (Story) => (
