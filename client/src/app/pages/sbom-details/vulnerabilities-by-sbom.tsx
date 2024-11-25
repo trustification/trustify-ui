@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import dayjs from "dayjs";
+
 import {
   Card,
   CardBody,
@@ -26,6 +28,9 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
+import { getSeverityPriority } from "@app/api/model-utils";
+import { VulnerabilityStatus } from "@app/api/models";
+import { SbomAdvisory, SbomPackage, SbomStatus } from "@app/client";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { PackageQualifiers } from "@app/components/PackageQualifiers";
 import { SbomVulnerabilitiesDonutChart } from "@app/components/SbomVulnerabilitiesDonutChart";
@@ -42,6 +47,19 @@ import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchSBOMById } from "@app/queries/sboms";
 import { useWithUiId } from "@app/utils/query-utils";
 import { decomposePurl, formatDate } from "@app/utils/utils";
+
+interface TableData {
+  vulnerability: SbomStatus;
+  vulnerabilityStatus: VulnerabilityStatus;
+  relatedPackages: {
+    advisory: SbomAdvisory;
+    packages: SbomPackage[];
+  }[];
+  summary: {
+    totalPackages: number;
+    allPackages: SbomPackage[];
+  };
+}
 
 interface VulnerabilitiesBySbomProps {
   sbomId: string;
@@ -61,10 +79,30 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
     fetchError: fetchErrorVulnerabilities,
   } = useVulnerabilitiesOfSbom(sbomId);
 
+  const affectedVulnerabilities = React.useMemo(() => {
+    return vulnerabilities.filter(
+      (item) => item.vulnerabilityStatus === "affected"
+    );
+  }, [vulnerabilities]);
+
+  const tableData = React.useMemo(() => {
+    return affectedVulnerabilities.map((item) => {
+      const allPackages = item.relatedPackages.flatMap((i) => i.packages);
+      const result: TableData = {
+        ...item,
+        summary: {
+          totalPackages: allPackages.length,
+          allPackages,
+        },
+      };
+
+      return result;
+    });
+  }, [affectedVulnerabilities]);
+
   const tableDataWithUiId = useWithUiId(
-    vulnerabilities,
-    (d) =>
-      `${d.vulnerability.identifier}-${d.advisory.identifier}-${d.advisory.uuid}`
+    tableData,
+    (d) => `${d.vulnerability.identifier}-${d.vulnerabilityStatus}`
   );
 
   const tableControls = useLocalTableControls({
@@ -82,7 +120,24 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
     },
     hasActionsColumn: false,
     isSortEnabled: true,
-    sortableColumns: ["id"],
+    sortableColumns: [
+      "id",
+      "cvss",
+      "affectedDependencies",
+      "published",
+      "updated",
+    ],
+    getSortValues: (item) => ({
+      id: item.vulnerability.identifier,
+      cvss: getSeverityPriority(item.vulnerability.average_severity),
+      affectedDependencies: item.summary.totalPackages,
+      published: item.vulnerability?.published
+        ? dayjs(item.vulnerability.published).valueOf()
+        : 0,
+      updated: item.vulnerability?.modified
+        ? dayjs(item.vulnerability.modified).valueOf()
+        : 0,
+    }),
     isPaginationEnabled: true,
     isFilterEnabled: false,
     isExpansionEnabled: true,
@@ -113,7 +168,8 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
           <Card>
             <CardBody>
               <LoadingWrapper
-                isFetching={isFetchingVulnerabilities || isFetchingSbom}
+                isFetching={isFetchingSbom || isFetchingVulnerabilities}
+                fetchError={fetchErrorSbom}
               >
                 <Grid hasGutter>
                   <GridItem md={6}>
@@ -231,7 +287,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                             rowIndex,
                           })}
                         >
-                          {item.packages.length}
+                          {item.summary.totalPackages}
                         </Td>
                         <Td
                           width={10}
@@ -271,7 +327,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                                     </Tr>
                                   </Thead>
                                   <Tbody>
-                                    {item.packages
+                                    {item.summary.allPackages
                                       .flatMap((item) => item.purl)
                                       .map((purl, index) => {
                                         const decomposedPurl = decomposePurl(
