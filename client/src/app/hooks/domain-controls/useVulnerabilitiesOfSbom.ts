@@ -7,7 +7,7 @@ import {
   useFetchSbomsAdvisoryBatch,
 } from "@app/queries/sboms";
 
-const areEqualVulnerabilityOfSbomEqual = (
+const areVulnerabilityOfSbomEqual = (
   a: VulnerabilityOfSbom,
   b: VulnerabilityOfSbom | FlatVulnerabilityOfSbom
 ) => {
@@ -58,7 +58,7 @@ const DEFAULT_SUMMARY: VulnerabilityOfSbomSummary = {
   },
 };
 
-const advisoryStatusToModels = (advisories: SbomAdvisory[]) => {
+const advisoryToModels = (advisories: SbomAdvisory[]) => {
   const vulnerabilities = advisories.flatMap((advisory) => {
     return (
       (advisory.status ?? [])
@@ -74,12 +74,12 @@ const advisoryStatusToModels = (advisories: SbomAdvisory[]) => {
         // group
         .reduce((prev, current) => {
           const existingElement = prev.find((item) => {
-            return areEqualVulnerabilityOfSbomEqual(item, current);
+            return areVulnerabilityOfSbomEqual(item, current);
           });
 
           if (existingElement) {
             const arrayWithoutExistingItem = prev.filter(
-              (item) => !areEqualVulnerabilityOfSbomEqual(item, existingElement)
+              (item) => !areVulnerabilityOfSbomEqual(item, existingElement)
             );
 
             const updatedItemInArray: VulnerabilityOfSbom = {
@@ -147,7 +147,7 @@ export const useVulnerabilitiesOfSbom = (sbomId: string) => {
   } = useFetchSbomsAdvisory(sbomId);
 
   const result = React.useMemo(() => {
-    return advisoryStatusToModels(advisories || []);
+    return advisoryToModels(advisories || []);
   }, [advisories]);
 
   return {
@@ -163,7 +163,7 @@ export const useVulnerabilitiesOfSboms = (sbomIds: string[]) => {
 
   const result = React.useMemo(() => {
     return (advisories ?? []).map((item) => {
-      return advisoryStatusToModels(item || []);
+      return advisoryToModels(item || []);
     });
   }, [advisories]);
 
