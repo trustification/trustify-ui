@@ -5,6 +5,9 @@ import type { Preview } from "@storybook/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { initialize, mswLoader } from "msw-storybook-addon";
 import { handlers } from "@mocks/handlers";
+import { AuthProvider } from "react-oidc-context";
+import { MemoryRouter } from "react-router";
+
 const queryClient = new QueryClient();
 
 if (typeof jest === "undefined") {
@@ -30,9 +33,13 @@ initialize();
 const preview: Preview = {
   decorators: [
     (Story) => (
-      <QueryClientProvider client={queryClient}>
-        <Story />
-      </QueryClientProvider>
+      <MemoryRouter initialEntries={["/"]}>
+        <AuthProvider>
+          <QueryClientProvider client={queryClient}>
+            <Story />
+          </QueryClientProvider>
+        </AuthProvider>
+      </MemoryRouter>
     ),
   ],
   loaders: [mswLoader],

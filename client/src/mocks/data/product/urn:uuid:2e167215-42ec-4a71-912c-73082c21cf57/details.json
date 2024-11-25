@@ -1,0 +1,11 @@
+{
+  "id": "urn:uuid:2e167215-42ec-4a71-912c-73082c21cf57",
+  "name": "A-MQ Clients 2",
+  "versions": [],
+  "vendor": {
+    "id": "3ca80722-2c01-41c6-bdde-5b76079db2c2",
+    "name": "Red Hat",
+    "cpe_key": "redhat",
+    "website": null
+  }
+}
