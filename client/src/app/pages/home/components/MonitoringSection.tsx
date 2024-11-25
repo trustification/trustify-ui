@@ -19,6 +19,10 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateHeader,
+  EmptyStateVariant,
   Grid,
   GridItem,
   Stack,
@@ -116,117 +120,131 @@ export const MonitoringSection: React.FC = () => {
                   </TextContent>
                 </StackItem>
                 <StackItem>
-                  <div style={{ height: 320 }}>
-                    <Chart
-                      ariaDesc="SBOM summary status"
-                      domainPadding={{ x: [30, 25] }}
-                      legendData={LEGENDS.map((legend) => {
-                        const severity = severityList[legend.severity];
-                        return { name: severity.name };
-                      })}
-                      legendPosition="bottom-left"
-                      height={375}
-                      name="sbom-summary-status"
-                      padding={{
-                        bottom: 75,
-                        left: 330,
-                        right: 50,
-                        top: 50,
-                      }}
-                      themeColor={ChartThemeColor.multiOrdered}
-                      width={700}
-                      legendComponent={
-                        <ChartLegend
-                          y={10}
-                          x={300}
+                  {barchartSboms.length > 0 ? (
+                    <div style={{ height: 320 }}>
+                      <Chart
+                        ariaDesc="SBOM summary status"
+                        domainPadding={{ x: [30, 25] }}
+                        legendData={LEGENDS.map((legend) => {
+                          const severity = severityList[legend.severity];
+                          return { name: severity.name };
+                        })}
+                        legendPosition="bottom-left"
+                        height={375}
+                        name="sbom-summary-status"
+                        padding={{
+                          bottom: 75,
+                          left: 330,
+                          right: 50,
+                          top: 50,
+                        }}
+                        themeColor={ChartThemeColor.multiOrdered}
+                        width={700}
+                        legendComponent={
+                          <ChartLegend
+                            y={10}
+                            x={300}
+                            colorScale={LEGENDS.map((legend) => {
+                              const severity = severityList[legend.severity];
+                              return severity.color.value;
+                            })}
+                          />
+                        }
+                      >
+                        <ChartAxis
+                          label="Products"
+                          axisLabelComponent={
+                            <ChartLabel dx={0} x={15} y={140} />
+                          }
+                          tickLabelComponent={
+                            <ChartLabel
+                              className="pf-v5-c-button pf-m-link pf-m-inline"
+                              style={[{ fill: "#0066cc" }]}
+                              events={{
+                                onClick: (event) => {
+                                  const sbomName = (event.target as any)
+                                    .innerHTML as string | null;
+                                  const sbom = barchartSboms.find(
+                                    (item, index) => {
+                                      return (
+                                        generateSbomBarName(item, index) ===
+                                        sbomName
+                                      );
+                                    }
+                                  );
+                                  if (sbom) {
+                                    navigate(`/sboms/${sbom.id}`);
+                                  }
+                                },
+                              }}
+                            />
+                          }
+                        />
+                        <ChartAxis
+                          dependentAxis
+                          showGrid
+                          tickValues={
+                            showTickValues
+                              ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                              : undefined
+                          }
+                          label="Vulnerabilities by Severity"
+                          fixLabelOverlap={true}
+                        />
+                        <ChartStack
+                          horizontal
                           colorScale={LEGENDS.map((legend) => {
                             const severity = severityList[legend.severity];
                             return severity.color.value;
                           })}
-                        />
-                      }
-                    >
-                      <ChartAxis
-                        label="Products"
-                        axisLabelComponent={
-                          <ChartLabel dx={0} x={15} y={140} />
-                        }
-                        tickLabelComponent={
-                          <ChartLabel
-                            className="pf-v5-c-button pf-m-link pf-m-inline"
-                            style={[{ fill: "#0066cc" }]}
-                            events={{
-                              onClick: (event) => {
-                                const sbomName = (event.target as any)
-                                  .innerHTML as string | null;
-                                const sbom = barchartSboms.find(
-                                  (item, index) => {
-                                    return (
-                                      generateSbomBarName(item, index) ===
-                                      sbomName
-                                    );
-                                  }
-                                );
-                                if (sbom) {
-                                  navigate(`/sboms/${sbom.id}`);
+                        >
+                          {LEGENDS.map((legend) => {
+                            const severityData = severityList[legend.severity];
+                            return (
+                              <ChartBar
+                                key={legend.severity}
+                                labelComponent={
+                                  <ChartTooltip constrainToVisibleArea />
                                 }
-                              },
-                            }}
-                          />
-                        }
-                      />
-                      <ChartAxis
-                        dependentAxis
-                        showGrid
-                        tickValues={
-                          showTickValues
-                            ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-                            : undefined
-                        }
-                        label="Vulnerabilities by Severity"
-                        fixLabelOverlap={true}
-                      />
-                      <ChartStack
-                        horizontal
-                        colorScale={LEGENDS.map((legend) => {
-                          const severity = severityList[legend.severity];
-                          return severity.color.value;
-                        })}
-                      >
-                        {LEGENDS.map((legend) => {
-                          const severityData = severityList[legend.severity];
-                          return (
-                            <ChartBar
-                              key={legend.severity}
-                              labelComponent={
-                                <ChartTooltip constrainToVisibleArea />
-                              }
-                              data={barchartSbomsVulnerabilities.map(
-                                (
-                                  {
-                                    summary: {
-                                      vulnerabilityStatus: { affected },
+                                data={barchartSbomsVulnerabilities.map(
+                                  (
+                                    {
+                                      summary: {
+                                        vulnerabilityStatus: { affected },
+                                      },
                                     },
-                                  },
-                                  index
-                                ) => {
-                                  const sbom = barchartSboms[index];
+                                    index
+                                  ) => {
+                                    const sbom = barchartSboms[index];
 
-                                  const severity = legend.severity;
-                                  const count = affected.severities[severity];
-                                  return {
-                                    x: generateSbomBarName(sbom, index),
-                                    y: count,
-                                    label: `${severityData.name}: ${count}`,
-                                  };
-                                }
-                              )}
-                            />
-                          );
-                        })}
-                      </ChartStack>
-                    </Chart>
-                  </div>
+                                    const severity = legend.severity;
+                                    const count = affected.severities[severity];
+                                    return {
+                                      x: generateSbomBarName(sbom, index),
+                                      y: count,
+                                      label: `${severityData.name}: ${count}`,
+                                    };
+                                  }
+                                )}
+                              />
+                            );
+                          })}
+                        </ChartStack>
+                      </Chart>
+                    </div>
+                  ) : (
+                    <EmptyState variant={EmptyStateVariant.xs}>
+                      <EmptyStateHeader
+                        titleText="There is nothing here yet"
+                        headingLevel="h4"
+                      />
+                      <EmptyStateBody>
+                        You can get started by uploading an SBOM. Once your
+                        SBOMs are uploaded come back to this page to see your
+                        overview.
+                      </EmptyStateBody>
+                    </EmptyState>
+                  )}
                 </StackItem>
               </Stack>
             </LoadingWrapper>
