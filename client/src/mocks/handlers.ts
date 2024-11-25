@@ -6,52 +6,88 @@ import getVulnerabilities from "@mocks/data/vulnerability/list.json";
 
 // DATA IMPORTS
 
-import cve202245787 from "@mocks/data/vulnerability/CVE-2022-45787/details.json";
-import cve20230044 from "@mocks/data/vulnerability/CVE-2023-0044/details.json";
-import cve20230481 from "@mocks/data/vulnerability/CVE-2023-0481/details.json";
-import cve20230482 from "@mocks/data/vulnerability/CVE-2023-0482/details.json";
-import cve20231370 from "@mocks/data/vulnerability/CVE-2023-1370/details.json";
-import cve20231436 from "@mocks/data/vulnerability/CVE-2023-1436/details.json";
-import cve202320861 from "@mocks/data/vulnerability/CVE-2023-20861/details.json";
-import cve202324815 from "@mocks/data/vulnerability/CVE-2023-24815/details.json";
-import cve202324998 from "@mocks/data/vulnerability/CVE-2023-24998/details.json";
-import cve202326464 from "@mocks/data/vulnerability/CVE-2023-26464/details.json";
+import cve_202245787 from "@mocks/data/vulnerability/CVE-2022-45787/details.json";
+import cve_20230044 from "@mocks/data/vulnerability/CVE-2023-0044/details.json";
+import cve_20230481 from "@mocks/data/vulnerability/CVE-2023-0481/details.json";
+import cve_20230482 from "@mocks/data/vulnerability/CVE-2023-0482/details.json";
+import cve_20231370 from "@mocks/data/vulnerability/CVE-2023-1370/details.json";
+import cve_20231436 from "@mocks/data/vulnerability/CVE-2023-1436/details.json";
+import cve_202320861 from "@mocks/data/vulnerability/CVE-2023-20861/details.json";
+import cve_202324815 from "@mocks/data/vulnerability/CVE-2023-24815/details.json";
+import cve_202324998 from "@mocks/data/vulnerability/CVE-2023-24998/details.json";
+import cve_202326464 from "@mocks/data/vulnerability/CVE-2023-26464/details.json";
 
-import sbom1 from "@mocks/data/sbom/details/urn%3Auuid%3A01932ff3-0fc4-7bf2-8201-5d5e9dc471bd.json";
-import sbom2 from "@mocks/data/sbom/details/urn%3Auuid%3A01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9.json";
+import sbom_5d5e9dc471bd from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fc4-7bf2-8201-5d5e9dc471bd/details.json";
+import sbom_c26de2fe81d9 from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9/details.json";
+// import sbom_f92bac24a6b0 from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f06-74e0-b673-f92bac24a6b0/details.json";
+// import sbom_1fac54a371f3 from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f90-7e51-9c9d-1fac54a371f3/details.json";
+// import sbom_c399c1e9a923 from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f91-7543-af38-c399c1e9a923/details.json";
+// import sbom_18044dbbb574 from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fbc-7b82-b9c2-18044dbbb574/details.json";
 
-import purl1 from "@mocks/data/purl/details/2e05fb3a-cda9-5e54-96b2-d8c7ea390f8d.json";
-import purl2 from "@mocks/data/purl/details/e0b74cfd-e0b0-512b-8814-947f868bc50e.json";
-import purl3 from "@mocks/data/purl/details/f4f6b460-82e5-59f0-a7f6-da5f226a9b24.json";
-import purl4 from "@mocks/data/purl/details/f357b0cc-75d5-532e-b7d9-2233f6f752c8.json";
+import sbom_5d5e9dc471bd_advisory from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fc4-7bf2-8201-5d5e9dc471bd/advisory.json";
+import sbom_c26de2fe81d9_advisory from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9/advisory.json";
+import sbom_f92bac24a6b0_advisory from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f06-74e0-b673-f92bac24a6b0/advisory.json";
+import sbom_1fac54a371f3_advisory from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f90-7e51-9c9d-1fac54a371f3/advisory.json";
+import sbom_c399c1e9a923_advisory from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f91-7543-af38-c399c1e9a923/advisory.json";
+import sbom_18044dbbb574_advisory from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fbc-7b82-b9c2-18044dbbb574/advisory.json";
+
+import sbom_5d5e9dc471bd_packages from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fc4-7bf2-8201-5d5e9dc471bd/packages.json";
+import sbom_c26de2fe81d9_packages from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9/packages.json";
+import sbom_f92bac24a6b0_packages from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f06-74e0-b673-f92bac24a6b0/packages.json";
+import sbom_1fac54a371f3_packages from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f90-7e51-9c9d-1fac54a371f3/packages.json";
+import sbom_c399c1e9a923_packages from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f91-7543-af38-c399c1e9a923/packages.json";
+import sbom_18044dbbb574_packages from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fbc-7b82-b9c2-18044dbbb574/packages.json";
+
+import purl_2e05fb3a from "@mocks/data/purl/details/2e05fb3a-cda9-5e54-96b2-d8c7ea390f8d.json";
+import purl_e0b74cfd from "@mocks/data/purl/details/e0b74cfd-e0b0-512b-8814-947f868bc50e.json";
+import purl_f4f6b460 from "@mocks/data/purl/details/f4f6b460-82e5-59f0-a7f6-da5f226a9b24.json";
+import purl_f357b0cc from "@mocks/data/purl/details/f357b0cc-75d5-532e-b7d9-2233f6f752c8.json";
 
 import imgAvatar from "@app/images/avatar.svg";
 import { VulnerabilityHead } from "@app/client";
 
 export const cveDetails: { [identifier: string]: Partial<VulnerabilityHead> } =
   {
-    "CVE-2022-45787": cve202245787,
-    "CVE-2023-0044": cve20230044,
-    "CVE-2023-0481": cve20230481,
-    "CVE-2023-0482": cve20230482,
-    "CVE-2023-1370": cve20231370,
-    "CVE-2023-1436": cve20231436,
-    "CVE-2023-20861": cve202320861,
-    "CVE-2023-24815": cve202324815,
-    "CVE-2023-24998": cve202324998,
-    "CVE-2023-26464": cve202326464,
+    "CVE-2022-45787": cve_202245787,
+    "CVE-2023-0044": cve_20230044,
+    "CVE-2023-0481": cve_20230481,
+    "CVE-2023-0482": cve_20230482,
+    "CVE-2023-1370": cve_20231370,
+    "CVE-2023-1436": cve_20231436,
+    "CVE-2023-20861": cve_202320861,
+    "CVE-2023-24815": cve_202324815,
+    "CVE-2023-24998": cve_202324998,
+    "CVE-2023-26464": cve_202326464,
   };
 
 export const sbomDetails: { [identifier: string]: any } = {
-  "urn:uuid:01932ff3-0fc4-7bf2-8201-5d5e9dc471bd": sbom1,
-  "urn:uuid:01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9": sbom2,
+  "urn:uuid:01932ff3-0fc4-7bf2-8201-5d5e9dc471bd": sbom_5d5e9dc471bd,
+  "urn:uuid:01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9": sbom_c26de2fe81d9,
+};
+
+export const sbomPackages: { [identifier: string]: any } = {
+  "urn:uuid:01932ff3-0fc4-7bf2-8201-5d5e9dc471bd": sbom_5d5e9dc471bd_packages,
+  "urn:uuid:01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9": sbom_c26de2fe81d9_packages,
+  "urn:uuid:01932ff3-0f06-74e0-b673-f92bac24a6b0": sbom_f92bac24a6b0_packages,
+  "urn:uuid:01932ff3-0f90-7e51-9c9d-1fac54a371f3": sbom_1fac54a371f3_packages,
+  "urn:uuid:01932ff3-0f91-7543-af38-c399c1e9a923": sbom_c399c1e9a923_packages,
+  "urn:uuid:01932ff3-0fbc-7b82-b9c2-18044dbbb574": sbom_18044dbbb574_packages,
+};
+
+export const sbomAdvisory: { [identifier: string]: any } = {
+  "urn:uuid:01932ff3-0fc4-7bf2-8201-5d5e9dc471bd": sbom_5d5e9dc471bd_advisory,
+  "urn:uuid:01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9": sbom_c26de2fe81d9_advisory,
+  "urn:uuid:01932ff3-0f06-74e0-b673-f92bac24a6b0": sbom_f92bac24a6b0_advisory,
+  "urn:uuid:01932ff3-0f90-7e51-9c9d-1fac54a371f3": sbom_1fac54a371f3_advisory,
+  "urn:uuid:01932ff3-0f91-7543-af38-c399c1e9a923": sbom_c399c1e9a923_advisory,
+  "urn:uuid:01932ff3-0fbc-7b82-b9c2-18044dbbb574": sbom_18044dbbb574_advisory,
 };
 
 export const purlDetails: { [identifier: string]: any } = {
-  "2e05fb3a-cda9-5e54-96b2-d8c7ea390f8d": purl1,
-  "e0b74cfd-e0b0-512b-8814-947f868bc50e": purl2,
-  "f4f6b460-82e5-59f0-a7f6-da5f226a9b24": purl3,
-  "f357b0cc-75d5-532e-b7d9-2233f6f752c8": purl4,
+  "2e05fb3a-cda9-5e54-96b2-d8c7ea390f8d": purl_2e05fb3a,
+  "e0b74cfd-e0b0-512b-8814-947f868bc50e": purl_e0b74cfd,
+  "f4f6b460-82e5-59f0-a7f6-da5f226a9b24": purl_f4f6b460,
+  "f357b0cc-75d5-532e-b7d9-2233f6f752c8": purl_f357b0cc,
 };
 
 /**
@@ -294,7 +330,12 @@ const sbomHandlers = [
     if (!id) {
       return new HttpResponse("Advisory for SBOM not found", { status: 404 });
     } else {
-      return HttpResponse.json({});
+      const data = sbomAdvisory[id as string];
+      if (!data) {
+        return new HttpResponse("Advisory for SBOM not found", { status: 404 });
+      }
+
+      return HttpResponse.json(data);
     }
   }),
 
@@ -310,7 +351,12 @@ const sbomHandlers = [
     if (!id) {
       return new HttpResponse("Packages for SBOM not found", { status: 404 });
     } else {
-      return HttpResponse.json({});
+      const data = sbomPackages[id as string];
+      if (!data) {
+        return new HttpResponse("Packages for SBOM not found", { status: 404 });
+      }
+
+      return HttpResponse.json(data);
     }
   }),
 
