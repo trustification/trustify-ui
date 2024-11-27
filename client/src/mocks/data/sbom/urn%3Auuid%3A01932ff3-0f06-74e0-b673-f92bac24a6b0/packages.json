@@ -1,0 +1,29 @@
+{
+  "items": [
+    {
+      "id": "SPDXRef-12b5ecbd-c0a0-40bc-a459-3b53ce1210a4",
+      "name": "basesystem",
+      "version": "11-5.el8",
+      "purl": [
+        {
+          "uuid": "2a84d7f3-0220-5f5b-8304-ac5fe7bd0e39",
+          "purl": "pkg:rpm/redhat/basesystem@11-5.el8?arch=noarch",
+          "base": {
+            "uuid": "fa88f614-d555-5088-bf47-0399fb182d35",
+            "purl": "pkg:rpm/redhat/basesystem"
+          },
+          "version": {
+            "uuid": "bf2d561b-0697-58dd-80a9-c0c7d3b3b6a0",
+            "purl": "pkg:rpm/redhat/basesystem@11-5.el8",
+            "version": "11-5.el8"
+          },
+          "qualifiers": {
+            "arch": "noarch"
+          }
+        }
+      ],
+      "cpe": []
+    }
+  ],
+  "total": 69
+}

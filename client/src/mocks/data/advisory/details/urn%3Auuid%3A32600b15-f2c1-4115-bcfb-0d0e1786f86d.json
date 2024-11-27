@@ -1,0 +1,41 @@
+{
+  "uuid": "urn:uuid:32600b15-f2c1-4115-bcfb-0d0e1786f86d",
+  "identifier": "CVE-2023-0044",
+  "issuer": {
+    "id": "d20006a8-1d58-4de7-91ac-7a1aa012324a",
+    "name": "redhat",
+    "cpe_key": null,
+    "website": null
+  },
+  "published": "2023-02-23T00:00:00Z",
+  "modified": "2024-08-02T04:54:32.575Z",
+  "withdrawn": null,
+  "title": "If the Quarkus Form Authentication session cookie Path attribute is set to `/` then a cross-site attack may be initiated which might lead to the Information Disclosure. This attack can be prevented with the Quarkus CSRF Prevention feature.",
+  "labels": {
+    "type": "cve"
+  },
+  "sha256": "sha256:df2918bec606d2607d81ae18e985f8cd146918f91bc73793c0cc419e65a5fd35",
+  "sha384": "sha384:113316052f6c46547767d40d82b8d3afc38f43f22b47e5909f8d4951232c369c1406d30ae318827e03c982be2028c0e0",
+  "sha512": "sha512:3d7e89cdf6fa8183e5a1dbc7538db4ef4b3f48a215611a37e2149595a74c503b905b46dcd569ec67b44f9c8d3a11d4c70f04542f5e77b2bf0c7774a56394d1bf",
+  "size": 2892,
+  "vulnerabilities": [
+    {
+      "normative": true,
+      "identifier": "CVE-2023-0044",
+      "title": "If the Quarkus Form Authentication session cookie Path attribute is set to `/` then a cross-site attack may be initiated which might lead to the Information Disclosure. This attack can be prevented with the Quarkus CSRF Prevention feature.",
+      "description": "If the Quarkus Form Authentication session cookie Path attribute is set to `/` then a cross-site attack may be initiated which might lead to the Information Disclosure. This attack can be prevented with the Quarkus CSRF Prevention feature.",
+      "reserved": "2023-01-04T00:00:00Z",
+      "published": "2023-02-23T00:00:00Z",
+      "modified": "2024-08-02T04:54:32.575Z",
+      "withdrawn": null,
+      "discovered": null,
+      "released": null,
+      "cwes": [],
+      "severity": "none",
+      "score": 0.0,
+      "cvss3_scores": []
+    }
+  ],
+  "average_severity": null,
+  "average_score": null
+}

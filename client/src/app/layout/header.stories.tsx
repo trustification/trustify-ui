@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
+import type { Meta, StoryObj } from "@storybook/react";
 import { HeaderApp } from "@app/layout/header";
-import { MemoryRouter } from "react-router-dom";
 import { fn } from "@storybook/test";
+import { BrowserRouter } from "react-router-dom";
 import * as actual from "@app/hooks/useBranding";
 
 const useBranding = fn(actual.useBranding).mockName("useBranding");
@@ -14,9 +14,9 @@ const meta = {
   component: HeaderApp,
   decorators: [
     (Story) => (
-      <MemoryRouter initialEntries={["/"]}>
+      <BrowserRouter>
         <Story />
-      </MemoryRouter>
+      </BrowserRouter>
     ),
   ],
 } satisfies Meta<typeof HeaderApp>;

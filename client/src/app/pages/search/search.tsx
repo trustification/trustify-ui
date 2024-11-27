@@ -1,19 +1,9 @@
 import React from "react";
 
 import {
-  Badge,
-  Card,
-  CardBody,
   PageSection,
   PageSectionVariants,
-  Popover,
   SearchInput,
-  Split,
-  SplitItem,
-  Tab,
-  TabAction,
-  TabTitleText,
-  Tabs,
   Text,
   TextContent,
   Toolbar,
@@ -21,31 +11,32 @@ import {
   ToolbarGroup,
   ToolbarItem,
 } from "@patternfly/react-core";
-import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
-import { FilterPanel } from "@app/components/FilterPanel";
 import { FILTER_TEXT_CATEGORY_KEY } from "@app/Constants";
 
 import { SearchProvider } from "./search-context";
 
 import { AdvisorySearchContext } from "../advisory-list/advisory-context";
-import { AdvisoryTable } from "../advisory-list/advisory-table";
 import { PackageSearchContext } from "../package-list/package-context";
-import { PackageTable } from "../package-list/package-table";
 import { SbomSearchContext } from "../sbom-list/sbom-context";
-import { SbomTable } from "../sbom-list/sbom-table";
 import { VulnerabilitySearchContext } from "../vulnerability-list/vulnerability-context";
-import { VulnerabilityTable } from "../vulnerability-list/vulnerability-table";
+import { SearchTabs } from "./components/SearchTabs";
 
-export const SearchPage: React.FC = () => {
+type SearchPageProps = {
+  searchBodyOverride?: React.ReactNode;
+};
+
+export const SearchPage: React.FC<SearchPageProps> = ({
+  searchBodyOverride,
+}) => {
   return (
     <SearchProvider>
-      <Search />
+      <Search searchBodyOverride={searchBodyOverride} />
     </SearchProvider>
   );
 };
 
-export const Search: React.FC = () => {
+export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
   const { tableControls: sbomTableControls } =
     React.useContext(SbomSearchContext);
   const { tableControls: packageTableControls } =
@@ -85,6 +76,13 @@ export const Search: React.FC = () => {
     },
   } = React.useContext(AdvisorySearchContext);
 
+  const filterPanelProps = {
+    advisoryFilterPanelProps,
+    packageFilterPanelProps,
+    sbomFilterPanelProps,
+    vulnerabilityFilterPanelProps,
+  };
+
   // Search
 
   const [searchValue, setSearchValue] = React.useState(
@@ -119,26 +117,12 @@ export const Search: React.FC = () => {
     });
   };
 
-  // Tabs
-
-  const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
-
-  const handleTabClick = (
-    _event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent,
-    tabIndex: string | number
-  ) => {
-    setActiveTabKey(tabIndex);
-  };
-
-  const sbomPopoverRef = React.createRef<HTMLElement>();
-
-  const sbomPopover = (popoverRef: React.RefObject<any>) => (
-    <Popover
-      bodyContent={
-        <div>Software Bill of Materials for Products and Containers.</div>
-      }
-      position={"right"}
-      triggerRef={popoverRef}
+  const searchTabs = (
+    <SearchTabs
+      filterPanelProps={filterPanelProps}
+      packageTotalCount={packageTotalCount}
+      sbomTotalCount={sbomTotalCount}
+      vulnerabilityTotalCount={vulnerabilityTotalCount}
     />
   );
 
@@ -174,110 +158,7 @@ export const Search: React.FC = () => {
           </ToolbarContent>
         </Toolbar>
       </PageSection>
-      <PageSection>
-        <Split hasGutter>
-          <SplitItem>
-            <Card isFullHeight>
-              <CardBody style={{ width: 241 }}>
-                {activeTabKey === 0 ? (
-                  <FilterPanel
-                    omitFilterCategoryKeys={[""]}
-                    {...sbomFilterPanelProps}
-                  />
-                ) : activeTabKey === 1 ? (
-                  <FilterPanel
-                    omitFilterCategoryKeys={[""]}
-                    {...packageFilterPanelProps}
-                  />
-                ) : activeTabKey === 2 ? (
-                  <FilterPanel
-                    omitFilterCategoryKeys={[""]}
-                    {...vulnerabilityFilterPanelProps}
-                  />
-                ) : activeTabKey === 3 ? (
-                  <FilterPanel
-                    omitFilterCategoryKeys={[""]}
-                    {...advisoryFilterPanelProps}
-                  />
-                ) : null}
-              </CardBody>
-            </Card>
-          </SplitItem>
-          <SplitItem isFilled>
-            <Tabs
-              isBox
-              activeKey={activeTabKey}
-              onSelect={handleTabClick}
-              aria-label="Tabs"
-              role="region"
-            >
-              <Tab
-                eventKey={0}
-                title={
-                  <TabTitleText>
-                    SBOMs{"  "}
-                    <Badge screenReaderText="Search Result Count">
-                      {sbomTotalCount}
-                    </Badge>
-                  </TabTitleText>
-                }
-                actions={
-                  <>
-                    <TabAction
-                      aria-label={`SBOM help popover`}
-                      ref={sbomPopoverRef}
-                    >
-                      <HelpIcon />
-                    </TabAction>
-                    {sbomPopover(sbomPopoverRef)}
-                  </>
-                }
-              >
-                <SbomTable />
-              </Tab>
-              <Tab
-                eventKey={1}
-                title={
-                  <TabTitleText>
-                    Packages{"  "}
-                    <Badge screenReaderText="Search Result Count">
-                      {packageTotalCount}
-                    </Badge>
-                  </TabTitleText>
-                }
-              >
-                <PackageTable />
-              </Tab>
-              <Tab
-                eventKey={2}
-                title={
-                  <TabTitleText>
-                    CVEs{"  "}
-                    <Badge screenReaderText="Search Result Count">
-                      {vulnerabilityTotalCount}
-                    </Badge>
-                  </TabTitleText>
-                }
-              >
-                <VulnerabilityTable />
-              </Tab>
-              <Tab
-                eventKey={3}
-                title={
-                  <TabTitleText>
-                    Advisories{"  "}
-                    <Badge screenReaderText="Advisory Result Count">
-                      {vulnerabilityTotalCount}
-                    </Badge>
-                  </TabTitleText>
-                }
-              >
-                <AdvisoryTable />
-              </Tab>
-            </Tabs>
-          </SplitItem>
-        </Split>
-      </PageSection>
+      <PageSection>{searchBodyOverride || searchTabs}</PageSection>
     </>
   );
 };

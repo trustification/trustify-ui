@@ -1,0 +1,41 @@
+{
+  "uuid": "urn:uuid:ea257645-f52f-4723-9c73-a4ed589f67ac",
+  "identifier": "CVE-2023-1108",
+  "issuer": {
+    "id": "64c20c61-472a-4259-bfde-b62ac7396343",
+    "name": "redhat",
+    "cpe_key": null,
+    "website": null
+  },
+  "published": "2023-09-14T14:48:58.869Z",
+  "modified": "2024-08-02T05:32:46.37Z",
+  "withdrawn": null,
+  "title": "Undertow: infinite loop in sslconduit during close",
+  "labels": {
+    "type": "cve"
+  },
+  "sha256": "sha256:584614c4ed0621fc17e58d2f9e4467ed54b7e8d4681ca62056d9e547529b4878",
+  "sha384": "sha384:5e01e71ec6b1022bcad12905a57eeeebfe8a2d1470ec6a6cd67f97755a55e3dd1ad16ee2fc217fa05efda7788efd5fd0",
+  "sha512": "sha512:d5b8d4b5b395f5a4bf9eb3fb55e68d071a092621b7a0633f6c980c0ee0879b76c4e195372d3f11f12ef028349faabdcbc1d7a32f198b21b2da5da9294455d8fc",
+  "size": 38300,
+  "vulnerabilities": [
+    {
+      "normative": true,
+      "identifier": "CVE-2023-1108",
+      "title": "Undertow: infinite loop in sslconduit during close",
+      "description": "A flaw was found in undertow. This issue makes achieving a denial of service possible due to an unexpected handshake status updated in SslConduit, where the loop never terminates.",
+      "reserved": "2023-03-01T00:27:23.587Z",
+      "published": "2023-09-14T14:48:58.869Z",
+      "modified": "2024-08-02T05:32:46.37Z",
+      "withdrawn": null,
+      "discovered": null,
+      "released": null,
+      "cwes": ["CWE-835"],
+      "severity": "none",
+      "score": 0.0,
+      "cvss3_scores": []
+    }
+  ],
+  "average_severity": null,
+  "average_score": null
+}
