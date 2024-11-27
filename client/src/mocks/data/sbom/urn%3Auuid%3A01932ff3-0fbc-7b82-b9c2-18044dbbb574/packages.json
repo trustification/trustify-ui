@@ -1,0 +1,29 @@
+{
+  "items": [
+    {
+      "id": "SPDXRef-1b03970b-6e3c-4501-8b22-6155c60da631",
+      "name": "acl",
+      "version": "2.3.1-3.el9",
+      "purl": [
+        {
+          "uuid": "522ac5e7-823a-51d4-a1db-796ac5bedd19",
+          "purl": "pkg:rpm/redhat/acl@2.3.1-3.el9?arch=aarch64",
+          "base": {
+            "uuid": "b7c585a2-7a90-505e-982c-c4b0b792d9fe",
+            "purl": "pkg:rpm/redhat/acl"
+          },
+          "version": {
+            "uuid": "9bf148fc-3c99-52ee-a30f-3ed44103ed2d",
+            "purl": "pkg:rpm/redhat/acl@2.3.1-3.el9",
+            "version": "2.3.1-3.el9"
+          },
+          "qualifiers": {
+            "arch": "aarch64"
+          }
+        }
+      ],
+      "cpe": []
+    }
+  ],
+  "total": 606
+}

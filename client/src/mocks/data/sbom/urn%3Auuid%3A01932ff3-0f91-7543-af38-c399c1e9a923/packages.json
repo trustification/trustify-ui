@@ -1,0 +1,29 @@
+{
+  "items": [
+    {
+      "id": "SPDXRef-03f96770-c27f-42fb-8a6d-d8a087cc508f",
+      "name": "audit-libs",
+      "version": "3.0.7-4.el8",
+      "purl": [
+        {
+          "uuid": "5f337da5-a040-50fe-81fb-1c730efbbaff",
+          "purl": "pkg:rpm/redhat/audit-libs@3.0.7-4.el8?arch=s390x",
+          "base": {
+            "uuid": "ad91be32-74ec-5ac8-8f68-3aee5c62f894",
+            "purl": "pkg:rpm/redhat/audit-libs"
+          },
+          "version": {
+            "uuid": "2e4e1949-e5b5-5279-a27b-298efb722653",
+            "purl": "pkg:rpm/redhat/audit-libs@3.0.7-4.el8",
+            "version": "3.0.7-4.el8"
+          },
+          "qualifiers": {
+            "arch": "s390x"
+          }
+        }
+      ],
+      "cpe": []
+    }
+  ],
+  "total": 379
+}

@@ -46,6 +46,11 @@ const preview: Preview = {
     msw: {
       handlers: [...handlers],
     },
+    options: {
+      storySort: {
+        order: ["v2.0", "v2.4", "v2.3", "v2.2", "v2.1"],
+      },
+    },
   },
 };
 
