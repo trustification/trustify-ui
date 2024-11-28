@@ -58,7 +58,7 @@ function useAllEntities() {
       const transformedAdvisories: IEntity[] = advisories.map((item) => ({
         id: item.identifier,
         title: item.identifier,
-        description: item.title,
+        description: item.title?.substring(0, 75),
         navLink: `/advisories/${item.uuid}`,
         type: "Advisory",
         typeColor: "blue",
@@ -86,7 +86,7 @@ function useAllEntities() {
         (item) => ({
           id: item.identifier,
           title: item.identifier,
-          description: item.description,
+          description: item.description?.substring(0, 75),
           navLink: `/vulnerabilities/${item.identifier}`,
           type: "CVE",
           typeColor: "orange",
@@ -271,7 +271,11 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
   }, [isAutocompleteOpen]);
 
   const autocomplete = (
-    <Menu ref={autocompleteRef} onSelect={onSelect}>
+    <Menu
+      ref={autocompleteRef}
+      onSelect={onSelect}
+      style={{ maxWidth: "450px" }}
+    >
       <MenuContent>
         <MenuList>{autocompleteOptions}</MenuList>
       </MenuContent>
