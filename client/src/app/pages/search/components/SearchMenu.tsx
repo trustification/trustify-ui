@@ -8,11 +8,12 @@ import {
   SearchInput,
 } from "@patternfly/react-core";
 import { FILTER_TEXT_CATEGORY_KEY } from "@app/Constants";
-import { VulnerabilitySearchContext } from "@app/pages/vulnerability-list/vulnerability-context";
-import { SbomSearchContext } from "@app/pages/sbom-list/sbom-context";
 import { Label } from "@patternfly/react-core";
-import { AdvisorySearchContext } from "@app/pages/advisory-list/advisory-context";
-import { PackageSearchContext } from "@app/pages/package-list/package-context";
+import { useFetchAdvisories } from "@app/queries/advisories";
+import { HubRequestParams } from "@app/api/models";
+import { useFetchPackages } from "@app/queries/packages";
+import { useFetchSBOMs } from "@app/queries/sboms";
+import { useFetchVulnerabilities } from "@app/queries/vulnerabilities";
 
 export interface IEntity {
   id: string;
@@ -32,91 +33,144 @@ export interface IEntity {
     | undefined;
 }
 
-function useAllEntities() {
-  const [entityList, setEntityList] = React.useState<IEntity[]>([]);
+// Filter function
+export function filterEntityListByValue(list: IEntity[], searchString: string) {
+  // When the value of the search input changes, build a list of no more than 10 autocomplete options.
+  // Options which start with the search input value are listed first, followed by options which contain
+  // the search input value.
+  let options: React.JSX.Element[] = list
+    .filter(
+      (option) =>
+        option.id.toLowerCase().startsWith(searchString.toLowerCase()) ||
+        option.title?.toLowerCase().startsWith(searchString.toLowerCase()) ||
+        option.description?.toLowerCase().startsWith(searchString.toLowerCase())
+    )
+    .map((option) => (
+      <MenuItem
+        itemId={option.id}
+        key={option.id}
+        description={option.description}
+        to={option.navLink}
+      >
+        {option.title} <Label color={option.typeColor}>{option.type}</Label>
+      </MenuItem>
+    ));
+
+  if (options.length > 10) {
+    options = options.slice(0, 10);
+  } else {
+    options = [
+      ...options,
+      ...list
+        .filter(
+          (option: IEntity) =>
+            !option.id.startsWith(searchString.toLowerCase()) &&
+            option.id.includes(searchString.toLowerCase())
+        )
+        .map((option: IEntity) => (
+          <MenuItem
+            itemId={option.id}
+            key={option.id}
+            description={option.description}
+            to={option.navLink}
+          >
+            {option.title} <Label color={option.typeColor}>{option.type}</Label>
+          </MenuItem>
+        )),
+    ].slice(0, 10);
+  }
+
+  return options;
+}
+
+function useAllEntities(filterText: string) {
+  const params: HubRequestParams = {
+    filters: [
+      { field: FILTER_TEXT_CATEGORY_KEY, operator: "~", value: filterText },
+    ],
+    page: { pageNumber: 1, itemsPerPage: 10 },
+  };
 
   const {
-    tableControls: { currentPageItems: advisories },
-  } = React.useContext(AdvisorySearchContext);
+    result: { data: advisories },
+  } = useFetchAdvisories({ ...params });
 
   const {
-    tableControls: { currentPageItems: packages },
-  } = React.useContext(PackageSearchContext);
+    result: { data: packages },
+  } = useFetchPackages({ ...params });
 
   const {
-    tableControls: { currentPageItems: sboms, filterState: sbomFilterState },
-  } = React.useContext(SbomSearchContext);
+    result: { data: sboms },
+  } = useFetchSBOMs({ ...params });
 
   const {
-    tableControls: { currentPageItems: vulnerabilities },
-  } = React.useContext(VulnerabilitySearchContext);
+    result: { data: vulnerabilities },
+  } = useFetchVulnerabilities({ ...params });
 
-  React.useEffect(() => {
-    function fetchAllEntities() {
-      const tmpArray: IEntity[] = [];
+  const tmpArray: IEntity[] = [];
 
-      const transformedAdvisories: IEntity[] = advisories.map((item) => ({
-        id: item.identifier,
-        title: item.identifier,
-        description: item.title?.substring(0, 75),
-        navLink: `/advisories/${item.uuid}`,
-        type: "Advisory",
-        typeColor: "blue",
-      }));
+  const transformedAdvisories: IEntity[] = advisories.map((item) => ({
+    id: item.identifier,
+    title: item.identifier,
+    description: item.title?.substring(0, 75),
+    navLink: `/advisories/${item.uuid}`,
+    type: "Advisory",
+    typeColor: "blue",
+  }));
 
-      const transformedPackages: IEntity[] = packages.map((item) => ({
-        id: item.uuid,
-        title: item.decomposedPurl ? item.decomposedPurl?.name : item.purl,
-        description: item.decomposedPurl?.namespace,
-        navLink: `/packages/${item.uuid}`,
-        type: "Package",
-        typeColor: "cyan",
-      }));
+  const transformedPackages: IEntity[] = packages.map((item) => ({
+    id: item.uuid,
+    title: "item.decomposedPurl ? item.decomposedPurl?.name : item.purl",
+    description: "item.decomposedPurl?.namespace",
+    navLink: `/packages/${item.uuid}`,
+    type: "Package",
+    typeColor: "cyan",
+  }));
 
-      const transformedSboms: IEntity[] = sboms.map((item) => ({
-        id: item.id,
-        title: item.name,
-        description: item.authors.join(", "),
-        navLink: `/sboms/${item.id}`,
-        type: "SBOM",
-        typeColor: "purple",
-      }));
+  const transformedSboms: IEntity[] = sboms.map((item) => ({
+    id: item.id,
+    title: item.name,
+    description: item.authors.join(", "),
+    navLink: `/sboms/${item.id}`,
+    type: "SBOM",
+    typeColor: "purple",
+  }));
 
-      const transformedVulnerabilities: IEntity[] = vulnerabilities.map(
-        (item) => ({
-          id: item.identifier,
-          title: item.identifier,
-          description: item.description?.substring(0, 75),
-          navLink: `/vulnerabilities/${item.identifier}`,
-          type: "CVE",
-          typeColor: "orange",
-        })
-      );
+  const transformedVulnerabilities: IEntity[] = vulnerabilities.map((item) => ({
+    id: item.identifier,
+    title: item.identifier,
+    description: item.description?.substring(0, 75),
+    navLink: `/vulnerabilities/${item.identifier}`,
+    type: "CVE",
+    typeColor: "orange",
+  }));
 
-      tmpArray.push(
-        ...transformedAdvisories,
-        ...transformedPackages,
-        ...transformedSboms,
-        ...transformedVulnerabilities
-      );
-      setEntityList(tmpArray);
-    }
-    // fetch on load
-    fetchAllEntities();
-  }, [advisories, packages, sboms, vulnerabilities]);
+  tmpArray.push(
+    ...transformedAdvisories,
+    ...transformedPackages,
+    ...transformedSboms,
+    ...transformedVulnerabilities
+  );
+
   return {
-    list: entityList,
-    defaultValue:
-      sbomFilterState.filterValues[FILTER_TEXT_CATEGORY_KEY]?.[0] || "",
+    list: tmpArray,
+    defaultValue: "",
   };
 }
 
 export interface ISearchMenu {
+  filterFunction?: (
+    list: IEntity[],
+    searchString: string
+  ) => React.JSX.Element[];
   onChangeSearch: (searchValue: string | undefined) => void;
 }
 
-export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
-  const { list: entityList, defaultValue } = useAllEntities();
+export const SearchMenu: React.FC<ISearchMenu> = ({
+  filterFunction = filterEntityListByValue,
+  onChangeSearch,
+}) => {
+  const { list: entityList, defaultValue } = useAllEntities("");
 
   const [searchValue, setSearchValue] = React.useState<string | undefined>(
     defaultValue
@@ -139,45 +193,10 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
     ) {
       setIsAutocompleteOpen(true);
 
-      // When the value of the search input changes, build a list of no more than 10 autocomplete options.
-      // Options which start with the search input value are listed first, followed by options which contain
-      // the search input value.
-      let options: React.JSX.Element[] = entityList
-        .filter(
-          (option) =>
-            option.id.toLowerCase().startsWith(newValue.toLowerCase()) ||
-            option.title?.toLowerCase().startsWith(newValue.toLowerCase()) ||
-            option.description?.toLowerCase().startsWith(newValue.toLowerCase())
-        )
-        .map((option) => (
-          <MenuItem
-            itemId={option.id}
-            key={option.id}
-            description={option.description}
-            to={option.navLink}
-          >
-            {option.title} <Label color={option.typeColor}>{option.type}</Label>
-          </MenuItem>
-        ));
-
-      if (options.length > 10) {
-        options = options.slice(0, 10);
-      } else {
-        options = [
-          ...options,
-          ...entityList
-            .filter(
-              (option: IEntity) =>
-                !option.id.startsWith(newValue.toLowerCase()) &&
-                option.id.includes(newValue.toLowerCase())
-            )
-            .map((option: IEntity) => (
-              <MenuItem itemId={option.id} key={option.id}>
-                {option.id}
-              </MenuItem>
-            )),
-        ].slice(0, 10);
-      }
+      console.table(entityList);
+      console.log(newValue);
+      const options = filterFunction(entityList, newValue);
+      console.log(options);
 
       // The menu is hidden if there are no options
       setIsAutocompleteOpen(options.length > 0);
@@ -191,7 +210,6 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
 
   const onClearSearchValue = () => {
     setSearchValue("");
-    onChangeSearch("");
   };
 
   const onSubmitInput = () => {
