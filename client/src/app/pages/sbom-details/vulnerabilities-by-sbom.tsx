@@ -334,7 +334,6 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                                   <Tbody>
                                     {item.summary.allPackages
                                       .flatMap((item) => {
-                                        // Workaround against https://github.com/trustification/trustify/issues/1043
                                         // Some packages do not have purl neither ID. So we render only the parent name meanwhile
                                         type EnrichedPurlSummary = {
                                           parentName: string;
@@ -353,8 +352,8 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                                           return item.purl.map((i) => {
                                             const result: EnrichedPurlSummary =
                                               {
-                                                ...i,
                                                 parentName: item.name,
+                                                purlSummary: i,
                                               };
                                             return result;
                                           });
