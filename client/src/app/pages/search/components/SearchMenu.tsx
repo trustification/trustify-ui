@@ -14,6 +14,7 @@ import { HubRequestParams } from "@app/api/models";
 import { useFetchPackages } from "@app/queries/packages";
 import { useFetchSBOMs } from "@app/queries/sboms";
 import { useFetchVulnerabilities } from "@app/queries/vulnerabilities";
+import { Link } from "react-router-dom";
 
 export interface IEntity {
   id: string;
@@ -50,9 +51,10 @@ export function filterEntityListByValue(list: IEntity[], searchString: string) {
         itemId={option.id}
         key={option.id}
         description={option.description}
-        to={option.navLink}
       >
-        {option.title} <Label color={option.typeColor}>{option.type}</Label>
+        <Link to={option.navLink}>
+          {option.title} <Label color={option.typeColor}>{option.type}</Label>
+        </Link>
       </MenuItem>
     ));
 
@@ -120,8 +122,7 @@ function useAllEntities(filterText: string) {
 
   const transformedPackages: IEntity[] = packages.map((item) => ({
     id: item.uuid,
-    title: "item.decomposedPurl ? item.decomposedPurl?.name : item.purl",
-    description: "item.decomposedPurl?.namespace",
+    title: item.purl,
     navLink: `/packages/${item.uuid}`,
     type: "Package",
     typeColor: "cyan",
@@ -193,10 +194,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({
     ) {
       setIsAutocompleteOpen(true);
 
-      console.table(entityList);
-      console.log(newValue);
       const options = filterFunction(entityList, newValue);
-      console.log(options);
 
       // The menu is hidden if there are no options
       setIsAutocompleteOpen(options.length > 0);
