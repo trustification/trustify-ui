@@ -14,6 +14,7 @@ import {
 
 import { FILTER_TEXT_CATEGORY_KEY } from "@app/Constants";
 
+import { SearchMenu } from "@app/pages/search/components/SearchMenu";
 import { SearchProvider } from "./search-context";
 
 import { AdvisorySearchContext } from "../advisory-list/advisory-context";
@@ -85,20 +86,8 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
 
   // Search
 
-  const [searchValue, setSearchValue] = React.useState(
-    sbomTableControls.filterState.filterValues[FILTER_TEXT_CATEGORY_KEY]?.[0] ||
-      ""
-  );
-
-  const onChangeSearchValue = (value: string) => {
-    setSearchValue(value);
-  };
-
-  const onClearSearchValue = () => {
-    setSearchValue("");
-  };
-
-  const onChangeContextSearchValue = () => {
+  const onChangeContextSearchValue = (searchValue: string | undefined) => {
+    if (searchValue == undefined) return;
     sbomTableControls.filterState.setFilterValues({
       ...sbomTableControls.filterState.filterValues,
       [FILTER_TEXT_CATEGORY_KEY]: [searchValue],
@@ -142,16 +131,7 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
             >
               <ToolbarGroup visibility={{ default: "hidden", lg: "visible" }}>
                 <ToolbarItem widths={{ default: "500px" }}>
-                  <SearchInput
-                    placeholder="Search for an SBOM, Package, or Vulnerability"
-                    value={searchValue}
-                    onChange={(_event, value) => onChangeSearchValue(value)}
-                    onClear={onClearSearchValue}
-                    onKeyDown={(event: React.KeyboardEvent) => {
-                      if (event.key && event.key !== "Enter") return;
-                      onChangeContextSearchValue();
-                    }}
-                  />
+                  <SearchMenu onChangeSearch={onChangeContextSearchValue} />
                 </ToolbarItem>
               </ToolbarGroup>
             </ToolbarGroup>
