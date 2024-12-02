@@ -34,6 +34,20 @@ export interface IEntity {
     | undefined;
 }
 
+const entityToMenu = (option: IEntity) => {
+  return (
+    <Link
+      key={option.id}
+      to={option.navLink}
+      style={{ textDecoration: "none" }}
+    >
+      <MenuItem itemId={option.id} description={option.description}>
+        {option.title} <Label color={option.typeColor}>{option.type}</Label>
+      </MenuItem>
+    </Link>
+  );
+};
+
 // Filter function
 export function filterEntityListByValue(list: IEntity[], searchString: string) {
   // When the value of the search input changes, build a list of no more than 10 autocomplete options.
@@ -46,17 +60,7 @@ export function filterEntityListByValue(list: IEntity[], searchString: string) {
         option.title?.toLowerCase().startsWith(searchString.toLowerCase()) ||
         option.description?.toLowerCase().startsWith(searchString.toLowerCase())
     )
-    .map((option) => (
-      <MenuItem
-        itemId={option.id}
-        key={option.id}
-        description={option.description}
-      >
-        <Link to={option.navLink}>
-          {option.title} <Label color={option.typeColor}>{option.type}</Label>
-        </Link>
-      </MenuItem>
-    ));
+    .map(entityToMenu);
 
   if (options.length > 10) {
     options = options.slice(0, 10);
@@ -69,16 +73,7 @@ export function filterEntityListByValue(list: IEntity[], searchString: string) {
             !option.id.startsWith(searchString.toLowerCase()) &&
             option.id.includes(searchString.toLowerCase())
         )
-        .map((option: IEntity) => (
-          <MenuItem
-            itemId={option.id}
-            key={option.id}
-            description={option.description}
-            to={option.navLink}
-          >
-            {option.title} <Label color={option.typeColor}>{option.type}</Label>
-          </MenuItem>
-        )),
+        .map(entityToMenu),
     ].slice(0, 10);
   }
 
@@ -214,15 +209,6 @@ export const SearchMenu: React.FC<ISearchMenu> = ({
     onChangeSearch(searchValue);
   };
 
-  // Whenever an autocomplete option is selected, set the search input value, close the menu, and put the browser
-  // focus back on the search input
-  const onSelect = (e: any, itemId?: string | number | undefined) => {
-    e?.stopPropagation();
-    setSearchValue(itemId as string);
-    setIsAutocompleteOpen(false);
-    searchInputRef.current?.focus();
-  };
-
   React.useEffect(() => {
     const handleMenuKeys = (event: any) => {
       if (
@@ -287,11 +273,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({
   }, [isAutocompleteOpen]);
 
   const autocomplete = (
-    <Menu
-      ref={autocompleteRef}
-      onSelect={onSelect}
-      style={{ maxWidth: "450px" }}
-    >
+    <Menu ref={autocompleteRef} style={{ maxWidth: "450px" }}>
       <MenuContent>
         <MenuList>{autocompleteOptions}</MenuList>
       </MenuContent>
