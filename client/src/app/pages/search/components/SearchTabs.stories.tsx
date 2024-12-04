@@ -3,7 +3,6 @@ import { AdvisorySearchContext } from "@app/pages/advisory-list/advisory-context
 import type { Meta, StoryObj } from "@storybook/react";
 import { SearchTabs, SearchTabsProps } from "./SearchTabs";
 import listResponse from "@mocks/data/advisory/list.json";
-import { MemoryRouter } from "react-router-dom";
 import * as stories from "../../advisory-list/advisory-table.stories";
 import { composeStories } from "@storybook/react";
 const { PrimaryState } = composeStories(stories);
@@ -224,11 +223,9 @@ const meta: Meta<typeof SearchTabs> = {
     (Story, { parameters }) => {
       const { contextDefaultValue } = parameters;
       return (
-        <MemoryRouter>
-          <AdvisorySearchContext.Provider value={contextDefaultValue}>
-            <Story />
-          </AdvisorySearchContext.Provider>
-        </MemoryRouter>
+        <AdvisorySearchContext.Provider value={contextDefaultValue}>
+          <Story />
+        </AdvisorySearchContext.Provider>
       );
     },
   ],
@@ -414,7 +411,6 @@ const customFilterPanelProps = {
 
 export const DefaultState: Story = {
   args: {
-    // advisoryTable: <>An advisory table here</>,
     advisoryTable: <PrimaryState />,
     filterPanelProps: customFilterPanelProps,
     packageTable: <>A package table here</>,

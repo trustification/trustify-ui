@@ -1,5 +1,8 @@
 import { http, HttpResponse } from "msw";
+import { VulnerabilityHead } from "@app/client";
+
 import getAdvisories from "@mocks/data/advisory/list.json";
+import getProducts from "@mocks/data/product/list.json";
 import getPurls from "@mocks/data/purl/list.json";
 import getSboms from "@mocks/data/sbom/list.json";
 import getVulnerabilities from "@mocks/data/vulnerability/list.json";
@@ -19,6 +22,10 @@ import cve_202326464 from "@mocks/data/vulnerability/CVE-2023-26464/details.json
 
 import sbom_5d5e9dc471bd from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fc4-7bf2-8201-5d5e9dc471bd/details.json";
 import sbom_c26de2fe81d9 from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9/details.json";
+// import sbom_f92bac24a6b0 from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f06-74e0-b673-f92bac24a6b0/details.json";
+// import sbom_1fac54a371f3 from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f90-7e51-9c9d-1fac54a371f3/details.json";
+// import sbom_c399c1e9a923 from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f91-7543-af38-c399c1e9a923/details.json";
+// import sbom_18044dbbb574 from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fbc-7b82-b9c2-18044dbbb574/details.json";
 
 import sbom_5d5e9dc471bd_advisory from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fc4-7bf2-8201-5d5e9dc471bd/advisory.json";
 import sbom_c26de2fe81d9_advisory from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9/advisory.json";
@@ -34,6 +41,11 @@ import sbom_1fac54a371f3_packages from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0
 import sbom_c399c1e9a923_packages from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f91-7543-af38-c399c1e9a923/packages.json";
 import sbom_18044dbbb574_packages from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fbc-7b82-b9c2-18044dbbb574/packages.json";
 
+import prod_2e167215 from "@mocks/data/product/urn:uuid:2e167215-42ec-4a71-912c-73082c21cf57/details.json";
+import prod_60d159e4 from "@mocks/data/product/urn:uuid:60d159e4-48dc-4480-90e8-7e84b8bfb759/details.json";
+import prod_77eb73d7 from "@mocks/data/product/urn:uuid:77eb73d7-dc2c-4d3d-bfe1-bd3a80280059/details.json";
+import prod_726e029c from "@mocks/data/product/urn:uuid:726e029c-2fd7-4e3a-8b67-6c96010d880a/details.json";
+
 import purl_2e05fb3a from "@mocks/data/purl/details/2e05fb3a-cda9-5e54-96b2-d8c7ea390f8d.json";
 import purl_14c5c61d from "@mocks/data/purl/details/14c5c61d-c4cc-56fb-9db6-f62541076b80.json";
 import purl_25ddc770 from "@mocks/data/purl/details/25ddc770-5fde-53a8-8451-41091d5fcb3b.json";
@@ -46,7 +58,6 @@ import purl_f4f6b460 from "@mocks/data/purl/details/f4f6b460-82e5-59f0-a7f6-da5f
 import purl_f357b0cc from "@mocks/data/purl/details/f357b0cc-75d5-532e-b7d9-2233f6f752c8.json";
 
 import imgAvatar from "@app/images/avatar.svg";
-import { VulnerabilityHead } from "@app/client";
 
 export const cveDetails: { [identifier: string]: Partial<VulnerabilityHead> } =
   {
@@ -85,6 +96,13 @@ export const sbomAdvisory: { [identifier: string]: any } = {
   "urn:uuid:01932ff3-0fbc-7b82-b9c2-18044dbbb574": sbom_18044dbbb574_advisory,
 };
 
+export const productDetails: { [identifier: string]: any } = {
+  "urn:uuid:2e167215-42ec-4a71-912c-73082c21cf57": prod_2e167215,
+  "urn:uuid:60d159e4-48dc-4480-90e8-7e84b8bfb759": prod_60d159e4,
+  "urn:uuid:77eb73d7-dc2c-4d3d-bfe1-bd3a80280059": prod_77eb73d7,
+  "urn:uuid:726e029c-2fd7-4e3a-8b67-6c96010d880a": prod_726e029c,
+};
+
 export const purlDetails: { [identifier: string]: any } = {
   "2e05fb3a-cda9-5e54-96b2-d8c7ea390f8d": purl_2e05fb3a,
   "14c5c61d-c4cc-56fb-9db6-f62541076b80": purl_14c5c61d,
@@ -107,7 +125,7 @@ export const purlDetails: { [identifier: string]: any } = {
 
 const advisoryHandlers = [
   // list advisories
-  http.get("/api/v1/advisory", ({ request }) => {
+  http.get("/api/v1/advisory", () => {
     return HttpResponse.json(getAdvisories);
   }),
 
@@ -230,8 +248,22 @@ const organizationHandlers = [
 // PRODUCT HANDLERS
 
 const productHandlers = [
-  http.get("/api/v1/product", () => {}),
-  http.get("/api/v1/product/:id", () => {}),
+  http.get("/api/v1/product", () => {
+    return HttpResponse.json(getProducts);
+  }),
+  http.get("/api/v1/product/:id", ({ params }) => {
+    const { id } = params;
+
+    if (!id) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    const data = productDetails[id as string];
+    if (!data) {
+      return new HttpResponse("Product not found", { status: 404 });
+    }
+    return HttpResponse.json(data);
+  }),
   http.delete("/api/v1/product/:id", () => {}),
 ];
 
@@ -239,8 +271,7 @@ const productHandlers = [
 
 const purlHandlers = [
   // list fully qualified purls
-  http.get("/api/v1/purl", ({ request }) => {
-    const url = new URL(request.url);
+  http.get("/api/v1/purl", () => {
     return HttpResponse.json(getPurls);
   }),
 
