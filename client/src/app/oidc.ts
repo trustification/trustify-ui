@@ -1,8 +1,11 @@
 import { OidcClientSettings } from "oidc-client-ts";
+
+import { isAuthServerEmbedded } from "./Constants";
 import { ENV } from "./env";
 
-export const OIDC_SERVER_URL =
-  ENV.OIDC_SERVER_URL || "http://localhost:8090/realms/trustify";
+export const OIDC_SERVER_URL = isAuthServerEmbedded
+  ? ENV.OIDC_SERVER_EMBEDDED_PATH || "/auth/realms/trustify"
+  : ENV.OIDC_SERVER_URL || "http://localhost:8090/realms/trustify";
 export const OIDC_CLIENT_ID = ENV.OIDC_CLIENT_ID || "frontend";
 
 export const oidcClientSettings: OidcClientSettings = {
