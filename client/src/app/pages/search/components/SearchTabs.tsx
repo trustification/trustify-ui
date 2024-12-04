@@ -13,15 +13,14 @@ import {
   TabTitleText,
 } from "@patternfly/react-core";
 
-import { PackageTable } from "@app/pages/package-list/package-table";
+import { FilterPanel } from "@app/components/FilterPanel";
 import { AdvisoryTable } from "@app/pages/advisory-list/advisory-table";
+import { PackageTable } from "@app/pages/package-list/package-table";
 import { SbomTable } from "@app/pages/sbom-list/sbom-table";
 import { VulnerabilityTable } from "@app/pages/vulnerability-list/vulnerability-table";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
-import { FilterPanel } from "@app/components/FilterPanel";
 
 export interface SearchTabsProps {
-  advisoryTable?: ReactNode;
   filterPanelProps: {
     advisoryFilterPanelProps?: any;
     packageFilterPanelProps?: any;
@@ -34,24 +33,27 @@ export interface SearchTabsProps {
   sbomTotalCount: number;
   vulnerabilityTable?: ReactElement;
   vulnerabilityTotalCount: number;
+  advisoryTable?: ReactNode;
+  advisoryTotalCount: number;
 }
 
 export const SearchTabs: React.FC<SearchTabsProps> = ({
-  advisoryTable,
   filterPanelProps,
-  packageTable,
-  packageTotalCount,
   sbomTable,
   sbomTotalCount,
+  packageTable,
+  packageTotalCount,
   vulnerabilityTable,
   vulnerabilityTotalCount,
+  advisoryTable,
+  advisoryTotalCount,
 }) => {
   const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
   const {
-    advisoryFilterPanelProps,
-    packageFilterPanelProps,
     sbomFilterPanelProps,
+    packageFilterPanelProps,
     vulnerabilityFilterPanelProps,
+    advisoryFilterPanelProps,
   } = filterPanelProps;
 
   const handleTabClick = (
@@ -166,7 +168,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
               <TabTitleText>
                 Advisories{"  "}
                 <Badge screenReaderText="Advisory Result Count">
-                  {vulnerabilityTotalCount}
+                  {advisoryTotalCount}
                 </Badge>
               </TabTitleText>
             }
