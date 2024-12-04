@@ -1,0 +1,280 @@
+{
+  "items": [
+    {
+      "id": "urn:uuid:2e167215-42ec-4a71-912c-73082c21cf57",
+      "name": "A-MQ Clients 2",
+      "versions": [],
+      "vendor": {
+        "id": "3ca80722-2c01-41c6-bdde-5b76079db2c2",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:a364583c-764e-4acf-ac87-38c9197b4ea1",
+      "name": "Red Hat support for Spring Boot",
+      "versions": [],
+      "vendor": {
+        "id": "87af9d56-f108-41fe-8487-3844474b69b2",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:aba902ee-25f5-4664-a45d-c22a2a4cb9ac",
+      "name": "Red Hat JBoss EAP 7.4 for RHEL 7 Server",
+      "versions": [],
+      "vendor": {
+        "id": "fd826605-6d12-45a5-8528-77906e401263",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:d2ffb470-56f8-4b00-849d-d9a6f11482cc",
+      "name": "Red Hat OpenShift Container Platform 4.10",
+      "versions": [],
+      "vendor": {
+        "id": "87af9d56-f108-41fe-8487-3844474b69b2",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:b8c6b809-3a79-4720-861e-8484098f14a5",
+      "name": "Red Hat build of Quarkus 2.7.7",
+      "versions": [],
+      "vendor": {
+        "id": "3ca80722-2c01-41c6-bdde-5b76079db2c2",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:e5eca3e8-b4d6-47e7-a79a-f3a18d50ead0",
+      "name": "Red Hat JBoss EAP 7.4 for RHEL 9",
+      "versions": [],
+      "vendor": {
+        "id": "fd28c807-2fec-4335-8a33-411613d9b49b",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:45838a68-6577-4560-90ce-30f95ee25b2e",
+      "name": "Red Hat JBoss EAP 7.4 for RHEL 9",
+      "versions": [],
+      "vendor": {
+        "id": "7a8adae5-131c-4810-a542-e887aed3ec40",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:77eb73d7-dc2c-4d3d-bfe1-bd3a80280059",
+      "name": "Red Hat Single Sign-On 7.6 for RHEL 7 Server",
+      "versions": [],
+      "vendor": {
+        "id": "fd826605-6d12-45a5-8528-77906e401263",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:726e029c-2fd7-4e3a-8b67-6c96010d880a",
+      "name": "RHINT Camel-Springboot 3.18.3.P2",
+      "versions": [],
+      "vendor": {
+        "id": "87af9d56-f108-41fe-8487-3844474b69b2",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:60d159e4-48dc-4480-90e8-7e84b8bfb759",
+      "name": "Red Hat Integration Camel Quarkus",
+      "versions": [],
+      "vendor": {
+        "id": "3ca80722-2c01-41c6-bdde-5b76079db2c2",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:246f011a-40e5-4ef3-8e09-97df65b0bd39",
+      "name": "Red Hat JBoss EAP 7.4 for RHEL 7 Server",
+      "versions": [],
+      "vendor": {
+        "id": "fd28c807-2fec-4335-8a33-411613d9b49b",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:cfa38982-a2be-4db7-b396-2f776ae23708",
+      "name": "Red Hat JBoss EAP 7.4 for RHEL 8",
+      "versions": [],
+      "vendor": {
+        "id": "7a8adae5-131c-4810-a542-e887aed3ec40",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:45bc2f23-825c-4eb3-82f7-b223dd76d9ed",
+      "name": "Red Hat Process Automation 7",
+      "versions": [],
+      "vendor": {
+        "id": "3ca80722-2c01-41c6-bdde-5b76079db2c2",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:bbc6cce8-cf22-447e-8fe9-0b187bc72a75",
+      "name": "Red Hat JBoss EAP 7.4 for RHEL 8",
+      "versions": [],
+      "vendor": {
+        "id": "fd826605-6d12-45a5-8528-77906e401263",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:2e71b7d5-a5a6-4c4a-a503-c4831b603200",
+      "name": "Red Hat JBoss Enterprise Application Platform Expansion Pack",
+      "versions": [],
+      "vendor": {
+        "id": "3ca80722-2c01-41c6-bdde-5b76079db2c2",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:dc463fa6-46aa-4429-a5f6-6ed8b70a7f48",
+      "name": "Red Hat JBoss EAP 7.4 for RHEL 9",
+      "versions": [],
+      "vendor": {
+        "id": "fd826605-6d12-45a5-8528-77906e401263",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:ce7d71ae-7c95-4c0a-b640-5244f2ccf2ed",
+      "name": "Red Hat JBoss Enterprise Application Platform 7",
+      "versions": [],
+      "vendor": {
+        "id": "3ca80722-2c01-41c6-bdde-5b76079db2c2",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:20b72f67-90d9-4b0e-8dd3-5305262971d9",
+      "name": "Red Hat JBoss EAP 7.4 for RHEL 7 Server",
+      "versions": [],
+      "vendor": {
+        "id": "7a8adae5-131c-4810-a542-e887aed3ec40",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:c3b22ead-bcf7-4900-bf18-613551263be9",
+      "name": "RHINT Camel-Springboot 3.20.1",
+      "versions": [],
+      "vendor": {
+        "id": "87af9d56-f108-41fe-8487-3844474b69b2",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:345d1f31-0592-4304-ac0e-7bf736350e2e",
+      "name": "Red Hat build of Quarkus",
+      "versions": [],
+      "vendor": {
+        "id": "3ca80722-2c01-41c6-bdde-5b76079db2c2",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:28360c0c-58a1-49a1-8d7b-1dcc8099a097",
+      "name": "Red Hat build of Quarkus 2.13.8.Final",
+      "versions": [],
+      "vendor": {
+        "id": "35bbf032-721f-489d-ac63-915d7d7f1baa",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:4fc15a85-fee5-490e-8d04-2da9c904d35c",
+      "name": "Red Hat JBoss EAP 7.4 for RHEL 8",
+      "versions": [],
+      "vendor": {
+        "id": "fd28c807-2fec-4335-8a33-411613d9b49b",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:889dd0d7-1c62-4914-ab68-95f56ed1335c",
+      "name": "Red Hat Fuse 7.12",
+      "versions": [],
+      "vendor": {
+        "id": "87af9d56-f108-41fe-8487-3844474b69b2",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:8302d189-a358-4d8d-8e9a-6f8a283a4c6f",
+      "name": "Red Hat JBoss Fuse 7",
+      "versions": [],
+      "vendor": {
+        "id": "3ca80722-2c01-41c6-bdde-5b76079db2c2",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    },
+    {
+      "id": "urn:uuid:6be1d761-5af9-4096-8fb7-dd8efa1c11a5",
+      "name": "RHINT Camel-Springboot 3.20.1",
+      "versions": [],
+      "vendor": {
+        "id": "fd826605-6d12-45a5-8528-77906e401263",
+        "name": "Red Hat",
+        "cpe_key": "redhat",
+        "website": null
+      }
+    }
+  ],
+  "total": 438
+}
