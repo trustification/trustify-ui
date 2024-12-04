@@ -34,6 +34,12 @@ export type TrustificationEnvType = {
   /** Target URL for the UI server's `/auth` proxy */
   OIDC_SERVER_URL?: string;
 
+  /** Whether or not `/auth` proxy will be enabled */
+  OIDC_SERVER_IS_EMBEDDED?: "true" | "false";
+
+  /** The Keycloak Realm */
+  OIDC_SERVER_EMBEDDED_PATH?: string;
+
   /** Target URL for the UI server's `/api` proxy */
   TRUSTIFY_API_URL?: string;
 
@@ -63,6 +69,8 @@ export const buildTrustificationEnv = ({
   MOCK = "off",
 
   OIDC_SERVER_URL,
+  OIDC_SERVER_IS_EMBEDDED = "false",
+  OIDC_SERVER_EMBEDDED_PATH,
   AUTH_REQUIRED = "true",
   OIDC_CLIENT_ID,
   OIDC_SCOPE,
@@ -80,6 +88,8 @@ export const buildTrustificationEnv = ({
   MOCK,
 
   OIDC_SERVER_URL,
+  OIDC_SERVER_IS_EMBEDDED,
+  OIDC_SERVER_EMBEDDED_PATH,
   AUTH_REQUIRED,
   OIDC_CLIENT_ID,
   OIDC_SCOPE,
