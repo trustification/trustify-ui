@@ -107,8 +107,8 @@ function useAllEntities(filterText: string) {
   const tmpArray: IEntity[] = [];
 
   const transformedAdvisories: IEntity[] = advisories.map((item) => ({
-    id: item.identifier,
-    title: item.identifier,
+    id: item.document_id,
+    title: item.document_id,
     description: item.title?.substring(0, 75),
     navLink: `/advisories/${item.uuid}`,
     type: "Advisory",

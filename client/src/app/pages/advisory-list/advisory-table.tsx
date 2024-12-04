@@ -103,7 +103,7 @@ export const AdvisoryTable: React.FC = ({}) => {
                       })}
                     >
                       <NavLink to={`/advisories/${item.uuid}`}>
-                        {item.identifier}
+                        {item.document_id}
                       </NavLink>
                     </Td>
                     <Td
