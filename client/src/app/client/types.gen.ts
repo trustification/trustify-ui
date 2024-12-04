@@ -15,6 +15,10 @@ export type AdvisoryDetails = AdvisoryHead &
 
 export type AdvisoryHead = {
   /**
+   * The identifier of the advisory, as provided by the document.
+   */
+  document_id: string;
+  /**
    * The identifier of the advisory, as assigned by the issuing organization.
    */
   identifier: string;

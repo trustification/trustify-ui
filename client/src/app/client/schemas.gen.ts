@@ -54,6 +54,7 @@ export const AdvisoryHeadSchema = {
   required: [
     "uuid",
     "identifier",
+    "document_id",
     "issuer",
     "published",
     "withdrawn",
@@ -61,6 +62,11 @@ export const AdvisoryHeadSchema = {
     "labels",
   ],
   properties: {
+    document_id: {
+      type: "string",
+      description:
+        "The identifier of the advisory, as provided by the document.",
+    },
     identifier: {
       type: "string",
       description:

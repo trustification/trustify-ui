@@ -50,7 +50,7 @@ export const AdvisoryDetails: React.FC = () => {
           <SplitItem isFilled>
             <TextContent>
               <Text component="h1">
-                {advisory?.identifier ?? advisoryId ?? ""}
+                {advisory?.document_id ?? advisoryId ?? ""}
               </Text>
               <Text component="p">Advisory detail information</Text>
             </TextContent>
