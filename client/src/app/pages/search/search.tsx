@@ -112,6 +112,7 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
       packageTotalCount={packageTotalCount}
       sbomTotalCount={sbomTotalCount}
       vulnerabilityTotalCount={vulnerabilityTotalCount}
+      advisoryTotalCount={advisoryTotalCount}
     />
   );
 
