@@ -1,8 +1,6 @@
-import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { HeaderApp } from "@app/layout/header";
 import { fn } from "@storybook/test";
-import { BrowserRouter } from "react-router-dom";
 import * as actual from "@app/hooks/useBranding";
 
 const useBranding = fn(actual.useBranding).mockName("useBranding");
@@ -12,13 +10,6 @@ import { BrandingStrings } from "@trustify-ui/common";
 const meta = {
   title: "Components/Layout/HeaderApp",
   component: HeaderApp,
-  decorators: [
-    (Story) => (
-      <BrowserRouter>
-        <Story />
-      </BrowserRouter>
-    ),
-  ],
 } satisfies Meta<typeof HeaderApp>;
 
 export default meta;

@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { AdvisoryTable } from "./advisory-table";
 import { AdvisorySearchContext } from "./advisory-context";
 import listResponse from "@mocks/data/advisory/list.json";
-import { BrowserRouter } from "react-router-dom";
 
 const meta = {
   title: "Components/AdvisoryList/AdvisoryTable",
@@ -13,11 +12,9 @@ const meta = {
     (Story, { parameters }) => {
       const { contextDefaultValue } = parameters;
       return (
-        <BrowserRouter>
-          <AdvisorySearchContext.Provider value={contextDefaultValue}>
-            <Story />
-          </AdvisorySearchContext.Provider>
-        </BrowserRouter>
+        <AdvisorySearchContext.Provider value={contextDefaultValue}>
+          <Story />
+        </AdvisorySearchContext.Provider>
       );
     },
   ],
@@ -184,7 +181,7 @@ export const PrimaryState: Story = {
       isFetching: false,
       fetchError: null,
       tableControls: { ...tableControlsCustom },
-      totalItemCount: 58,
+      totalItemCount: tableControlsCustom.currentPageItems.length,
     },
   },
 };
