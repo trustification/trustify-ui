@@ -274,7 +274,7 @@ export const ImporterList: React.FC = () => {
             </ToolbarContent>
           </Toolbar>
 
-          <Table {...tableProps} aria-label="CVEs table">
+          <Table {...tableProps} aria-label="Importer table">
             <Thead>
               <Tr>
                 <TableHeaderContentWithControls {...tableControls}>

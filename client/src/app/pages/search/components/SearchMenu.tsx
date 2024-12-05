@@ -1,5 +1,11 @@
-import React from "react";
+import { HubRequestParams } from "@app/api/models";
+import { FILTER_TEXT_CATEGORY_KEY } from "@app/Constants";
+import { useFetchAdvisories } from "@app/queries/advisories";
+import { useFetchPackages } from "@app/queries/packages";
+import { useFetchSBOMs } from "@app/queries/sboms";
+import { useFetchVulnerabilities } from "@app/queries/vulnerabilities";
 import {
+  Label,
   Menu,
   MenuContent,
   MenuItem,
@@ -7,13 +13,7 @@ import {
   Popper,
   SearchInput,
 } from "@patternfly/react-core";
-import { FILTER_TEXT_CATEGORY_KEY } from "@app/Constants";
-import { Label } from "@patternfly/react-core";
-import { useFetchAdvisories } from "@app/queries/advisories";
-import { HubRequestParams } from "@app/api/models";
-import { useFetchPackages } from "@app/queries/packages";
-import { useFetchSBOMs } from "@app/queries/sboms";
-import { useFetchVulnerabilities } from "@app/queries/vulnerabilities";
+import React from "react";
 import { Link } from "react-router-dom";
 
 export interface IEntity {
@@ -137,7 +137,7 @@ function useAllEntities(filterText: string) {
     title: item.identifier,
     description: item.description?.substring(0, 75),
     navLink: `/vulnerabilities/${item.identifier}`,
-    type: "CVE",
+    type: "Vulnerability",
     typeColor: "orange",
   }));
 

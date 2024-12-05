@@ -33,7 +33,7 @@ export const VulnerabilitiesByAdvisory: React.FC<
     items: vulnerabilities,
     isLoading: isFetching,
     columnNames: {
-      identifier: "CVE ID",
+      identifier: "ID",
       title: "Title",
       discovery: "Discovery",
       release: "Release",
