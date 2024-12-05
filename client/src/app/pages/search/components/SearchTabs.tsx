@@ -153,7 +153,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
             eventKey={2}
             title={
               <TabTitleText>
-                CVEs{"  "}
+                Vulnerabilities{"  "}
                 <Badge screenReaderText="Search Result Count">
                   {vulnerabilityTotalCount}
                 </Badge>

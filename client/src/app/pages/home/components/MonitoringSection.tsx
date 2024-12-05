@@ -34,8 +34,8 @@ import { severityList } from "@app/api/model-utils";
 import { SbomHead, Severity } from "@app/client";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useVulnerabilitiesOfSboms } from "@app/hooks/domain-controls/useVulnerabilitiesOfSbom";
+import { useFetchAdvisories } from "@app/queries/advisories";
 import { useFetchSBOMs } from "@app/queries/sboms";
-import { useFetchVulnerabilities } from "@app/queries/vulnerabilities";
 import { formatDate } from "@app/utils/utils";
 
 interface Legend {
@@ -84,10 +84,10 @@ export const MonitoringSection: React.FC = () => {
   //
 
   const {
-    result: { data: vulnerabilities, total: totalVulnerabilities },
-    isFetching: isFetchingVulnerabilities,
-    fetchError: fetchErrorVulnerabilities,
-  } = useFetchVulnerabilities(
+    result: { data: advisories, total: totalAdvisories },
+    isFetching: isFetchingAdvisories,
+    fetchError: fetchErrorAdvisories,
+  } = useFetchAdvisories(
     {
       page: { pageNumber: 1, itemsPerPage: 10 },
       sort: { field: "published", direction: "desc" },
@@ -114,9 +114,9 @@ export const MonitoringSection: React.FC = () => {
               <Stack hasGutter>
                 <StackItem>
                   <TextContent>
-                    Below is a summary of CVE status for your last 10 ingested
-                    SBOMs. You can click on the SBOM name or CVE severity number
-                    below to be taken to their respective details page.
+                    Below is a summary of Vulnerability status for your last 10
+                    ingested SBOMs. You can click on the SBOM name to be taken
+                    to their respective details page.
                   </TextContent>
                 </StackItem>
                 <StackItem>
@@ -251,8 +251,8 @@ export const MonitoringSection: React.FC = () => {
           </GridItem>
           <GridItem md={6}>
             <LoadingWrapper
-              isFetching={isFetchingVulnerabilities}
-              fetchError={fetchErrorVulnerabilities}
+              isFetching={isFetchingAdvisories || isFetchingBarchartSboms}
+              fetchError={fetchErrorAdvisories || fetchErrorBarchartSboms}
             >
               <Grid hasGutter>
                 <GridItem md={6}>
@@ -290,16 +290,14 @@ export const MonitoringSection: React.FC = () => {
                   <DescriptionList>
                     <DescriptionListGroup>
                       <DescriptionListTerm>
-                        Last Vulnerability ingested
+                        Last Advisory ingested
                       </DescriptionListTerm>
                       <DescriptionListDescription>
                         <Stack>
                           <StackItem>
-                            {formatDate(vulnerabilities?.[0]?.published)}
+                            {formatDate(advisories?.[0]?.published)}
                           </StackItem>
-                          <StackItem>
-                            {vulnerabilities?.[0]?.identifier}
-                          </StackItem>
+                          <StackItem>{advisories?.[0]?.identifier}</StackItem>
                         </Stack>
                       </DescriptionListDescription>
                     </DescriptionListGroup>
@@ -309,10 +307,10 @@ export const MonitoringSection: React.FC = () => {
                   <DescriptionList>
                     <DescriptionListGroup>
                       <DescriptionListTerm>
-                        Total Vulnerabilities
+                        Total Advisories
                       </DescriptionListTerm>
                       <DescriptionListDescription>
-                        {totalVulnerabilities}
+                        {totalAdvisories}
                       </DescriptionListDescription>
                     </DescriptionListGroup>
                   </DescriptionList>
