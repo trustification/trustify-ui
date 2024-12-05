@@ -20,31 +20,31 @@ import cve_202324815 from "@mocks/data/vulnerability/CVE-2023-24815/details.json
 import cve_202324998 from "@mocks/data/vulnerability/CVE-2023-24998/details.json";
 import cve_202326464 from "@mocks/data/vulnerability/CVE-2023-26464/details.json";
 
-import sbom_5d5e9dc471bd from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fc4-7bf2-8201-5d5e9dc471bd/details.json";
-import sbom_c26de2fe81d9 from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9/details.json";
-// import sbom_f92bac24a6b0 from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f06-74e0-b673-f92bac24a6b0/details.json";
-// import sbom_1fac54a371f3 from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f90-7e51-9c9d-1fac54a371f3/details.json";
-// import sbom_c399c1e9a923 from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f91-7543-af38-c399c1e9a923/details.json";
-// import sbom_18044dbbb574 from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fbc-7b82-b9c2-18044dbbb574/details.json";
+import sbom_5d5e9dc471bd from "@mocks/data/sbom/01932ff3-0fc4-7bf2-8201-5d5e9dc471bd/details.json";
+import sbom_c26de2fe81d9 from "@mocks/data/sbom/01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9/details.json";
+// import sbom_f92bac24a6b0 from "@mocks/data/sbom/01932ff3-0f06-74e0-b673-f92bac24a6b0/details.json";
+// import sbom_1fac54a371f3 from "@mocks/data/sbom/01932ff3-0f90-7e51-9c9d-1fac54a371f3/details.json";
+// import sbom_c399c1e9a923 from "@mocks/data/sbom/01932ff3-0f91-7543-af38-c399c1e9a923/details.json";
+// import sbom_18044dbbb574 from "@mocks/data/sbom/01932ff3-0fbc-7b82-b9c2-18044dbbb574/details.json";
 
-import sbom_5d5e9dc471bd_advisory from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fc4-7bf2-8201-5d5e9dc471bd/advisory.json";
-import sbom_c26de2fe81d9_advisory from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9/advisory.json";
-import sbom_f92bac24a6b0_advisory from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f06-74e0-b673-f92bac24a6b0/advisory.json";
-import sbom_1fac54a371f3_advisory from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f90-7e51-9c9d-1fac54a371f3/advisory.json";
-import sbom_c399c1e9a923_advisory from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f91-7543-af38-c399c1e9a923/advisory.json";
-import sbom_18044dbbb574_advisory from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fbc-7b82-b9c2-18044dbbb574/advisory.json";
+import sbom_5d5e9dc471bd_advisory from "@mocks/data/sbom/01932ff3-0fc4-7bf2-8201-5d5e9dc471bd/advisory.json";
+import sbom_c26de2fe81d9_advisory from "@mocks/data/sbom/01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9/advisory.json";
+import sbom_f92bac24a6b0_advisory from "@mocks/data/sbom/01932ff3-0f06-74e0-b673-f92bac24a6b0/advisory.json";
+import sbom_1fac54a371f3_advisory from "@mocks/data/sbom/01932ff3-0f90-7e51-9c9d-1fac54a371f3/advisory.json";
+import sbom_c399c1e9a923_advisory from "@mocks/data/sbom/01932ff3-0f91-7543-af38-c399c1e9a923/advisory.json";
+import sbom_18044dbbb574_advisory from "@mocks/data/sbom/01932ff3-0fbc-7b82-b9c2-18044dbbb574/advisory.json";
 
-import sbom_5d5e9dc471bd_packages from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fc4-7bf2-8201-5d5e9dc471bd/packages.json";
-import sbom_c26de2fe81d9_packages from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9/packages.json";
-import sbom_f92bac24a6b0_packages from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f06-74e0-b673-f92bac24a6b0/packages.json";
-import sbom_1fac54a371f3_packages from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f90-7e51-9c9d-1fac54a371f3/packages.json";
-import sbom_c399c1e9a923_packages from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0f91-7543-af38-c399c1e9a923/packages.json";
-import sbom_18044dbbb574_packages from "@mocks/data/sbom/urn%3Auuid%3A01932ff3-0fbc-7b82-b9c2-18044dbbb574/packages.json";
+import sbom_5d5e9dc471bd_packages from "@mocks/data/sbom/01932ff3-0fc4-7bf2-8201-5d5e9dc471bd/packages.json";
+import sbom_c26de2fe81d9_packages from "@mocks/data/sbom/01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9/packages.json";
+import sbom_f92bac24a6b0_packages from "@mocks/data/sbom/01932ff3-0f06-74e0-b673-f92bac24a6b0/packages.json";
+import sbom_1fac54a371f3_packages from "@mocks/data/sbom/01932ff3-0f90-7e51-9c9d-1fac54a371f3/packages.json";
+import sbom_c399c1e9a923_packages from "@mocks/data/sbom/01932ff3-0f91-7543-af38-c399c1e9a923/packages.json";
+import sbom_18044dbbb574_packages from "@mocks/data/sbom/01932ff3-0fbc-7b82-b9c2-18044dbbb574/packages.json";
 
-import prod_2e167215 from "@mocks/data/product/urn:uuid:2e167215-42ec-4a71-912c-73082c21cf57/details.json";
-import prod_60d159e4 from "@mocks/data/product/urn:uuid:60d159e4-48dc-4480-90e8-7e84b8bfb759/details.json";
-import prod_77eb73d7 from "@mocks/data/product/urn:uuid:77eb73d7-dc2c-4d3d-bfe1-bd3a80280059/details.json";
-import prod_726e029c from "@mocks/data/product/urn:uuid:726e029c-2fd7-4e3a-8b67-6c96010d880a/details.json";
+import prod_2e167215 from "@mocks/data/product/2e167215-42ec-4a71-912c-73082c21cf57/details.json";
+import prod_60d159e4 from "@mocks/data/product/60d159e4-48dc-4480-90e8-7e84b8bfb759/details.json";
+import prod_77eb73d7 from "@mocks/data/product/77eb73d7-dc2c-4d3d-bfe1-bd3a80280059/details.json";
+import prod_726e029c from "@mocks/data/product/726e029c-2fd7-4e3a-8b67-6c96010d880a/details.json";
 
 import purl_2e05fb3a from "@mocks/data/purl/details/2e05fb3a-cda9-5e54-96b2-d8c7ea390f8d.json";
 import purl_14c5c61d from "@mocks/data/purl/details/14c5c61d-c4cc-56fb-9db6-f62541076b80.json";
