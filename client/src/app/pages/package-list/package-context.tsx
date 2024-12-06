@@ -33,7 +33,7 @@ interface IPackageSearchContext {
     | "path"
     | "qualifiers"
     | "vulnerabilities",
-    never,
+    "name" | "namespace" | "version",
     "" | "type" | "arch",
     string
   >;
@@ -70,7 +70,7 @@ export const PackageSearchProvider: React.FunctionComponent<
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
-    sortableColumns: [],
+    sortableColumns: ["name", "namespace", "version"],
     isFilterEnabled: true,
     filterCategories: [
       {
@@ -115,7 +115,11 @@ export const PackageSearchProvider: React.FunctionComponent<
   } = useFetchPackages(
     getHubRequestParams({
       ...tableControlState,
-      hubSortFieldKeys: {},
+      hubSortFieldKeys: {
+        name: "name",
+        namespace: "namespace",
+        version: "version",
+      },
     })
   );
 
