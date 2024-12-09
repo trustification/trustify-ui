@@ -2167,8 +2167,13 @@ Described in CVSS v3.1 Specification: Section 5:
 
 export const SourceDocumentSchema = {
   type: "object",
-  required: ["sha256", "sha384", "sha512", "size"],
+  required: ["sha256", "sha384", "sha512", "size", "ingested"],
   properties: {
+    ingested: {
+      type: "string",
+      format: "date-time",
+      description: "The timestamp the document was ingested",
+    },
     sha256: {
       type: "string",
     },

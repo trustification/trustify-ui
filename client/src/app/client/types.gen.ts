@@ -797,6 +797,10 @@ export type SbomSummary = SbomHead &
 export type Severity = "none" | "low" | "medium" | "high" | "critical";
 
 export type SourceDocument = {
+  /**
+   * The timestamp the document was ingested
+   */
+  ingested: string;
   sha256: string;
   sha384: string;
   sha512: string;
