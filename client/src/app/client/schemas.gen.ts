@@ -861,10 +861,10 @@ export const ImporterReportSchema = {
 export const IngestResultSchema = {
   type: "object",
   description: "The result of the ingestion process",
-  required: ["id", "document_id"],
+  required: ["id"],
   properties: {
     document_id: {
-      type: "string",
+      type: ["string", "null"],
       description: "The ID declared by the document",
     },
     id: {
@@ -1950,7 +1950,6 @@ export const SbomHeadSchema = {
   type: "object",
   required: [
     "id",
-    "document_id",
     "labels",
     "data_licenses",
     "published",
@@ -1972,7 +1971,7 @@ export const SbomHeadSchema = {
       },
     },
     document_id: {
-      type: "string",
+      type: ["string", "null"],
     },
     id: {
       type: "string",
@@ -2167,8 +2166,13 @@ Described in CVSS v3.1 Specification: Section 5:
 
 export const SourceDocumentSchema = {
   type: "object",
-  required: ["sha256", "sha384", "sha512", "size"],
+  required: ["sha256", "sha384", "sha512", "size", "ingested"],
   properties: {
+    ingested: {
+      type: "string",
+      format: "date-time",
+      description: "The timestamp the document was ingested",
+    },
     sha256: {
       type: "string",
     },

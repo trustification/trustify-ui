@@ -346,7 +346,7 @@ export type IngestResult = {
   /**
    * The ID declared by the document
    */
-  document_id: string;
+  document_id?: string | null;
   /**
    * The internal ID of the document
    */
@@ -739,7 +739,7 @@ export type SbomAdvisory = AdvisoryHead & {
 export type SbomHead = {
   authors: Array<string>;
   data_licenses: Array<string>;
-  document_id: string;
+  document_id?: string | null;
   id: string;
   labels: Labels;
   name: string;
@@ -797,6 +797,10 @@ export type SbomSummary = SbomHead &
 export type Severity = "none" | "low" | "medium" | "high" | "critical";
 
 export type SourceDocument = {
+  /**
+   * The timestamp the document was ingested
+   */
+  ingested: string;
   sha256: string;
   sha384: string;
   sha512: string;
