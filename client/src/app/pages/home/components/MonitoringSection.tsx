@@ -36,7 +36,7 @@ import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useVulnerabilitiesOfSboms } from "@app/hooks/domain-controls/useVulnerabilitiesOfSbom";
 import { useFetchAdvisories } from "@app/queries/advisories";
 import { useFetchSBOMs } from "@app/queries/sboms";
-import { formatDate } from "@app/utils/utils";
+import { formatDateTime } from "@app/utils/utils";
 
 interface Legend {
   severity: Severity;
@@ -62,7 +62,7 @@ export const MonitoringSection: React.FC = () => {
   } = useFetchSBOMs(
     {
       page: { pageNumber: 1, itemsPerPage: 10 },
-      sort: { field: "published", direction: "desc" },
+      sort: { field: "ingested", direction: "desc" },
     },
     true
   );
@@ -90,7 +90,7 @@ export const MonitoringSection: React.FC = () => {
   } = useFetchAdvisories(
     {
       page: { pageNumber: 1, itemsPerPage: 10 },
-      sort: { field: "published", direction: "desc" },
+      sort: { field: "ingested", direction: "desc" },
     },
     true
   );
@@ -264,7 +264,7 @@ export const MonitoringSection: React.FC = () => {
                       <DescriptionListDescription>
                         <Stack>
                           <StackItem>
-                            {formatDate(barchartSboms?.[0]?.published)}
+                            {formatDateTime(barchartSboms?.[0]?.ingested)}
                           </StackItem>
                           <StackItem>
                             <Link to={`/sboms/${barchartSboms?.[0]?.id}`}>
@@ -295,7 +295,7 @@ export const MonitoringSection: React.FC = () => {
                       <DescriptionListDescription>
                         <Stack>
                           <StackItem>
-                            {formatDate(advisories?.[0]?.published)}
+                            {formatDateTime(advisories?.[0]?.ingested)}
                           </StackItem>
                           <StackItem>{advisories?.[0]?.identifier}</StackItem>
                         </Stack>
