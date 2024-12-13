@@ -2624,14 +2624,20 @@ export const VulnerabilitySbomStatusSchema = {
     },
     {
       type: "object",
-      required: ["status"],
+      required: ["purl_statuses"],
       properties: {
-        status: {
-          type: "array",
-          items: {
+        purl_statuses: {
+          type: "object",
+          additionalProperties: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/PurlSummary",
+            },
+            uniqueItems: true,
+          },
+          propertyNames: {
             type: "string",
           },
-          uniqueItems: true,
         },
         version: {
           type: ["string", "null"],

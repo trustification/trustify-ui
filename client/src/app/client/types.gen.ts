@@ -963,7 +963,9 @@ export type VulnerabilityHead = {
 };
 
 export type VulnerabilitySbomStatus = SbomHead & {
-  status: Array<string>;
+  purl_statuses: {
+    [key: string]: Array<PurlSummary>;
+  };
   version?: string | null;
 };
 
