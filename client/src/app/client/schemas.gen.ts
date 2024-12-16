@@ -1025,6 +1025,20 @@ export const OsvImporterSchema = {
           type: "string",
           description: "The URL to the git repository of the OSV data",
         },
+        startYear: {
+          type: ["integer", "null"],
+          format: "int32",
+          minimum: 0,
+        },
+        years: {
+          type: "array",
+          items: {
+            type: "integer",
+            format: "int32",
+            minimum: 0,
+          },
+          uniqueItems: true,
+        },
       },
     },
   ],
