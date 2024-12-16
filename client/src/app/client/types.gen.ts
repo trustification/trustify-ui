@@ -429,6 +429,8 @@ export type OsvImporter = CommonImporter & {
    * The URL to the git repository of the OSV data
    */
   source: string;
+  startYear?: number | null;
+  years?: Array<number>;
 };
 
 export type PaginatedResults_AdvisorySummary = {
