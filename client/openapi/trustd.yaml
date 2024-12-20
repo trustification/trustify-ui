@@ -5,7 +5,7 @@ info:
   license:
     name: Apache License, Version 2.0
     identifier: Apache-2.0
-  version: 0.1.0
+  version: 0.1.1
 paths:
   /.well-known/trustify:
     get:
@@ -2327,7 +2327,6 @@ components:
     BasePurlSummary:
       allOf:
       - $ref: '#/components/schemas/BasePurlHead'
-      - type: object
     BinaryByteSize:
       type: string
     ChatMessage:
@@ -2754,7 +2753,6 @@ components:
     OrganizationSummary:
       allOf:
       - $ref: '#/components/schemas/OrganizationHead'
-      - type: object
     OsvImporter:
       allOf:
       - $ref: '#/components/schemas/CommonImporter'
@@ -2775,6 +2773,19 @@ components:
           source:
             type: string
             description: The URL to the git repository of the OSV data
+          startYear:
+            type:
+            - integer
+            - 'null'
+            format: int32
+            minimum: 0
+          years:
+            type: array
+            items:
+              type: integer
+              format: int32
+              minimum: 0
+            uniqueItems: true
     PaginatedResults_AdvisorySummary:
       type: object
       required:
@@ -2827,7 +2838,6 @@ components:
           items:
             allOf:
             - $ref: '#/components/schemas/BasePurlHead'
-            - type: object
         total:
           type: integer
           format: int64

@@ -156,9 +156,7 @@ export type BasePurlHead = {
   uuid: string;
 };
 
-export type BasePurlSummary = BasePurlHead & {
-  [key: string]: unknown;
-};
+export type BasePurlSummary = BasePurlHead;
 
 export type BinaryByteSize = string;
 
@@ -412,9 +410,7 @@ export type OrganizationHead = {
   website: string | null;
 };
 
-export type OrganizationSummary = OrganizationHead & {
-  [key: string]: unknown;
-};
+export type OrganizationSummary = OrganizationHead;
 
 export type OsvImporter = CommonImporter & {
   /**
@@ -429,6 +425,8 @@ export type OsvImporter = CommonImporter & {
    * The URL to the git repository of the OSV data
    */
   source: string;
+  startYear?: number | null;
+  years?: Array<number>;
 };
 
 export type PaginatedResults_AdvisorySummary = {
@@ -453,11 +451,7 @@ export type PaginatedResults_AdvisorySummary = {
 };
 
 export type PaginatedResults_BasePurlSummary = {
-  items: Array<
-    BasePurlHead & {
-      [key: string]: unknown;
-    }
-  >;
+  items: Array<BasePurlHead>;
   total: number;
 };
 
