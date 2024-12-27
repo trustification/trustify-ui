@@ -26,7 +26,12 @@ const config: StorybookConfig = {
     name: getAbsolutePath("@storybook/react-webpack5"),
     options: {},
   },
-  staticDirs: ["../public", "../client/public", "../client/src/app/images"],
+  staticDirs: [
+    "../public",
+    "../branding/images",
+    "../client/public",
+    "../client/src/app/images",
+  ],
   typescript: {
     reactDocgen: "react-docgen-typescript",
     reactDocgenTypescriptOptions: {
@@ -47,11 +52,24 @@ const config: StorybookConfig = {
       ];
     }
     if (config.module) {
-      config.module.rules?.push({
-        test: /\.svg$/,
-        use: ["@svgr/webpack"],
+      // remove svg from existing rule
+      config.module.rules = config.module.rules?.map((rule: any) => {
+        if (
+          String(rule.test) ===
+          String(
+            /\.(svg|ico|jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|cur|ani)(\?.*)?$/
+          )
+        ) {
+          return {
+            ...rule,
+            test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|cur|ani)(\?.*)?$/,
+          };
+        }
+
+        return rule;
       });
     }
+
     return config;
   },
 };
