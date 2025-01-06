@@ -397,9 +397,6 @@ export const BasePurlSummarySchema = {
     {
       $ref: "#/components/schemas/BasePurlHead",
     },
-    {
-      type: "object",
-    },
   ],
 } as const;
 
@@ -996,9 +993,6 @@ export const OrganizationSummarySchema = {
     {
       $ref: "#/components/schemas/OrganizationHead",
     },
-    {
-      type: "object",
-    },
   ],
 } as const;
 
@@ -1024,6 +1018,20 @@ export const OsvImporterSchema = {
         source: {
           type: "string",
           description: "The URL to the git repository of the OSV data",
+        },
+        startYear: {
+          type: ["integer", "null"],
+          format: "int32",
+          minimum: 0,
+        },
+        years: {
+          type: "array",
+          items: {
+            type: "integer",
+            format: "int32",
+            minimum: 0,
+          },
+          uniqueItems: true,
         },
       },
     },
@@ -1098,9 +1106,6 @@ export const PaginatedResults_BasePurlSummarySchema = {
         allOf: [
           {
             $ref: "#/components/schemas/BasePurlHead",
-          },
-          {
-            type: "object",
           },
         ],
       },
