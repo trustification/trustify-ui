@@ -36,7 +36,7 @@ export const AboutApp: React.FC<IButtonAboutAppProps> = ({
       brandImageAlt="Logo"
       brandImageSrc={about.imageSrc ?? TRANSPARENT_1x1_GIF}
       backgroundImageSrc={backgroundImage}
-      trademark="COPYRIGHT © 2022."
+      trademark={`COPYRIGHT © 2020, ${new Date().getFullYear()}`}
     >
       <TextContent>
         <Text component={TextVariants.p}>
