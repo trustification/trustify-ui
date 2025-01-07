@@ -1,6 +1,9 @@
 import { http, HttpResponse } from "msw";
 import { VulnerabilityHead } from "@app/client";
 
+import imgAvatar from "../app/images/avatar.svg";
+import logo from "../../../branding/images/masthead-logo.svg";
+
 import getAdvisories from "@mocks/data/advisory/list.json";
 import getProducts from "@mocks/data/product/list.json";
 import getPurls from "@mocks/data/purl/list.json";
@@ -8,6 +11,17 @@ import getSboms from "@mocks/data/sbom/list.json";
 import getVulnerabilities from "@mocks/data/vulnerability/list.json";
 
 // DATA IMPORTS
+
+import advisory_03bb16dc from "@mocks/data/advisory/details/03bb16dc-3cff-4a7d-8393-9a6a7124ecc2.json";
+import advisory_87aa81c3 from "@mocks/data/advisory/details/87aa81c3-2aa5-438e-b5d4-d67ca4e321a9.json";
+import advisory_88a4fc6c from "@mocks/data/advisory/details/88a4fc6c-60ae-4e4a-bdbe-4fb2e1d33e9c.json";
+import advisory_459c504b from "@mocks/data/advisory/details/459c504b-7e09-4ea9-9cbb-baa8ce040e83.json";
+import advisory_671dd85b from "@mocks/data/advisory/details/671dd85b-409f-4509-9a50-c4b2404ac10a.json";
+import advisory_673acfc8 from "@mocks/data/advisory/details/673acfc8-ea7d-4c6d-aff9-20cf70caade0.json";
+import advisory_32600b15 from "@mocks/data/advisory/details/32600b15-f2c1-4115-bcfb-0d0e1786f86d.json";
+import advisory_d99d1421 from "@mocks/data/advisory/details/d99d1421-e2fd-49c2-b2dd-82fe848fff48.json";
+import advisory_ea257645 from "@mocks/data/advisory/details/ea257645-f52f-4723-9c73-a4ed589f67ac.json";
+import advisory_ee8cff4d from "@mocks/data/advisory/details/ee8cff4d-d6bc-4a27-89ac-a7ad193f5eb6.json";
 
 import cve_202245787 from "@mocks/data/vulnerability/CVE-2022-45787/details.json";
 import cve_20230044 from "@mocks/data/vulnerability/CVE-2023-0044/details.json";
@@ -57,7 +71,18 @@ import purl_e0b74cfd from "@mocks/data/purl/details/e0b74cfd-e0b0-512b-8814-947f
 import purl_f4f6b460 from "@mocks/data/purl/details/f4f6b460-82e5-59f0-a7f6-da5f226a9b24.json";
 import purl_f357b0cc from "@mocks/data/purl/details/f357b0cc-75d5-532e-b7d9-2233f6f752c8.json";
 
-import imgAvatar from "@app/images/avatar.svg";
+export const advisoryDetails: { [identifier: string]: any } = {
+  "urn:uuid:03bb16dc-3cff-4a7d-8393-9a6a7124ecc2": advisory_03bb16dc,
+  "urn:uuid:87aa81c3-2aa5-438e-b5d4-d67ca4e321a9": advisory_87aa81c3,
+  "urn:uuid:88a4fc6c-60ae-4e4a-bdbe-4fb2e1d33e9c": advisory_88a4fc6c,
+  "urn:uuid:459c504b-7e09-4ea9-9cbb-baa8ce040e83": advisory_459c504b,
+  "urn:uuid:671dd85b-409f-4509-9a50-c4b2404ac10a": advisory_671dd85b,
+  "urn:uuid:673acfc8-ea7d-4c6d-aff9-20cf70caade0": advisory_673acfc8,
+  "urn:uuid:32600b15-f2c1-4115-bcfb-0d0e1786f86d": advisory_32600b15,
+  "urn:uuid:d99d1421-e2fd-49c2-b2dd-82fe848fff48": advisory_d99d1421,
+  "urn:uuid:ea257645-f52f-4723-9c73-a4ed589f67ac": advisory_ea257645,
+  "urn:uuid:ee8cff4d-d6bc-4a27-89ac-a7ad193f5eb6": advisory_ee8cff4d,
+};
 
 export const cveDetails: { [identifier: string]: Partial<VulnerabilityHead> } =
   {
@@ -139,7 +164,19 @@ const advisoryHandlers = [
   http.patch("/api/v1/advisory/:id/label", () => {}),
 
   // get an advisory
-  http.get("/api/v1/advisory/:key", () => {}),
+  http.get("/api/v1/advisory/:key", ({ params }) => {
+    const { key } = params;
+    if (!key) {
+      return new HttpResponse("Advisory for SBOM not found", { status: 404 });
+    } else {
+      const data = sbomAdvisory[key as string];
+      if (!data) {
+        return new HttpResponse("Advisory for SBOM not found", { status: 404 });
+      }
+
+      return HttpResponse.json(data);
+    }
+  }),
 
   // delete an advisory
   http.delete("/api/v1/advisory/:key", () => {}),
@@ -170,8 +207,9 @@ const analysisHandlers = [
 // ASSET HANDLERS
 
 const assetHandlers = [
+  http.get("/branding/images/placeholder.svg", () => {}),
   http.get("/branding/images/masthead-logo.svg", () => {
-    return new HttpResponse(imgAvatar);
+    return new HttpResponse(logo);
   }),
 ];
 
