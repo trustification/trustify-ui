@@ -698,10 +698,10 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
                       ) : (
                         <LogButton>
                           {item.error ? (
-                            <IconedStatus status="danger" label={item.error} />
+                            <IconedStatus preset="Failed" label={item.error} />
                           ) : (
                             <IconedStatus
-                              status="success"
+                              preset="Completed"
                               label="Finished successfully"
                             />
                           )}
