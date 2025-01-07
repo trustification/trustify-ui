@@ -11,7 +11,7 @@ export const OIDC_CLIENT_ID = ENV.OIDC_CLIENT_ID || "frontend";
 export const oidcClientSettings: OidcClientSettings = {
   authority: OIDC_SERVER_URL,
   client_id: OIDC_CLIENT_ID,
-  redirect_uri: window.location.origin,
+  redirect_uri: window.location.href,
   post_logout_redirect_uri: window.location.origin,
   response_type: "code",
   loadUserInfo: true,
