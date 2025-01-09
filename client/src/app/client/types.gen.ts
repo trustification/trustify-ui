@@ -654,6 +654,7 @@ export type PurlLicenseSummary = {
 };
 
 export type PurlStatus = {
+  average_severity: Severity;
   context: null | StatusContext;
   status: string;
   vulnerability: VulnerabilityHead;
