@@ -1783,8 +1783,11 @@ export const PurlLicenseSummarySchema = {
 
 export const PurlStatusSchema = {
   type: "object",
-  required: ["vulnerability", "status", "context"],
+  required: ["vulnerability", "average_severity", "status", "context"],
   properties: {
+    average_severity: {
+      $ref: "#/components/schemas/Severity",
+    },
     context: {
       oneOf: [
         {
