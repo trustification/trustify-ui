@@ -20,7 +20,6 @@ import {
 import { useDownload } from "@app/hooks/domain-controls/useDownload";
 import { formatDate } from "@app/utils/utils";
 
-import { PackagesCount } from "./components/PackagesCount";
 import { SBOMVulnerabilities } from "./components/SbomVulnerabilities";
 import { SbomSearchContext } from "./sbom-context";
 
@@ -105,7 +104,7 @@ export const SbomTable: React.FC = ({}) => {
                       {formatDate(item.published)}
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "packages" })}>
-                      <PackagesCount sbomId={item.id} />
+                      {item.number_of_packages}
                     </Td>
                     <Td
                       width={20}
