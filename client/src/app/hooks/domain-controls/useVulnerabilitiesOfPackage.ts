@@ -1,30 +1,137 @@
 import React from "react";
 
 import { VulnerabilityStatus } from "@app/api/models";
-import { client } from "@app/axios-config/apiInit";
-import {
-  getVulnerability,
-  PurlAdvisory,
-  Severity,
-  VulnerabilityDetails,
-} from "@app/client";
+import { PurlAdvisory, Severity, VulnerabilityHead } from "@app/client";
 import { useFetchPackageById } from "@app/queries/packages";
 
-interface VulnerabilityOfPackage {
-  vulnerabilityId: string;
+const areVulnerabilityOfPackageEqual = (
+  a: VulnerabilityOfPackage,
+  b: VulnerabilityOfPackage | FlatVulnerabilityOfPackage
+) => {
+  return (
+    a.vulnerability.identifier === b.vulnerability.identifier &&
+    a.vulnerabilityStatus === b.vulnerabilityStatus
+  );
+};
+
+interface FlatVulnerabilityOfPackage {
+  vulnerability: VulnerabilityHead & { average_severity: Severity };
+  vulnerabilityStatus: VulnerabilityStatus;
   advisory: PurlAdvisory;
-  status: VulnerabilityStatus;
-  vulnerability?: VulnerabilityDetails;
 }
 
-interface VulnerabilityOfPackageSummary {
+interface VulnerabilityOfPackage {
+  vulnerability: VulnerabilityHead & { average_severity: Severity };
+  vulnerabilityStatus: VulnerabilityStatus;
+  relatedSboms: {
+    advisory: PurlAdvisory;
+  }[];
+}
+
+type SeveritySummary = {
   total: number;
   severities: { [key in Severity]: number };
+};
+
+interface VulnerabilityOfPackageSummary {
+  vulnerabilityStatus: {
+    [key in VulnerabilityStatus]: SeveritySummary;
+  };
 }
 
-const DEFAULT_SUMMARY: VulnerabilityOfPackageSummary = {
+const DEFAULT_SEVERITY: SeveritySummary = {
   total: 0,
   severities: { none: 0, low: 0, medium: 0, high: 0, critical: 0 },
+};
+
+const DEFAULT_SUMMARY: VulnerabilityOfPackageSummary = {
+  vulnerabilityStatus: {
+    affected: { ...DEFAULT_SEVERITY },
+    fixed: { ...DEFAULT_SEVERITY },
+    not_affected: { ...DEFAULT_SEVERITY },
+    known_not_affected: { ...DEFAULT_SEVERITY },
+  },
+};
+
+const advisoryToModels = (advisories: PurlAdvisory[]) => {
+  const vulnerabilities = advisories.flatMap((advisory) => {
+    return (
+      (advisory.status ?? [])
+        .map((pkgStatus) => {
+          const result: FlatVulnerabilityOfPackage = {
+            vulnerability: {
+              ...pkgStatus.vulnerability,
+              average_severity: pkgStatus.average_severity,
+            },
+            vulnerabilityStatus: pkgStatus.status as VulnerabilityStatus,
+            advisory: advisory,
+          };
+          return result;
+        })
+        // group
+        .reduce((prev, current) => {
+          const existingElement = prev.find((item) => {
+            return areVulnerabilityOfPackageEqual(item, current);
+          });
+
+          if (existingElement) {
+            const arrayWithoutExistingItem = prev.filter(
+              (item) => !areVulnerabilityOfPackageEqual(item, existingElement)
+            );
+
+            const updatedItemInArray: VulnerabilityOfPackage = {
+              ...existingElement,
+              relatedSboms: [
+                ...existingElement.relatedSboms,
+                {
+                  advisory: current.advisory,
+                },
+              ],
+            };
+
+            return [...arrayWithoutExistingItem, updatedItemInArray];
+          } else {
+            const newItemInArray: VulnerabilityOfPackage = {
+              vulnerability: current.vulnerability,
+              vulnerabilityStatus: current.vulnerabilityStatus,
+              relatedSboms: [
+                {
+                  advisory: current.advisory,
+                },
+              ],
+            };
+            return [...prev, newItemInArray];
+          }
+        }, [] as VulnerabilityOfPackage[])
+    );
+  });
+
+  const summary = vulnerabilities.reduce((prev, current) => {
+    const vulnStatus = current.vulnerabilityStatus;
+    const severity = current.vulnerability.average_severity;
+
+    const prevVulnStatusValue = prev.vulnerabilityStatus[vulnStatus];
+
+    const result: VulnerabilityOfPackageSummary = {
+      ...prev,
+      vulnerabilityStatus: {
+        ...prev.vulnerabilityStatus,
+        [vulnStatus]: {
+          total: prevVulnStatusValue.total + 1,
+          severities: {
+            ...prevVulnStatusValue.severities,
+            [severity]: prevVulnStatusValue.severities[severity] + 1,
+          },
+        },
+      },
+    };
+    return result;
+  }, DEFAULT_SUMMARY);
+
+  return {
+    vulnerabilities,
+    summary,
+  };
 };
 
 export const useVulnerabilitiesOfPackage = (packageId: string) => {
@@ -34,114 +141,13 @@ export const useVulnerabilitiesOfPackage = (packageId: string) => {
     fetchError: fetchErrorPackage,
   } = useFetchPackageById(packageId);
 
-  const [allVulnerabilities, setAllVulnerabilities] = React.useState<
-    VulnerabilityOfPackage[]
-  >([]);
-  const [vulnerabilitiesById, setVulnerabilitiesById] = React.useState<
-    Map<string, VulnerabilityDetails>
-  >(new Map());
-  const [isFetchingVulnerabilities, setIsFetchingVulnerabilities] =
-    React.useState(false);
-
-  React.useEffect(() => {
-    if (!pkg || pkg.advisories.length === 0) {
-      return;
-    }
-
-    const vulnerabilities = (pkg?.advisories ?? [])
-      .flatMap((advisory) => {
-        return (advisory.status ?? []).map((status) => {
-          const result: VulnerabilityOfPackage = {
-            vulnerabilityId: status.vulnerability.identifier,
-            status: status.status as VulnerabilityStatus,
-            advisory: advisory,
-          };
-          return result;
-        });
-      })
-      // Take only "affected"
-      .filter((item) => item.status === "affected")
-      // Remove duplicates if exists
-      .reduce((prev, current) => {
-        const exists = prev.find(
-          (item) =>
-            item.vulnerabilityId === current.vulnerabilityId &&
-            item.advisory.uuid === current.advisory.uuid
-        );
-        if (!exists) {
-          return [...prev, current];
-        } else {
-          return prev;
-        }
-      }, [] as VulnerabilityOfPackage[]);
-
-    setAllVulnerabilities(vulnerabilities);
-    setIsFetchingVulnerabilities(true);
-
-    Promise.all(
-      vulnerabilities
-        .map(async (item) => {
-          const response = await getVulnerability({
-            client,
-            path: { id: item.vulnerabilityId },
-          });
-          return response.data;
-        })
-        .map((vulnerability) => vulnerability.catch(() => null))
-    ).then((vulnerabilities) => {
-      const validVulnerabilities = vulnerabilities.reduce((prev, current) => {
-        if (current) {
-          return [...prev, current];
-        } else {
-          // Filter out error responses
-          return prev;
-        }
-      }, [] as VulnerabilityDetails[]);
-
-      const vulnerabilitiesById = new Map<string, VulnerabilityDetails>();
-      validVulnerabilities.forEach((vulnerability) => {
-        vulnerabilitiesById.set(vulnerability.identifier, vulnerability);
-      });
-
-      setVulnerabilitiesById(vulnerabilitiesById);
-      setIsFetchingVulnerabilities(false);
-    });
+  const result = React.useMemo(() => {
+    return advisoryToModels(pkg?.advisories || []);
   }, [pkg]);
 
-  const allVulnerabilitiesWithMappedData = React.useMemo(() => {
-    return allVulnerabilities.map((item) => {
-      const result: VulnerabilityOfPackage = {
-        ...item,
-        vulnerability: vulnerabilitiesById.get(item.vulnerabilityId),
-      };
-      return result;
-    });
-  }, [allVulnerabilities, vulnerabilitiesById]);
-
-  // Summary
-
-  const vulnerabilitiesSummary = React.useMemo(() => {
-    return allVulnerabilitiesWithMappedData.reduce((prev, current) => {
-      if (current.vulnerability?.average_severity) {
-        const severity = current.vulnerability?.average_severity;
-        return {
-          ...prev,
-          total: prev.total + 1,
-          severities: {
-            ...prev.severities,
-            [severity]: prev.severities[severity] + 1,
-          },
-        };
-      } else {
-        return prev;
-      }
-    }, DEFAULT_SUMMARY);
-  }, [allVulnerabilitiesWithMappedData]);
-
   return {
-    isFetching: isFetchingPackage || isFetchingVulnerabilities,
+    data: result,
+    isFetching: isFetchingPackage,
     fetchError: fetchErrorPackage,
-    vulnerabilities: allVulnerabilitiesWithMappedData,
-    summary: vulnerabilitiesSummary,
   };
 };

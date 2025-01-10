@@ -13,7 +13,7 @@ interface PackageVulnerabilitiesProps {
 export const PackageVulnerabilities: React.FC<PackageVulnerabilitiesProps> = ({
   packageId,
 }) => {
-  const { summary, isFetching, fetchError } =
+  const { data, isFetching, fetchError } =
     useVulnerabilitiesOfPackage(packageId);
 
   return (
@@ -23,7 +23,9 @@ export const PackageVulnerabilities: React.FC<PackageVulnerabilitiesProps> = ({
       isFetchingState={<Skeleton screenreaderText="Loading contents" />}
       fetchErrorState={<Label color="red">Error</Label>}
     >
-      <VulnerabilityGallery severities={summary.severities} />
+      <VulnerabilityGallery
+        severities={data.summary.vulnerabilityStatus.affected.severities}
+      />
     </LoadingWrapper>
   );
 };
