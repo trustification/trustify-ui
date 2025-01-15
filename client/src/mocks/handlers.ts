@@ -150,21 +150,21 @@ export const purlDetails: { [identifier: string]: any } = {
 
 const advisoryHandlers = [
   // list advisories
-  http.get("/api/v1/advisory", () => {
+  http.get("/api/v2/advisory", () => {
     return HttpResponse.json(getAdvisories);
   }),
 
   // upload a new advisory
-  http.post("/api/v1/advisory", () => {}),
+  http.post("/api/v2/advisory", () => {}),
 
   // replace the labels of an advisory
-  http.put("/api/v1/advisory/:id/label", () => {}),
+  http.put("/api/v2/advisory/:id/label", () => {}),
 
   // modify existing labels of an advisory
-  http.patch("/api/v1/advisory/:id/label", () => {}),
+  http.patch("/api/v2/advisory/:id/label", () => {}),
 
   // get an advisory
-  http.get("/api/v1/advisory/:key", ({ params }) => {
+  http.get("/api/v2/advisory/:key", ({ params }) => {
     const { key } = params;
     if (!key) {
       return new HttpResponse("Advisory for SBOM not found", { status: 404 });
@@ -179,29 +179,29 @@ const advisoryHandlers = [
   }),
 
   // delete an advisory
-  http.delete("/api/v1/advisory/:key", () => {}),
+  http.delete("/api/v2/advisory/:key", () => {}),
 
   // download an advisory document
-  http.get("/api/v1/advisory/:key/download", () => {}),
+  http.get("/api/v2/advisory/:key/download", () => {}),
 ];
 
 // AI HANDLERS
 
 const aiHandlers = [
-  http.get("/api/v1/ai/flags", () => {}),
-  http.get("/api/v1/ai/tools", () => {}),
-  http.post("/api/v1/ai/tools/:name", () => {}),
-  http.post("/api/v1/ai/completions", () => {}),
+  http.get("/api/v2/ai/flags", () => {}),
+  http.get("/api/v2/ai/tools", () => {}),
+  http.post("/api/v2/ai/tools/:name", () => {}),
+  http.post("/api/v2/ai/completions", () => {}),
 ];
 
 // ANALYSIS HANDLERS
 
 const analysisHandlers = [
-  http.get("/api/v1/analysis/dep", () => {}),
-  http.get("/api/v1/analysis/dep/:key", () => {}),
-  http.get("/api/v1/analysis/root-component", () => {}),
-  http.get("/api/v1/analysis/root-component/:key", () => {}),
-  http.get("/api/v1/analysis/status", () => {}),
+  http.get("/api/v2/analysis/dep", () => {}),
+  http.get("/api/v2/analysis/dep/:key", () => {}),
+  http.get("/api/v2/analysis/root-component", () => {}),
+  http.get("/api/v2/analysis/root-component/:key", () => {}),
+  http.get("/api/v2/analysis/status", () => {}),
 ];
 
 // ASSET HANDLERS
@@ -217,79 +217,79 @@ const assetHandlers = [
 
 const datasetHandlers = [
   // upload a new dataset
-  http.post("/api/v1/dataset", () => {}),
+  http.post("/api/v2/dataset", () => {}),
 ];
 
 // IMPORTER HANDLERS
 
 const importerHandlers = [
   // list importer configurations
-  http.get("/api/v1/importer", () => {}),
+  http.get("/api/v2/importer", () => {}),
 
   // get an importer configuration
-  http.get("/api/v1/importer/:name", () => {}),
+  http.get("/api/v2/importer/:name", () => {}),
 
   // update an existing importer configuration
-  http.put("/api/v1/importer/:name", () => {}),
+  http.put("/api/v2/importer/:name", () => {}),
 
   // create an importer configuration
-  http.post("/api/v1/importer/:name", () => {}),
+  http.post("/api/v2/importer/:name", () => {}),
 
   // delete an importer configuration
-  http.delete("/api/v1/importer/:name", () => {}),
+  http.delete("/api/v2/importer/:name", () => {}),
 
   // update an importer configuration
-  http.patch("/api/v1/importer/:name", () => {}),
+  http.patch("/api/v2/importer/:name", () => {}),
 
   // update an existing importer configuration
-  http.put("/api/v1/importer/:name/enabled", () => {}),
+  http.put("/api/v2/importer/:name/enabled", () => {}),
 
   // force an importer to run as soon as possible
-  http.post("/api/v1/importer/:name/force", () => {}),
+  http.post("/api/v2/importer/:name/force", () => {}),
 
   // get reports for an importer
-  http.get("/api/v1/importer/:name/report", () => {}),
+  http.get("/api/v2/importer/:name/report", () => {}),
 ];
 
 // LICENSE HANDLERS
 
 const licenseHandlers = [
-  http.get("/api/v1/license", () => {}),
+  http.get("/api/v2/license", () => {}),
 
   // license details
-  http.get("/api/v1/license/:uuid", () => {}),
+  http.get("/api/v2/license/:uuid", () => {}),
 
   // retrieve purls covered by a license
-  http.get("/api/v1/license/:uuid/purl", () => {}),
+  http.get("/api/v2/license/:uuid/purl", () => {}),
 ];
 
 // SPDX LICENSE HANDLERS
 
 const spdxLicenseHandlers = [
   // list spdx licenses
-  http.get("/api/v1/license/spdx/license", () => {}),
+  http.get("/api/v2/license/spdx/license", () => {}),
 
   // spdx license details
-  http.get("/api/v1/license/spdx/license/:id", () => {}),
+  http.get("/api/v2/license/spdx/license/:id", () => {}),
 ];
 
 // ORGANIZATION HANDLERS
 
 const organizationHandlers = [
   // list organizations
-  http.get("/api/v1/organization", () => {}),
+  http.get("/api/v2/organization", () => {}),
 
   // organization details
-  http.get("/api/v1/organization/:id", () => {}),
+  http.get("/api/v2/organization/:id", () => {}),
 ];
 
 // PRODUCT HANDLERS
 
 const productHandlers = [
-  http.get("/api/v1/product", () => {
+  http.get("/api/v2/product", () => {
     return HttpResponse.json(getProducts);
   }),
-  http.get("/api/v1/product/:id", ({ params }) => {
+  http.get("/api/v2/product/:id", ({ params }) => {
     const { id } = params;
 
     if (!id) {
@@ -302,22 +302,22 @@ const productHandlers = [
     }
     return HttpResponse.json(data);
   }),
-  http.delete("/api/v1/product/:id", () => {}),
+  http.delete("/api/v2/product/:id", () => {}),
 ];
 
 // PURL HANDLERS
 
 const purlHandlers = [
   // list fully qualified purls
-  http.get("/api/v1/purl", () => {
+  http.get("/api/v2/purl", () => {
     return HttpResponse.json(getPurls);
   }),
 
   // retrieve versioned pURL details of a type
-  http.get("/api/v1/purl/type/:type/:namespace_and_name@:version", () => {}),
+  http.get("/api/v2/purl/type/:type/:namespace_and_name@:version", () => {}),
 
   // retrieve details of a fully qualified purl
-  http.get("/api/v1/purl/:key", ({ params }) => {
+  http.get("/api/v2/purl/:key", ({ params }) => {
     const { key } = params;
 
     if (!key) {
@@ -336,57 +336,57 @@ const purlHandlers = [
 
 const basePurlHandlers = [
   // list base versionless pURLs
-  http.get("/api/v1/purl/base", () => {}),
+  http.get("/api/v2/purl/base", () => {}),
 
   // retrieve details for a base versionless pURL
-  http.get("/api/v1/purl/base/:key", () => {}),
+  http.get("/api/v2/purl/base/:key", () => {}),
 ];
 
 // PURL TYPE HANDLERS
 
 const purlTypeHandlers = [
   // list known pURL types
-  http.get("/api/v1/purl/type", () => {}),
+  http.get("/api/v2/purl/type", () => {}),
 
   // retrieve details about a pURL type
-  http.get("/api/v1/purl/type/:type", () => {}),
+  http.get("/api/v2/purl/type/:type", () => {}),
 
   // retrieve base pURL details of a type
-  http.get("/api/v1/purl/type/:type/:namespace_and_name", () => {}),
+  http.get("/api/v2/purl/type/:type/:namespace_and_name", () => {}),
 ];
 
 // VERSIONED PURL HANDLERS
 
 const versionedPurlHandlers = [
   // retrieve details of a versioned, non-qualified pURL
-  http.get("/api/v1/purl/version/{key}", () => {}),
+  http.get("/api/v2/purl/version/{key}", () => {}),
 ];
 
 // SBOM HANDLERS
 
 const sbomHandlers = [
   // get ALL SBOMs
-  http.get("/api/v1/sbom", () => {
+  http.get("/api/v2/sbom", () => {
     return HttpResponse.json(getSboms);
   }),
 
   // upload a new SBOM
-  http.post("/api/v1/sbom", () => {}),
+  http.post("/api/v2/sbom", () => {}),
 
   // find all SBOMs containing the provided package
   // NOTE: The package can be provided either via a PURL or
   // using the ID of a package as returned by other APIs, but not both.
-  http.get("/api/v1/sbom/by-package", () => {
+  http.get("/api/v2/sbom/by-package", () => {
     return HttpResponse.json(getSboms);
   }),
 
   // count all SBOMs containing the provided packages
-  http.get("/api/v1/sbom/count-by-package", () => {
+  http.get("/api/v2/sbom/count-by-package", () => {
     return HttpResponse.json(getSboms);
   }),
 
   // get an SBOM by its ID
-  http.get("/api/v1/sbom/:id", ({ params }) => {
+  http.get("/api/v2/sbom/:id", ({ params }) => {
     const { id } = params;
 
     if (!id) {
@@ -400,9 +400,9 @@ const sbomHandlers = [
     return HttpResponse.json(data);
   }),
 
-  http.delete("/api/v1/sbom/:id", () => {}),
+  http.delete("/api/v2/sbom/:id", () => {}),
 
-  http.get("/api/v1/sbom/:id/advisory", ({ params }) => {
+  http.get("/api/v2/sbom/:id/advisory", ({ params }) => {
     const { id } = params;
     if (!id) {
       return new HttpResponse("Advisory for SBOM not found", { status: 404 });
@@ -417,13 +417,13 @@ const sbomHandlers = [
   }),
 
   // replace labels of an SBOM
-  http.put("/api/v1/sbom/:id/label", () => {}),
+  http.put("/api/v2/sbom/:id/label", () => {}),
 
   // modify existing labels of an SBOM
-  http.patch("/api/v1/sbom/:id/label", () => {}),
+  http.patch("/api/v2/sbom/:id/label", () => {}),
 
   // search for packages of an SBOM
-  http.get("/api/v1/sbom/:id/packages", ({ params }) => {
+  http.get("/api/v2/sbom/:id/packages", ({ params }) => {
     const { id } = params;
     if (!id) {
       return new HttpResponse("Packages for SBOM not found", { status: 404 });
@@ -438,23 +438,23 @@ const sbomHandlers = [
   }),
 
   // search for related packages in an SBOM
-  http.get("/api/v1/sbom/:id/related", () => {}),
+  http.get("/api/v2/sbom/:id/related", () => {}),
 
-  http.get("/api/v1/sbom/:key/download", () => {}),
+  http.get("/api/v2/sbom/:key/download", () => {}),
 ];
 
 // USER PREFERENCES HANDLERS
 
 const userPreferencesHandlers = [
-  http.get("/api/v1/userPreference/:key", () => {}),
-  http.put("/api/v1/userPreference/:key", () => {}),
-  http.delete("/api/v1/userPreference/:key", () => {}),
+  http.get("/api/v2/userPreference/:key", () => {}),
+  http.put("/api/v2/userPreference/:key", () => {}),
+  http.delete("/api/v2/userPreference/:key", () => {}),
 ];
 
 // VULNERABILITY HANDLERS
 
 const vulnerabilityHandlers = [
-  http.get("/api/v1/vulnerability", ({ request }) => {
+  http.get("/api/v2/vulnerability", ({ request }) => {
     // construct a URL instance out of the request intercepted
     const url = new URL(request.url);
 
@@ -466,7 +466,7 @@ const vulnerabilityHandlers = [
     return HttpResponse.json(getVulnerabilities);
   }),
 
-  http.get("/api/v1/vulnerability/:id", ({ params }) => {
+  http.get("/api/v2/vulnerability/:id", ({ params }) => {
     const { id } = params;
 
     if (!id) {
@@ -480,7 +480,7 @@ const vulnerabilityHandlers = [
     return HttpResponse.json(data);
   }),
 
-  http.delete("/api/v1/vulnerability/:id", ({ params }) => {
+  http.delete("/api/v2/vulnerability/:id", ({ params }) => {
     const { id } = params;
 
     if (!id) {
@@ -493,9 +493,9 @@ const vulnerabilityHandlers = [
 
 const weaknessHandlers = [
   // list weaknesses
-  http.get("/api/v1/weakness", () => {}),
+  http.get("/api/v2/weakness", () => {}),
 
-  http.get("/api/v1/weakness/:id", () => {}),
+  http.get("/api/v2/weakness/:id", () => {}),
 ];
 
 // named imports
