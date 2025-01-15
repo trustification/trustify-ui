@@ -8,13 +8,13 @@ import { HubPaginatedResult, HubRequestParams } from "./models";
 
 const API = "/api";
 
-export const ORGANIZATIONS = API + "/v1/organization";
-export const PRODUCTS = API + "/v1/product";
-export const ADVISORIES = API + "/v1/advisory";
-export const VULNERABILITIES = API + "/v1/vulnerability";
-export const SBOMS = API + "/v1/sbom";
-export const PACKAGES = API + "/v1/purl";
-export const IMPORTERS = API + "/v1/importer";
+export const ORGANIZATIONS = API + "/v2/organization";
+export const PRODUCTS = API + "/v2/product";
+export const ADVISORIES = API + "/v2/advisory";
+export const VULNERABILITIES = API + "/v2/vulnerability";
+export const SBOMS = API + "/v2/sbom";
+export const PACKAGES = API + "/v2/purl";
+export const IMPORTERS = API + "/v2/importer";
 
 export interface PaginatedResponse<T> {
   items: T[];
