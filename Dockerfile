@@ -1,3 +1,4 @@
+
 # Builder image
 FROM registry.access.redhat.com/ubi9/nodejs-20:latest AS builder
 
