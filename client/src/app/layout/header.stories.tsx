@@ -1,3 +1,4 @@
+
 import type { Meta, StoryObj } from "@storybook/react";
 import { HeaderApp } from "@app/layout/header";
 import { fn } from "@storybook/test";
