@@ -8,6 +8,20 @@ import {
 import type {
   InfoError,
   InfoResponse,
+  ListConversationsData,
+  ListConversationsError,
+  ListConversationsResponse,
+  CreateConversationError,
+  CreateConversationResponse,
+  GetConversationData,
+  GetConversationError,
+  GetConversationResponse,
+  UpdateConversationData,
+  UpdateConversationError,
+  UpdateConversationResponse,
+  DeleteConversationData,
+  DeleteConversationError,
+  DeleteConversationResponse,
   ListAdvisoriesData,
   ListAdvisoriesError,
   ListAdvisoriesResponse,
@@ -211,6 +225,71 @@ export const info = <ThrowOnError extends boolean = false>(
       url: "/.well-known/trustify",
     }
   );
+};
+
+export const listConversations = <ThrowOnError extends boolean = false>(
+  options?: Options<ListConversationsData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    ListConversationsResponse,
+    ListConversationsError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/ai/conversations",
+  });
+};
+
+export const createConversation = <ThrowOnError extends boolean = false>(
+  options?: Options<unknown, ThrowOnError>
+) => {
+  return (options?.client ?? client).post<
+    CreateConversationResponse,
+    CreateConversationError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/ai/conversations",
+  });
+};
+
+export const getConversation = <ThrowOnError extends boolean = false>(
+  options: Options<GetConversationData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetConversationResponse,
+    GetConversationError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/ai/conversations/{id}",
+  });
+};
+
+export const updateConversation = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateConversationData, ThrowOnError>
+) => {
+  return (options?.client ?? client).put<
+    UpdateConversationResponse,
+    UpdateConversationError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/ai/conversations/{id}",
+  });
+};
+
+export const deleteConversation = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteConversationData, ThrowOnError>
+) => {
+  return (options?.client ?? client).delete<
+    DeleteConversationResponse,
+    DeleteConversationError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/ai/conversations/{id}",
+  });
 };
 
 /**
