@@ -1008,79 +1008,6 @@ export type InfoResponse = {
 
 export type InfoError = unknown;
 
-export type ListConversationsData = {
-  query?: {
-    /**
-     * The maximum number of entries to return.
-     *
-     * Zero means: no limit
-     */
-    limit?: number;
-    /**
-     * The first item to return, skipping all that come before it.
-     *
-     * NOTE: The order of items is defined by the API being called.
-     */
-    offset?: number;
-    q?: string;
-    sort?: string;
-  };
-};
-
-export type ListConversationsResponse = PaginatedResults_ConversationSummary;
-
-export type ListConversationsError = unknown;
-
-export type CreateConversationResponse = Conversation;
-
-export type CreateConversationError = unknown;
-
-export type GetConversationData = {
-  path: {
-    /**
-     * Opaque ID of the conversation
-     */
-    id: string;
-  };
-};
-
-export type GetConversationResponse = Conversation;
-
-export type GetConversationError = unknown;
-
-export type UpdateConversationData = {
-  body: Array<ChatMessage>;
-  headers?: {
-    /**
-     * The revision to update
-     */
-    "if-match"?: string | null;
-  };
-  path: {
-    /**
-     * Opaque ID of the conversation
-     */
-    id: string;
-  };
-};
-
-export type UpdateConversationResponse = Conversation;
-
-export type UpdateConversationError = unknown;
-
-export type DeleteConversationData = {
-  path: {
-    /**
-     * Opaque ID of the conversation
-     */
-    id: string;
-  };
-};
-
-export type DeleteConversationResponse = Conversation;
-
-export type DeleteConversationError = unknown;
-
 export type ListAdvisoriesData = {
   query?: {
     deprecated?: "Ignore" | "Consider";
@@ -1199,6 +1126,79 @@ export type CompletionsData = {
 export type CompletionsResponse = ChatState;
 
 export type CompletionsError = unknown;
+
+export type ListConversationsData = {
+  query?: {
+    /**
+     * The maximum number of entries to return.
+     *
+     * Zero means: no limit
+     */
+    limit?: number;
+    /**
+     * The first item to return, skipping all that come before it.
+     *
+     * NOTE: The order of items is defined by the API being called.
+     */
+    offset?: number;
+    q?: string;
+    sort?: string;
+  };
+};
+
+export type ListConversationsResponse = PaginatedResults_ConversationSummary;
+
+export type ListConversationsError = unknown;
+
+export type CreateConversationResponse = Conversation;
+
+export type CreateConversationError = unknown;
+
+export type GetConversationData = {
+  path: {
+    /**
+     * Opaque ID of the conversation
+     */
+    id: string;
+  };
+};
+
+export type GetConversationResponse = Conversation;
+
+export type GetConversationError = unknown;
+
+export type UpdateConversationData = {
+  body: Array<ChatMessage>;
+  headers?: {
+    /**
+     * The revision to update
+     */
+    "if-match"?: string | null;
+  };
+  path: {
+    /**
+     * Opaque ID of the conversation
+     */
+    id: string;
+  };
+};
+
+export type UpdateConversationResponse = Conversation;
+
+export type UpdateConversationError = unknown;
+
+export type DeleteConversationData = {
+  path: {
+    /**
+     * Opaque ID of the conversation
+     */
+    id: string;
+  };
+};
+
+export type DeleteConversationResponse = Conversation;
+
+export type DeleteConversationError = unknown;
 
 export type AiFlagsResponse = AiFlags;
 
