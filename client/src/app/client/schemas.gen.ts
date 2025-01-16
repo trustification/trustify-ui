@@ -406,16 +406,17 @@ export const BinaryByteSizeSchema = {
 
 export const ChatMessageSchema = {
   type: "object",
-  required: ["message_type", "content"],
+  required: ["message_type", "content", "timestamp"],
   properties: {
     content: {
       type: "string",
     },
-    internal_state: {
-      type: ["string", "null"],
-    },
     message_type: {
       $ref: "#/components/schemas/MessageType",
+    },
+    timestamp: {
+      type: "string",
+      format: "date-time",
     },
   },
 } as const;
@@ -424,6 +425,9 @@ export const ChatStateSchema = {
   type: "object",
   required: ["messages"],
   properties: {
+    internal_state: {
+      type: ["string", "null"],
+    },
     messages: {
       type: "array",
       items: {
@@ -515,6 +519,49 @@ export const CommonImporterSchema = {
     period: {
       type: "string",
       description: "The period the importer should be run.",
+    },
+  },
+} as const;
+
+export const ConversationSchema = {
+  type: "object",
+  required: ["id", "messages", "updated_at", "seq"],
+  properties: {
+    id: {
+      type: "string",
+      format: "uuid",
+    },
+    messages: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/ChatMessage",
+      },
+    },
+    seq: {
+      type: "integer",
+      format: "int32",
+    },
+    updated_at: {
+      type: "string",
+      format: "date-time",
+    },
+  },
+} as const;
+
+export const ConversationSummarySchema = {
+  type: "object",
+  required: ["id", "updated_at", "summary"],
+  properties: {
+    id: {
+      type: "string",
+      format: "uuid",
+    },
+    summary: {
+      type: "string",
+    },
+    updated_at: {
+      type: "string",
+      format: "date-time",
     },
   },
 } as const;
@@ -1108,6 +1155,38 @@ export const PaginatedResults_BasePurlSummarySchema = {
             $ref: "#/components/schemas/BasePurlHead",
           },
         ],
+      },
+    },
+    total: {
+      type: "integer",
+      format: "int64",
+      minimum: 0,
+    },
+  },
+} as const;
+
+export const PaginatedResults_ConversationSummarySchema = {
+  type: "object",
+  required: ["items", "total"],
+  properties: {
+    items: {
+      type: "array",
+      items: {
+        type: "object",
+        required: ["id", "updated_at", "summary"],
+        properties: {
+          id: {
+            type: "string",
+            format: "uuid",
+          },
+          summary: {
+            type: "string",
+          },
+          updated_at: {
+            type: "string",
+            format: "date-time",
+          },
+        },
       },
     },
     total: {
@@ -1724,7 +1803,7 @@ export const PurlDetailsSchema = {
     },
     {
       type: "object",
-      required: ["version", "base", "advisories", "licenses"],
+      required: ["version", "base", "advisories", "licenses", "relationships"],
       properties: {
         advisories: {
           type: "array",
@@ -1739,6 +1818,36 @@ export const PurlDetailsSchema = {
           type: "array",
           items: {
             $ref: "#/components/schemas/PurlLicenseSummary",
+          },
+        },
+        relationships: {
+          type: "object",
+          additionalProperties: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+          propertyNames: {
+            type: "string",
+            enum: [
+              "contained_by",
+              "dependency_of",
+              "dev_dependency_of",
+              "optional_dependency_of",
+              "provided_dependency_of",
+              "test_dependency_of",
+              "runtime_dependency_of",
+              "example_of",
+              "generated_from",
+              "ancestor_of",
+              "variant_of",
+              "build_tool_of",
+              "dev_tool_of",
+              "described_by",
+              "package_of",
+              "undefined",
+            ],
           },
         },
         version: {
