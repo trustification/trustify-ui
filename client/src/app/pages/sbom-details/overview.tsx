@@ -33,19 +33,19 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
             <DescriptionList>
               <DescriptionListGroup>
                 <DescriptionListTerm>Name</DescriptionListTerm>
-                <DescriptionListDescription>
+                <DescriptionListDescription aria-label="SBOM's name">
                   {sbom.name}
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
                 <DescriptionListTerm>Namespace</DescriptionListTerm>
-                <DescriptionListDescription>
+                <DescriptionListDescription aria-label="SBOM's namespace">
                   {sbom.document_id}
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
                 <DescriptionListTerm>Data License</DescriptionListTerm>
-                <DescriptionListDescription>
+                <DescriptionListDescription aria-label="SBOM's license">
                   {sbom.data_licenses.join(", ")}
                 </DescriptionListDescription>
               </DescriptionListGroup>
@@ -60,13 +60,13 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
             <DescriptionList>
               <DescriptionListGroup>
                 <DescriptionListTerm>Created</DescriptionListTerm>
-                <DescriptionListDescription>
+                <DescriptionListDescription aria-label="SBOM's creation date">
                   {formatDate(sbom.published)}
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
                 <DescriptionListTerm>Creator</DescriptionListTerm>
-                <DescriptionListDescription>
+                <DescriptionListDescription aria-label="SBOM's creator">
                   {sbom.authors}
                 </DescriptionListDescription>
               </DescriptionListGroup>
