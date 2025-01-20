@@ -575,7 +575,7 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
       startDate: "Start date",
       endDate: "End date",
       numberOfItems: "Number of items",
-      output: "Output",
+      status: "Status",
       duration: "Duration",
     },
     isPaginationEnabled: true,
@@ -627,7 +627,7 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
               <Th {...getThProps({ columnKey: "startDate" })} />
               <Th {...getThProps({ columnKey: "endDate" })} />
               <Th {...getThProps({ columnKey: "numberOfItems" })} />
-              <Th {...getThProps({ columnKey: "output" })} />
+              <Th {...getThProps({ columnKey: "status" })} />
               <Th {...getThProps({ columnKey: "duration" })} />
             </TableHeaderContentWithControls>
           </Tr>
@@ -682,16 +682,16 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
                       {formatDateTime(item.endDate)}
                     </Td>
                     <Td
-                      width={10}
+                      width={15}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "numberOfItems" })}
                     >
                       {item.numberOfItems}
                     </Td>
                     <Td
-                      width={40}
+                      width={30}
                       modifier="truncate"
-                      {...getTdProps({ columnKey: "output" })}
+                      {...getTdProps({ columnKey: "status" })}
                     >
                       {item.isRunning ? (
                         <ImporterStatusIcon state="running" />
@@ -709,7 +709,7 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
                       )}
                     </Td>
                     <Td
-                      width={20}
+                      width={25}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "duration" })}
                     >
