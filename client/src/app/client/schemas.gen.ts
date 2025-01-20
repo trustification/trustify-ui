@@ -243,28 +243,6 @@ export const AiToolSchema = {
   },
 } as const;
 
-export const AllRelatedQuerySchema = {
-  type: "object",
-  properties: {
-    id: {
-      type: ["string", "null"],
-      format: "uuid",
-      description: "Find by an ID of a package",
-    },
-    purl: {
-      oneOf: [
-        {
-          type: "null",
-        },
-        {
-          $ref: "#/components/schemas/Purl",
-          description: "Find by PURL",
-        },
-      ],
-    },
-  },
-} as const;
-
 export const AnalysisStatusSchema = {
   type: "object",
   required: ["sbom_count", "graph_count"],
@@ -272,18 +250,36 @@ export const AnalysisStatusSchema = {
     graph_count: {
       type: "integer",
       format: "int32",
+      description: "The number of graphs loaded in memory",
+      minimum: 0,
     },
     sbom_count: {
       type: "integer",
       format: "int32",
+      description: "The number of SBOMs found in the database",
+      minimum: 0,
     },
   },
 } as const;
 
 export const AncNodeSchema = {
   type: "object",
-  required: ["sbom_id", "node_id", "relationship", "purl", "name", "version"],
+  required: [
+    "sbom_id",
+    "node_id",
+    "relationship",
+    "purl",
+    "cpe",
+    "name",
+    "version",
+  ],
   properties: {
+    cpe: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/Cpe",
+      },
+    },
     name: {
       type: "string",
     },
@@ -291,7 +287,10 @@ export const AncNodeSchema = {
       type: "string",
     },
     purl: {
-      type: "string",
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/Purl",
+      },
     },
     relationship: {
       type: "string",
@@ -311,6 +310,7 @@ export const AncestorSummarySchema = {
     "sbom_id",
     "node_id",
     "purl",
+    "cpe",
     "name",
     "version",
     "published",
@@ -324,6 +324,12 @@ export const AncestorSummarySchema = {
       type: "array",
       items: {
         $ref: "#/components/schemas/AncNode",
+      },
+    },
+    cpe: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/Cpe",
       },
     },
     document_id: {
@@ -345,7 +351,10 @@ export const AncestorSummarySchema = {
       type: "string",
     },
     purl: {
-      type: "string",
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/Purl",
+      },
     },
     sbom_id: {
       type: "string",
@@ -566,6 +575,11 @@ export const ConversationSummarySchema = {
   },
 } as const;
 
+export const CpeSchema = {
+  type: "string",
+  format: "uri",
+} as const;
+
 export const CsafImporterSchema = {
   allOf: [
     {
@@ -652,11 +666,18 @@ export const DepNodeSchema = {
     "node_id",
     "relationship",
     "purl",
+    "cpe",
     "name",
     "version",
     "deps",
   ],
   properties: {
+    cpe: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/Cpe",
+      },
+    },
     deps: {
       type: "array",
       items: {
@@ -670,7 +691,10 @@ export const DepNodeSchema = {
       type: "string",
     },
     purl: {
-      type: "string",
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/Purl",
+      },
     },
     relationship: {
       type: "string",
@@ -690,6 +714,7 @@ export const DepSummarySchema = {
     "sbom_id",
     "node_id",
     "purl",
+    "cpe",
     "name",
     "version",
     "published",
@@ -699,6 +724,12 @@ export const DepSummarySchema = {
     "deps",
   ],
   properties: {
+    cpe: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/Cpe",
+      },
+    },
     deps: {
       type: "array",
       items: {
@@ -724,13 +755,44 @@ export const DepSummarySchema = {
       type: "string",
     },
     purl: {
-      type: "string",
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/Purl",
+      },
     },
     sbom_id: {
       type: "string",
     },
     version: {
       type: "string",
+    },
+  },
+} as const;
+
+export const ExternalReferenceQuerySchema = {
+  type: "object",
+  properties: {
+    cpe: {
+      oneOf: [
+        {
+          type: "null",
+        },
+        {
+          $ref: "#/components/schemas/Cpe",
+          description: "Find by CPE",
+        },
+      ],
+    },
+    purl: {
+      oneOf: [
+        {
+          type: "null",
+        },
+        {
+          $ref: "#/components/schemas/Purl",
+          description: "Find by PURL",
+        },
+      ],
     },
   },
 } as const;

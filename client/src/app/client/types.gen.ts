@@ -106,23 +106,22 @@ export type AiTool = {
   parameters: unknown;
 };
 
-export type AllRelatedQuery = {
-  /**
-   * Find by an ID of a package
-   */
-  id?: string | null;
-  purl?: null | Purl;
-};
-
 export type AnalysisStatus = {
+  /**
+   * The number of graphs loaded in memory
+   */
   graph_count: number;
+  /**
+   * The number of SBOMs found in the database
+   */
   sbom_count: number;
 };
 
 export type AncNode = {
+  cpe: Array<Cpe>;
   name: string;
   node_id: string;
-  purl: string;
+  purl: Array<Purl>;
   relationship: string;
   sbom_id: string;
   version: string;
@@ -130,13 +129,14 @@ export type AncNode = {
 
 export type AncestorSummary = {
   ancestors: Array<AncNode>;
+  cpe: Array<Cpe>;
   document_id: string;
   name: string;
   node_id: string;
   product_name: string;
   product_version: string;
   published: string;
-  purl: string;
+  purl: Array<Purl>;
   sbom_id: string;
   version: string;
 };
@@ -226,6 +226,8 @@ export type ConversationSummary = {
   updated_at: string;
 };
 
+export type Cpe = string;
+
 export type CsafImporter = CommonImporter & {
   fetchRetries?: number | null;
   ignoreMissing?: boolean;
@@ -245,16 +247,18 @@ export type CweImporter = CommonImporter & {
 };
 
 export type DepNode = {
+  cpe: Array<Cpe>;
   deps: Array<DepNode>;
   name: string;
   node_id: string;
-  purl: string;
+  purl: Array<Purl>;
   relationship: string;
   sbom_id: string;
   version: string;
 };
 
 export type DepSummary = {
+  cpe: Array<Cpe>;
   deps: Array<DepNode>;
   document_id: string;
   name: string;
@@ -262,9 +266,14 @@ export type DepSummary = {
   product_name: string;
   product_version: string;
   published: string;
-  purl: string;
+  purl: Array<Purl>;
   sbom_id: string;
   version: string;
+};
+
+export type ExternalReferenceQuery = {
+  cpe?: null | Cpe;
+  purl?: null | Purl;
 };
 
 /**
@@ -1836,9 +1845,9 @@ export type UploadSbomError = unknown;
 export type ListRelatedSbomsData = {
   query?: {
     /**
-     * Find by an ID of a package
+     * Find by CPE
      */
-    id?: string | null;
+    cpe?: null | Cpe;
     /**
      * The maximum number of entries to return.
      *
@@ -1865,12 +1874,12 @@ export type ListRelatedSbomsResponse = PaginatedResults_SbomSummary;
 export type ListRelatedSbomsError = unknown;
 
 export type CountRelatedSbomsData = {
-  body: Array<AllRelatedQuery>;
+  body: Array<ExternalReferenceQuery>;
   path: {
     /**
-     * Find by an ID of a package
+     * Find by CPE
      */
-    id: string | null;
+    cpe: null | Cpe;
     /**
      * Find by PURL
      */
