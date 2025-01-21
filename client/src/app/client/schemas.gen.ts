@@ -305,64 +305,23 @@ export const AncNodeSchema = {
 } as const;
 
 export const AncestorSummarySchema = {
-  type: "object",
-  required: [
-    "sbom_id",
-    "node_id",
-    "purl",
-    "cpe",
-    "name",
-    "version",
-    "published",
-    "document_id",
-    "product_name",
-    "product_version",
-    "ancestors",
+  allOf: [
+    {
+      $ref: "#/components/schemas/BaseSummary",
+    },
+    {
+      type: "object",
+      required: ["ancestors"],
+      properties: {
+        ancestors: {
+          type: "array",
+          items: {
+            $ref: "#/components/schemas/AncNode",
+          },
+        },
+      },
+    },
   ],
-  properties: {
-    ancestors: {
-      type: "array",
-      items: {
-        $ref: "#/components/schemas/AncNode",
-      },
-    },
-    cpe: {
-      type: "array",
-      items: {
-        $ref: "#/components/schemas/Cpe",
-      },
-    },
-    document_id: {
-      type: "string",
-    },
-    name: {
-      type: "string",
-    },
-    node_id: {
-      type: "string",
-    },
-    product_name: {
-      type: "string",
-    },
-    product_version: {
-      type: "string",
-    },
-    published: {
-      type: "string",
-    },
-    purl: {
-      type: "array",
-      items: {
-        $ref: "#/components/schemas/Purl",
-      },
-    },
-    sbom_id: {
-      type: "string",
-    },
-    version: {
-      type: "string",
-    },
-  },
 } as const;
 
 export const BasePurlDetailsSchema = {
@@ -407,6 +366,60 @@ export const BasePurlSummarySchema = {
       $ref: "#/components/schemas/BasePurlHead",
     },
   ],
+} as const;
+
+export const BaseSummarySchema = {
+  type: "object",
+  required: [
+    "sbom_id",
+    "node_id",
+    "purl",
+    "cpe",
+    "name",
+    "version",
+    "published",
+    "document_id",
+    "product_name",
+    "product_version",
+  ],
+  properties: {
+    cpe: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/Cpe",
+      },
+    },
+    document_id: {
+      type: "string",
+    },
+    name: {
+      type: "string",
+    },
+    node_id: {
+      type: "string",
+    },
+    product_name: {
+      type: "string",
+    },
+    product_version: {
+      type: "string",
+    },
+    published: {
+      type: "string",
+    },
+    purl: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/Purl",
+      },
+    },
+    sbom_id: {
+      type: "string",
+    },
+    version: {
+      type: "string",
+    },
+  },
 } as const;
 
 export const BinaryByteSizeSchema = {
@@ -709,64 +722,23 @@ export const DepNodeSchema = {
 } as const;
 
 export const DepSummarySchema = {
-  type: "object",
-  required: [
-    "sbom_id",
-    "node_id",
-    "purl",
-    "cpe",
-    "name",
-    "version",
-    "published",
-    "document_id",
-    "product_name",
-    "product_version",
-    "deps",
+  allOf: [
+    {
+      $ref: "#/components/schemas/BaseSummary",
+    },
+    {
+      type: "object",
+      required: ["deps"],
+      properties: {
+        deps: {
+          type: "array",
+          items: {
+            $ref: "#/components/schemas/DepNode",
+          },
+        },
+      },
+    },
   ],
-  properties: {
-    cpe: {
-      type: "array",
-      items: {
-        $ref: "#/components/schemas/Cpe",
-      },
-    },
-    deps: {
-      type: "array",
-      items: {
-        $ref: "#/components/schemas/DepNode",
-      },
-    },
-    document_id: {
-      type: "string",
-    },
-    name: {
-      type: "string",
-    },
-    node_id: {
-      type: "string",
-    },
-    product_name: {
-      type: "string",
-    },
-    product_version: {
-      type: "string",
-    },
-    published: {
-      type: "string",
-    },
-    purl: {
-      type: "array",
-      items: {
-        $ref: "#/components/schemas/Purl",
-      },
-    },
-    sbom_id: {
-      type: "string",
-    },
-    version: {
-      type: "string",
-    },
-  },
 } as const;
 
 export const ExternalReferenceQuerySchema = {
@@ -1205,6 +1177,40 @@ export const PaginatedResults_AdvisorySummarySchema = {
   },
 } as const;
 
+export const PaginatedResults_AncestorSummarySchema = {
+  type: "object",
+  required: ["items", "total"],
+  properties: {
+    items: {
+      type: "array",
+      items: {
+        allOf: [
+          {
+            $ref: "#/components/schemas/BaseSummary",
+          },
+          {
+            type: "object",
+            required: ["ancestors"],
+            properties: {
+              ancestors: {
+                type: "array",
+                items: {
+                  $ref: "#/components/schemas/AncNode",
+                },
+              },
+            },
+          },
+        ],
+      },
+    },
+    total: {
+      type: "integer",
+      format: "int64",
+      minimum: 0,
+    },
+  },
+} as const;
+
 export const PaginatedResults_BasePurlSummarySchema = {
   type: "object",
   required: ["items", "total"],
@@ -1217,6 +1223,74 @@ export const PaginatedResults_BasePurlSummarySchema = {
             $ref: "#/components/schemas/BasePurlHead",
           },
         ],
+      },
+    },
+    total: {
+      type: "integer",
+      format: "int64",
+      minimum: 0,
+    },
+  },
+} as const;
+
+export const PaginatedResults_BaseSummarySchema = {
+  type: "object",
+  required: ["items", "total"],
+  properties: {
+    items: {
+      type: "array",
+      items: {
+        type: "object",
+        required: [
+          "sbom_id",
+          "node_id",
+          "purl",
+          "cpe",
+          "name",
+          "version",
+          "published",
+          "document_id",
+          "product_name",
+          "product_version",
+        ],
+        properties: {
+          cpe: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Cpe",
+            },
+          },
+          document_id: {
+            type: "string",
+          },
+          name: {
+            type: "string",
+          },
+          node_id: {
+            type: "string",
+          },
+          product_name: {
+            type: "string",
+          },
+          product_version: {
+            type: "string",
+          },
+          published: {
+            type: "string",
+          },
+          purl: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Purl",
+            },
+          },
+          sbom_id: {
+            type: "string",
+          },
+          version: {
+            type: "string",
+          },
+        },
       },
     },
     total: {
@@ -1249,6 +1323,40 @@ export const PaginatedResults_ConversationSummarySchema = {
             format: "date-time",
           },
         },
+      },
+    },
+    total: {
+      type: "integer",
+      format: "int64",
+      minimum: 0,
+    },
+  },
+} as const;
+
+export const PaginatedResults_DepSummarySchema = {
+  type: "object",
+  required: ["items", "total"],
+  properties: {
+    items: {
+      type: "array",
+      items: {
+        allOf: [
+          {
+            $ref: "#/components/schemas/BaseSummary",
+          },
+          {
+            type: "object",
+            required: ["deps"],
+            properties: {
+              deps: {
+                type: "array",
+                items: {
+                  $ref: "#/components/schemas/DepNode",
+                },
+              },
+            },
+          },
+        ],
       },
     },
     total: {
@@ -1865,7 +1973,7 @@ export const PurlDetailsSchema = {
     },
     {
       type: "object",
-      required: ["version", "base", "advisories", "licenses", "relationships"],
+      required: ["version", "base", "advisories", "licenses"],
       properties: {
         advisories: {
           type: "array",
@@ -1880,36 +1988,6 @@ export const PurlDetailsSchema = {
           type: "array",
           items: {
             $ref: "#/components/schemas/PurlLicenseSummary",
-          },
-        },
-        relationships: {
-          type: "object",
-          additionalProperties: {
-            type: "array",
-            items: {
-              type: "string",
-            },
-          },
-          propertyNames: {
-            type: "string",
-            enum: [
-              "contained_by",
-              "dependency_of",
-              "dev_dependency_of",
-              "optional_dependency_of",
-              "provided_dependency_of",
-              "test_dependency_of",
-              "runtime_dependency_of",
-              "example_of",
-              "generated_from",
-              "ancestor_of",
-              "variant_of",
-              "build_tool_of",
-              "dev_tool_of",
-              "described_by",
-              "package_of",
-              "undefined",
-            ],
           },
         },
         version: {

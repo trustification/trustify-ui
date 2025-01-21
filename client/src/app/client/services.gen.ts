@@ -53,6 +53,9 @@ import type {
   AiToolCallData,
   AiToolCallError,
   AiToolCallResponse,
+  GetComponentData,
+  GetComponentError,
+  GetComponentResponse,
   SearchComponentDepsData,
   SearchComponentDepsError,
   SearchComponentDepsResponse,
@@ -453,6 +456,19 @@ export const aiToolCall = <ThrowOnError extends boolean = false>(
   >({
     ...options,
     url: "/api/v2/ai/tools/{name}",
+  });
+};
+
+export const getComponent = <ThrowOnError extends boolean = false>(
+  options: Options<GetComponentData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetComponentResponse,
+    GetComponentError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v2/analysis/component/{key}",
   });
 };
 
