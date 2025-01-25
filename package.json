@@ -29,5 +29,15 @@
     "node": "^20",
     "npm": ">=9.5.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "rimraf": "^5.0.7",
+    "@rollup/plugin-commonjs": "^26.0.1",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-run": "^3.0.2",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@rollup/plugin-virtual": "^3.0.2",
+    "rollup": "^3.29.4",
+    "rollup-plugin-copy": "^3.5.0"
+  }
 }
