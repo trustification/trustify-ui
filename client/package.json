@@ -5,8 +5,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build --debug",
+    "dev": "vite --config vite.config.dev.ts",
+    "build": "tsc -b && vite build --config vite.config.prod.ts",
     "lint": "eslint .",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
@@ -41,6 +41,7 @@
     "react-oidc-context": "^2.3.1",
     "react-router-dom": "^6.21.1",
     "usehooks-ts": "^2.14.0",
+    "vite-plugin-ejs": "^1.7.0",
     "web-vitals": "^0.2.4",
     "xmllint": "^0.1.1",
     "yaml": "^1.10.2",
