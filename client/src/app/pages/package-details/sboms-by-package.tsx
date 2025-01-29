@@ -23,9 +23,7 @@ interface SbomsByPackageProps {
   purl: string;
 }
 
-export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({
-  purl,
-}) => {
+export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
   const tableControlState = useTableControlState({
     tableName: "sboms",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.sboms_by_package,
