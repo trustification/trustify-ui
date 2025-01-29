@@ -20,11 +20,11 @@ import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchSbomsByPackageId } from "@app/queries/sboms";
 
 interface SbomsByPackageProps {
-  packageId: string;
+  purl: string;
 }
 
 export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({
-  packageId,
+  purl,
 }) => {
   const tableControlState = useTableControlState({
     tableName: "sboms",
@@ -53,7 +53,7 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({
     isFetching,
     fetchError,
   } = useFetchSbomsByPackageId(
-    packageId,
+    purl,
     getHubRequestParams({
       ...tableControlState,
       hubSortFieldKeys: {},
