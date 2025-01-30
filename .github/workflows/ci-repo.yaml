@@ -28,6 +28,8 @@ jobs:
         run: npm clean-install --ignore-scripts
       # - name: Lint sources
       #   run: npm run lint
+      - name: Generate
+        run: npm run generate
       - name: Build
         run: npm run build
       - name: Build storybook
