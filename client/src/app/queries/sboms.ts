@@ -150,6 +150,7 @@ export const useFetchSbomsByPackageId = (
       });
     },
   });
+
   return {
     result: {
       data: data?.data?.items || [],

@@ -20,10 +20,12 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - name: Install
         working-directory: build
         run: npm clean-install --ignore-scripts
+      - name: Generate
+        run: npm run generate
       - name: Build
         working-directory: build
         run: npm run build

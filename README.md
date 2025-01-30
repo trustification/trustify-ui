@@ -6,23 +6,23 @@ Trustify UI Component
 
 # Build and Test Status
 
-| branch | last merge CI | last merge image build | nightly CI |
-| :----- | :------------ | :--------------------- | :--------- |
-| main   | [![CI (repo level)](https://github.com/trustification/trustify-ui/actions/workflows/ci-repo.yaml/badge.svg?branch=main&event=push)](https://github.com/trustification/trustify-ui/actions/workflows/ci-repo.yaml?query=branch%3Amain+event%3Apush)           | [![Multiple Architecture Image Build](https://github.com/trustification/trustify-ui/actions/workflows/image-build.yaml/badge.svg?branch=main&event=push)](https://github.com/trustification/trustify-ui/actions/workflows/image-build.yaml?query=branch%3Amain+event%3Apush)                    | [![Nightly CI (repo level @main)](https://github.com/trustification/trustify-ui/actions/workflows/nightly-ci-repo.yaml/badge.svg?branch=main&event=schedule)](https://github.com/trustification/trustify-ui/actions/workflows/nightly-ci-repo.yaml?query=branch%3Amain+event%3Aschedule)       |
+| branch | last merge CI                                                                                                                                                                                                                                      | last merge image build                                                                                                                                                                                                                                                       | nightly CI                                                                                                                                                                                                                                                                               |
+| :----- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| main   | [![CI (repo level)](https://github.com/trustification/trustify-ui/actions/workflows/ci-repo.yaml/badge.svg?branch=main&event=push)](https://github.com/trustification/trustify-ui/actions/workflows/ci-repo.yaml?query=branch%3Amain+event%3Apush) | [![Multiple Architecture Image Build](https://github.com/trustification/trustify-ui/actions/workflows/image-build.yaml/badge.svg?branch=main&event=push)](https://github.com/trustification/trustify-ui/actions/workflows/image-build.yaml?query=branch%3Amain+event%3Apush) | [![Nightly CI (repo level @main)](https://github.com/trustification/trustify-ui/actions/workflows/nightly-ci-repo.yaml/badge.svg?branch=main&event=schedule)](https://github.com/trustification/trustify-ui/actions/workflows/nightly-ci-repo.yaml?query=branch%3Amain+event%3Aschedule) |
 
-| branch | last merge e2e CI | nightly e2e CI |
-| :----- | :---------------- | :------------- |
-| main   | [![CI (global Trustify CI)](https://github.com/trustification/trustify-ui/actions/workflows/ci-global.yaml/badge.svg?branch=main&event=push)](https://github.com/trustification/trustify-ui/actions/workflows/ci-global.yaml?query=branch%3Amain+event%3Apush)               | [![Nightly CI (global trustify CI @main)](https://github.com/trustification/trustify-ui/actions/workflows/nightly-ci-global.yaml/badge.svg?branch=main&event=schedule)](https://github.com/trustification/trustify-ui/actions/workflows/nightly-ci-global.yaml?query=branch%3Amain+event%3Aschedule)            |
+| branch | last merge e2e CI                                                                                                                                                                                                                                              | nightly e2e CI                                                                                                                                                                                                                                                                                       |
+| :----- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| main   | [![CI (global Trustify CI)](https://github.com/trustification/trustify-ui/actions/workflows/ci-global.yaml/badge.svg?branch=main&event=push)](https://github.com/trustification/trustify-ui/actions/workflows/ci-global.yaml?query=branch%3Amain+event%3Apush) | [![Nightly CI (global trustify CI @main)](https://github.com/trustification/trustify-ui/actions/workflows/nightly-ci-global.yaml/badge.svg?branch=main&event=schedule)](https://github.com/trustification/trustify-ui/actions/workflows/nightly-ci-global.yaml?query=branch%3Amain+event%3Aschedule) |
 
 ## Development
 
 ### Requisites
 
-- NodeJS 20. Use [nvm](https://github.com/nvm-sh/nvm?tab=readme-ov-file#install--update-script) to install NodeJS
+[NodeJS](https://nodejs.org) >= 20. Use [nvm](https://nodejs.org/en/download) to install NodeJS
 
 ```shell
-nvm install 20
-nvm use 20
+nvm install 22
+nvm use 22
 ```
 
 - Backend. Clone [trustify](https://github.com/trustification/trustify) and there execute:
