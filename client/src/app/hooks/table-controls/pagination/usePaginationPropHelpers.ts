@@ -63,7 +63,7 @@ export const usePaginationPropHelpers = (
    */
   const paginationToolbarItemProps: ToolbarItemProps = {
     variant: "pagination",
-    align: { default: "alignRight" },
+    align: { default: "alignEnd" },
   };
 
   return { paginationProps, paginationToolbarItemProps };

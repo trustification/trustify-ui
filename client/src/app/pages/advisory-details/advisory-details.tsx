@@ -9,8 +9,7 @@ import {
   TabContent,
   Tabs,
   TabTitleText,
-  Text,
-  TextContent,
+  Content,
 } from "@patternfly/react-core";
 import DownloadIcon from "@patternfly/react-icons/dist/esm/icons/download-icon";
 
@@ -45,15 +44,15 @@ export const AdvisoryDetails: React.FC = () => {
 
   return (
     <>
-      <PageSection variant="light">
+      <PageSection hasBodyWrapper={false}>
         <Split>
           <SplitItem isFilled>
-            <TextContent>
-              <Text component="h1">
+            <Content>
+              <Content component="h1">
                 {advisory?.document_id ?? advisoryId ?? ""}
-              </Text>
-              <Text component="p">Advisory detail information</Text>
-            </TextContent>
+              </Content>
+              <Content component="p">Advisory detail information</Content>
+            </Content>
           </SplitItem>
           <SplitItem>
             {!isFetching && (
@@ -77,7 +76,7 @@ export const AdvisoryDetails: React.FC = () => {
           </SplitItem>
         </Split>
       </PageSection>
-      <PageSection type="nav">
+      <PageSection hasBodyWrapper={false}>
         <Tabs
           mountOnEnter
           activeKey={activeTabKey}
@@ -99,7 +98,7 @@ export const AdvisoryDetails: React.FC = () => {
           />
         </Tabs>
       </PageSection>
-      <PageSection>
+      <PageSection hasBodyWrapper={false}>
         <TabContent
           eventKey={0}
           id="refTabInfoSection"

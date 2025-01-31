@@ -5,7 +5,6 @@ import {
   PaginationProps,
   PaginationVariant,
 } from "@patternfly/react-core";
-import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
 
 export type PaginationStateProps = Pick<
   PaginationProps,

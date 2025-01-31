@@ -10,12 +10,13 @@ import {
   List,
   ListItem,
   Modal,
+  ModalBody,
+  ModalHeader,
   MultipleFileUpload,
   MultipleFileUploadMain,
   MultipleFileUploadStatus,
   MultipleFileUploadStatusItem,
   Spinner,
-  Text,
 } from "@patternfly/react-core";
 
 import FileIcon from "@patternfly/react-icons/dist/esm/icons/file-code-icon";
@@ -159,18 +160,18 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
 
         <Modal
           isOpen={rejectedFiles.length > 0}
-          title="Unsupported files"
-          titleIconVariant="warning"
-          showClose
           aria-label="unsupported file upload attempted"
           onClose={() => setRejectedFiles([])}
           variant="small"
         >
-          <List>
-            {rejectedFiles.map((e, index) => (
-              <ListItem key={index}>{e.file.name}</ListItem>
-            ))}
-          </List>
+          <ModalHeader title="Unsupported files" titleIconVariant="warning" />
+          <ModalBody>
+            <List>
+              {rejectedFiles.map((e, index) => (
+                <ListItem key={index}>{e.file.name}</ListItem>
+              ))}
+            </List>
+          </ModalBody>
         </Modal>
       </MultipleFileUpload>
     </>

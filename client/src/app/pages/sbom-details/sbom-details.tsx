@@ -14,8 +14,7 @@ import {
   TabContent,
   Tabs,
   TabTitleText,
-  Text,
-  TextContent,
+  Content,
 } from "@patternfly/react-core";
 import DownloadIcon from "@patternfly/react-icons/dist/esm/icons/download-icon";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
@@ -55,14 +54,14 @@ export const SbomDetails: React.FC = () => {
 
   return (
     <>
-      <PageSection variant="light">
+      <PageSection hasBodyWrapper={false}>
         <Split>
           <SplitItem isFilled>
             <Flex>
               <FlexItem spacer={{ default: "spacerSm" }}>
-                <TextContent>
-                  <Text component="h1">{sbom?.name ?? sbomId ?? ""}</Text>
-                </TextContent>
+                <Content>
+                  <Content component="h1">{sbom?.name ?? sbomId ?? ""}</Content>
+                </Content>
               </FlexItem>
               <FlexItem>
                 {sbom?.labels.type && (
@@ -91,7 +90,7 @@ export const SbomDetails: React.FC = () => {
           </SplitItem>
         </Split>
       </PageSection>
-      <PageSection type="nav">
+      <PageSection hasBodyWrapper={false}>
         <Tabs
           mountOnEnter
           activeKey={activeTabKey}
@@ -135,7 +134,7 @@ export const SbomDetails: React.FC = () => {
           />
         </Tabs>
       </PageSection>
-      <PageSection>
+      <PageSection hasBodyWrapper={false}>
         <TabContent
           eventKey={0}
           id="refTabInfoSection"

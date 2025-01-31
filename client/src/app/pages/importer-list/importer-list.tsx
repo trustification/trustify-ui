@@ -7,14 +7,15 @@ import {
   Button,
   ButtonVariant,
   Label,
-  Modal,
   PageSection,
-  PageSectionVariants,
-  Text,
-  TextContent,
+  Content,
   Toolbar,
   ToolbarContent,
   ToolbarItem,
+  ModalHeader,
+  Modal,
+  ModalFooter,
+  ModalBody,
 } from "@patternfly/react-core";
 import { LogViewer, LogViewerSearch } from "@patternfly/react-log-viewer";
 import {
@@ -250,17 +251,13 @@ export const ImporterList: React.FC = () => {
 
   return (
     <>
-      <PageSection variant={PageSectionVariants.light}>
-        <TextContent>
-          <Text component="h1">Importers</Text>
-        </TextContent>
+      <PageSection hasBodyWrapper={false}>
+        <Content>
+          <Content component="h1">Importers</Content>
+        </Content>
       </PageSection>
-      <PageSection>
-        <div
-          style={{
-            backgroundColor: "var(--pf-v5-global--BackgroundColor--100)",
-          }}
-        >
+      <PageSection hasBodyWrapper={false}>
+        <div>
           <Toolbar {...toolbarProps}>
             <ToolbarContent>
               <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
@@ -396,7 +393,7 @@ export const ImporterList: React.FC = () => {
                     {isCellExpanded(item) ? (
                       <Tr isExpanded>
                         <Td colSpan={7}>
-                          <div className="pf-v5-u-m-md">
+                          <div className="pf-v6-u-m-md">
                             <ExpandableRowContent>
                               <ImporterExpandedArea importer={item} />
                             </ExpandableRowContent>
@@ -733,35 +730,33 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
         paginationProps={paginationProps}
       />
 
-      <Modal
-        title="Log"
-        variant="large"
-        isOpen={isLogModalOpen}
-        onClose={toggleLogModal}
-        actions={[
+      <Modal variant="large" isOpen={isLogModalOpen} onClose={toggleLogModal}>
+        <ModalHeader title="Log" />
+        <ModalBody>
+          <LogViewer
+            hasLineNumbers={false}
+            height={400}
+            data={logData}
+            theme="dark"
+            toolbar={
+              <Toolbar>
+                <ToolbarContent>
+                  <ToolbarItem>
+                    <LogViewerSearch
+                      placeholder="Search value"
+                      minSearchChars={1}
+                    />
+                  </ToolbarItem>
+                </ToolbarContent>
+              </Toolbar>
+            }
+          />
+        </ModalBody>
+        <ModalFooter>
           <Button key="cancel" variant="link" onClick={toggleLogModal}>
             Close
-          </Button>,
-        ]}
-      >
-        <LogViewer
-          hasLineNumbers={false}
-          height={400}
-          data={logData}
-          theme="dark"
-          toolbar={
-            <Toolbar>
-              <ToolbarContent>
-                <ToolbarItem>
-                  <LogViewerSearch
-                    placeholder="Search value"
-                    minSearchChars={1}
-                  />
-                </ToolbarItem>
-              </ToolbarContent>
-            </Toolbar>
-          }
-        />
+          </Button>
+        </ModalFooter>
       </Modal>
     </>
   );

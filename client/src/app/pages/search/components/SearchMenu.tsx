@@ -23,14 +23,15 @@ export interface IEntity {
   navLink: string;
   type: string;
   typeColor:
-    | "purple"
-    | "orange"
     | "blue"
-    | "cyan"
+    | "teal"
     | "green"
+    | "orange"
+    | "purple"
     | "red"
+    | "orangered"
     | "grey"
-    | "gold"
+    | "yellow"
     | undefined;
 }
 
@@ -120,7 +121,7 @@ function useAllEntities(filterText: string) {
     title: item.purl,
     navLink: `/packages/${item.uuid}`,
     type: "Package",
-    typeColor: "cyan",
+    typeColor: "teal",
   }));
 
   const transformedSboms: IEntity[] = sboms.map((item) => ({

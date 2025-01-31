@@ -15,7 +15,9 @@
       "alt": "brand",
       "height": "40px"
     },
-    "leftTitle": null,
+    "leftTitle": {
+      "text": "Trustification"
+    },
     "rightBrand": null
   }
 }

@@ -159,10 +159,13 @@ const config: Configuration = {
         use: "raw-loader",
       },
 
-      // For monaco-editor-webpack-plugin
+      // For monaco-editor-webpack-plugin & @patternfly/react-log-viewer
       {
         test: /\.css$/,
-        include: [pathTo("../../node_modules/monaco-editor")],
+        include: [
+          pathTo("../../node_modules/monaco-editor"),
+          pathTo("../../node_modules/@patternfly/react-log-viewer"),
+        ],
         use: ["style-loader", "css-loader"],
       },
       {

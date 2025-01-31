@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ChartDonut } from "@patternfly/react-charts";
+import { ChartDonut } from "@patternfly/react-charts/victory";
 
 import { compareBySeverityFn, severityList } from "@app/api/model-utils";
 import { Severity } from "@app/client";

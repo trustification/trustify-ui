@@ -1,12 +1,6 @@
 import * as React from "react";
 
-import {
-  Button,
-  Stack,
-  StackItem,
-  Text,
-  TextContent,
-} from "@patternfly/react-core";
+import { Button, Stack, StackItem, Content } from "@patternfly/react-core";
 
 import {
   FilterCategory,
@@ -73,9 +67,9 @@ export const FilterPanel = <TItem, TFilterCategoryKey extends string>({
               <StackItem key={category.categoryKey}>
                 <Stack hasGutter>
                   <StackItem>
-                    <TextContent>
-                      <Text component="h4">{category.title}</Text>
-                    </TextContent>
+                    <Content>
+                      <Content component="h4">{category.title}</Content>
+                    </Content>
                   </StackItem>
                   <StackItem>
                     <FilterControl<TItem, TFilterCategoryKey>

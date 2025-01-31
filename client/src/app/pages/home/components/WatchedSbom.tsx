@@ -9,7 +9,6 @@ import {
   CardTitle,
   EmptyState,
   EmptyStateBody,
-  EmptyStateHeader,
   EmptyStateVariant,
   MenuToggle,
   MenuToggleElement,
@@ -129,11 +128,11 @@ export const WatchedSbom: React.FC<WatchedSbomProps> = ({
               </StackItem>
             </Stack>
           ) : (
-            <EmptyState variant={EmptyStateVariant.xs}>
-              <EmptyStateHeader
-                titleText="There is nothing here yet"
-                headingLevel="h4"
-              />
+            <EmptyState
+              headingLevel="h4"
+              titleText="There is nothing here yet"
+              variant={EmptyStateVariant.xs}
+            >
               <EmptyStateBody>
                 You can get started by uploading an SBOM. Once your SBOMs are
                 uploaded come back to this page to change the SBOMs you would
@@ -174,12 +173,11 @@ export const WatchedSbom: React.FC<WatchedSbomProps> = ({
                   {...(!inputValue ? { style: { display: "none" } } : {})}
                 >
                   <Button
+                    icon={<TimesIcon aria-hidden />}
                     variant="plain"
                     onClick={onClearButtonClick}
                     aria-label="Clear input value"
-                  >
-                    <TimesIcon aria-hidden />
-                  </Button>
+                  />
                 </TextInputGroupUtilities>
               </TextInputGroup>
             </MenuToggle>

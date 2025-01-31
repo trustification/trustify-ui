@@ -94,7 +94,7 @@ const arrayList: IEntity[] = [
     description: "item.decomposedPurl?.namespace",
     navLink: "/packages/2e05fb3a-cda9-5e54-96b2-d8c7ea390f8d",
     type: "Package",
-    typeColor: "cyan",
+    typeColor: "teal",
   },
   {
     id: "e0b74cfd-e0b0-512b-8814-947f868bc50e",
@@ -102,7 +102,7 @@ const arrayList: IEntity[] = [
     description: "item.decomposedPurl?.namespace",
     navLink: "/packages/e0b74cfd-e0b0-512b-8814-947f868bc50e",
     type: "Package",
-    typeColor: "cyan",
+    typeColor: "teal",
   },
   {
     id: "f4f6b460-82e5-59f0-a7f6-da5f226a9b24",
@@ -110,7 +110,7 @@ const arrayList: IEntity[] = [
     description: "item.decomposedPurl?.namespace",
     navLink: "/packages/f4f6b460-82e5-59f0-a7f6-da5f226a9b24",
     type: "Package",
-    typeColor: "cyan",
+    typeColor: "teal",
   },
   {
     id: "f357b0cc-75d5-532e-b7d9-2233f6f752c8",
@@ -118,7 +118,7 @@ const arrayList: IEntity[] = [
     description: "item.decomposedPurl?.namespace",
     navLink: "/packages/f357b0cc-75d5-532e-b7d9-2233f6f752c8",
     type: "Package",
-    typeColor: "cyan",
+    typeColor: "teal",
   },
   {
     id: "b9a43108-525d-59ea-bc31-ff217d4c7925",
@@ -126,7 +126,7 @@ const arrayList: IEntity[] = [
     description: "item.decomposedPurl?.namespace",
     navLink: "/packages/b9a43108-525d-59ea-bc31-ff217d4c7925",
     type: "Package",
-    typeColor: "cyan",
+    typeColor: "teal",
   },
   {
     id: "d6dea366-e8a6-5500-9aef-14464b717295",
@@ -134,7 +134,7 @@ const arrayList: IEntity[] = [
     description: "item.decomposedPurl?.namespace",
     navLink: "/packages/d6dea366-e8a6-5500-9aef-14464b717295",
     type: "Package",
-    typeColor: "cyan",
+    typeColor: "teal",
   },
   {
     id: "14c5c61d-c4cc-56fb-9db6-f62541076b80",
@@ -142,7 +142,7 @@ const arrayList: IEntity[] = [
     description: "item.decomposedPurl?.namespace",
     navLink: "/packages/14c5c61d-c4cc-56fb-9db6-f62541076b80",
     type: "Package",
-    typeColor: "cyan",
+    typeColor: "teal",
   },
   {
     id: "25ddc770-5fde-53a8-8451-41091d5fcb3b",
@@ -150,7 +150,7 @@ const arrayList: IEntity[] = [
     description: "item.decomposedPurl?.namespace",
     navLink: "/packages/25ddc770-5fde-53a8-8451-41091d5fcb3b",
     type: "Package",
-    typeColor: "cyan",
+    typeColor: "teal",
   },
   {
     id: "62c9cfab-997b-5126-ad5c-90bc277e048f",
@@ -158,7 +158,7 @@ const arrayList: IEntity[] = [
     description: "item.decomposedPurl?.namespace",
     navLink: "/packages/62c9cfab-997b-5126-ad5c-90bc277e048f",
     type: "Package",
-    typeColor: "cyan",
+    typeColor: "teal",
   },
   {
     id: "81293bba-1ab5-5524-8444-0bd55d19b9b3",
@@ -166,7 +166,7 @@ const arrayList: IEntity[] = [
     description: "item.decomposedPurl?.namespace",
     navLink: "/packages/81293bba-1ab5-5524-8444-0bd55d19b9b3",
     type: "Package",
-    typeColor: "cyan",
+    typeColor: "teal",
   },
   {
     id: "urn:uuid:01932ff3-0f06-74e0-b673-f92bac24a6b0",
@@ -174,7 +174,7 @@ const arrayList: IEntity[] = [
     description: "Organization: Red Hat Product Security (secalert@redhat.com)",
     navLink: "/sboms/urn:uuid:01932ff3-0f06-74e0-b673-f92bac24a6b0",
     type: "SBOM",
-    typeColor: "purple",
+    typeColor: "teal",
   },
   {
     id: "urn:uuid:01932ff3-0f90-7e51-9c9d-1fac54a371f3",
@@ -182,7 +182,7 @@ const arrayList: IEntity[] = [
     description: "Organization: Red Hat Product Security (secalert@redhat.com)",
     navLink: "/sboms/urn:uuid:01932ff3-0f90-7e51-9c9d-1fac54a371f3",
     type: "SBOM",
-    typeColor: "purple",
+    typeColor: "teal",
   },
   {
     id: "urn:uuid:01932ff3-0f91-7543-af38-c399c1e9a923",
@@ -190,7 +190,7 @@ const arrayList: IEntity[] = [
     description: "Organization: Red Hat Product Security (secalert@redhat.com)",
     navLink: "/sboms/urn:uuid:01932ff3-0f91-7543-af38-c399c1e9a923",
     type: "SBOM",
-    typeColor: "purple",
+    typeColor: "teal",
   },
   {
     id: "urn:uuid:01932ff3-0fbc-7b82-b9c2-18044dbbb574",
@@ -198,7 +198,7 @@ const arrayList: IEntity[] = [
     description: "Organization: Red Hat Product Security (secalert@redhat.com)",
     navLink: "/sboms/urn:uuid:01932ff3-0fbc-7b82-b9c2-18044dbbb574",
     type: "SBOM",
-    typeColor: "purple",
+    typeColor: "teal",
   },
   {
     id: "urn:uuid:01932ff3-0fc4-7bf2-8201-5d5e9dc471bd",
@@ -206,7 +206,7 @@ const arrayList: IEntity[] = [
     description: "Organization: Red Hat Product Security (secalert@redhat.com)",
     navLink: "/sboms/urn:uuid:01932ff3-0fc4-7bf2-8201-5d5e9dc471bd",
     type: "SBOM",
-    typeColor: "purple",
+    typeColor: "teal",
   },
   {
     id: "urn:uuid:01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9",
@@ -214,7 +214,7 @@ const arrayList: IEntity[] = [
     description: "Organization: Red Hat Product Security (secalert@redhat.com)",
     navLink: "/sboms/urn:uuid:01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9",
     type: "SBOM",
-    typeColor: "purple",
+    typeColor: "teal",
   },
   {
     id: "CVE-2022-45787",

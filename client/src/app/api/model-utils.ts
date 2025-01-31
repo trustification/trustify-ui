@@ -1,10 +1,10 @@
 import { ProgressProps } from "@patternfly/react-core";
 import {
-  global_palette_purple_400 as criticalColor,
-  global_danger_color_100 as importantColor,
-  global_info_color_100 as lowColor,
-  global_warning_color_100 as moderateColor,
-  global_palette_black_400 as noneColor,
+  t_global_icon_color_severity_critical_default as criticalColor,
+  t_global_icon_color_severity_important_default as importantColor,
+  t_global_icon_color_severity_moderate_default as moderateColor,
+  t_global_icon_color_severity_minor_default as lowColor,
+  t_global_icon_color_severity_none_default as noneColor,
 } from "@patternfly/react-tokens";
 
 import { Severity } from "@app/client";

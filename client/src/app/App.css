@@ -13,15 +13,10 @@ table.vertical-middle-aligned-table tr td {
   vertical-align: middle;
 }
 
-.multiple-file-upload-status-item-force-blue .pf-v5-c-progress.pf-m-success {
-  --pf-v5-c-progress__bar--before--BackgroundColor: var(
-    --pf-v5-global--primary-color--100
-  ) !important;
-  --pf-v5-c-progress__status-icon--Color: var(--pf-v5-global--Color--100);
+.multiple-file-upload-status-item-force-blue .pf-v6-c-progress__indicator {
+  background-color: #0066cc !important;
 }
 
-.multiple-file-upload-status-item-force-blue .pf-v5-c-progress__indicator {
-  background-color: var(
-    --pf-v5-c-progress__indicator--BackgroundColor
-  ) !important;
+.multiple-file-upload-status-item-force-blue .pf-v6-c-progress__status-icon {
+  color: #0066cc !important;  
 }

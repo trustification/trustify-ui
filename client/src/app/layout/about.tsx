@@ -1,13 +1,6 @@
 import React from "react";
 
-import {
-  AboutModal,
-  Text,
-  TextContent,
-  TextList,
-  TextListItem,
-  TextVariants,
-} from "@patternfly/react-core";
+import { AboutModal, Content, ContentVariants } from "@patternfly/react-core";
 
 import backgroundImage from "@app/images/pfbg-icon.svg";
 
@@ -38,35 +31,35 @@ export const AboutApp: React.FC<IButtonAboutAppProps> = ({
       backgroundImageSrc={backgroundImage}
       trademark={`COPYRIGHT © 2020, ${new Date().getFullYear()}`}
     >
-      <TextContent>
-        <Text component={TextVariants.p}>
+      <Content>
+        <Content component={ContentVariants.p}>
           {about.displayName} is vendor-neutral, thought-leadering, mostly
           informational collection of resources devoted to making Software
           Supply Chains easier to create, manage, consume and ultimately… to
           trust!
-        </Text>
+        </Content>
 
         {about.documentationUrl ? (
-          <Text component={TextVariants.p}>
+          <Content component={ContentVariants.p}>
             For more information refer to{" "}
-            <Text
-              component={TextVariants.a}
+            <Content
+              component={ContentVariants.a}
               href={about.documentationUrl}
               target="_blank"
             >
               {about.displayName} documentation
-            </Text>
-          </Text>
+            </Content>
+          </Content>
         ) : null}
-      </TextContent>
-      <TextContent className="pf-v5-u-py-xl">
-        <TextContent>
-          <TextList component="dl">
-            <TextListItem component="dt">Version</TextListItem>
-            <TextListItem component="dd">{ENV.VERSION}</TextListItem>
-          </TextList>
-        </TextContent>
-      </TextContent>
+      </Content>
+      <Content className="pf-v6-u-py-xl">
+        <Content>
+          <Content component="dl">
+            <Content component="dt">Version</Content>
+            <Content component="dd">{ENV.VERSION}</Content>
+          </Content>
+        </Content>
+      </Content>
     </AboutModal>
   );
 };

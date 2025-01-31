@@ -11,7 +11,7 @@ import {
   TextInputGroup,
   TextInputGroupMain,
   TextInputGroupUtilities,
-  ToolbarChip,
+  ToolbarLabel,
   ToolbarFilter,
   Tooltip,
 } from "@patternfly/react-core";
@@ -73,7 +73,7 @@ export const MultiselectFilterControl = <TItem,>({
   const [inputValue, setInputValue] = React.useState<string>("");
 
   const onFilterClearAll = () => setFilterValue([]);
-  const onFilterClear = (chip: string | ToolbarChip) => {
+  const onFilterClear = (chip: string | ToolbarLabel) => {
     const value = typeof chip === "string" ? chip : chip.key;
 
     if (value) {
@@ -317,6 +317,7 @@ export const MultiselectFilterControl = <TItem,>({
         <TextInputGroupUtilities>
           {!!inputValue && (
             <Button
+              icon={<TimesIcon aria-hidden />}
               variant="plain"
               onClick={() => {
                 setInputValue("");
@@ -324,9 +325,7 @@ export const MultiselectFilterControl = <TItem,>({
                 textInputRef?.current?.focus();
               }}
               aria-label="Clear input value"
-            >
-              <TimesIcon aria-hidden />
-            </Button>
+            />
           )}
           {filterValue?.length ? (
             <Badge isRead>{filterValue.length}</Badge>
@@ -339,9 +338,9 @@ export const MultiselectFilterControl = <TItem,>({
   return (
     <ToolbarFilter
       id={`filter-control-${category.categoryKey}`}
-      chips={chips}
-      deleteChip={(_, chip) => onFilterClear(chip)}
-      deleteChipGroup={onFilterClearAll}
+      labels={chips}
+      deleteLabel={(_, chip) => onFilterClear(chip)}
+      deleteLabelGroup={onFilterClearAll}
       categoryName={category.title}
       showToolbarItem={showToolbarItem}
     >

@@ -54,7 +54,7 @@ const ProductWizard: React.FC = () => {
         </WizardStep>
         <WizardStep name="SBOMs" id="basic-second-step">
           <p>SBOM Selection</p>
-          <DualListSelector
+          {/* <DualListSelector
             availableOptions={availableOptions}
             chosenOptions={chosenOptions}
             onListChange={onListChange}
@@ -67,7 +67,7 @@ const ProductWizard: React.FC = () => {
             removeAllTooltip="Remove all options"
             removeAllTooltipProps={{ position: "bottom" }}
             id="dual-list-selector-basic-tooltips"
-          />
+          /> */}
         </WizardStep>
         <WizardStep name="Validation" id="basic-third-step">
           <h2>Product Validation</h2>

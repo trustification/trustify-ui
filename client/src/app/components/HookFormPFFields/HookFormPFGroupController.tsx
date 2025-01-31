@@ -64,7 +64,7 @@ export const HookFormPFGroupController = <
         error?.message && (isDirty || isTouched) && !errorsSuppressed;
       return (
         <FormGroup
-          labelIcon={labelIcon}
+          labelHelp={labelIcon}
           label={label}
           fieldId={fieldId}
           className={className}

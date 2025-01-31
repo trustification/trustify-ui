@@ -6,14 +6,12 @@ import {
   Card,
   CardBody,
   PageSection,
-  PageSectionVariants,
   Tab,
   TabContent,
   TabContentBody,
   Tabs,
   TabTitleText,
-  Text,
-  TextContent,
+  Content,
 } from "@patternfly/react-core";
 
 import { useUploadAdvisory } from "@app/queries/advisories";
@@ -35,12 +33,12 @@ export const ImporterList: React.FC = () => {
 
   return (
     <>
-      <PageSection variant={PageSectionVariants.light}>
-        <TextContent>
-          <Text component="h1">Upload</Text>
-        </TextContent>
+      <PageSection hasBodyWrapper={false}>
+        <Content>
+          <Content component="h1">Upload</Content>
+        </Content>
       </PageSection>
-      <PageSection>
+      <PageSection hasBodyWrapper={false}>
         <Card>
           <CardBody>
             <Tabs defaultActiveKey={0}>
