@@ -55,26 +55,6 @@ interface IPageContentWithDrawerProviderProps {
 export const PageContentWithDrawerProvider: React.FC<
   IPageContentWithDrawerProviderProps
 > = ({ children }) => {
-  const [screenSize, setScreenSize] = React.useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
-
-  React.useEffect(() => {
-    const handleResize = () => {
-      setScreenSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
   const pageDrawerState = usePageDrawerState();
   const {
     isDrawerExpanded,
@@ -104,8 +84,6 @@ export const PageContentWithDrawerProvider: React.FC<
                 {drawerPanelContent}
               </DrawerPanelContent>
             }
-            // className="carlos"
-            style={{height: screenSize.height - 110}}
           >
             <DrawerContentBody>{children}</DrawerContentBody>
           </DrawerContent>

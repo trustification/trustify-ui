@@ -19,7 +19,6 @@ const SBOMDetails = lazy(() => import("./pages/sbom-details"));
 const Search = lazy(() => import("./pages/search"));
 const ImporterList = lazy(() => import("./pages/importer-list"));
 const Upload = lazy(() => import("./pages/upload"));
-const ChatBot = lazy(() => import("./pages/chat-bot"));
 
 export enum PathParam {
   PRODUCT_ID = "productId",
@@ -59,7 +58,6 @@ export const AppRoutes = () => {
       element: <ImporterList />,
     },
     { path: "/upload", element: <Upload /> },
-    { path: "/chatbot", element: <ChatBot /> },
   ]);
 
   return (

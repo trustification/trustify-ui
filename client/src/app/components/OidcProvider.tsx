@@ -9,8 +9,7 @@ import {
   Bullseye,
   EmptyState,
   EmptyStateBody,
-  EmptyStateVariant,
-  Title,
+  EmptyStateVariant
 } from "@patternfly/react-core";
 import ExclamationCircleIcon from "@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon";
 
@@ -64,11 +63,8 @@ const AuthEnabledOidcProvider: React.FC<IOidcProviderProps> = ({
       <Bullseye>
         <EmptyState
           status="danger"
-          titleText={
-            <Title headingLevel="h2" size="lg">
-              Auth Error
-            </Title>
-          }
+          titleText=" Auth Error"
+          headingLevel="h4"
           icon={ExclamationCircleIcon}
           variant={EmptyStateVariant.sm}
         >

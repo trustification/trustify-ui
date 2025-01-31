@@ -3,19 +3,15 @@ import React from "react";
 import {
   EmptyState,
   EmptyStateBody,
-  EmptyStateVariant,
-  Title,
+  EmptyStateVariant
 } from "@patternfly/react-core";
 import SearchIcon from "@patternfly/react-icons/dist/esm/icons/search-icon";
 
 export const StateNoResults: React.FC = () => {
   return (
     <EmptyState
-      titleText={
-        <Title headingLevel="h2" size="lg">
-          No results found
-        </Title>
-      }
+      titleText="No results found"
+      headingLevel="h4"
       icon={SearchIcon}
       variant={EmptyStateVariant.sm}
     >

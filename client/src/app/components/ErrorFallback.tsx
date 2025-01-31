@@ -6,8 +6,7 @@ import {
   Button,
   EmptyState,
   EmptyStateBody,
-  EmptyStateVariant,
-  Title,
+  EmptyStateVariant
 } from "@patternfly/react-core";
 import UserNinjaIcon from "@patternfly/react-icons/dist/esm/icons/user-ninja-icon";
 import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
@@ -45,11 +44,8 @@ export const ErrorFallback = ({
   return (
     <Bullseye>
       <EmptyState
-        titleText={
-          <Title headingLevel="h2" size="lg">
-            Oops! Something went wrong.
-          </Title>
-        }
+        titleText="Oops! Something went wrong."
+        headingLevel="h4"
         icon={UserNinjaIcon}
         variant={EmptyStateVariant.sm}
       >

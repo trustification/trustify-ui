@@ -1,9 +1,9 @@
 import React from "react";
+
 import {
   EmptyState,
-  EmptyStateVariant,
-  Title,
   EmptyStateBody,
+  EmptyStateVariant,
 } from "@patternfly/react-core";
 import ExclamationCircleIcon from "@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon";
 
@@ -11,11 +11,8 @@ export const StateError: React.FC = () => {
   return (
     <EmptyState
       status="danger"
-      titleText={
-        <Title headingLevel="h2" size="lg">
-          Unable to connect
-        </Title>
-      }
+      headingLevel="h4"
+      titleText="Unable to connect"
       icon={ExclamationCircleIcon}
       variant={EmptyStateVariant.sm}
     >

@@ -9,8 +9,6 @@ import {
 } from "@patternfly/react-core";
 import { css } from "@patternfly/react-styles";
 
-import { LayoutTheme } from "./layout-constants";
-
 const LINK_CLASS = "pf-v6-c-nav__link";
 const ACTIVE_LINK_CLASS = "pf-m-current";
 
@@ -27,16 +25,6 @@ export const SidebarApp: React.FC = () => {
               }}
             >
               Dashboard
-            </NavLink>
-          </li>
-          <li className="pf-v6-c-nav__item">
-            <NavLink
-              to="/chatbot"
-              className={({ isActive }) => {
-                return css(LINK_CLASS, isActive ? ACTIVE_LINK_CLASS : "");
-              }}
-            >
-              Chat Bot
             </NavLink>
           </li>
           <li className="pf-v6-c-nav__item">
