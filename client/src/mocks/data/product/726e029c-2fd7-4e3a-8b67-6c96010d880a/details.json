@@ -1,0 +1,11 @@
+{
+  "id": "urn:uuid:726e029c-2fd7-4e3a-8b67-6c96010d880a",
+  "name": "RHINT Camel-Springboot 3.18.3.P2",
+  "versions": [],
+  "vendor": {
+    "id": "87af9d56-f108-41fe-8487-3844474b69b2",
+    "name": "Red Hat",
+    "cpe_key": "redhat",
+    "website": null
+  }
+}

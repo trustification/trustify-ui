@@ -1,0 +1,41 @@
+{
+  "uuid": "urn:uuid:ee8cff4d-d6bc-4a27-89ac-a7ad193f5eb6",
+  "identifier": "CVE-2022-45787",
+  "issuer": {
+    "id": "1f998387-0fdc-403b-a492-418b22f76f69",
+    "name": "apache",
+    "cpe_key": null,
+    "website": null
+  },
+  "published": "2023-01-06T09:31:40.118Z",
+  "modified": "2024-08-03T14:17:04.186Z",
+  "withdrawn": null,
+  "title": "Apache James MIME4J: Temporary File Information Disclosure in MIME4J TempFileStorageProvider",
+  "labels": {
+    "type": "cve"
+  },
+  "sha256": "sha256:9905eaad399e6d47e5aceae07a1f271ff878332118f613197fb959fbca0a0895",
+  "sha384": "sha384:6b43007cb7e13ee46160500fee9f35de731db6fd4e713a9a8bcf2f65885d0a9c05a7a95558090ee0e657c1602b03eb07",
+  "sha512": "sha512:b80f8db0e845a0f2a0b84583efd2c90935e3653e31beba06e1eb1011db0c49bab6a925d3c2d84dc35ebe8a900a704611b5e76724e6cf16b19b13946897fc5b71",
+  "size": 4360,
+  "vulnerabilities": [
+    {
+      "normative": true,
+      "identifier": "CVE-2022-45787",
+      "title": "Apache James MIME4J: Temporary File Information Disclosure in MIME4J TempFileStorageProvider",
+      "description": "Unproper laxist permissions on the temporary files used by MIME4J TempFileStorageProvider may lead to information disclosure to other local users. This issue affects Apache James MIME4J version 0.8.8 and prior versions.\n\nWe recommend users to upgrade to MIME4j version 0.8.9 or later.\n",
+      "reserved": "2022-11-22T08:49:26.227Z",
+      "published": "2023-01-06T09:31:40.118Z",
+      "modified": "2024-08-03T14:17:04.186Z",
+      "withdrawn": null,
+      "discovered": null,
+      "released": null,
+      "cwes": ["CWE-312"],
+      "severity": "none",
+      "score": 0.0,
+      "cvss3_scores": []
+    }
+  ],
+  "average_severity": null,
+  "average_score": null
+}

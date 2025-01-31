@@ -26,6 +26,9 @@
     "paths": {
       "@app/*": [
         "src/app/*"
+      ],
+      "@mocks/*": [
+        "src/mocks/*"
       ]
     }
   },

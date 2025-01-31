@@ -1,0 +1,2919 @@
+[
+  {
+    "uuid": "urn:uuid:499fe624-5219-4e93-b2ed-d4aaa8c3de55",
+    "identifier": "https://www.redhat.com/#CVE-2023-2976",
+    "issuer": {
+      "id": "5e9c87c9-2e6b-453b-8b27-6c80dfc7d7ff",
+      "name": "Red Hat Product Security",
+      "cpe_key": null,
+      "website": null
+    },
+    "published": "2023-06-14T00:00:00Z",
+    "modified": "2023-11-14T21:31:33Z",
+    "withdrawn": null,
+    "title": "guava: insecure temporary directory creation",
+    "labels": {
+      "type": "csaf"
+    },
+    "status": [
+      {
+        "normative": true,
+        "identifier": "CVE-2023-2976",
+        "title": "Use of temporary directory for file creation in `FileBackedOutputStream` in Guava",
+        "description": "Use of Java's default temporary directory for file creation in `FileBackedOutputStream` in Google Guava versions 1.0 to 31.1 on Unix systems and Android Ice Cream Sandwich allows other users and apps on the machine with access to the default Java temporary directory to be able to access the files created by the class.\n\nEven though the security vulnerability is fixed in version 32.0.0, we recommend using version 32.0.1 as version 32.0.0 breaks some functionality under Windows.\n\n",
+        "reserved": "2023-05-30T13:15:41.56Z",
+        "published": "2023-06-14T17:36:40.64Z",
+        "modified": "2024-08-02T06:41:03.778Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "medium",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "guava",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-2976",
+        "title": "Use of temporary directory for file creation in `FileBackedOutputStream` in Guava",
+        "description": "Use of Java's default temporary directory for file creation in `FileBackedOutputStream` in Google Guava versions 1.0 to 31.1 on Unix systems and Android Ice Cream Sandwich allows other users and apps on the machine with access to the default Java temporary directory to be able to access the files created by the class.\n\nEven though the security vulnerability is fixed in version 32.0.0, we recommend using version 32.0.1 as version 32.0.0 breaks some functionality under Windows.\n\n",
+        "reserved": "2023-05-30T13:15:41.56Z",
+        "published": "2023-06-14T17:36:40.64Z",
+        "modified": "2024-08-02T06:41:03.778Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "medium",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "guava",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-2976",
+        "title": "Use of temporary directory for file creation in `FileBackedOutputStream` in Guava",
+        "description": "Use of Java's default temporary directory for file creation in `FileBackedOutputStream` in Google Guava versions 1.0 to 31.1 on Unix systems and Android Ice Cream Sandwich allows other users and apps on the machine with access to the default Java temporary directory to be able to access the files created by the class.\n\nEven though the security vulnerability is fixed in version 32.0.0, we recommend using version 32.0.1 as version 32.0.0 breaks some functionality under Windows.\n\n",
+        "reserved": "2023-05-30T13:15:41.56Z",
+        "published": "2023-06-14T17:36:40.64Z",
+        "modified": "2024-08-02T06:41:03.778Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "medium",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:7:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "guava",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "uuid": "urn:uuid:cecc86c6-84bf-48e9-830f-e517dfcb2f30",
+    "identifier": "https://www.redhat.com/#CVE-2023-0482",
+    "issuer": {
+      "id": "04194b23-2358-4267-a83b-a69a3b60d5c5",
+      "name": "Red Hat Product Security",
+      "cpe_key": null,
+      "website": null
+    },
+    "published": "2023-01-31T00:00:00Z",
+    "modified": "2023-11-02T07:08:07Z",
+    "withdrawn": null,
+    "title": "RESTEasy: creation of insecure temp files",
+    "labels": {
+      "type": "csaf"
+    },
+    "status": [
+      {
+        "normative": true,
+        "identifier": "CVE-2023-0482",
+        "title": "In RESTEasy the insecure File.createTempFile() is used in the DataSourceProvider, FileProvider and Mime4JWorkaround classes which creates temp files with insecure permissions that could be read by a local user.",
+        "description": "In RESTEasy the insecure File.createTempFile() is used in the DataSourceProvider, FileProvider and Mime4JWorkaround classes which creates temp files with insecure permissions that could be read by a local user.",
+        "reserved": "2023-01-24T00:00:00Z",
+        "published": "2023-02-17T00:00:00Z",
+        "modified": "2024-08-02T05:10:56.348Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-378"],
+        "average_severity": "medium",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "resteasy",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-0482",
+        "title": "In RESTEasy the insecure File.createTempFile() is used in the DataSourceProvider, FileProvider and Mime4JWorkaround classes which creates temp files with insecure permissions that could be read by a local user.",
+        "description": "In RESTEasy the insecure File.createTempFile() is used in the DataSourceProvider, FileProvider and Mime4JWorkaround classes which creates temp files with insecure permissions that could be read by a local user.",
+        "reserved": "2023-01-24T00:00:00Z",
+        "published": "2023-02-17T00:00:00Z",
+        "modified": "2024-08-02T05:10:56.348Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-378"],
+        "average_severity": "medium",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "resteasy",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "uuid": "urn:uuid:bbf5e16e-adfc-446b-b9cd-ac74167eebb3",
+    "identifier": "https://www.redhat.com/#CVE-2023-20861",
+    "issuer": {
+      "id": "5e9c87c9-2e6b-453b-8b27-6c80dfc7d7ff",
+      "name": "Red Hat Product Security",
+      "cpe_key": null,
+      "website": null
+    },
+    "published": "2023-03-20T00:00:00Z",
+    "modified": "2023-11-14T17:29:24Z",
+    "withdrawn": null,
+    "title": "springframework: Spring Expression DoS Vulnerability",
+    "labels": {
+      "type": "csaf"
+    },
+    "status": [
+      {
+        "normative": true,
+        "identifier": "CVE-2023-20861",
+        "title": "In Spring Framework versions 6.0.0 - 6.0.6, 5.3.0 - 5.3.25, 5.2.0.RELEASE - 5.2.22.RELEASE, and older unsupported versions, it is possible for a user to provide a specially crafted SpEL expression that may cause a denial-of-service (DoS) condition.",
+        "description": "In Spring Framework versions 6.0.0 - 6.0.6, 5.3.0 - 5.3.25, 5.2.0.RELEASE - 5.2.22.RELEASE, and older unsupported versions, it is possible for a user to provide a specially crafted SpEL expression that may cause a denial-of-service (DoS) condition.",
+        "reserved": "2022-11-01T00:00:00Z",
+        "published": "2023-03-23T00:00:00Z",
+        "modified": "2024-08-02T09:21:32.428Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "medium",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "log4j",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-20861",
+        "title": "In Spring Framework versions 6.0.0 - 6.0.6, 5.3.0 - 5.3.25, 5.2.0.RELEASE - 5.2.22.RELEASE, and older unsupported versions, it is possible for a user to provide a specially crafted SpEL expression that may cause a denial-of-service (DoS) condition.",
+        "description": "In Spring Framework versions 6.0.0 - 6.0.6, 5.3.0 - 5.3.25, 5.2.0.RELEASE - 5.2.22.RELEASE, and older unsupported versions, it is possible for a user to provide a specially crafted SpEL expression that may cause a denial-of-service (DoS) condition.",
+        "reserved": "2022-11-01T00:00:00Z",
+        "published": "2023-03-23T00:00:00Z",
+        "modified": "2024-08-02T09:21:32.428Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "medium",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "log4j:2/log4j",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-20861",
+        "title": "In Spring Framework versions 6.0.0 - 6.0.6, 5.3.0 - 5.3.25, 5.2.0.RELEASE - 5.2.22.RELEASE, and older unsupported versions, it is possible for a user to provide a specially crafted SpEL expression that may cause a denial-of-service (DoS) condition.",
+        "description": "In Spring Framework versions 6.0.0 - 6.0.6, 5.3.0 - 5.3.25, 5.2.0.RELEASE - 5.2.22.RELEASE, and older unsupported versions, it is possible for a user to provide a specially crafted SpEL expression that may cause a denial-of-service (DoS) condition.",
+        "reserved": "2022-11-01T00:00:00Z",
+        "published": "2023-03-23T00:00:00Z",
+        "modified": "2024-08-02T09:21:32.428Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "medium",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:hypervisor:*"
+        },
+        "packages": []
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-20861",
+        "title": "In Spring Framework versions 6.0.0 - 6.0.6, 5.3.0 - 5.3.25, 5.2.0.RELEASE - 5.2.22.RELEASE, and older unsupported versions, it is possible for a user to provide a specially crafted SpEL expression that may cause a denial-of-service (DoS) condition.",
+        "description": "In Spring Framework versions 6.0.0 - 6.0.6, 5.3.0 - 5.3.25, 5.2.0.RELEASE - 5.2.22.RELEASE, and older unsupported versions, it is possible for a user to provide a specially crafted SpEL expression that may cause a denial-of-service (DoS) condition.",
+        "reserved": "2022-11-01T00:00:00Z",
+        "published": "2023-03-23T00:00:00Z",
+        "modified": "2024-08-02T09:21:32.428Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "medium",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/a:redhat:enterprise_linux:8:*:hypervisor:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "apache-sshd",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "uuid": "urn:uuid:afc27082-2db2-411d-9fbf-ecf151e659e2",
+    "identifier": "https://www.redhat.com/#CVE-2023-34455",
+    "issuer": {
+      "id": "5e9c87c9-2e6b-453b-8b27-6c80dfc7d7ff",
+      "name": "Red Hat Product Security",
+      "cpe_key": null,
+      "website": null
+    },
+    "published": "2023-06-16T00:00:00Z",
+    "modified": "2023-11-14T21:49:01Z",
+    "withdrawn": null,
+    "title": "snappy-java: Unchecked chunk length leads to DoS",
+    "labels": {
+      "type": "csaf"
+    },
+    "status": [
+      {
+        "normative": true,
+        "identifier": "CVE-2023-34455",
+        "title": "snappy-java's unchecked chunk length leads to DoS",
+        "description": "snappy-java is a fast compressor/decompressor for Java. Due to use of an unchecked chunk length, an unrecoverable fatal error can occur in versions prior to 1.1.10.1.\n\nThe code in the function hasNextChunk in the fileSnappyInputStream.java checks if a given stream has more chunks to read. It does that by attempting to read 4 bytes. If it wasn’t possible to read the 4 bytes, the function returns false. Otherwise, if 4 bytes were available, the code treats them as the length of the next chunk.\n\nIn the case that the `compressed` variable is null, a byte array is allocated with the size given by the input data. Since the code doesn’t test the legality of the `chunkSize` variable, it is possible to pass a negative number (such as 0xFFFFFFFF which is -1), which will cause the code to raise a `java.lang.NegativeArraySizeException` exception. A worse case would happen when passing a huge positive value (such as 0x7FFFFFFF), which would raise the fatal `java.lang.OutOfMemoryError` error.\n\nVersion 1.1.10.1 contains a patch for this issue.",
+        "reserved": "2023-06-06T16:16:53.559Z",
+        "published": "2023-06-15T17:15:00.311Z",
+        "modified": "2024-08-02T16:10:07.032Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-770"],
+        "average_severity": "medium",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "log4j",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-34455",
+        "title": "snappy-java's unchecked chunk length leads to DoS",
+        "description": "snappy-java is a fast compressor/decompressor for Java. Due to use of an unchecked chunk length, an unrecoverable fatal error can occur in versions prior to 1.1.10.1.\n\nThe code in the function hasNextChunk in the fileSnappyInputStream.java checks if a given stream has more chunks to read. It does that by attempting to read 4 bytes. If it wasn’t possible to read the 4 bytes, the function returns false. Otherwise, if 4 bytes were available, the code treats them as the length of the next chunk.\n\nIn the case that the `compressed` variable is null, a byte array is allocated with the size given by the input data. Since the code doesn’t test the legality of the `chunkSize` variable, it is possible to pass a negative number (such as 0xFFFFFFFF which is -1), which will cause the code to raise a `java.lang.NegativeArraySizeException` exception. A worse case would happen when passing a huge positive value (such as 0x7FFFFFFF), which would raise the fatal `java.lang.OutOfMemoryError` error.\n\nVersion 1.1.10.1 contains a patch for this issue.",
+        "reserved": "2023-06-06T16:16:53.559Z",
+        "published": "2023-06-15T17:15:00.311Z",
+        "modified": "2024-08-02T16:10:07.032Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-770"],
+        "average_severity": "medium",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "log4j:2/log4j",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "uuid": "urn:uuid:4d24d8d5-97e0-4224-a3a4-fadbfdf7893e",
+    "identifier": "https://www.redhat.com/#CVE-2023-2455",
+    "issuer": {
+      "id": "5e9c87c9-2e6b-453b-8b27-6c80dfc7d7ff",
+      "name": "Red Hat Product Security",
+      "cpe_key": null,
+      "website": null
+    },
+    "published": "2023-05-11T00:00:00Z",
+    "modified": "2023-11-14T21:03:41Z",
+    "withdrawn": null,
+    "title": "postgresql: row security policies disregard user ID changes after inlining.",
+    "labels": {
+      "type": "csaf"
+    },
+    "status": [
+      {
+        "normative": true,
+        "identifier": "CVE-2023-2455",
+        "title": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+        "description": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+        "reserved": "2023-05-01T00:00:00Z",
+        "published": "2023-06-09T00:00:00Z",
+        "modified": "2024-08-02T06:26:08.921Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-20"],
+        "average_severity": "medium",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "postgresql:15/postgresql",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-2455",
+        "title": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+        "description": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+        "reserved": "2023-05-01T00:00:00Z",
+        "published": "2023-06-09T00:00:00Z",
+        "modified": "2024-08-02T06:26:08.921Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-20"],
+        "average_severity": "medium",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:6:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "postgresql",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-2455",
+        "title": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+        "description": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+        "reserved": "2023-05-01T00:00:00Z",
+        "published": "2023-06-09T00:00:00Z",
+        "modified": "2024-08-02T06:26:08.921Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-20"],
+        "average_severity": "medium",
+        "status": "fixed",
+        "context": {
+          "cpe": "cpe:/a:redhat:enterprise_linux:9:*:crb:*"
+        },
+        "packages": []
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-2455",
+        "title": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+        "description": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+        "reserved": "2023-05-01T00:00:00Z",
+        "published": "2023-06-09T00:00:00Z",
+        "modified": "2024-08-02T06:26:08.921Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-20"],
+        "average_severity": "medium",
+        "status": "fixed",
+        "context": {
+          "cpe": "cpe:/a:redhat:enterprise_linux:8:*:appstream:*"
+        },
+        "packages": []
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-2455",
+        "title": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+        "description": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+        "reserved": "2023-05-01T00:00:00Z",
+        "published": "2023-06-09T00:00:00Z",
+        "modified": "2024-08-02T06:26:08.921Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-20"],
+        "average_severity": "medium",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:7:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "postgresql",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-2455",
+        "title": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+        "description": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+        "reserved": "2023-05-01T00:00:00Z",
+        "published": "2023-06-09T00:00:00Z",
+        "modified": "2024-08-02T06:26:08.921Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-20"],
+        "average_severity": "medium",
+        "status": "fixed",
+        "context": {
+          "cpe": "cpe:/a:redhat:enterprise_linux:9:*:appstream:*"
+        },
+        "packages": []
+      }
+    ]
+  },
+  {
+    "uuid": "urn:uuid:c1f1e6fc-e1c1-495d-952a-9e323d4f62a4",
+    "identifier": "https://www.redhat.com/#CVE-2023-34454",
+    "issuer": {
+      "id": "5e9c87c9-2e6b-453b-8b27-6c80dfc7d7ff",
+      "name": "Red Hat Product Security",
+      "cpe_key": null,
+      "website": null
+    },
+    "published": "2023-06-15T00:00:00Z",
+    "modified": "2023-11-14T21:46:49Z",
+    "withdrawn": null,
+    "title": "snappy-java: Integer overflow in compress leads to DoS",
+    "labels": {
+      "type": "csaf"
+    },
+    "status": [
+      {
+        "normative": true,
+        "identifier": "CVE-2023-34454",
+        "title": "snappy-java's Integer Overflow vulnerability in compress leads to DoS",
+        "description": "snappy-java is a fast compressor/decompressor for Java. Due to unchecked multiplications, an integer overflow may occur in versions prior to 1.1.10.1, causing an unrecoverable fatal error.\n\nThe function `compress(char[] input)` in the file `Snappy.java` receives an array of characters and compresses it. It does so by multiplying the length by 2 and passing it to the rawCompress` function.\n\nSince the length is not tested, the multiplication by two can cause an integer overflow and become negative. The rawCompress function then uses the received length and passes it to the natively compiled maxCompressedLength function, using the returned value to allocate a byte array.\n\nSince the maxCompressedLength function treats the length as an unsigned integer, it doesn’t care that it is negative, and it returns a valid value, which is casted to a signed integer by the Java engine. If the result is negative, a `java.lang.NegativeArraySizeException` exception will be raised while trying to allocate the array `buf`. On the other side, if the result is positive, the `buf` array will successfully be allocated, but its size might be too small to use for the compression, causing a fatal Access Violation error.\n\nThe same issue exists also when using the `compress` functions that receive double, float, int, long and short, each using a different multiplier that may cause the same issue. The issue most likely won’t occur when using a byte array, since creating a byte array of size 0x80000000 (or any other negative value) is impossible in the first place.\n\nVersion 1.1.10.1 contains a patch for this issue.",
+        "reserved": "2023-06-06T16:16:53.559Z",
+        "published": "2023-06-15T16:27:45.467Z",
+        "modified": "2024-08-02T16:10:07.3Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-190"],
+        "average_severity": "medium",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "log4j",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-34454",
+        "title": "snappy-java's Integer Overflow vulnerability in compress leads to DoS",
+        "description": "snappy-java is a fast compressor/decompressor for Java. Due to unchecked multiplications, an integer overflow may occur in versions prior to 1.1.10.1, causing an unrecoverable fatal error.\n\nThe function `compress(char[] input)` in the file `Snappy.java` receives an array of characters and compresses it. It does so by multiplying the length by 2 and passing it to the rawCompress` function.\n\nSince the length is not tested, the multiplication by two can cause an integer overflow and become negative. The rawCompress function then uses the received length and passes it to the natively compiled maxCompressedLength function, using the returned value to allocate a byte array.\n\nSince the maxCompressedLength function treats the length as an unsigned integer, it doesn’t care that it is negative, and it returns a valid value, which is casted to a signed integer by the Java engine. If the result is negative, a `java.lang.NegativeArraySizeException` exception will be raised while trying to allocate the array `buf`. On the other side, if the result is positive, the `buf` array will successfully be allocated, but its size might be too small to use for the compression, causing a fatal Access Violation error.\n\nThe same issue exists also when using the `compress` functions that receive double, float, int, long and short, each using a different multiplier that may cause the same issue. The issue most likely won’t occur when using a byte array, since creating a byte array of size 0x80000000 (or any other negative value) is impossible in the first place.\n\nVersion 1.1.10.1 contains a patch for this issue.",
+        "reserved": "2023-06-06T16:16:53.559Z",
+        "published": "2023-06-15T16:27:45.467Z",
+        "modified": "2024-08-02T16:10:07.3Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-190"],
+        "average_severity": "medium",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "log4j:2/log4j",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "uuid": "urn:uuid:03da38c7-2b9f-475c-9057-e9ff74202505",
+    "identifier": "https://www.redhat.com/#CVE-2023-2454",
+    "issuer": {
+      "id": "5e9c87c9-2e6b-453b-8b27-6c80dfc7d7ff",
+      "name": "Red Hat Product Security",
+      "cpe_key": null,
+      "website": null
+    },
+    "published": "2023-05-11T00:00:00Z",
+    "modified": "2023-11-14T21:02:22Z",
+    "withdrawn": null,
+    "title": "postgresql: schema_element defeats protective search_path changes",
+    "labels": {
+      "type": "csaf"
+    },
+    "status": [
+      {
+        "normative": true,
+        "identifier": "CVE-2023-2454",
+        "title": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+        "description": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+        "reserved": "2023-05-01T00:00:00Z",
+        "published": "2023-06-09T00:00:00Z",
+        "modified": "2024-08-02T06:26:08.641Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-20"],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "postgresql:15/postgresql",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-2454",
+        "title": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+        "description": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+        "reserved": "2023-05-01T00:00:00Z",
+        "published": "2023-06-09T00:00:00Z",
+        "modified": "2024-08-02T06:26:08.641Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-20"],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:6:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "postgresql",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-2454",
+        "title": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+        "description": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+        "reserved": "2023-05-01T00:00:00Z",
+        "published": "2023-06-09T00:00:00Z",
+        "modified": "2024-08-02T06:26:08.641Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-20"],
+        "average_severity": "high",
+        "status": "fixed",
+        "context": {
+          "cpe": "cpe:/a:redhat:enterprise_linux:9:*:crb:*"
+        },
+        "packages": []
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-2454",
+        "title": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+        "description": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+        "reserved": "2023-05-01T00:00:00Z",
+        "published": "2023-06-09T00:00:00Z",
+        "modified": "2024-08-02T06:26:08.641Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-20"],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/a:redhat:enterprise_linux:8:*:appstream:*"
+        },
+        "packages": []
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-2454",
+        "title": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+        "description": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+        "reserved": "2023-05-01T00:00:00Z",
+        "published": "2023-06-09T00:00:00Z",
+        "modified": "2024-08-02T06:26:08.641Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-20"],
+        "average_severity": "high",
+        "status": "fixed",
+        "context": {
+          "cpe": "cpe:/a:redhat:enterprise_linux:8:*:appstream:*"
+        },
+        "packages": []
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-2454",
+        "title": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+        "description": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+        "reserved": "2023-05-01T00:00:00Z",
+        "published": "2023-06-09T00:00:00Z",
+        "modified": "2024-08-02T06:26:08.641Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-20"],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:7:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "postgresql",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-2454",
+        "title": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+        "description": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+        "reserved": "2023-05-01T00:00:00Z",
+        "published": "2023-06-09T00:00:00Z",
+        "modified": "2024-08-02T06:26:08.641Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-20"],
+        "average_severity": "high",
+        "status": "fixed",
+        "context": {
+          "cpe": "cpe:/a:redhat:enterprise_linux:9:*:appstream:*"
+        },
+        "packages": []
+      }
+    ]
+  },
+  {
+    "uuid": "urn:uuid:d3e17957-c483-40c8-8041-f62223cfb6b9",
+    "identifier": "https://www.redhat.com/#CVE-2023-1436",
+    "issuer": {
+      "id": "ec0a2ff2-50cf-42e1-a5d6-7c83eb200161",
+      "name": "Red Hat Product Security",
+      "cpe_key": null,
+      "website": null
+    },
+    "published": "2023-03-22T00:00:00Z",
+    "modified": "2023-11-14T17:43:03Z",
+    "withdrawn": null,
+    "title": "jettison: Uncontrolled Recursion in JSONArray",
+    "labels": {
+      "type": "csaf"
+    },
+    "status": [
+      {
+        "normative": true,
+        "identifier": "CVE-2023-1436",
+        "title": "Infinite recursion in Jettison leads to denial of service when creating a crafted JSONArray",
+        "description": "An infinite recursion is triggered in Jettison when constructing a JSONArray from a Collection that contains a self-reference in one of its elements. This leads to a StackOverflowError exception being thrown.\n\n",
+        "reserved": "2023-03-16T20:44:44.527Z",
+        "published": "2023-03-16T20:59:51.072Z",
+        "modified": "2024-08-02T05:49:11.438Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-674"],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "log4j",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-1436",
+        "title": "Infinite recursion in Jettison leads to denial of service when creating a crafted JSONArray",
+        "description": "An infinite recursion is triggered in Jettison when constructing a JSONArray from a Collection that contains a self-reference in one of its elements. This leads to a StackOverflowError exception being thrown.\n\n",
+        "reserved": "2023-03-16T20:44:44.527Z",
+        "published": "2023-03-16T20:59:51.072Z",
+        "modified": "2024-08-02T05:49:11.438Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-674"],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "log4j:2/log4j",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-1436",
+        "title": "Infinite recursion in Jettison leads to denial of service when creating a crafted JSONArray",
+        "description": "An infinite recursion is triggered in Jettison when constructing a JSONArray from a Collection that contains a self-reference in one of its elements. This leads to a StackOverflowError exception being thrown.\n\n",
+        "reserved": "2023-03-16T20:44:44.527Z",
+        "published": "2023-03-16T20:59:51.072Z",
+        "modified": "2024-08-02T05:49:11.438Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-674"],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:7:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "jettison",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "uuid": "urn:uuid:950b0c5e-0dc9-4851-9d23-e3db8a971799",
+    "identifier": "https://www.redhat.com/#CVE-2023-21971",
+    "issuer": {
+      "id": "5e9c87c9-2e6b-453b-8b27-6c80dfc7d7ff",
+      "name": "Red Hat Product Security",
+      "cpe_key": null,
+      "website": null
+    },
+    "published": "2023-04-19T00:00:00Z",
+    "modified": "2023-11-14T20:12:02Z",
+    "withdrawn": null,
+    "title": "mysql-connector-java: Connector/J unspecified vulnerability (CPU April 2023)",
+    "labels": {
+      "type": "csaf"
+    },
+    "status": [
+      {
+        "normative": true,
+        "identifier": "CVE-2023-21971",
+        "title": null,
+        "description": null,
+        "reserved": "2022-12-17T19:26:00.735Z",
+        "published": "2023-04-18T19:54:35.372Z",
+        "modified": "2024-08-02T09:59:28.563Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "medium",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:6:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "mysql-connector-java",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-21971",
+        "title": null,
+        "description": null,
+        "reserved": "2022-12-17T19:26:00.735Z",
+        "published": "2023-04-18T19:54:35.372Z",
+        "modified": "2024-08-02T09:59:28.563Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "medium",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:7:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "mysql-connector-java",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "uuid": "urn:uuid:281b25d0-17d8-4d02-bb4e-b3f7e0ddb012",
+    "identifier": "https://www.redhat.com/#CVE-2023-26464",
+    "issuer": {
+      "id": "5e9c87c9-2e6b-453b-8b27-6c80dfc7d7ff",
+      "name": "Red Hat Product Security",
+      "cpe_key": null,
+      "website": null
+    },
+    "published": "2023-03-15T00:00:00Z",
+    "modified": "2023-11-14T17:46:50Z",
+    "withdrawn": null,
+    "title": "log4j1-chainsaw, log4j1-socketappender: DoS via hashmap logging",
+    "labels": {
+      "type": "csaf"
+    },
+    "status": [
+      {
+        "normative": true,
+        "identifier": "CVE-2023-26464",
+        "title": "Apache Log4j 1.x (EOL) allows DoS in Chainsaw and SocketAppender",
+        "description": "** UNSUPPORTED WHEN ASSIGNED **\n\nWhen using the Chainsaw or SocketAppender components with Log4j 1.x on JRE less than 1.7, an attacker that manages to cause a logging entry involving a specially-crafted (ie, deeply nested) \nhashmap or hashtable (depending on which logging component is in use) to be processed could exhaust the available memory in the virtual machine and achieve Denial of Service when the object is deserialized.\n\nThis issue affects Apache Log4j before 2. Affected users are recommended to update to Log4j 2.x.\n\nNOTE: This vulnerability only affects products that are no longer supported by the maintainer.\n\n\n\n\n",
+        "reserved": "2023-02-23T16:15:06.902Z",
+        "published": "2023-03-10T13:38:16.19Z",
+        "modified": "2024-08-02T11:53:52.958Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-502"],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "log4j",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-26464",
+        "title": "Apache Log4j 1.x (EOL) allows DoS in Chainsaw and SocketAppender",
+        "description": "** UNSUPPORTED WHEN ASSIGNED **\n\nWhen using the Chainsaw or SocketAppender components with Log4j 1.x on JRE less than 1.7, an attacker that manages to cause a logging entry involving a specially-crafted (ie, deeply nested) \nhashmap or hashtable (depending on which logging component is in use) to be processed could exhaust the available memory in the virtual machine and achieve Denial of Service when the object is deserialized.\n\nThis issue affects Apache Log4j before 2. Affected users are recommended to update to Log4j 2.x.\n\nNOTE: This vulnerability only affects products that are no longer supported by the maintainer.\n\n\n\n\n",
+        "reserved": "2023-02-23T16:15:06.902Z",
+        "published": "2023-03-10T13:38:16.19Z",
+        "modified": "2024-08-02T11:53:52.958Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-502"],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:6:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "log4j",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-26464",
+        "title": "Apache Log4j 1.x (EOL) allows DoS in Chainsaw and SocketAppender",
+        "description": "** UNSUPPORTED WHEN ASSIGNED **\n\nWhen using the Chainsaw or SocketAppender components with Log4j 1.x on JRE less than 1.7, an attacker that manages to cause a logging entry involving a specially-crafted (ie, deeply nested) \nhashmap or hashtable (depending on which logging component is in use) to be processed could exhaust the available memory in the virtual machine and achieve Denial of Service when the object is deserialized.\n\nThis issue affects Apache Log4j before 2. Affected users are recommended to update to Log4j 2.x.\n\nNOTE: This vulnerability only affects products that are no longer supported by the maintainer.\n\n\n\n\n",
+        "reserved": "2023-02-23T16:15:06.902Z",
+        "published": "2023-03-10T13:38:16.19Z",
+        "modified": "2024-08-02T11:53:52.958Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-502"],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "slf4j",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-26464",
+        "title": "Apache Log4j 1.x (EOL) allows DoS in Chainsaw and SocketAppender",
+        "description": "** UNSUPPORTED WHEN ASSIGNED **\n\nWhen using the Chainsaw or SocketAppender components with Log4j 1.x on JRE less than 1.7, an attacker that manages to cause a logging entry involving a specially-crafted (ie, deeply nested) \nhashmap or hashtable (depending on which logging component is in use) to be processed could exhaust the available memory in the virtual machine and achieve Denial of Service when the object is deserialized.\n\nThis issue affects Apache Log4j before 2. Affected users are recommended to update to Log4j 2.x.\n\nNOTE: This vulnerability only affects products that are no longer supported by the maintainer.\n\n\n\n\n",
+        "reserved": "2023-02-23T16:15:06.902Z",
+        "published": "2023-03-10T13:38:16.19Z",
+        "modified": "2024-08-02T11:53:52.958Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-502"],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:7:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "log4j",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "uuid": "urn:uuid:8811ed0b-745a-4207-afa5-416d7a65eba9",
+    "identifier": "https://www.redhat.com/#CVE-2023-20862",
+    "issuer": {
+      "id": "5e9c87c9-2e6b-453b-8b27-6c80dfc7d7ff",
+      "name": "Red Hat Product Security",
+      "cpe_key": null,
+      "website": null
+    },
+    "published": "2023-04-19T00:00:00Z",
+    "modified": "2023-11-14T22:09:12Z",
+    "withdrawn": null,
+    "title": "spring-security: Empty SecurityContext Is Not Properly Saved Upon Logout",
+    "labels": {
+      "type": "csaf"
+    },
+    "status": [
+      {
+        "normative": true,
+        "identifier": "CVE-2023-20862",
+        "title": "In Spring Security, versions 5.7.x prior to 5.7.8, versions 5.8.x prior to 5.8.3, and versions 6.0.x prior to 6.0.3, the logout support does not properly clean the security context if using serialized versions. Additionally, it is not possible to explicitly save an empty security context to the HttpSessionSecurityContextRepository. This vulnerability can keep users authenticated even after they performed logout. Users of affected versions should apply the following mitigation. 5.7.x users should upgrade to 5.7.8. 5.8.x users should upgrade to 5.8.3. 6.0.x users should upgrade to 6.0.3.",
+        "description": "In Spring Security, versions 5.7.x prior to 5.7.8, versions 5.8.x prior to 5.8.3, and versions 6.0.x prior to 6.0.3, the logout support does not properly clean the security context if using serialized versions. Additionally, it is not possible to explicitly save an empty security context to the HttpSessionSecurityContextRepository. This vulnerability can keep users authenticated even after they performed logout. Users of affected versions should apply the following mitigation. 5.7.x users should upgrade to 5.7.8. 5.8.x users should upgrade to 5.8.3. 6.0.x users should upgrade to 6.0.3.",
+        "reserved": "2022-11-01T00:00:00Z",
+        "published": "2023-04-19T00:00:00Z",
+        "modified": "2024-08-02T09:21:32.378Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "medium",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "log4j",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-20862",
+        "title": "In Spring Security, versions 5.7.x prior to 5.7.8, versions 5.8.x prior to 5.8.3, and versions 6.0.x prior to 6.0.3, the logout support does not properly clean the security context if using serialized versions. Additionally, it is not possible to explicitly save an empty security context to the HttpSessionSecurityContextRepository. This vulnerability can keep users authenticated even after they performed logout. Users of affected versions should apply the following mitigation. 5.7.x users should upgrade to 5.7.8. 5.8.x users should upgrade to 5.8.3. 6.0.x users should upgrade to 6.0.3.",
+        "description": "In Spring Security, versions 5.7.x prior to 5.7.8, versions 5.8.x prior to 5.8.3, and versions 6.0.x prior to 6.0.3, the logout support does not properly clean the security context if using serialized versions. Additionally, it is not possible to explicitly save an empty security context to the HttpSessionSecurityContextRepository. This vulnerability can keep users authenticated even after they performed logout. Users of affected versions should apply the following mitigation. 5.7.x users should upgrade to 5.7.8. 5.8.x users should upgrade to 5.8.3. 6.0.x users should upgrade to 6.0.3.",
+        "reserved": "2022-11-01T00:00:00Z",
+        "published": "2023-04-19T00:00:00Z",
+        "modified": "2024-08-02T09:21:32.378Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "medium",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "log4j:2/log4j",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "uuid": "urn:uuid:5b98f727-1145-4eca-8176-d3f2a32e0fce",
+    "identifier": "https://www.redhat.com/#CVE-2023-44487",
+    "issuer": {
+      "id": "5e9c87c9-2e6b-453b-8b27-6c80dfc7d7ff",
+      "name": "Red Hat Product Security",
+      "cpe_key": null,
+      "website": null
+    },
+    "published": "2023-10-10T00:00:00Z",
+    "modified": "2023-11-21T11:59:10Z",
+    "withdrawn": null,
+    "title": "HTTP/2: Multiple HTTP/2 enabled web servers are vulnerable to a DDoS attack (Rapid Reset Attack)",
+    "labels": {
+      "type": "csaf"
+    },
+    "status": [
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "fixed",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:baseos:*"
+        },
+        "packages": []
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "fixed",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:7:*:workstation:*"
+        },
+        "packages": []
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "buildah",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "butane",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "containernetworking-plugins",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "git-lfs",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "grafana-pcp",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "haproxy",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "httpd",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "ignition",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "mod_http2",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "osbuild-composer",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "podman",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "skopeo",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "weldr-client",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "dotnet8.0",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "nginx:1.22/nginx",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "nodejs:18/nodejs",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "nodejs:20/nodejs",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "pki-servlet-engine",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:6:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "httpd",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:6:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "tomcat6",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "fixed",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:baseos:*"
+        },
+        "packages": []
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "container-tools:4.0/buildah",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "container-tools:4.0/conmon",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "container-tools:4.0/containernetworking-plugins",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "container-tools:4.0/podman",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "container-tools:4.0/skopeo",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "container-tools:rhel8/buildah",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "container-tools:rhel8/containernetworking-plugins",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "container-tools:rhel8/podman",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "container-tools:rhel8/skopeo",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "git-lfs",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "grafana-pcp",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "haproxy",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "httpd:2.4/httpd",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "httpd:2.4/mod_http2",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "osbuild-composer",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "weldr-client",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "container-tools:4.0/toolbox",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "container-tools:rhel8/toolbox",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "pki-deps:10.6/pki-servlet-engine",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "fixed",
+        "context": {
+          "cpe": "cpe:/a:redhat:enterprise_linux:9:*:crb:*"
+        },
+        "packages": []
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "fixed",
+        "context": {
+          "cpe": "cpe:/a:redhat:enterprise_linux:8:*:appstream:*"
+        },
+        "packages": []
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "fixed",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:7:*:server:*"
+        },
+        "packages": []
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "fixed",
+        "context": {
+          "cpe": "cpe:/a:redhat:enterprise_linux:8:*:crb:*"
+        },
+        "packages": []
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:7:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "haproxy",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:7:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "httpd",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:7:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "tomcat",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/a:redhat:enterprise_linux:9:*:appstream:*"
+        },
+        "packages": []
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "fixed",
+        "context": {
+          "cpe": "cpe:/a:redhat:enterprise_linux:9:*:appstream:*"
+        },
+        "packages": []
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "fixed",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:7:*:client:*"
+        },
+        "packages": []
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-44487",
+        "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+        "reserved": "2023-09-29T00:00:00Z",
+        "published": "2023-10-10T00:00:00Z",
+        "modified": "2024-08-19T07:48:04.546Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "fixed",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:7:*:computenode:*"
+        },
+        "packages": []
+      }
+    ]
+  },
+  {
+    "uuid": "urn:uuid:139b9f36-484a-4eed-957f-5a6c56280297",
+    "identifier": "https://www.redhat.com/#CVE-2023-20860",
+    "issuer": {
+      "id": "5e9c87c9-2e6b-453b-8b27-6c80dfc7d7ff",
+      "name": "Red Hat Product Security",
+      "cpe_key": null,
+      "website": null
+    },
+    "published": "2023-03-20T00:00:00Z",
+    "modified": "2023-11-14T17:28:21Z",
+    "withdrawn": null,
+    "title": "springframework: Security Bypass With Un-Prefixed Double Wildcard Pattern",
+    "labels": {
+      "type": "csaf"
+    },
+    "status": [
+      {
+        "normative": true,
+        "identifier": "CVE-2023-20860",
+        "title": "Spring Framework running version 6.0.0 - 6.0.6 or 5.3.0 - 5.3.25 using \"**\" as a pattern in Spring Security configuration with the mvcRequestMatcher creates a mismatch in pattern matching between Spring Security and Spring MVC, and the potential for a security bypass.",
+        "description": "Spring Framework running version 6.0.0 - 6.0.6 or 5.3.0 - 5.3.25 using \"**\" as a pattern in Spring Security configuration with the mvcRequestMatcher creates a mismatch in pattern matching between Spring Security and Spring MVC, and the potential for a security bypass.",
+        "reserved": "2022-11-01T00:00:00Z",
+        "published": "2023-03-27T00:00:00Z",
+        "modified": "2024-08-02T09:21:32.43Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "log4j",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-20860",
+        "title": "Spring Framework running version 6.0.0 - 6.0.6 or 5.3.0 - 5.3.25 using \"**\" as a pattern in Spring Security configuration with the mvcRequestMatcher creates a mismatch in pattern matching between Spring Security and Spring MVC, and the potential for a security bypass.",
+        "description": "Spring Framework running version 6.0.0 - 6.0.6 or 5.3.0 - 5.3.25 using \"**\" as a pattern in Spring Security configuration with the mvcRequestMatcher creates a mismatch in pattern matching between Spring Security and Spring MVC, and the potential for a security bypass.",
+        "reserved": "2022-11-01T00:00:00Z",
+        "published": "2023-03-27T00:00:00Z",
+        "modified": "2024-08-02T09:21:32.43Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "log4j:2/log4j",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-20860",
+        "title": "Spring Framework running version 6.0.0 - 6.0.6 or 5.3.0 - 5.3.25 using \"**\" as a pattern in Spring Security configuration with the mvcRequestMatcher creates a mismatch in pattern matching between Spring Security and Spring MVC, and the potential for a security bypass.",
+        "description": "Spring Framework running version 6.0.0 - 6.0.6 or 5.3.0 - 5.3.25 using \"**\" as a pattern in Spring Security configuration with the mvcRequestMatcher creates a mismatch in pattern matching between Spring Security and Spring MVC, and the potential for a security bypass.",
+        "reserved": "2022-11-01T00:00:00Z",
+        "published": "2023-03-27T00:00:00Z",
+        "modified": "2024-08-02T09:21:32.43Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:hypervisor:*"
+        },
+        "packages": []
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-20860",
+        "title": "Spring Framework running version 6.0.0 - 6.0.6 or 5.3.0 - 5.3.25 using \"**\" as a pattern in Spring Security configuration with the mvcRequestMatcher creates a mismatch in pattern matching between Spring Security and Spring MVC, and the potential for a security bypass.",
+        "description": "Spring Framework running version 6.0.0 - 6.0.6 or 5.3.0 - 5.3.25 using \"**\" as a pattern in Spring Security configuration with the mvcRequestMatcher creates a mismatch in pattern matching between Spring Security and Spring MVC, and the potential for a security bypass.",
+        "reserved": "2022-11-01T00:00:00Z",
+        "published": "2023-03-27T00:00:00Z",
+        "modified": "2024-08-02T09:21:32.43Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": [],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/a:redhat:enterprise_linux:8:*:hypervisor:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "apache-sshd",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "uuid": "urn:uuid:28e7ba9b-d698-4ee7-8d3f-dcc1b9130091",
+    "identifier": "https://www.redhat.com/#CVE-2023-24998",
+    "issuer": {
+      "id": "5e9c87c9-2e6b-453b-8b27-6c80dfc7d7ff",
+      "name": "Red Hat Product Security",
+      "cpe_key": null,
+      "website": null
+    },
+    "published": "2023-02-20T00:00:00Z",
+    "modified": "2023-11-14T16:51:21Z",
+    "withdrawn": null,
+    "title": "Apache Commons FileUpload: FileUpload DoS with excessive parts",
+    "labels": {
+      "type": "csaf"
+    },
+    "status": [
+      {
+        "normative": true,
+        "identifier": "CVE-2023-24998",
+        "title": "Apache Commons FileUpload, Apache Tomcat: FileUpload DoS with excessive parts",
+        "description": "Apache Commons FileUpload before 1.5 does not limit the number of request parts to be processed resulting in the possibility of an attacker triggering a DoS with a malicious upload or series of uploads.\n\n\n\n\nNote that, like all of the file upload limits, the\n          new configuration option (FileUploadBase#setFileCountMax) is not\n          enabled by default and must be explicitly configured.\n\n\n",
+        "reserved": "2023-02-01T10:32:05.492Z",
+        "published": "2023-02-20T15:57:07.372Z",
+        "modified": "2024-08-02T11:11:43.763Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-770"],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "pki-servlet-engine",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-24998",
+        "title": "Apache Commons FileUpload, Apache Tomcat: FileUpload DoS with excessive parts",
+        "description": "Apache Commons FileUpload before 1.5 does not limit the number of request parts to be processed resulting in the possibility of an attacker triggering a DoS with a malicious upload or series of uploads.\n\n\n\n\nNote that, like all of the file upload limits, the\n          new configuration option (FileUploadBase#setFileCountMax) is not\n          enabled by default and must be explicitly configured.\n\n\n",
+        "reserved": "2023-02-01T10:32:05.492Z",
+        "published": "2023-02-20T15:57:07.372Z",
+        "modified": "2024-08-02T11:11:43.763Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-770"],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:6:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "tomcat6",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-24998",
+        "title": "Apache Commons FileUpload, Apache Tomcat: FileUpload DoS with excessive parts",
+        "description": "Apache Commons FileUpload before 1.5 does not limit the number of request parts to be processed resulting in the possibility of an attacker triggering a DoS with a malicious upload or series of uploads.\n\n\n\n\nNote that, like all of the file upload limits, the\n          new configuration option (FileUploadBase#setFileCountMax) is not\n          enabled by default and must be explicitly configured.\n\n\n",
+        "reserved": "2023-02-01T10:32:05.492Z",
+        "published": "2023-02-20T15:57:07.372Z",
+        "modified": "2024-08-02T11:11:43.763Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-770"],
+        "average_severity": "high",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "pki-servlet-container",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-24998",
+        "title": "Apache Commons FileUpload, Apache Tomcat: FileUpload DoS with excessive parts",
+        "description": "Apache Commons FileUpload before 1.5 does not limit the number of request parts to be processed resulting in the possibility of an attacker triggering a DoS with a malicious upload or series of uploads.\n\n\n\n\nNote that, like all of the file upload limits, the\n          new configuration option (FileUploadBase#setFileCountMax) is not\n          enabled by default and must be explicitly configured.\n\n\n",
+        "reserved": "2023-02-01T10:32:05.492Z",
+        "published": "2023-02-20T15:57:07.372Z",
+        "modified": "2024-08-02T11:11:43.763Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-770"],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "pki-deps:10.6/pki-servlet-engine",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-24998",
+        "title": "Apache Commons FileUpload, Apache Tomcat: FileUpload DoS with excessive parts",
+        "description": "Apache Commons FileUpload before 1.5 does not limit the number of request parts to be processed resulting in the possibility of an attacker triggering a DoS with a malicious upload or series of uploads.\n\n\n\n\nNote that, like all of the file upload limits, the\n          new configuration option (FileUploadBase#setFileCountMax) is not\n          enabled by default and must be explicitly configured.\n\n\n",
+        "reserved": "2023-02-01T10:32:05.492Z",
+        "published": "2023-02-20T15:57:07.372Z",
+        "modified": "2024-08-02T11:11:43.763Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-770"],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "pki-servlet-engine",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-24998",
+        "title": "Apache Commons FileUpload, Apache Tomcat: FileUpload DoS with excessive parts",
+        "description": "Apache Commons FileUpload before 1.5 does not limit the number of request parts to be processed resulting in the possibility of an attacker triggering a DoS with a malicious upload or series of uploads.\n\n\n\n\nNote that, like all of the file upload limits, the\n          new configuration option (FileUploadBase#setFileCountMax) is not\n          enabled by default and must be explicitly configured.\n\n\n",
+        "reserved": "2023-02-01T10:32:05.492Z",
+        "published": "2023-02-20T15:57:07.372Z",
+        "modified": "2024-08-02T11:11:43.763Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-770"],
+        "average_severity": "high",
+        "status": "fixed",
+        "context": {
+          "cpe": "cpe:/a:redhat:enterprise_linux:8:*:appstream:*"
+        },
+        "packages": []
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-24998",
+        "title": "Apache Commons FileUpload, Apache Tomcat: FileUpload DoS with excessive parts",
+        "description": "Apache Commons FileUpload before 1.5 does not limit the number of request parts to be processed resulting in the possibility of an attacker triggering a DoS with a malicious upload or series of uploads.\n\n\n\n\nNote that, like all of the file upload limits, the\n          new configuration option (FileUploadBase#setFileCountMax) is not\n          enabled by default and must be explicitly configured.\n\n\n",
+        "reserved": "2023-02-01T10:32:05.492Z",
+        "published": "2023-02-20T15:57:07.372Z",
+        "modified": "2024-08-02T11:11:43.763Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-770"],
+        "average_severity": "high",
+        "status": "affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:7:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "tomcat",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-24998",
+        "title": "Apache Commons FileUpload, Apache Tomcat: FileUpload DoS with excessive parts",
+        "description": "Apache Commons FileUpload before 1.5 does not limit the number of request parts to be processed resulting in the possibility of an attacker triggering a DoS with a malicious upload or series of uploads.\n\n\n\n\nNote that, like all of the file upload limits, the\n          new configuration option (FileUploadBase#setFileCountMax) is not\n          enabled by default and must be explicitly configured.\n\n\n",
+        "reserved": "2023-02-01T10:32:05.492Z",
+        "published": "2023-02-20T15:57:07.372Z",
+        "modified": "2024-08-02T11:11:43.763Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-770"],
+        "average_severity": "high",
+        "status": "fixed",
+        "context": {
+          "cpe": "cpe:/a:redhat:enterprise_linux:9:*:appstream:*"
+        },
+        "packages": []
+      }
+    ]
+  },
+  {
+    "uuid": "urn:uuid:43a3c864-3593-4dde-ba74-1bef3b5ac58b",
+    "identifier": "https://www.redhat.com/#CVE-2023-34453",
+    "issuer": {
+      "id": "5e9c87c9-2e6b-453b-8b27-6c80dfc7d7ff",
+      "name": "Red Hat Product Security",
+      "cpe_key": null,
+      "website": null
+    },
+    "published": "2023-06-15T00:00:00Z",
+    "modified": "2023-11-14T21:37:42Z",
+    "withdrawn": null,
+    "title": "snappy-java: Integer overflow in shuffle leads to DoS",
+    "labels": {
+      "type": "csaf"
+    },
+    "status": [
+      {
+        "normative": true,
+        "identifier": "CVE-2023-34453",
+        "title": "snappy-java's Integer Overflow vulnerability in shuffle leads to DoS",
+        "description": "snappy-java is a fast compressor/decompressor for Java. Due to unchecked multiplications, an integer overflow may occur in versions prior to 1.1.10.1, causing a fatal error.\n\nThe function `shuffle(int[] input)` in the file `BitShuffle.java` receives an array of integers and applies a bit shuffle on it. It does so by multiplying the length by 4 and passing it to the natively compiled shuffle function. Since the length is not tested, the multiplication by four can cause an integer overflow and become a smaller value than the true size, or even zero or negative. In the case of a negative value, a `java.lang.NegativeArraySizeException` exception will raise, which can crash the program. In a case of a value that is zero or too small, the code that afterwards references the shuffled array will assume a bigger size of the array, which might cause exceptions such as `java.lang.ArrayIndexOutOfBoundsException`.\n\nThe same issue exists also when using the `shuffle` functions that receive a double, float, long and short, each using a different multiplier that may cause the same issue.\n\nVersion 1.1.10.1 contains a patch for this vulnerability.",
+        "reserved": "2023-06-06T16:16:53.558Z",
+        "published": "2023-06-15T16:12:34.119Z",
+        "modified": "2024-08-02T16:10:07.005Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-190"],
+        "average_severity": "medium",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:9:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "log4j",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      },
+      {
+        "normative": true,
+        "identifier": "CVE-2023-34453",
+        "title": "snappy-java's Integer Overflow vulnerability in shuffle leads to DoS",
+        "description": "snappy-java is a fast compressor/decompressor for Java. Due to unchecked multiplications, an integer overflow may occur in versions prior to 1.1.10.1, causing a fatal error.\n\nThe function `shuffle(int[] input)` in the file `BitShuffle.java` receives an array of integers and applies a bit shuffle on it. It does so by multiplying the length by 4 and passing it to the natively compiled shuffle function. Since the length is not tested, the multiplication by four can cause an integer overflow and become a smaller value than the true size, or even zero or negative. In the case of a negative value, a `java.lang.NegativeArraySizeException` exception will raise, which can crash the program. In a case of a value that is zero or too small, the code that afterwards references the shuffled array will assume a bigger size of the array, which might cause exceptions such as `java.lang.ArrayIndexOutOfBoundsException`.\n\nThe same issue exists also when using the `shuffle` functions that receive a double, float, long and short, each using a different multiplier that may cause the same issue.\n\nVersion 1.1.10.1 contains a patch for this vulnerability.",
+        "reserved": "2023-06-06T16:16:53.558Z",
+        "published": "2023-06-15T16:12:34.119Z",
+        "modified": "2024-08-02T16:10:07.005Z",
+        "withdrawn": null,
+        "discovered": null,
+        "released": null,
+        "cwes": ["CWE-190"],
+        "average_severity": "medium",
+        "status": "not_affected",
+        "context": {
+          "cpe": "cpe:/o:redhat:enterprise_linux:8:*:*:*"
+        },
+        "packages": [
+          {
+            "id": "",
+            "name": "log4j:2/log4j",
+            "version": null,
+            "purl": [],
+            "cpe": []
+          }
+        ]
+      }
+    ]
+  }
+]
