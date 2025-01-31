@@ -15,6 +15,7 @@ import {
 } from "@patternfly/react-core";
 
 import { PathParam, useRouteParams } from "@app/Routes";
+import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { PackageQualifiers } from "@app/components/PackageQualifiers";
 import { useFetchPackageById } from "@app/queries/packages";
 import { decomposePurl } from "@app/utils/utils";
@@ -24,7 +25,7 @@ import { VulnerabilitiesByPackage } from "./vulnerabilities-by-package";
 
 export const PackageDetails: React.FC = () => {
   const packageId = useRouteParams(PathParam.PACKAGE_ID);
-  const { pkg } = useFetchPackageById(packageId);
+  const { pkg, isFetching, fetchError } = useFetchPackageById(packageId);
 
   const decomposedPurl = React.useMemo(() => {
     return pkg ? decomposePurl(pkg.purl) : undefined;
@@ -106,7 +107,9 @@ export const PackageDetails: React.FC = () => {
           aria-label="SBOMs using the Package"
           hidden
         >
-          {packageId && <SbomsByPackage packageId={packageId} />}
+          <LoadingWrapper isFetching={isFetching} fetchError={fetchError}>
+            {pkg?.purl && <SbomsByPackage purl={pkg.purl} />}
+          </LoadingWrapper>
         </TabContent>
       </PageSection>
     </>

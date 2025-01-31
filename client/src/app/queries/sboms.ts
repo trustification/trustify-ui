@@ -138,15 +138,15 @@ export const useUpdateSbomLabelsMutation = (
 };
 
 export const useFetchSbomsByPackageId = (
-  packageId: string,
+  purl: string,
   params: HubRequestParams = {}
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ["SBOMsQueryKeysss", "by-package", packageId, params],
+    queryKey: ["SBOMsQueryKeysss", "by-package", purl, params],
     queryFn: () => {
       return listRelatedSboms({
         client,
-        query: { id: packageId, ...requestParamsQuery(params) },
+        query: { purl, ...requestParamsQuery(params) },
       });
     },
   });
