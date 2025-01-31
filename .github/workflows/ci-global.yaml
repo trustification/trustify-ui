@@ -18,6 +18,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+  
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+  
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run build
+        run: npm run build 
+
       - name: save trustify-ui image
         run: |
           docker build . -t ghcr.io/trustification/trustify-ui:pr-test -f Dockerfile
