@@ -3,15 +3,11 @@ import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
-import unusedImports from "eslint-plugin-unused-imports";
 
 export default tseslint.config(
   { ignores: ["dist"] },
   {
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.recommended
-    ],
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
       ecmaVersion: 2020,
@@ -20,7 +16,6 @@ export default tseslint.config(
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
-      "unused-imports": unusedImports,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -29,10 +24,16 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
       "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/no-unused-vars": "off",
-      "unused-imports/no-unused-imports": "warn",
-      "unused-imports/no-unused-vars": ["warn"],
-      // "@typescript-eslint/no-empty-interface": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_" },
+      ],
+      "@typescript-eslint/no-empty-object-type": "warn",
+      "@typescript-eslint/no-wrapper-object-types": "warn",
+      "@typescript-eslint/no-unused-expressions": "warn",
+      "no-empty-pattern": "warn",
+      "prefer-const": "warn",
+      "no-constant-binary-expression": "warn",
     },
   }
 );

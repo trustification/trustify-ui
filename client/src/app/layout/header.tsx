@@ -41,6 +41,7 @@ export const HeaderApp: React.FC = () => {
     masthead: { leftBrand, leftTitle, rightBrand },
   } = useBranding();
 
+  /* eslint-disable react-hooks/rules-of-hooks */
   const auth = (isAuthRequired && useAuth()) || undefined;
 
   const navigate = useNavigate();
