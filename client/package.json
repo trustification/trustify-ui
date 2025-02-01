@@ -1,16 +1,16 @@
 {
   "name": "@trustify-ui/client",
   "version": "0.1.0",
-  "license": "Apache-2.0",
   "private": true,
+  "license": "Apache-2.0",
   "type": "module",
   "scripts": {
+    "build": "tsc -b && vite build",
     "clean": "rimraf ./dist",
-    "openapi:generate-client": "openapi-ts -f ./config/openapi-ts.config.ts",
-    "start:dev": "vite --config vite.config.dev.ts",
-    "build": "tsc -b && vite build --config vite.config.prod.ts",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "openapi:generate-client": "openapi-ts -f ./config/openapi-ts.config.ts",
+    "preview": "vite preview",
+    "start:dev": "vite"
   },
   "dependencies": {
     "@hey-api/client-axios": "0.2.7",
@@ -32,8 +32,8 @@
     "oidc-client-ts": "^2.4.0",
     "packageurl-js": "^2.0.1",
     "pretty-bytes": "^6.1.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-error-boundary": "^4.0.13",
     "react-hook-form": "^7.43.1",
     "react-markdown": "^8.0.7",
@@ -41,9 +41,6 @@
     "react-oidc-context": "^2.3.1",
     "react-router-dom": "^6.21.1",
     "usehooks-ts": "^2.14.0",
-    "vite-plugin-ejs": "^1.7.0",
-    "web-vitals": "^0.2.4",
-    "xmllint": "^0.1.1",
     "yup": "^0.32.11"
   },
   "devDependencies": {
@@ -57,10 +54,10 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.16",
     "globals": "^15.14.0",
-    "msw": "^2.7.0",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.18.2",
     "vite": "^6.0.5",
+    "vite-plugin-ejs": "^1.7.0",
     "vite-plugin-static-copy": "^2.2.0"
   }
 }
