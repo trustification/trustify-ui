@@ -26,7 +26,7 @@ const config: StorybookConfig = {
         tsconfigPaths({
           projects: ["./client/"],
         }),
-      ]
+      ],
     });
   },
 };
