@@ -27,14 +27,13 @@ const renderApp = () => {
   );
 };
 
-// if (ENV.NODE_ENV === "development") {
-//   import("./mocks/browser").then((browserMocks) => {
-//     if (browserMocks.config.enabled) {
-//       browserMocks.worker.start();
-//     }
-//     renderApp();
-//   });
-// } else {
-//   renderApp();
-// }
-renderApp();
+if (ENV.NODE_ENV === "development") {
+  import("./mocks/browser").then((browserMocks) => {
+    if (browserMocks.config.enabled) {
+      browserMocks.worker.start();
+    }
+    renderApp();
+  });
+} else {
+  renderApp();
+}

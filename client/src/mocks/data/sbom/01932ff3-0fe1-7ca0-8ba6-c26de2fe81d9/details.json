@@ -1,0 +1,43 @@
+{
+  "id": "urn:uuid:01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9",
+  "document_id": "https://access.redhat.com/security/data/sbom/beta/spdx/quarkus-bom-d6ecbbd9-31bf-46fd-afda-8082120f5260",
+  "labels": {
+    "type": "spdx"
+  },
+  "data_licenses": ["CC0-1.0"],
+  "published": "2023-11-22T14:00:00Z",
+  "authors": ["Organization: Red Hat Product Security (secalert@redhat.com)"],
+  "name": "quarkus-bom",
+  "sha256": "sha256:4087ad9b170efe11192ff2dd28ec11c3c07e0d859dba42685d2665aa4086bcf8",
+  "sha384": "sha384:c30e74cb3bb4111476b86b580fc994e8113d1c3f1d128561d79fd12d3b5097f2b7dbd6bc0e5ed7aaaf00a71e1a2d874e",
+  "sha512": "sha512:47ed78d3f6d37f28df9bd3beb86c609d4e235ff154bdd64f03582970a6d6e9e23a2350a8c55941548a434f92294a0de5f3e416d98212bd18107671feec7b64dd",
+  "size": 1174356,
+  "described_by": [
+    {
+      "id": "SPDXRef-d6ecbbd9-31bf-46fd-afda-8082120f5260",
+      "name": "quarkus-bom",
+      "version": "2.13.8.Final-redhat-00004",
+      "purl": [
+        {
+          "uuid": "269366bb-0d1a-5058-a752-d2cc434431c6",
+          "purl": "pkg:maven/com.redhat.quarkus.platform/quarkus-bom@2.13.8.Final-redhat-00004?repository_url=https://maven.repository.redhat.com/ga/&type=pom",
+          "base": {
+            "uuid": "eb87eb3b-0dbf-5f1b-9198-94f453fd74f7",
+            "purl": "pkg:maven/com.redhat.quarkus.platform/quarkus-bom"
+          },
+          "version": {
+            "uuid": "c0201f09-3d0a-5739-9cf3-8ad19dd177f7",
+            "purl": "pkg:maven/com.redhat.quarkus.platform/quarkus-bom@2.13.8.Final-redhat-00004",
+            "version": "2.13.8.Final-redhat-00004"
+          },
+          "qualifiers": {
+            "repository_url": "https://maven.repository.redhat.com/ga/",
+            "type": "pom"
+          }
+        }
+      ],
+      "cpe": ["cpe:/a:redhat:quarkus:2.13:*:el8:*"]
+    }
+  ],
+  "number_of_packages": 880
+}

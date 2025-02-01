@@ -1,0 +1,54 @@
+{
+  "uuid": "d6dea366-e8a6-5500-9aef-14464b717295",
+  "purl": "pkg:oci/multicluster-engine-cluster-api-provider-agent-rhel8@sha256:18c5b6c1a503a44ab3efb19e0ffcb88fd42499e056e9e94883bad512f898ba20?arch=amd64&repository_url=registry.redhat.io/multicluster-engine/multicluster-engine-cluster-api-provider-agent-rhel8&tag=v2.2.9-5",
+  "version": {
+    "uuid": "001fe136-dcb0-5395-8ad2-86183e8483ad",
+    "purl": "pkg:oci/multicluster-engine-cluster-api-provider-agent-rhel8@sha256:18c5b6c1a503a44ab3efb19e0ffcb88fd42499e056e9e94883bad512f898ba20",
+    "version": "sha256:18c5b6c1a503a44ab3efb19e0ffcb88fd42499e056e9e94883bad512f898ba20"
+  },
+  "base": {
+    "uuid": "159b129e-138a-53fe-8f74-b4efeccbf06c",
+    "purl": "pkg:oci/multicluster-engine-cluster-api-provider-agent-rhel8"
+  },
+  "advisories": [
+    {
+      "uuid": "urn:uuid:5b98f727-1145-4eca-8176-d3f2a32e0fce",
+      "identifier": "https://www.redhat.com/#CVE-2023-44487",
+      "issuer": {
+        "id": "5e9c87c9-2e6b-453b-8b27-6c80dfc7d7ff",
+        "name": "Red Hat Product Security",
+        "cpe_key": null,
+        "website": null
+      },
+      "published": "2023-10-10T00:00:00Z",
+      "modified": "2023-11-21T11:59:10Z",
+      "withdrawn": null,
+      "title": "HTTP/2: Multiple HTTP/2 enabled web servers are vulnerable to a DDoS attack (Rapid Reset Attack)",
+      "labels": {
+        "type": "csaf"
+      },
+      "status": [
+        {
+          "vulnerability": {
+            "normative": true,
+            "identifier": "CVE-2023-44487",
+            "title": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+            "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+            "reserved": "2023-09-29T00:00:00Z",
+            "published": "2023-10-10T00:00:00Z",
+            "modified": "2024-08-19T07:48:04.546Z",
+            "withdrawn": null,
+            "discovered": null,
+            "released": null,
+            "cwes": []
+          },
+          "status": "fixed",
+          "context": {
+            "cpe": "cpe:/a:redhat:multicluster_engine:2.2:*:el8:*"
+          }
+        }
+      ]
+    }
+  ],
+  "licenses": []
+}

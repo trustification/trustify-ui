@@ -1,0 +1,358 @@
+{
+  "uuid": "25ddc770-5fde-53a8-8451-41091d5fcb3b",
+  "purl": "pkg:rpm/redhat/postgresql-pltcl-debuginfo@13.11-1.el9_2?arch=aarch64",
+  "version": {
+    "uuid": "002058a4-84e7-50f2-ab86-48459a573a24",
+    "purl": "pkg:rpm/redhat/postgresql-pltcl-debuginfo@13.11-1.el9_2",
+    "version": "13.11-1.el9_2"
+  },
+  "base": {
+    "uuid": "330091eb-120d-5b2a-983f-f75036dfd57e",
+    "purl": "pkg:rpm/redhat/postgresql-pltcl-debuginfo"
+  },
+  "advisories": [
+    {
+      "uuid": "urn:uuid:03da38c7-2b9f-475c-9057-e9ff74202505",
+      "identifier": "https://www.redhat.com/#CVE-2023-2454",
+      "issuer": {
+        "id": "5e9c87c9-2e6b-453b-8b27-6c80dfc7d7ff",
+        "name": "Red Hat Product Security",
+        "cpe_key": null,
+        "website": null
+      },
+      "published": "2023-05-11T00:00:00Z",
+      "modified": "2023-11-14T21:02:22Z",
+      "withdrawn": null,
+      "title": "postgresql: schema_element defeats protective search_path changes",
+      "labels": {
+        "type": "csaf"
+      },
+      "status": [
+        {
+          "vulnerability": {
+            "normative": true,
+            "identifier": "CVE-2023-2454",
+            "title": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+            "description": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+            "reserved": "2023-05-01T00:00:00Z",
+            "published": "2023-06-09T00:00:00Z",
+            "modified": "2024-08-02T06:26:08.641Z",
+            "withdrawn": null,
+            "discovered": null,
+            "released": null,
+            "cwes": ["CWE-20"]
+          },
+          "status": "fixed",
+          "context": {
+            "cpe": "cpe:/a:redhat:enterprise_linux:9:*:crb:*"
+          }
+        },
+        {
+          "vulnerability": {
+            "normative": true,
+            "identifier": "CVE-2023-2454",
+            "title": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+            "description": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+            "reserved": "2023-05-01T00:00:00Z",
+            "published": "2023-06-09T00:00:00Z",
+            "modified": "2024-08-02T06:26:08.641Z",
+            "withdrawn": null,
+            "discovered": null,
+            "released": null,
+            "cwes": ["CWE-20"]
+          },
+          "status": "fixed",
+          "context": {
+            "cpe": "cpe:/a:redhat:enterprise_linux:9:*:appstream:*"
+          }
+        },
+        {
+          "vulnerability": {
+            "normative": true,
+            "identifier": "CVE-2023-2454",
+            "title": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+            "description": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+            "reserved": "2023-05-01T00:00:00Z",
+            "published": "2023-06-09T00:00:00Z",
+            "modified": "2024-08-02T06:26:08.641Z",
+            "withdrawn": null,
+            "discovered": null,
+            "released": null,
+            "cwes": ["CWE-20"]
+          },
+          "status": "fixed",
+          "context": {
+            "cpe": "cpe:/a:redhat:enterprise_linux:9:*:appstream:*"
+          }
+        },
+        {
+          "vulnerability": {
+            "normative": true,
+            "identifier": "CVE-2023-2454",
+            "title": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+            "description": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+            "reserved": "2023-05-01T00:00:00Z",
+            "published": "2023-06-09T00:00:00Z",
+            "modified": "2024-08-02T06:26:08.641Z",
+            "withdrawn": null,
+            "discovered": null,
+            "released": null,
+            "cwes": ["CWE-20"]
+          },
+          "status": "fixed",
+          "context": {
+            "cpe": "cpe:/a:redhat:enterprise_linux:9:*:appstream:*"
+          }
+        },
+        {
+          "vulnerability": {
+            "normative": true,
+            "identifier": "CVE-2023-2454",
+            "title": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+            "description": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+            "reserved": "2023-05-01T00:00:00Z",
+            "published": "2023-06-09T00:00:00Z",
+            "modified": "2024-08-02T06:26:08.641Z",
+            "withdrawn": null,
+            "discovered": null,
+            "released": null,
+            "cwes": ["CWE-20"]
+          },
+          "status": "fixed",
+          "context": {
+            "cpe": "cpe:/a:redhat:enterprise_linux:9:*:crb:*"
+          }
+        },
+        {
+          "vulnerability": {
+            "normative": true,
+            "identifier": "CVE-2023-2454",
+            "title": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+            "description": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+            "reserved": "2023-05-01T00:00:00Z",
+            "published": "2023-06-09T00:00:00Z",
+            "modified": "2024-08-02T06:26:08.641Z",
+            "withdrawn": null,
+            "discovered": null,
+            "released": null,
+            "cwes": ["CWE-20"]
+          },
+          "status": "fixed",
+          "context": {
+            "cpe": "cpe:/a:redhat:enterprise_linux:9:*:crb:*"
+          }
+        },
+        {
+          "vulnerability": {
+            "normative": true,
+            "identifier": "CVE-2023-2454",
+            "title": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+            "description": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+            "reserved": "2023-05-01T00:00:00Z",
+            "published": "2023-06-09T00:00:00Z",
+            "modified": "2024-08-02T06:26:08.641Z",
+            "withdrawn": null,
+            "discovered": null,
+            "released": null,
+            "cwes": ["CWE-20"]
+          },
+          "status": "fixed",
+          "context": {
+            "cpe": "cpe:/a:redhat:enterprise_linux:9:*:crb:*"
+          }
+        },
+        {
+          "vulnerability": {
+            "normative": true,
+            "identifier": "CVE-2023-2454",
+            "title": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+            "description": "schema_element defeats protective search_path changes; It was found that certain database calls in PostgreSQL could permit an authed attacker with elevated database-level privileges to execute arbitrary code.",
+            "reserved": "2023-05-01T00:00:00Z",
+            "published": "2023-06-09T00:00:00Z",
+            "modified": "2024-08-02T06:26:08.641Z",
+            "withdrawn": null,
+            "discovered": null,
+            "released": null,
+            "cwes": ["CWE-20"]
+          },
+          "status": "fixed",
+          "context": {
+            "cpe": "cpe:/a:redhat:enterprise_linux:9:*:appstream:*"
+          }
+        }
+      ]
+    },
+    {
+      "uuid": "urn:uuid:4d24d8d5-97e0-4224-a3a4-fadbfdf7893e",
+      "identifier": "https://www.redhat.com/#CVE-2023-2455",
+      "issuer": {
+        "id": "5e9c87c9-2e6b-453b-8b27-6c80dfc7d7ff",
+        "name": "Red Hat Product Security",
+        "cpe_key": null,
+        "website": null
+      },
+      "published": "2023-05-11T00:00:00Z",
+      "modified": "2023-11-14T21:03:41Z",
+      "withdrawn": null,
+      "title": "postgresql: row security policies disregard user ID changes after inlining.",
+      "labels": {
+        "type": "csaf"
+      },
+      "status": [
+        {
+          "vulnerability": {
+            "normative": true,
+            "identifier": "CVE-2023-2455",
+            "title": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+            "description": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+            "reserved": "2023-05-01T00:00:00Z",
+            "published": "2023-06-09T00:00:00Z",
+            "modified": "2024-08-02T06:26:08.921Z",
+            "withdrawn": null,
+            "discovered": null,
+            "released": null,
+            "cwes": ["CWE-20"]
+          },
+          "status": "fixed",
+          "context": {
+            "cpe": "cpe:/a:redhat:enterprise_linux:9:*:appstream:*"
+          }
+        },
+        {
+          "vulnerability": {
+            "normative": true,
+            "identifier": "CVE-2023-2455",
+            "title": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+            "description": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+            "reserved": "2023-05-01T00:00:00Z",
+            "published": "2023-06-09T00:00:00Z",
+            "modified": "2024-08-02T06:26:08.921Z",
+            "withdrawn": null,
+            "discovered": null,
+            "released": null,
+            "cwes": ["CWE-20"]
+          },
+          "status": "fixed",
+          "context": {
+            "cpe": "cpe:/a:redhat:enterprise_linux:9:*:crb:*"
+          }
+        },
+        {
+          "vulnerability": {
+            "normative": true,
+            "identifier": "CVE-2023-2455",
+            "title": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+            "description": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+            "reserved": "2023-05-01T00:00:00Z",
+            "published": "2023-06-09T00:00:00Z",
+            "modified": "2024-08-02T06:26:08.921Z",
+            "withdrawn": null,
+            "discovered": null,
+            "released": null,
+            "cwes": ["CWE-20"]
+          },
+          "status": "fixed",
+          "context": {
+            "cpe": "cpe:/a:redhat:enterprise_linux:9:*:appstream:*"
+          }
+        },
+        {
+          "vulnerability": {
+            "normative": true,
+            "identifier": "CVE-2023-2455",
+            "title": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+            "description": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+            "reserved": "2023-05-01T00:00:00Z",
+            "published": "2023-06-09T00:00:00Z",
+            "modified": "2024-08-02T06:26:08.921Z",
+            "withdrawn": null,
+            "discovered": null,
+            "released": null,
+            "cwes": ["CWE-20"]
+          },
+          "status": "fixed",
+          "context": {
+            "cpe": "cpe:/a:redhat:enterprise_linux:9:*:crb:*"
+          }
+        },
+        {
+          "vulnerability": {
+            "normative": true,
+            "identifier": "CVE-2023-2455",
+            "title": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+            "description": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+            "reserved": "2023-05-01T00:00:00Z",
+            "published": "2023-06-09T00:00:00Z",
+            "modified": "2024-08-02T06:26:08.921Z",
+            "withdrawn": null,
+            "discovered": null,
+            "released": null,
+            "cwes": ["CWE-20"]
+          },
+          "status": "fixed",
+          "context": {
+            "cpe": "cpe:/a:redhat:enterprise_linux:9:*:appstream:*"
+          }
+        },
+        {
+          "vulnerability": {
+            "normative": true,
+            "identifier": "CVE-2023-2455",
+            "title": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+            "description": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+            "reserved": "2023-05-01T00:00:00Z",
+            "published": "2023-06-09T00:00:00Z",
+            "modified": "2024-08-02T06:26:08.921Z",
+            "withdrawn": null,
+            "discovered": null,
+            "released": null,
+            "cwes": ["CWE-20"]
+          },
+          "status": "fixed",
+          "context": {
+            "cpe": "cpe:/a:redhat:enterprise_linux:9:*:crb:*"
+          }
+        },
+        {
+          "vulnerability": {
+            "normative": true,
+            "identifier": "CVE-2023-2455",
+            "title": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+            "description": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+            "reserved": "2023-05-01T00:00:00Z",
+            "published": "2023-06-09T00:00:00Z",
+            "modified": "2024-08-02T06:26:08.921Z",
+            "withdrawn": null,
+            "discovered": null,
+            "released": null,
+            "cwes": ["CWE-20"]
+          },
+          "status": "fixed",
+          "context": {
+            "cpe": "cpe:/a:redhat:enterprise_linux:9:*:crb:*"
+          }
+        },
+        {
+          "vulnerability": {
+            "normative": true,
+            "identifier": "CVE-2023-2455",
+            "title": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+            "description": "Row security policies disregard user ID changes after inlining; PostgreSQL could permit incorrect policies to be applied in certain cases where role-specific policies are used and a given query is planned under one role and then executed under other roles. This scenario can happen under security definer functions or when a common user and query is planned initially and then re-used across multiple SET ROLEs. Applying an incorrect policy may permit a user to complete otherwise-forbidden reads and modifications. This affects only databases that have used CREATE POLICY to define a row security policy.",
+            "reserved": "2023-05-01T00:00:00Z",
+            "published": "2023-06-09T00:00:00Z",
+            "modified": "2024-08-02T06:26:08.921Z",
+            "withdrawn": null,
+            "discovered": null,
+            "released": null,
+            "cwes": ["CWE-20"]
+          },
+          "status": "fixed",
+          "context": {
+            "cpe": "cpe:/a:redhat:enterprise_linux:9:*:appstream:*"
+          }
+        }
+      ]
+    }
+  ],
+  "licenses": []
+}

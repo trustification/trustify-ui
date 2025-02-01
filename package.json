@@ -21,7 +21,9 @@
     "start:dev:client": "npm run start:dev -w client",
     "start:dev": "concurrently -n common,client -c 'white.bold.inverse,green.bold.inverse,blue.bold.inverse' 'npm:start:dev:common' 'npm:start:dev:client'",
     "start": "npm run build -w common -w client && npm run start -w server",
-    "lint": "npm run lint -ws --if-present --"
+    "lint": "npm run lint -ws --if-present --",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "lint-staged": {
     "package-lock.json": "./scripts/verify_lock.mjs",
@@ -37,12 +39,20 @@
     "npm": ">=9.5.0"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^3.2.4",
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-run": "^3.0.2",
     "@rollup/plugin-typescript": "^11.1.6",
     "@rollup/plugin-virtual": "^3.0.2",
+    "@storybook/addon-essentials": "^8.5.2",
+    "@storybook/addon-interactions": "^8.5.2",
+    "@storybook/addon-onboarding": "^8.5.2",
+    "@storybook/blocks": "^8.5.2",
+    "@storybook/react": "^8.5.2",
+    "@storybook/react-vite": "^8.5.2",
+    "@storybook/test": "^8.5.2",
     "@tanstack/eslint-plugin-query": "^4.34.1",
     "concurrently": "^8.2.0",
     "copyfiles": "^2.4.1",
@@ -51,16 +61,24 @@
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "^7.33.1",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-storybook": "^0.10.1",
+    "eslint-plugin-storybook": "^0.11.2",
     "eslint-plugin-unused-imports": "^3.0.0",
+    "msw-storybook-addon": "^2.0.4",
     "prettier": "^3.0.2",
     "rimraf": "^5.0.7",
     "rollup": "^3.29.4",
-    "rollup-plugin-copy": "^3.5.0"
+    "rollup-plugin-copy": "^3.5.0",
+    "storybook": "^8.5.2",
+    "vite-tsconfig-paths": "^5.1.4"
   },
   "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "~5.6.2"
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:storybook/recommended"
+    ]
   }
 }

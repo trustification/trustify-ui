@@ -1,0 +1,41 @@
+{
+  "uuid": "urn:uuid:88a4fc6c-60ae-4e4a-bdbe-4fb2e1d33e9c",
+  "identifier": "CVE-2023-20860",
+  "issuer": {
+    "id": "34973ac6-8ad3-4c55-8aa7-03d53cd11d39",
+    "name": "vmware",
+    "cpe_key": null,
+    "website": null
+  },
+  "published": "2023-03-27T00:00:00Z",
+  "modified": "2024-08-02T09:21:32.43Z",
+  "withdrawn": null,
+  "title": "Spring Framework running version 6.0.0 - 6.0.6 or 5.3.0 - 5.3.25 using \"**\" as a pattern in Spring Security configuration with the mvcRequestMatcher creates a mismatch in pattern matching between Spring Security and Spring MVC, and the potential for a security bypass.",
+  "labels": {
+    "type": "cve"
+  },
+  "sha256": "sha256:6f64b679d476a078b010f57868566ea62aef3e6e80967d967e711f60f80bda19",
+  "sha384": "sha384:c1499294f85347ef96fbfa55e0958dea8aa8d25f66ea9bf221e664cf93d576db32f2d12860933e7b3c49acdb535f6f81",
+  "sha512": "sha512:42abb7521389736a011790cdb0b303cff269f6cc00b7eaae1cfe878ee88d4f7eafb209b9ff355b93a9cd5ebbb4bb68b18a6286230a6a69b058606291c3a8d338",
+  "size": 3022,
+  "vulnerabilities": [
+    {
+      "normative": true,
+      "identifier": "CVE-2023-20860",
+      "title": "Spring Framework running version 6.0.0 - 6.0.6 or 5.3.0 - 5.3.25 using \"**\" as a pattern in Spring Security configuration with the mvcRequestMatcher creates a mismatch in pattern matching between Spring Security and Spring MVC, and the potential for a security bypass.",
+      "description": "Spring Framework running version 6.0.0 - 6.0.6 or 5.3.0 - 5.3.25 using \"**\" as a pattern in Spring Security configuration with the mvcRequestMatcher creates a mismatch in pattern matching between Spring Security and Spring MVC, and the potential for a security bypass.",
+      "reserved": "2022-11-01T00:00:00Z",
+      "published": "2023-03-27T00:00:00Z",
+      "modified": "2024-08-02T09:21:32.43Z",
+      "withdrawn": null,
+      "discovered": null,
+      "released": null,
+      "cwes": [],
+      "severity": "none",
+      "score": 0.0,
+      "cvss3_scores": []
+    }
+  ],
+  "average_severity": null,
+  "average_score": null
+}

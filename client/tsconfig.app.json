@@ -24,7 +24,8 @@
 
     "baseUrl": ".",
     "paths": {
-      "@app/*": ["src/app/*"]
+      "@app/*": ["src/app/*"],
+      "@mocks/*": ["src/mocks/*"],
     }
   },
   "include": ["src", "types/**/*"]
