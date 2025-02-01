@@ -16,7 +16,7 @@ import "./select-overrides.css";
 
 export interface ISelectFilterControlProps<
   TItem,
-  TFilterCategoryKey extends string
+  TFilterCategoryKey extends string,
 > extends IFilterControlProps<TItem, TFilterCategoryKey> {
   category: ISelectFilterCategory<TItem, TFilterCategoryKey>;
   isScrollable?: boolean;
@@ -49,13 +49,16 @@ export const SelectFilterControl = <TItem, TFilterCategoryKey extends string>({
         node: chipLabel ?? label ?? value,
       };
     })
-    .reduce((prev, current) => {
-      if (current) {
-        return [...prev, current];
-      } else {
-        return prev;
-      }
-    }, [] as (string | ToolbarChip)[]);
+    .reduce(
+      (prev, current) => {
+        if (current) {
+          return [...prev, current];
+        } else {
+          return prev;
+        }
+      },
+      [] as (string | ToolbarChip)[]
+    );
 
   const onFilterSelect = (value: string) => {
     const option = getOptionFromOptionValue(value);

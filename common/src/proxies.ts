@@ -7,7 +7,7 @@ export const proxyMap: Record<string, Options> = {
       target: TRUSTIFICATION_ENV.OIDC_SERVER_URL || "http://localhost:8090",
       logLevel: process.env.DEBUG ? "debug" : "info",
       changeOrigin: true,
-      onProxyReq: (proxyReq, req, _res) => {
+      onProxyReq: (proxyReq, req: any, _res) => {
         // Keycloak needs these header set so we can function in Kubernetes (non-OpenShift)
         // https://www.keycloak.org/server/reverseproxy
         //
@@ -33,7 +33,7 @@ export const proxyMap: Record<string, Options> = {
     target: TRUSTIFICATION_ENV.TRUSTIFY_API_URL || "http://localhost:8080",
     logLevel: process.env.DEBUG ? "debug" : "info",
     changeOrigin: true,
-    onProxyReq: (proxyReq, req, _res) => {
+    onProxyReq: (proxyReq, req: any, _res) => {
       // Add the Bearer token to the request if it is not already present, AND if
       // the token is part of the request as a cookie
       if (req.cookies?.keycloak_cookie && !req.headers["authorization"]) {
@@ -43,7 +43,7 @@ export const proxyMap: Record<string, Options> = {
         );
       }
     },
-    onProxyRes: (proxyRes, req, res) => {
+    onProxyRes: (proxyRes, req: any, res: any) => {
       const includesJsonHeaders =
         req.headers.accept?.includes("application/json");
       if (

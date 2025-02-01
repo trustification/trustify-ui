@@ -24,12 +24,7 @@
 
     "baseUrl": ".",
     "paths": {
-      "@app/*": [
-        "src/app/*"
-      ],
-      "@mocks/*": [
-        "src/mocks/*"
-      ]
+      "@app/*": ["src/app/*"]
     }
   },
   "include": ["src", "types/**/*"]

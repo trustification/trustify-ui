@@ -1,30 +1,28 @@
-import {defineConfig} from 'vite';
-import {ViteEjsPlugin} from "vite-plugin-ejs";
+import { defineConfig, mergeConfig } from "vite";
+import { ViteEjsPlugin } from "vite-plugin-ejs";
 
 import {
   brandingStrings,
   encodeEnv,
   SERVER_ENV_KEYS,
   TRUSTIFICATION_ENV,
-  proxyMap
+  proxyMap,
 } from "@trustify-ui/common";
 
-import commonViteConfiguration from "./vite.config.common.ts";
+import commonConfig from "./vite.config.common";
 
 // https://vite.dev/config/
-export default defineConfig({
-  ...commonViteConfiguration,
+const devConfig = defineConfig({
   plugins: [
-    ...[commonViteConfiguration.plugins],
+    ...[commonConfig.plugins],
     ViteEjsPlugin({
       _env: encodeEnv(TRUSTIFICATION_ENV, SERVER_ENV_KEYS),
       branding: brandingStrings,
     }),
   ],
   server: {
-    proxy: proxyMap
-  }
-})
+    proxy: proxyMap,
+  },
+});
 
-
-
+export default defineConfig(mergeConfig(commonConfig, devConfig));

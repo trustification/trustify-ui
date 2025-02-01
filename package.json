@@ -8,6 +8,12 @@
     "url": "https://github.com/trustification/trustify-ui.git"
   },
   "scripts": {
+    "format:check": "npx prettier --check './**/*.{ts,tsx,js,json}'",
+    "format:fix": "npx prettier --write './**/*.{ts,tsx,js,json}'",
+    "openapi:generate-client": "npm run openapi:generate-client -w client",
+    "generate": "npm run openapi:generate-client",
+    "clean": "rimraf ./dist && npm run clean -ws --if-present",
+    "clean:all": "npm run clean && rimraf ./node_modules ./**/node_modules/",
     "dist": "rimraf ./dist && copyfiles -e 'node_modules/**' entrypoint.sh '**/package.json' '*/dist/**/*' ./dist",
     "build": "npm run build -ws --if-present",
     "start:dev:common": "npm run start:dev -w common",
@@ -30,14 +36,24 @@
     "npm": ">=9.5.0"
   },
   "devDependencies": {
-    "rimraf": "^5.0.7",
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-run": "^3.0.2",
     "@rollup/plugin-typescript": "^11.1.6",
     "@rollup/plugin-virtual": "^3.0.2",
+    "concurrently": "^8.2.0",
+    "copyfiles": "^2.4.1",
+    "msw": "^2.6.4",
+    "prettier": "^3.0.2",
+    "rimraf": "^5.0.7",
     "rollup": "^3.29.4",
-    "rollup-plugin-copy": "^3.5.0"
+    "rollup-plugin-copy": "^3.5.0",
+    "vite-tsconfig-paths": "^5.1.4"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "~5.6.2"
   }
 }

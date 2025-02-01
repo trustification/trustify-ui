@@ -1,20 +1,31 @@
-import {defineConfig} from 'vite';
-
-import commonViteConfiguration from "./vite.config.common.ts";
+import fs from 'fs';
+import path from "path";
+import { defineConfig, mergeConfig } from "vite";
+import commonConfig from "./vite.config.common";
 
 // https://vite.dev/config/
-export default defineConfig({
-  ...commonViteConfiguration,
+const prodConfig = defineConfig({
   plugins: [
-    ...[commonViteConfiguration.plugins],
+    ...[commonConfig.plugins],
     {
-      name: 'html-transform',
+      name: "html-transform",
       transformIndexHtml(html) {
         return html;
       },
-    }
-  ]
-})
+    },
+    {
+      name: 'copy-index',
+      closeBundle: ()=> {
+        const distDir = path.resolve(__dirname, 'dist');
+        const src = path.join(distDir, 'index.html');
+        const dest = path.join(distDir, 'index.html.ejs');
 
+        if (fs.existsSync(src)) {
+          fs.renameSync(src, dest);
+        }
+      },
+    },
+  ],
+});
 
-
+export default defineConfig(mergeConfig(commonConfig, prodConfig));

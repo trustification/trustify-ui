@@ -1,9 +1,9 @@
-import {defineConfig} from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 import path from "path";
 
-import { viteStaticCopy } from 'vite-plugin-static-copy'
-import { createRequire } from 'module';
+import { viteStaticCopy } from "vite-plugin-static-copy";
+import { createRequire } from "module";
 
 const require = createRequire(import.meta.url);
 const { brandingAssetPath } = require("@trustify-ui/common");
@@ -17,16 +17,16 @@ export default defineConfig({
   plugins: [
     react(),
     {
-      name: 'ignore-process-env',
+      name: "ignore-process-env",
       transform(code) {
-        return code.replace(/process\.env/g, '({})');
+        return code.replace(/process\.env/g, "({})");
       },
     },
     viteStaticCopy({
       targets: [
         {
           src: manifestPath,
-          dest: '.'
+          dest: ".",
         },
         {
           src: brandingPath,
@@ -36,24 +36,21 @@ export default defineConfig({
           src: faviconPath,
           dest: ".",
         },
-      ]
+      ],
     }),
   ],
   resolve: {
     alias: {
-      '@app': path.resolve(__dirname, "./src/app")
+      "@app": path.resolve(__dirname, "./src/app")
     },
   },
   build: {
     rollupOptions: {
       output: {
         manualChunks: {
-          react: ['react', 'react-dom']
+          react: ["react", "react-dom"],
         },
       },
     },
   },
-})
-
-
-
+});
