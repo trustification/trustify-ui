@@ -39,6 +39,11 @@
     "node": "^20",
     "npm": ">=9.5.0"
   },
+  "peerDependencies": {
+    "react": "^18",
+    "react-dom": "^18",
+    "typescript": "~5.6.2"
+  },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.4",
     "@rollup/plugin-commonjs": "^26.0.1",
@@ -67,15 +72,5 @@
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "vite-tsconfig-paths": "^5.1.4"
-  },
-  "peerDependencies": {
-    "react": "^18",
-    "react-dom": "^18",
-    "typescript": "~5.6.2"
-  },
-  "eslintConfig": {
-    "extends": [
-      "plugin:storybook/recommended"
-    ]
   }
 }

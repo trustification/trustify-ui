@@ -5,13 +5,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc -b && vite build",
     "clean": "rimraf ./dist",
-    "lint": "eslint .",
-    "openapi:generate-client": "openapi-ts -f ./config/openapi-ts.config.ts",
-    "preview": "vite preview",
+    "build": "tsc -b && vite build",
     "start:dev": "vite",
-    "test": "NODE_ENV=test jest --rootDir=. --config=./config/jest.config.ts"
+    "test": "NODE_ENV=test jest --rootDir=. --config=./config/jest.config.ts",
+    "openapi:generate-client": "openapi-ts -f ./config/openapi-ts.config.ts",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "lint-staged": {
+    "*.{js,cjs,mjs,jsx,ts,cts,mts,tsx}": "eslint --fix",
+    "*.{css,json,md,yaml,yml}": "prettier --write"
   },
   "dependencies": {
     "@hey-api/client-axios": "0.2.7",
