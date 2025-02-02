@@ -14,6 +14,14 @@ const config: StorybookConfig = {
     name: "@storybook/react-vite",
     options: {},
   },
+  staticDirs: [
+    {
+      from: "../branding",
+      to: "./branding",
+    },
+    "../client/src/app/images",
+    "../client/public",
+  ],
   async viteFinal(config, options) {
     return mergeConfig(config, {
       plugins: [

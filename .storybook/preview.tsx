@@ -10,6 +10,19 @@ import { MemoryRouter } from "react-router";
 
 const queryClient = new QueryClient();
 
+if (typeof jest === "undefined") {
+  // Mock Jest in the Storybook runtime
+  globalThis.jest = {
+    fn: () => {
+      const mockFn = () => {};
+      mockFn.mockReturnValue = () => mockFn;
+      mockFn.mockReturnValueOnce = () => mockFn;
+      mockFn.mockImplementation = () => mockFn;
+      return mockFn;
+    },
+  } as any;
+}
+
 /*
  * Initializes MSW
  * See https://github.com/mswjs/msw-storybook-addon#configuring-msw

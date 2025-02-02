@@ -524,7 +524,7 @@ export const handlers = [
   ...advisoryHandlers,
   ...aiHandlers,
   ...analysisHandlers,
-  ...assetHandlers,
+  // ...assetHandlers,
   ...basePurlHandlers,
   ...datasetHandlers,
   ...importerHandlers,
