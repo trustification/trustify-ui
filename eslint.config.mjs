@@ -28,6 +28,7 @@ export default tseslint.config(
         "warn",
         { argsIgnorePattern: "^_" },
       ],
+      // TODO remove the rules below progressively
       "@typescript-eslint/no-empty-object-type": "warn",
       "@typescript-eslint/no-wrapper-object-types": "warn",
       "@typescript-eslint/no-unused-expressions": "warn",
