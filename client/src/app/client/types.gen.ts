@@ -96,16 +96,6 @@ export type AdvisoryVulnerabilitySummary = AdvisoryVulnerabilityHead & {
   cvss3_scores: Array<string>;
 };
 
-export type AiFlags = {
-  completions: boolean;
-};
-
-export type AiTool = {
-  description: string;
-  name: string;
-  parameters: unknown;
-};
-
 export type AnalysisStatus = {
   /**
    * The number of graphs loaded in memory
@@ -115,20 +105,6 @@ export type AnalysisStatus = {
    * The number of SBOMs found in the database
    */
   sbom_count: number;
-};
-
-export type AncNode = {
-  cpe: Array<Cpe>;
-  name: string;
-  node_id: string;
-  purl: Array<Purl>;
-  relationship: string;
-  sbom_id: string;
-  version: string;
-};
-
-export type AncestorSummary = BaseSummary & {
-  ancestors: Array<AncNode>;
 };
 
 export type BasePurlDetails = BasePurlHead & {
@@ -162,17 +138,6 @@ export type BaseSummary = {
 };
 
 export type BinaryByteSize = string;
-
-export type ChatMessage = {
-  content: string;
-  message_type: MessageType;
-  timestamp: string;
-};
-
-export type ChatState = {
-  internal_state?: string | null;
-  messages: Array<ChatMessage>;
-};
 
 export type ClearlyDefinedCurationImporter = CommonImporter & {
   source?: string;
@@ -216,19 +181,6 @@ export type CommonImporter = {
   period: string;
 };
 
-export type Conversation = {
-  id: string;
-  messages: Array<ChatMessage>;
-  seq: number;
-  updated_at: string;
-};
-
-export type ConversationSummary = {
-  id: string;
-  summary: string;
-  updated_at: string;
-};
-
 export type Cpe = string;
 
 export type CsafImporter = CommonImporter & {
@@ -247,21 +199,6 @@ export type CveImporter = CommonImporter & {
 
 export type CweImporter = CommonImporter & {
   source?: string;
-};
-
-export type DepNode = {
-  cpe: Array<Cpe>;
-  deps: Array<DepNode>;
-  name: string;
-  node_id: string;
-  purl: Array<Purl>;
-  relationship: string;
-  sbom_id: string;
-  version: string;
-};
-
-export type DepSummary = BaseSummary & {
-  deps: Array<DepNode>;
 };
 
 export type ExternalReferenceQuery = {
@@ -394,8 +331,6 @@ export type Message = {
   severity: Severity;
 };
 
-export type MessageType = "human" | "system" | "ai" | "tool";
-
 export type OrganizationDetails = OrganizationHead & {
   /**
    * Advisories issued by the organization, if any.
@@ -466,15 +401,6 @@ export type PaginatedResults_AdvisorySummary = {
   total: number;
 };
 
-export type PaginatedResults_AncestorSummary = {
-  items: Array<
-    BaseSummary & {
-      ancestors: Array<AncNode>;
-    }
-  >;
-  total: number;
-};
-
 export type PaginatedResults_BasePurlSummary = {
   items: Array<BasePurlHead>;
   total: number;
@@ -493,24 +419,6 @@ export type PaginatedResults_BaseSummary = {
     sbom_id: string;
     version: string;
   }>;
-  total: number;
-};
-
-export type PaginatedResults_ConversationSummary = {
-  items: Array<{
-    id: string;
-    summary: string;
-    updated_at: string;
-  }>;
-  total: number;
-};
-
-export type PaginatedResults_DepSummary = {
-  items: Array<
-    BaseSummary & {
-      deps: Array<DepNode>;
-    }
-  >;
   total: number;
 };
 
@@ -728,21 +636,21 @@ export type PurlSummary = PurlHead & {
 };
 
 export type Relationship =
-  | "contained_by"
-  | "dependency_of"
-  | "dev_dependency_of"
-  | "optional_dependency_of"
-  | "provided_dependency_of"
-  | "test_dependency_of"
-  | "runtime_dependency_of"
-  | "example_of"
-  | "generated_from"
+  | "contains"
+  | "dependency"
+  | "dev_dependency"
+  | "optional_dependency"
+  | "provided_dependency"
+  | "test_dependency"
+  | "runtime_dependency"
+  | "example"
+  | "generates"
   | "ancestor_of"
-  | "variant_of"
-  | "build_tool_of"
-  | "dev_tool_of"
-  | "described_by"
-  | "package_of"
+  | "variant"
+  | "build_tool"
+  | "dev_tool"
+  | "describes"
+  | "package"
   | "undefined";
 
 export type Report = {
@@ -1152,16 +1060,10 @@ export type DownloadAdvisoryResponse = Blob | File;
 
 export type DownloadAdvisoryError = unknown;
 
-export type CompletionsData = {
-  body: ChatState;
-};
-
-export type CompletionsResponse = ChatState;
-
-export type CompletionsError = unknown;
-
-export type ListConversationsData = {
+export type SearchComponentData = {
   query?: {
+    ancestors?: number;
+    descendants?: number;
     /**
      * The maximum number of entries to return.
      *
@@ -1175,85 +1077,14 @@ export type ListConversationsData = {
      */
     offset?: number;
     q?: string;
+    relationships?: Array<Relationship>;
     sort?: string;
   };
 };
 
-export type ListConversationsResponse = PaginatedResults_ConversationSummary;
+export type SearchComponentResponse = PaginatedResults_BaseSummary;
 
-export type ListConversationsError = unknown;
-
-export type CreateConversationResponse = Conversation;
-
-export type CreateConversationError = unknown;
-
-export type GetConversationData = {
-  path: {
-    /**
-     * Opaque ID of the conversation
-     */
-    id: string;
-  };
-};
-
-export type GetConversationResponse = Conversation;
-
-export type GetConversationError = unknown;
-
-export type UpdateConversationData = {
-  body: Array<ChatMessage>;
-  headers?: {
-    /**
-     * The revision to update
-     */
-    "if-match"?: string | null;
-  };
-  path: {
-    /**
-     * Opaque ID of the conversation
-     */
-    id: string;
-  };
-};
-
-export type UpdateConversationResponse = Conversation;
-
-export type UpdateConversationError = unknown;
-
-export type DeleteConversationData = {
-  path: {
-    /**
-     * Opaque ID of the conversation
-     */
-    id: string;
-  };
-};
-
-export type DeleteConversationResponse = Conversation;
-
-export type DeleteConversationError = unknown;
-
-export type AiFlagsResponse = AiFlags;
-
-export type AiFlagsError = unknown;
-
-export type AiToolsResponse = Array<AiTool>;
-
-export type AiToolsError = unknown;
-
-export type AiToolCallData = {
-  body: unknown;
-  path: {
-    /**
-     * Name of the tool to call
-     */
-    name: string;
-  };
-};
-
-export type AiToolCallResponse = string;
-
-export type AiToolCallError = unknown;
+export type SearchComponentError = unknown;
 
 export type GetComponentData = {
   path: {
@@ -1261,6 +1092,25 @@ export type GetComponentData = {
      * provide component name, URL-encoded pURL, or CPE itself
      */
     key: string;
+    q: string;
+    sort: string;
+  };
+  query?: {
+    ancestors?: number;
+    descendants?: number;
+    /**
+     * The maximum number of entries to return.
+     *
+     * Zero means: no limit
+     */
+    limit?: number;
+    /**
+     * The first item to return, skipping all that come before it.
+     *
+     * NOTE: The order of items is defined by the API being called.
+     */
+    offset?: number;
+    relationships?: Array<Relationship>;
   };
 };
 
@@ -1268,79 +1118,18 @@ export type GetComponentResponse = PaginatedResults_BaseSummary;
 
 export type GetComponentError = unknown;
 
-export type SearchComponentDepsData = {
-  query?: {
-    /**
-     * The maximum number of entries to return.
-     *
-     * Zero means: no limit
-     */
-    limit?: number;
-    /**
-     * The first item to return, skipping all that come before it.
-     *
-     * NOTE: The order of items is defined by the API being called.
-     */
-    offset?: number;
-    q?: string;
-    sort?: string;
-  };
-};
-
-export type SearchComponentDepsResponse = PaginatedResults_DepSummary;
-
-export type SearchComponentDepsError = unknown;
-
-export type GetComponentDepsData = {
+export type RenderSbomGraphData = {
   path: {
     /**
-     * provide component name or URL-encoded pURL itself
+     * ID of the SBOM
      */
-    key: string;
+    sbom: string;
   };
 };
 
-export type GetComponentDepsResponse = PaginatedResults_DepSummary;
+export type RenderSbomGraphResponse = string;
 
-export type GetComponentDepsError = unknown;
-
-export type SearchComponentRootComponentsData = {
-  query?: {
-    /**
-     * The maximum number of entries to return.
-     *
-     * Zero means: no limit
-     */
-    limit?: number;
-    /**
-     * The first item to return, skipping all that come before it.
-     *
-     * NOTE: The order of items is defined by the API being called.
-     */
-    offset?: number;
-    q?: string;
-    sort?: string;
-  };
-};
-
-export type SearchComponentRootComponentsResponse =
-  PaginatedResults_AncestorSummary;
-
-export type SearchComponentRootComponentsError = unknown;
-
-export type GetComponentRootComponentsData = {
-  path: {
-    /**
-     * provide component name, URL-encoded pURL, or CPE itself
-     */
-    key: string;
-  };
-};
-
-export type GetComponentRootComponentsResponse =
-  PaginatedResults_AncestorSummary;
-
-export type GetComponentRootComponentsError = unknown;
+export type RenderSbomGraphError = unknown;
 
 export type StatusResponse = AnalysisStatus;
 
