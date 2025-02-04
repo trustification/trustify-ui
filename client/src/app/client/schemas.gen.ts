@@ -219,30 +219,6 @@ May include several, varying by minor version of the CVSS3 vector.`,
     "Summary of information from this advisory regarding a single specific vulnerability.",
 } as const;
 
-export const AiFlagsSchema = {
-  type: "object",
-  required: ["completions"],
-  properties: {
-    completions: {
-      type: "boolean",
-    },
-  },
-} as const;
-
-export const AiToolSchema = {
-  type: "object",
-  required: ["name", "description", "parameters"],
-  properties: {
-    description: {
-      type: "string",
-    },
-    name: {
-      type: "string",
-    },
-    parameters: {},
-  },
-} as const;
-
 export const AnalysisStatusSchema = {
   type: "object",
   required: ["sbom_count", "graph_count"],
@@ -260,68 +236,6 @@ export const AnalysisStatusSchema = {
       minimum: 0,
     },
   },
-} as const;
-
-export const AncNodeSchema = {
-  type: "object",
-  required: [
-    "sbom_id",
-    "node_id",
-    "relationship",
-    "purl",
-    "cpe",
-    "name",
-    "version",
-  ],
-  properties: {
-    cpe: {
-      type: "array",
-      items: {
-        $ref: "#/components/schemas/Cpe",
-      },
-    },
-    name: {
-      type: "string",
-    },
-    node_id: {
-      type: "string",
-    },
-    purl: {
-      type: "array",
-      items: {
-        $ref: "#/components/schemas/Purl",
-      },
-    },
-    relationship: {
-      type: "string",
-    },
-    sbom_id: {
-      type: "string",
-    },
-    version: {
-      type: "string",
-    },
-  },
-} as const;
-
-export const AncestorSummarySchema = {
-  allOf: [
-    {
-      $ref: "#/components/schemas/BaseSummary",
-    },
-    {
-      type: "object",
-      required: ["ancestors"],
-      properties: {
-        ancestors: {
-          type: "array",
-          items: {
-            $ref: "#/components/schemas/AncNode",
-          },
-        },
-      },
-    },
-  ],
 } as const;
 
 export const BasePurlDetailsSchema = {
@@ -426,39 +340,6 @@ export const BinaryByteSizeSchema = {
   type: "string",
 } as const;
 
-export const ChatMessageSchema = {
-  type: "object",
-  required: ["message_type", "content", "timestamp"],
-  properties: {
-    content: {
-      type: "string",
-    },
-    message_type: {
-      $ref: "#/components/schemas/MessageType",
-    },
-    timestamp: {
-      type: "string",
-      format: "date-time",
-    },
-  },
-} as const;
-
-export const ChatStateSchema = {
-  type: "object",
-  required: ["messages"],
-  properties: {
-    internal_state: {
-      type: ["string", "null"],
-    },
-    messages: {
-      type: "array",
-      items: {
-        $ref: "#/components/schemas/ChatMessage",
-      },
-    },
-  },
-} as const;
-
 export const ClearlyDefinedCurationImporterSchema = {
   allOf: [
     {
@@ -545,49 +426,6 @@ export const CommonImporterSchema = {
   },
 } as const;
 
-export const ConversationSchema = {
-  type: "object",
-  required: ["id", "messages", "updated_at", "seq"],
-  properties: {
-    id: {
-      type: "string",
-      format: "uuid",
-    },
-    messages: {
-      type: "array",
-      items: {
-        $ref: "#/components/schemas/ChatMessage",
-      },
-    },
-    seq: {
-      type: "integer",
-      format: "int32",
-    },
-    updated_at: {
-      type: "string",
-      format: "date-time",
-    },
-  },
-} as const;
-
-export const ConversationSummarySchema = {
-  type: "object",
-  required: ["id", "updated_at", "summary"],
-  properties: {
-    id: {
-      type: "string",
-      format: "uuid",
-    },
-    summary: {
-      type: "string",
-    },
-    updated_at: {
-      type: "string",
-      format: "date-time",
-    },
-  },
-} as const;
-
 export const CpeSchema = {
   type: "string",
   format: "uri",
@@ -666,75 +504,6 @@ export const CweImporterSchema = {
       properties: {
         source: {
           type: "string",
-        },
-      },
-    },
-  ],
-} as const;
-
-export const DepNodeSchema = {
-  type: "object",
-  required: [
-    "sbom_id",
-    "node_id",
-    "relationship",
-    "purl",
-    "cpe",
-    "name",
-    "version",
-    "deps",
-  ],
-  properties: {
-    cpe: {
-      type: "array",
-      items: {
-        $ref: "#/components/schemas/Cpe",
-      },
-    },
-    deps: {
-      type: "array",
-      items: {
-        $ref: "#/components/schemas/DepNode",
-      },
-    },
-    name: {
-      type: "string",
-    },
-    node_id: {
-      type: "string",
-    },
-    purl: {
-      type: "array",
-      items: {
-        $ref: "#/components/schemas/Purl",
-      },
-    },
-    relationship: {
-      type: "string",
-    },
-    sbom_id: {
-      type: "string",
-    },
-    version: {
-      type: "string",
-    },
-  },
-} as const;
-
-export const DepSummarySchema = {
-  allOf: [
-    {
-      $ref: "#/components/schemas/BaseSummary",
-    },
-    {
-      type: "object",
-      required: ["deps"],
-      properties: {
-        deps: {
-          type: "array",
-          items: {
-            $ref: "#/components/schemas/DepNode",
-          },
         },
       },
     },
@@ -1017,11 +786,6 @@ export const MessageSchema = {
   },
 } as const;
 
-export const MessageTypeSchema = {
-  type: "string",
-  enum: ["human", "system", "ai", "tool"],
-} as const;
-
 export const OrganizationDetailsSchema = {
   allOf: [
     {
@@ -1177,40 +941,6 @@ export const PaginatedResults_AdvisorySummarySchema = {
   },
 } as const;
 
-export const PaginatedResults_AncestorSummarySchema = {
-  type: "object",
-  required: ["items", "total"],
-  properties: {
-    items: {
-      type: "array",
-      items: {
-        allOf: [
-          {
-            $ref: "#/components/schemas/BaseSummary",
-          },
-          {
-            type: "object",
-            required: ["ancestors"],
-            properties: {
-              ancestors: {
-                type: "array",
-                items: {
-                  $ref: "#/components/schemas/AncNode",
-                },
-              },
-            },
-          },
-        ],
-      },
-    },
-    total: {
-      type: "integer",
-      format: "int64",
-      minimum: 0,
-    },
-  },
-} as const;
-
 export const PaginatedResults_BasePurlSummarySchema = {
   type: "object",
   required: ["items", "total"],
@@ -1291,72 +1021,6 @@ export const PaginatedResults_BaseSummarySchema = {
             type: "string",
           },
         },
-      },
-    },
-    total: {
-      type: "integer",
-      format: "int64",
-      minimum: 0,
-    },
-  },
-} as const;
-
-export const PaginatedResults_ConversationSummarySchema = {
-  type: "object",
-  required: ["items", "total"],
-  properties: {
-    items: {
-      type: "array",
-      items: {
-        type: "object",
-        required: ["id", "updated_at", "summary"],
-        properties: {
-          id: {
-            type: "string",
-            format: "uuid",
-          },
-          summary: {
-            type: "string",
-          },
-          updated_at: {
-            type: "string",
-            format: "date-time",
-          },
-        },
-      },
-    },
-    total: {
-      type: "integer",
-      format: "int64",
-      minimum: 0,
-    },
-  },
-} as const;
-
-export const PaginatedResults_DepSummarySchema = {
-  type: "object",
-  required: ["items", "total"],
-  properties: {
-    items: {
-      type: "array",
-      items: {
-        allOf: [
-          {
-            $ref: "#/components/schemas/BaseSummary",
-          },
-          {
-            type: "object",
-            required: ["deps"],
-            properties: {
-              deps: {
-                type: "array",
-                items: {
-                  $ref: "#/components/schemas/DepNode",
-                },
-              },
-            },
-          },
-        ],
       },
     },
     total: {
@@ -2088,21 +1752,21 @@ export const PurlSummarySchema = {
 export const RelationshipSchema = {
   type: "string",
   enum: [
-    "contained_by",
-    "dependency_of",
-    "dev_dependency_of",
-    "optional_dependency_of",
-    "provided_dependency_of",
-    "test_dependency_of",
-    "runtime_dependency_of",
-    "example_of",
-    "generated_from",
+    "contains",
+    "dependency",
+    "dev_dependency",
+    "optional_dependency",
+    "provided_dependency",
+    "test_dependency",
+    "runtime_dependency",
+    "example",
+    "generates",
     "ancestor_of",
-    "variant_of",
-    "build_tool_of",
-    "dev_tool_of",
-    "described_by",
-    "package_of",
+    "variant",
+    "build_tool",
+    "dev_tool",
+    "describes",
+    "package",
     "undefined",
   ],
 } as const;

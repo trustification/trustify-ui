@@ -29,45 +29,15 @@ import type {
   DownloadAdvisoryData,
   DownloadAdvisoryError,
   DownloadAdvisoryResponse,
-  CompletionsData,
-  CompletionsError,
-  CompletionsResponse,
-  ListConversationsData,
-  ListConversationsError,
-  ListConversationsResponse,
-  CreateConversationError,
-  CreateConversationResponse,
-  GetConversationData,
-  GetConversationError,
-  GetConversationResponse,
-  UpdateConversationData,
-  UpdateConversationError,
-  UpdateConversationResponse,
-  DeleteConversationData,
-  DeleteConversationError,
-  DeleteConversationResponse,
-  AiFlagsError,
-  AiFlagsResponse,
-  AiToolsError,
-  AiToolsResponse,
-  AiToolCallData,
-  AiToolCallError,
-  AiToolCallResponse,
+  SearchComponentData,
+  SearchComponentError,
+  SearchComponentResponse,
   GetComponentData,
   GetComponentError,
   GetComponentResponse,
-  SearchComponentDepsData,
-  SearchComponentDepsError,
-  SearchComponentDepsResponse,
-  GetComponentDepsData,
-  GetComponentDepsError,
-  GetComponentDepsResponse,
-  SearchComponentRootComponentsData,
-  SearchComponentRootComponentsError,
-  SearchComponentRootComponentsResponse,
-  GetComponentRootComponentsData,
-  GetComponentRootComponentsError,
-  GetComponentRootComponentsResponse,
+  RenderSbomGraphData,
+  RenderSbomGraphError,
+  RenderSbomGraphResponse,
   StatusError,
   StatusResponse,
   UploadDatasetData,
@@ -342,120 +312,16 @@ export const downloadAdvisory = <ThrowOnError extends boolean = false>(
   });
 };
 
-export const completions = <ThrowOnError extends boolean = false>(
-  options: Options<CompletionsData, ThrowOnError>
-) => {
-  return (options?.client ?? client).post<
-    CompletionsResponse,
-    CompletionsError,
-    ThrowOnError
-  >({
-    ...options,
-    url: "/api/v2/ai/completions",
-  });
-};
-
-export const listConversations = <ThrowOnError extends boolean = false>(
-  options?: Options<ListConversationsData, ThrowOnError>
+export const searchComponent = <ThrowOnError extends boolean = false>(
+  options?: Options<SearchComponentData, ThrowOnError>
 ) => {
   return (options?.client ?? client).get<
-    ListConversationsResponse,
-    ListConversationsError,
+    SearchComponentResponse,
+    SearchComponentError,
     ThrowOnError
   >({
     ...options,
-    url: "/api/v2/ai/conversations",
-  });
-};
-
-export const createConversation = <ThrowOnError extends boolean = false>(
-  options?: Options<unknown, ThrowOnError>
-) => {
-  return (options?.client ?? client).post<
-    CreateConversationResponse,
-    CreateConversationError,
-    ThrowOnError
-  >({
-    ...options,
-    url: "/api/v2/ai/conversations",
-  });
-};
-
-export const getConversation = <ThrowOnError extends boolean = false>(
-  options: Options<GetConversationData, ThrowOnError>
-) => {
-  return (options?.client ?? client).get<
-    GetConversationResponse,
-    GetConversationError,
-    ThrowOnError
-  >({
-    ...options,
-    url: "/api/v2/ai/conversations/{id}",
-  });
-};
-
-export const updateConversation = <ThrowOnError extends boolean = false>(
-  options: Options<UpdateConversationData, ThrowOnError>
-) => {
-  return (options?.client ?? client).put<
-    UpdateConversationResponse,
-    UpdateConversationError,
-    ThrowOnError
-  >({
-    ...options,
-    url: "/api/v2/ai/conversations/{id}",
-  });
-};
-
-export const deleteConversation = <ThrowOnError extends boolean = false>(
-  options: Options<DeleteConversationData, ThrowOnError>
-) => {
-  return (options?.client ?? client).delete<
-    DeleteConversationResponse,
-    DeleteConversationError,
-    ThrowOnError
-  >({
-    ...options,
-    url: "/api/v2/ai/conversations/{id}",
-  });
-};
-
-export const aiFlags = <ThrowOnError extends boolean = false>(
-  options?: Options<unknown, ThrowOnError>
-) => {
-  return (options?.client ?? client).get<
-    AiFlagsResponse,
-    AiFlagsError,
-    ThrowOnError
-  >({
-    ...options,
-    url: "/api/v2/ai/flags",
-  });
-};
-
-export const aiTools = <ThrowOnError extends boolean = false>(
-  options?: Options<unknown, ThrowOnError>
-) => {
-  return (options?.client ?? client).get<
-    AiToolsResponse,
-    AiToolsError,
-    ThrowOnError
-  >({
-    ...options,
-    url: "/api/v2/ai/tools",
-  });
-};
-
-export const aiToolCall = <ThrowOnError extends boolean = false>(
-  options: Options<AiToolCallData, ThrowOnError>
-) => {
-  return (options?.client ?? client).post<
-    AiToolCallResponse,
-    AiToolCallError,
-    ThrowOnError
-  >({
-    ...options,
-    url: "/api/v2/ai/tools/{name}",
+    url: "/api/v2/analysis/component",
   });
 };
 
@@ -472,59 +338,16 @@ export const getComponent = <ThrowOnError extends boolean = false>(
   });
 };
 
-export const searchComponentDeps = <ThrowOnError extends boolean = false>(
-  options?: Options<SearchComponentDepsData, ThrowOnError>
+export const renderSbomGraph = <ThrowOnError extends boolean = false>(
+  options: Options<RenderSbomGraphData, ThrowOnError>
 ) => {
   return (options?.client ?? client).get<
-    SearchComponentDepsResponse,
-    SearchComponentDepsError,
+    RenderSbomGraphResponse,
+    RenderSbomGraphError,
     ThrowOnError
   >({
     ...options,
-    url: "/api/v2/analysis/dep",
-  });
-};
-
-export const getComponentDeps = <ThrowOnError extends boolean = false>(
-  options: Options<GetComponentDepsData, ThrowOnError>
-) => {
-  return (options?.client ?? client).get<
-    GetComponentDepsResponse,
-    GetComponentDepsError,
-    ThrowOnError
-  >({
-    ...options,
-    url: "/api/v2/analysis/dep/{key}",
-  });
-};
-
-export const searchComponentRootComponents = <
-  ThrowOnError extends boolean = false,
->(
-  options?: Options<SearchComponentRootComponentsData, ThrowOnError>
-) => {
-  return (options?.client ?? client).get<
-    SearchComponentRootComponentsResponse,
-    SearchComponentRootComponentsError,
-    ThrowOnError
-  >({
-    ...options,
-    url: "/api/v2/analysis/root-component",
-  });
-};
-
-export const getComponentRootComponents = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<GetComponentRootComponentsData, ThrowOnError>
-) => {
-  return (options?.client ?? client).get<
-    GetComponentRootComponentsResponse,
-    GetComponentRootComponentsError,
-    ThrowOnError
-  >({
-    ...options,
-    url: "/api/v2/analysis/root-component/{key}",
+    url: "/api/v2/analysis/sbom/{sbom}/render",
   });
 };
 
