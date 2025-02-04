@@ -39,12 +39,6 @@ It will start the backend in http://localhost:8080
 npm clean-install --ignore-scripts
 ```
 
-### Run the build
-
-```shell
-npm run build
-```
-
 ### Init the dev server
 
 ```shell
