@@ -312,6 +312,9 @@ export const downloadAdvisory = <ThrowOnError extends boolean = false>(
   });
 };
 
+/**
+ * Retrieve SBOM components (packages) by a complex search.
+ */
 export const searchComponent = <ThrowOnError extends boolean = false>(
   options?: Options<SearchComponentData, ThrowOnError>
 ) => {
@@ -325,6 +328,9 @@ export const searchComponent = <ThrowOnError extends boolean = false>(
   });
 };
 
+/**
+ * Retrieve SBOM components (packages) by name, Package URL, or CPE.
+ */
 export const getComponent = <ThrowOnError extends boolean = false>(
   options: Options<GetComponentData, ThrowOnError>
 ) => {
@@ -338,6 +344,9 @@ export const getComponent = <ThrowOnError extends boolean = false>(
   });
 };
 
+/**
+ * Render an SBOM graph
+ */
 export const renderSbomGraph = <ThrowOnError extends boolean = false>(
   options: Options<RenderSbomGraphData, ThrowOnError>
 ) => {
@@ -347,10 +356,13 @@ export const renderSbomGraph = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    url: "/api/v2/analysis/sbom/{sbom}/render",
+    url: "/api/v2/analysis/sbom/{sbom}/render.{ext}",
   });
 };
 
+/**
+ * Get the status of the analysis service.
+ */
 export const status = <ThrowOnError extends boolean = false>(
   options?: Options<unknown, ThrowOnError>
 ) => {

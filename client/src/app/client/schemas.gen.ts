@@ -786,6 +786,47 @@ export const MessageSchema = {
   },
 } as const;
 
+export const NodeSchema = {
+  allOf: [
+    {
+      $ref: "#/components/schemas/BaseSummary",
+    },
+    {
+      type: "object",
+      properties: {
+        ancestors: {
+          type: ["array", "null"],
+          items: {
+            $ref: "#/components/schemas/Node",
+          },
+          description:
+            "All ancestors of this node. [`None`] if not requested on this level.",
+        },
+        descendants: {
+          type: ["array", "null"],
+          items: {
+            $ref: "#/components/schemas/Node",
+          },
+          description:
+            "All descendents of this node. [`None`] if not requested on this level.",
+        },
+        relationship: {
+          oneOf: [
+            {
+              type: "null",
+            },
+            {
+              $ref: "#/components/schemas/Relationship",
+              description:
+                "The relationship the node has to it's containing node, if any.",
+            },
+          ],
+        },
+      },
+    },
+  ],
+} as const;
+
 export const OrganizationDetailsSchema = {
   allOf: [
     {
@@ -963,74 +1004,6 @@ export const PaginatedResults_BasePurlSummarySchema = {
   },
 } as const;
 
-export const PaginatedResults_BaseSummarySchema = {
-  type: "object",
-  required: ["items", "total"],
-  properties: {
-    items: {
-      type: "array",
-      items: {
-        type: "object",
-        required: [
-          "sbom_id",
-          "node_id",
-          "purl",
-          "cpe",
-          "name",
-          "version",
-          "published",
-          "document_id",
-          "product_name",
-          "product_version",
-        ],
-        properties: {
-          cpe: {
-            type: "array",
-            items: {
-              $ref: "#/components/schemas/Cpe",
-            },
-          },
-          document_id: {
-            type: "string",
-          },
-          name: {
-            type: "string",
-          },
-          node_id: {
-            type: "string",
-          },
-          product_name: {
-            type: "string",
-          },
-          product_version: {
-            type: "string",
-          },
-          published: {
-            type: "string",
-          },
-          purl: {
-            type: "array",
-            items: {
-              $ref: "#/components/schemas/Purl",
-            },
-          },
-          sbom_id: {
-            type: "string",
-          },
-          version: {
-            type: "string",
-          },
-        },
-      },
-    },
-    total: {
-      type: "integer",
-      format: "int64",
-      minimum: 0,
-    },
-  },
-} as const;
-
 export const PaginatedResults_ImporterReportSchema = {
   type: "object",
   required: ["items", "total"],
@@ -1120,6 +1093,61 @@ export const PaginatedResults_LicenseSummarySchema = {
             },
           },
         },
+      },
+    },
+    total: {
+      type: "integer",
+      format: "int64",
+      minimum: 0,
+    },
+  },
+} as const;
+
+export const PaginatedResults_NodeSchema = {
+  type: "object",
+  required: ["items", "total"],
+  properties: {
+    items: {
+      type: "array",
+      items: {
+        allOf: [
+          {
+            $ref: "#/components/schemas/BaseSummary",
+          },
+          {
+            type: "object",
+            properties: {
+              ancestors: {
+                type: ["array", "null"],
+                items: {
+                  $ref: "#/components/schemas/Node",
+                },
+                description:
+                  "All ancestors of this node. [`None`] if not requested on this level.",
+              },
+              descendants: {
+                type: ["array", "null"],
+                items: {
+                  $ref: "#/components/schemas/Node",
+                },
+                description:
+                  "All descendents of this node. [`None`] if not requested on this level.",
+              },
+              relationship: {
+                oneOf: [
+                  {
+                    type: "null",
+                  },
+                  {
+                    $ref: "#/components/schemas/Relationship",
+                    description:
+                      "The relationship the node has to it's containing node, if any.",
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
     },
     total: {

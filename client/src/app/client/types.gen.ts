@@ -331,6 +331,18 @@ export type Message = {
   severity: Severity;
 };
 
+export type Node = BaseSummary & {
+  /**
+   * All ancestors of this node. [`None`] if not requested on this level.
+   */
+  ancestors?: Array<Node> | null;
+  /**
+   * All descendents of this node. [`None`] if not requested on this level.
+   */
+  descendants?: Array<Node> | null;
+  relationship?: null | Relationship;
+};
+
 export type OrganizationDetails = OrganizationHead & {
   /**
    * Advisories issued by the organization, if any.
@@ -406,22 +418,6 @@ export type PaginatedResults_BasePurlSummary = {
   total: number;
 };
 
-export type PaginatedResults_BaseSummary = {
-  items: Array<{
-    cpe: Array<Cpe>;
-    document_id: string;
-    name: string;
-    node_id: string;
-    product_name: string;
-    product_version: string;
-    published: string;
-    purl: Array<Purl>;
-    sbom_id: string;
-    version: string;
-  }>;
-  total: number;
-};
-
 export type PaginatedResults_ImporterReport = {
   items: Array<{
     /**
@@ -453,6 +449,23 @@ export type PaginatedResults_LicenseSummary = {
     spdx_license_exceptions: Array<string>;
     spdx_licenses: Array<string>;
   }>;
+  total: number;
+};
+
+export type PaginatedResults_Node = {
+  items: Array<
+    BaseSummary & {
+      /**
+       * All ancestors of this node. [`None`] if not requested on this level.
+       */
+      ancestors?: Array<Node> | null;
+      /**
+       * All descendents of this node. [`None`] if not requested on this level.
+       */
+      descendants?: Array<Node> | null;
+      relationship?: null | Relationship;
+    }
+  >;
   total: number;
 };
 
@@ -1062,7 +1075,17 @@ export type DownloadAdvisoryError = unknown;
 
 export type SearchComponentData = {
   query?: {
+    /**
+     * The level of ancestors to return.
+     *
+     * Zero, the default, meaning none.
+     */
     ancestors?: number;
+    /**
+     * The level of descendants to return.
+     *
+     * Zero, the default, meaning none.
+     */
     descendants?: number;
     /**
      * The maximum number of entries to return.
@@ -1077,12 +1100,17 @@ export type SearchComponentData = {
      */
     offset?: number;
     q?: string;
+    /**
+     * A set of relationships to filter for.
+     *
+     * An empty set, the default, meaning all relationships.
+     */
     relationships?: Array<Relationship>;
     sort?: string;
   };
 };
 
-export type SearchComponentResponse = PaginatedResults_BaseSummary;
+export type SearchComponentResponse = PaginatedResults_Node;
 
 export type SearchComponentError = unknown;
 
@@ -1096,7 +1124,17 @@ export type GetComponentData = {
     sort: string;
   };
   query?: {
+    /**
+     * The level of ancestors to return.
+     *
+     * Zero, the default, meaning none.
+     */
     ancestors?: number;
+    /**
+     * The level of descendants to return.
+     *
+     * Zero, the default, meaning none.
+     */
     descendants?: number;
     /**
      * The maximum number of entries to return.
@@ -1110,16 +1148,25 @@ export type GetComponentData = {
      * NOTE: The order of items is defined by the API being called.
      */
     offset?: number;
+    /**
+     * A set of relationships to filter for.
+     *
+     * An empty set, the default, meaning all relationships.
+     */
     relationships?: Array<Relationship>;
   };
 };
 
-export type GetComponentResponse = PaginatedResults_BaseSummary;
+export type GetComponentResponse = PaginatedResults_Node;
 
 export type GetComponentError = unknown;
 
 export type RenderSbomGraphData = {
   path: {
+    /**
+     * Renderer to use
+     */
+    ext: "gv";
     /**
      * ID of the SBOM
      */
