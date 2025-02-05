@@ -6,7 +6,7 @@ on:
       - main
       - "release/*"
     tags:
-      - "v*"      
+      - "v*"
   workflow_dispatch:
 
 concurrency:
@@ -39,6 +39,7 @@ jobs:
           git clone "$SOURCE" publish
           cd publish
           git fetch --tags
+          git fetch origin ${{ github.ref_name }}:${{ github.ref_name }} 2>/dev/null || true
           git checkout publish/${{ github.ref_name }} 2>/dev/null || git checkout -b publish/${{ github.ref_name }}
           git merge ${{ github.ref_name }} -X theirs
       - name: Copy dist folder
