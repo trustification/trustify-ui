@@ -19,6 +19,10 @@ import { PackageTable } from "@app/pages/package-list/package-table";
 import { SbomTable } from "@app/pages/sbom-list/sbom-table";
 import { VulnerabilityTable } from "@app/pages/vulnerability-list/vulnerability-table";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
+import { SbomSearchContext } from "@app/pages/sbom-list/sbom-context";
+import { PackageSearchContext } from "@app/pages/package-list/package-context";
+import { VulnerabilitySearchContext } from "@app/pages/vulnerability-list/vulnerability-context";
+import { AdvisorySearchContext } from "@app/pages/advisory-list/advisory-context";
 
 export interface SearchTabsProps {
   filterPanelProps: {
@@ -48,6 +52,22 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
   advisoryTable,
   advisoryTotalCount,
 }) => {
+  const { setRefetchDisabled: setSbomRefetchDisabled } =
+    React.useContext(SbomSearchContext);
+  const { setRefetchDisabled: setPackageRefetchDisabled } =
+    React.useContext(PackageSearchContext);
+  const { setRefetchDisabled: setVulnerabilityRefetchDisabled } =
+    React.useContext(VulnerabilitySearchContext);
+  const { setRefetchDisabled: setAdvisoryRefetchDisabled } = React.useContext(
+    AdvisorySearchContext
+  );
+
+  const tabs = {
+    sboms: {
+      setRefetchDisabled: setSbomRefetchDisabled
+    },
+  };
+
   const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
   const {
     sbomFilterPanelProps,
@@ -61,6 +81,20 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
     tabIndex: string | number
   ) => {
     setActiveTabKey(tabIndex);
+
+    setSbomRefetchDisabled(false);
+    setPackageRefetchDisabled(false);
+    setVulnerabilityRefetchDisabled(false);
+    setAdvisoryRefetchDisabled(false);
+
+    switch (tabIndex) {
+      case 0:
+        setSbomRefetchDisabled(true);
+        break;
+
+      default:
+        break;
+    }
   };
 
   const sbomPopoverRef = React.createRef<HTMLElement>();

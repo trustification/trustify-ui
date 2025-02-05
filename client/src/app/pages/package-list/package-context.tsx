@@ -24,6 +24,8 @@ interface PackageTableData extends PurlSummary {
 }
 
 interface IPackageSearchContext {
+  setRefetchDisabled: (isDisabled: boolean) => void;
+
   tableControls: ITableControls<
     PackageTableData,
     | "name"
@@ -55,6 +57,8 @@ interface IPackageProvider {
 export const PackageSearchProvider: React.FunctionComponent<
   IPackageProvider
 > = ({ children }) => {
+  const [refetchDisabled, setRefetchDisabled] = React.useState(false);
+
   const tableControlState = useTableControlState({
     tableName: "packages",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.packages,
@@ -120,7 +124,8 @@ export const PackageSearchProvider: React.FunctionComponent<
         namespace: "namespace",
         version: "version",
       },
-    })
+    }),
+    refetchDisabled
   );
 
   const enrichedPackages = React.useMemo(() => {
@@ -147,7 +152,15 @@ export const PackageSearchProvider: React.FunctionComponent<
 
   return (
     <PackageSearchContext.Provider
-      value={{ totalItemCount, isFetching, fetchError, tableControls }}
+      value={{
+        setRefetchDisabled: (refetchDisabled: boolean) => {
+          setRefetchDisabled(refetchDisabled);
+        },
+        totalItemCount,
+        isFetching,
+        fetchError,
+        tableControls,
+      }}
     >
       {children}
     </PackageSearchContext.Provider>
