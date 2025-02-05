@@ -6,6 +6,8 @@ on:
       - main
     tags:
       - "v*"
+      - "release/*"
+    workflow_dispatch:
 
 concurrency:
   group: tag-dist
