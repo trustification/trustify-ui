@@ -3,7 +3,7 @@ name: Tag Dist Build
 on:
   push:
     branches:
-      - main
+      - "main"
       - "release/*"
     tags:
       - "v*"
