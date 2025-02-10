@@ -280,7 +280,16 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
   }, [isAutocompleteOpen]);
 
   const autocomplete = (
-    <Menu ref={autocompleteRef} style={{ maxWidth: "450px" }}>
+    <Menu
+      ref={autocompleteRef}
+      style={{
+        maxWidth: "450px",
+        maxHeight: "450px",
+        overflow: "scroll",
+        overflowX: "hidden",
+        overflowY: "auto",
+      }}
+    >
       <MenuContent>
         <MenuList>
           {isFetching ? (
