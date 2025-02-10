@@ -117,7 +117,7 @@ function useAllEntities(filterText: string, disableSearch: boolean) {
     typeColor: "orange",
   }));
 
-  const filterTextLoweCase = filterText.toLowerCase();
+  const filterTextLowerCase = filterText.toLowerCase();
 
   const list = [
     ...transformedVulnerabilities,
@@ -125,17 +125,17 @@ function useAllEntities(filterText: string, disableSearch: boolean) {
     ...transformedAdvisories,
     ...transformedPackages,
   ].sort((a, b) => {
-    if (a.title?.includes(filterTextLoweCase)) {
+    if (a.title?.includes(filterTextLowerCase)) {
       return -1;
-    } else if (b.title?.includes(filterTextLoweCase)) {
+    } else if (b.title?.includes(filterTextLowerCase)) {
       return 1;
     } else {
       const aIndex = (a.description || "")
         .toLowerCase()
-        .indexOf(filterTextLoweCase);
+        .indexOf(filterTextLowerCase);
       const bIndex = (b.description || "")
         .toLowerCase()
-        .indexOf(filterTextLoweCase);
+        .indexOf(filterTextLowerCase);
       return aIndex - bIndex;
     }
   });
