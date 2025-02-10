@@ -18,8 +18,6 @@ import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchSBOMs } from "@app/queries/sboms";
 
 interface ISbomSearchContext {
-  setRefetchDisabled: (isDisabled: boolean) => void;
-
   tableControls: ITableControls<
     SbomSummary,
     | "name"
@@ -50,8 +48,6 @@ interface ISbomProvider {
 export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
   children,
 }) => {
-  const [refetchDisabled, setRefetchDisabled] = React.useState(false);
-
   const tableControlState = useTableControlState({
     tableName: "sbom",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.sboms,
@@ -95,8 +91,7 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
         name: "name",
         published: "published",
       },
-    }),
-    refetchDisabled
+    })
   );
 
   const tableControls = useTableControlProps({
@@ -113,15 +108,7 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
 
   return (
     <SbomSearchContext.Provider
-      value={{
-        setRefetchDisabled: (refetchDisabled: boolean) => {
-          setRefetchDisabled(refetchDisabled);
-        },
-        totalItemCount,
-        isFetching,
-        fetchError,
-        tableControls,
-      }}
+      value={{ totalItemCount, isFetching, fetchError, tableControls }}
     >
       {children}
     </SbomSearchContext.Provider>

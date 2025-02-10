@@ -18,8 +18,6 @@ import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchAdvisories } from "@app/queries/advisories";
 
 interface IAdvisorySearchContext {
-  setRefetchDisabled: (isDisabled: boolean) => void;
-
   tableControls: ITableControls<
     AdvisorySummary,
     "identifier" | "title" | "severity" | "modified" | "vulnerabilities",
@@ -45,8 +43,6 @@ interface IAdvisoryProvider {
 export const AdvisorySearchProvider: React.FunctionComponent<
   IAdvisoryProvider
 > = ({ children }) => {
-  const [refetchDisabled, setRefetchDisabled] = React.useState(false);
-
   const tableControlState = useTableControlState({
     tableName: "advisory",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.advisories,
@@ -103,8 +99,7 @@ export const AdvisorySearchProvider: React.FunctionComponent<
         severity: "average_score",
         modified: "modified",
       },
-    }),
-    refetchDisabled
+    })
   );
 
   const tableControls = useTableControlProps({
@@ -121,15 +116,7 @@ export const AdvisorySearchProvider: React.FunctionComponent<
 
   return (
     <AdvisorySearchContext.Provider
-      value={{
-        setRefetchDisabled: (refetchDisabled: boolean) => {
-          setRefetchDisabled(refetchDisabled);
-        },
-        totalItemCount,
-        isFetching,
-        fetchError,
-        tableControls,
-      }}
+      value={{ totalItemCount, isFetching, fetchError, tableControls }}
     >
       {children}
     </AdvisorySearchContext.Provider>
