@@ -8,6 +8,9 @@ node_modules/
 # testing
 coverage/
 
+# generated files
+client/src/app/client/
+
 # production
 dist/
 /qa/build
