@@ -11,7 +11,8 @@ export const PackagesQueryKey = "packages";
 
 export const useFetchPackages = (
   params: HubRequestParams = {},
-  refetchDisabled: boolean = false
+  refetchDisabled: boolean = false,
+  disableQuery: boolean = false
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [PackagesQueryKey, params],
@@ -22,6 +23,7 @@ export const useFetchPackages = (
       });
     },
     refetchInterval: !refetchDisabled ? 5000 : false,
+    enabled: !disableQuery,
   });
 
   return {

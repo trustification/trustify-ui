@@ -106,6 +106,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
       </SplitItem>
       <SplitItem isFilled>
         <Tabs
+          mountOnEnter
           isBox
           activeKey={activeTabKey}
           onSelect={handleTabClick}

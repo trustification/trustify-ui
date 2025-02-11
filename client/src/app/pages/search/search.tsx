@@ -3,7 +3,6 @@ import React from "react";
 import {
   PageSection,
   PageSectionVariants,
-  SearchInput,
   Text,
   TextContent,
   Toolbar,
