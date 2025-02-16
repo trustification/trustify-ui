@@ -3,19 +3,35 @@ import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
+import react from "eslint-plugin-react";
+import prettierRecommended from "eslint-plugin-prettier/recommended";
 
 export default tseslint.config(
-  { ignores: ["dist"] },
+  { ignores: ["**/dist"] },
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    extends: [
+      js.configs.recommended,
+      ...tseslint.configs.recommendedTypeChecked,
+      ...tseslint.configs.stylisticTypeChecked,
+      prettierRecommended,
+    ],
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+      parserOptions: {
+        project: [
+          "./common/tsconfig.json",
+          "./client/tsconfig.node.json",
+          "./client/tsconfig.app.json",
+        ],
+        tsconfigRootDir: import.meta.dirname,
+      },
     },
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
+      react,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -23,18 +39,16 @@ export default tseslint.config(
         "warn",
         { allowConstantExport: true },
       ],
-      "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/no-unused-vars": [
+      ...react.configs.recommended.rules,
+      ...react.configs["jsx-runtime"].rules,
+      "prettier/prettier": [
         "warn",
-        { argsIgnorePattern: "^_" },
+        {
+          singleQuote: false,
+        },
       ],
-      // TODO remove the rules below progressively
-      "@typescript-eslint/no-empty-object-type": "warn",
-      "@typescript-eslint/no-wrapper-object-types": "warn",
-      "@typescript-eslint/no-unused-expressions": "warn",
-      "no-empty-pattern": "warn",
-      "prefer-const": "warn",
-      "no-constant-binary-expression": "warn",
     },
+    settings: { react: { version: "18.3" } },
+    ignores: ["src/routeTree.gen.ts"],
   }
 );
