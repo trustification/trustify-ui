@@ -219,7 +219,6 @@ export const ImporterList: React.FC = () => {
         ],
         placeholderText: "Status",
         matcher: (filter, item) => {
-          console.log(filter, item);
           return filter === getImporterStatus(item);
         },
       },
