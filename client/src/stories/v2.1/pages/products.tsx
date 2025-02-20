@@ -207,9 +207,7 @@ export const ProductsPage: React.FC = () => {
         <Toolbar {...toolbarProps}>
           <ToolbarContent>
             <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
-            <ToolbarItem>
-              
-            </ToolbarItem>
+            <ToolbarItem></ToolbarItem>
             <ToolbarItem {...paginationToolbarItemProps}>
               <SimplePagination
                 idPrefix="products-table"
@@ -220,9 +218,7 @@ export const ProductsPage: React.FC = () => {
           </ToolbarContent>
         </Toolbar>
       </PageSection>
-      <PageSection>
-        table
-      </PageSection>
+      <PageSection>table</PageSection>
     </>
   );
 };
