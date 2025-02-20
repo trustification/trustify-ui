@@ -1,10 +1,6 @@
 import React from "react";
 
 import type { Meta, StoryObj } from "@storybook/react";
-
-import { NotificationsProvider } from "@app/components/NotificationsContext";
-
-import { SearchPage } from "./pages/search";
 import {
   Nav,
   NavItem,
@@ -13,11 +9,17 @@ import {
   PageSidebar,
   SkipToContent,
 } from "@patternfly/react-core";
+
+import { NotificationsProvider } from "@app/components/NotificationsContext";
+
 import { HeaderApp } from "@app/layout/header";
 import { PageContentWithDrawerProvider } from "@app/components/PageDrawerContext";
 import { Notifications } from "@app/components/Notifications";
 
-type Route = "dashboard" | "search";
+import { SearchPage } from "./pages/search";
+import { ProductsPage } from "./pages/products";
+
+type Route = "dashboard" | "search" | "products";
 type RouteProps = {
   [key in Route]: {
     element: React.ReactNode;
@@ -35,6 +37,9 @@ const App: React.FC<AppProps> = ({ route }) => {
     },
     search: {
       element: <SearchPage />,
+    },
+    products: {
+      element: <ProductsPage />,
     },
   };
 
@@ -110,5 +115,11 @@ export const Dashboard: Story = {
 export const Search: Story = {
   args: {
     route: "search",
+  },
+};
+
+export const Products: Story = {
+  args: {
+    route: "products",
   },
 };

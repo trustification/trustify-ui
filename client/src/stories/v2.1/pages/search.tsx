@@ -648,7 +648,7 @@ export const SearchPage: React.FC = () => {
                     </ListItem>
                   ))}
                 </List>
-                <a>All versions</a>
+                <a>All 49 versions</a>
               </DescriptionListDescription>
             </DescriptionListGroup>
           </DescriptionList>
