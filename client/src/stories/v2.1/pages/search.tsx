@@ -9,13 +9,19 @@ import {
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
+  DescriptionListTerm,
   DescriptionListTermHelpText,
   DescriptionListTermHelpTextButton,
+  Divider,
+  Flex,
+  FlexItem,
   Gallery,
   Grid,
   GridItem,
   Icon,
   Label,
+  List,
+  ListItem,
   PageSection,
   PageSectionVariants,
   Popover,
@@ -25,9 +31,12 @@ import {
   StackItem,
   Text,
   TextContent,
+  ToggleGroup,
+  ToggleGroupItem,
   Toolbar,
   ToolbarContent,
   ToolbarItem,
+  Tooltip
 } from "@patternfly/react-core";
 
 import {
@@ -38,10 +47,20 @@ import {
   ChartThemeColor,
   ChartTooltip,
 } from "@patternfly/react-charts";
+import { right } from "@patternfly/react-core/dist/esm/helpers/Popper/thirdparty/popper-core";
 import {
+  BoxIcon,
   CircleNotchIcon,
   GithubIcon,
+  ListIcon,
+  ReceiptIcon,
   RedhatIcon,
+  SeverityCriticalIcon,
+  SeverityImportantIcon,
+  SeverityMinorIcon,
+  SeverityModerateIcon,
+  SeverityNoneIcon,
+  ShieldVirusIcon,
 } from "@patternfly/react-icons";
 
 import { severityList } from "@app/api/model-utils";
@@ -63,28 +82,31 @@ const LEGENDS: Legend[] = [
   { severity: "none" },
 ];
 
+//
+
 interface Data {
-  type: "sbom" | "vulnerability";
+  type: "sbom" | "vulnerability" | "pkg";
   name: string;
-  description: string;
 }
 
-const sboms: Data[] = [...Array(5).keys()].map((item) => ({
+const sboms: Data[] = [...Array(4).keys()].map((item) => ({
   type: "sbom",
   name: `sbom-${item}`,
-  description: `This is my SBOM ${item}`,
 }));
-const vulnerabilities: Data[] = [...Array(5).keys()].map((item) => ({
+const vulnerabilities: Data[] = [...Array(4).keys()].map((item) => ({
   type: "vulnerability",
   name: `CVE-${item}`,
-  description: `Apache James MIME4J: Temporary File Information Disclosure in MIME4J TempFileStorageProvider`,
+}));
+const pkgs: Data[] = [...Array(4).keys()].map((item) => ({
+  type: "pkg",
+  name: `package-${item}`,
 }));
 
 export const SearchPage: React.FC = () => {
   const tableControls = useLocalTableControls({
     tableName: "search-table",
     idProperty: "name",
-    items: [...sboms, ...vulnerabilities],
+    items: [...sboms, ...vulnerabilities, ...pkgs],
     columnNames: {
       name: "Name",
       type: "Type",
@@ -111,200 +133,268 @@ export const SearchPage: React.FC = () => {
         placeholderText: "Search",
         getItemValue: (item) => item.name || "",
       },
+      {
+        categoryKey: "vulnerability",
+        title: "Vulnerability",
+        type: FilterType.multiselect,
+        logicOperator: "OR",
+        selectOptions: [...Array(vulnerabilities.length).keys()].map(
+          (item) => ({
+            value: `CVE-${item}`,
+            label: `CVE-${item}`,
+          })
+        ),
+        placeholderText: "Vulnerability",
+        matcher: (filter, item) => {
+          return item.type !== "vulnerability" ? true : filter === item.name;
+        },
+      },
+      {
+        categoryKey: "sbom",
+        title: "SBOM",
+        type: FilterType.multiselect,
+        logicOperator: "OR",
+        selectOptions: [...Array(sboms.length).keys()].map((item) => ({
+          value: `sbom-${item}`,
+          label: `sbom-${item}`,
+        })),
+        placeholderText: "SBOM",
+        matcher: (filter, item) => {
+          return item.type !== "sbom" ? true : filter === item.name;
+        },
+      },
+      {
+        categoryKey: "pkg",
+        title: "Package",
+        type: FilterType.multiselect,
+        logicOperator: "OR",
+        selectOptions: [...Array(pkgs.length).keys()].map((item) => ({
+          value: `package-${item}`,
+          label: `package-${item}`,
+        })),
+        placeholderText: "Package",
+        matcher: (filter, item) => {
+          return item.type !== "pkg" ? true : filter === item.name;
+        },
+      },
     ],
+    initialItemsPerPage: 20,
   });
 
   const {
     currentPageItems,
-    numRenderedColumns,
     propHelpers: {
       toolbarProps,
       filterToolbarProps,
       paginationToolbarItemProps,
       paginationProps,
-      tableProps,
-      getThProps,
-      getTrProps,
-      getTdProps,
     },
-    expansionDerivedState: { isCellExpanded },
   } = tableControls;
 
   //
-  const sbomHeader = (item: Data) => (
-    <Label color="green" variant="outline" isCompact>
-      SBOM
-    </Label>
-  );
+  const sbomCard = (item: Data) => {
+    return (
+      <>
+        <CardHeader
+          selectableActions={{
+            isChecked: false,
+            selectableActionId: `selectable-actions-item-${item.name}`,
+            name: `check-${item.name}`,
+            onChange: () => {},
+          }}
+        >
+          <Label color="green" variant="outline" isCompact>
+            SBOM
+          </Label>
+        </CardHeader>
+        <CardTitle>
+          <Split>
+            <SplitItem isFilled>{item.name}</SplitItem>
+            <SplitItem>
+              <Label isCompact>v8.1</Label>
+            </SplitItem>
+          </Split>
+        </CardTitle>
 
-  const vulnerabilityHeader = (item: Data) => (
-    <Label color="purple" variant="outline" isCompact>
-      Vulnerability
-    </Label>
-  );
+        <CardBody>
+          <Stack hasGutter>
+            <StackItem>My SBOM Description</StackItem>
+            <StackItem>
+              <DescriptionList isCompact>
+                <DescriptionListGroup>
+                  <DescriptionListTermHelpText>
+                    <Popover
+                      headerContent={<div>Product</div>}
+                      bodyContent={
+                        <div>The product where this SBOM belongs to</div>
+                      }
+                    >
+                      <DescriptionListTermHelpTextButton>
+                        Product
+                      </DescriptionListTermHelpTextButton>
+                    </Popover>
+                  </DescriptionListTermHelpText>
+                  <DescriptionListDescription>
+                    <Text component="a">RHEL</Text>
+                  </DescriptionListDescription>
+                </DescriptionListGroup>
+              </DescriptionList>
+            </StackItem>
+          </Stack>
+        </CardBody>
 
-  const sbomTitle = (item: Data) => (
-    <Split>
-      <SplitItem isFilled>{item.name}</SplitItem>
-      <SplitItem>
-        <Label isCompact>v8.1</Label>
-      </SplitItem>
-    </Split>
-  );
+        <CardFooter>
+          <DescriptionList isCompact>
+            <DescriptionListGroup>
+              <DescriptionListTermHelpText>
+                <Popover
+                  headerContent={<div>Vulnerabilities</div>}
+                  bodyContent={<div>Vulnerabilities affecting</div>}
+                >
+                  <DescriptionListTermHelpTextButton>
+                    Vulnerabilities
+                  </DescriptionListTermHelpTextButton>
+                </Popover>
+              </DescriptionListTermHelpText>
+              <DescriptionListDescription>
+                <Grid>
+                  <GridItem md={4}>
+                    <TextContent>
+                      <Text component="p">
+                        <Icon isInline status="danger" size="sm">
+                          <RedhatIcon />
+                        </Icon>{" "}
+                        Red Hat
+                      </Text>
+                    </TextContent>
+                  </GridItem>
+                  <GridItem md={8}>{sbomVulnerabilities}</GridItem>
 
-  const vulnerabilityTitle = (item: Data) => (
-    <Split>
-      <SplitItem isFilled>{item.name}</SplitItem>
-      <SplitItem>
-        <SeverityShieldAndText value="medium" hideLabel />
-      </SplitItem>
-    </Split>
-  );
+                  <GridItem md={4}>
+                    <TextContent>
+                      <Text component="p">
+                        <Icon isInline status="info" size="sm">
+                          <GithubIcon />
+                        </Icon>{" "}
+                        GitHub
+                      </Text>
+                    </TextContent>
+                  </GridItem>
+                  <GridItem md={8}>{sbomVulnerabilities}</GridItem>
 
-  const sbomBody = (item: Data) => (
-    <Stack hasGutter>
-      <StackItem>{item.description}</StackItem>
-      <StackItem>
-        <DescriptionList isCompact>
-          <DescriptionListGroup>
-            <DescriptionListTermHelpText>
-              <Popover
-                headerContent={<div>Product</div>}
-                bodyContent={<div>The product where this SBOM belongs to</div>}
-              >
-                <DescriptionListTermHelpTextButton>
-                  Product
-                </DescriptionListTermHelpTextButton>
-              </Popover>
-            </DescriptionListTermHelpText>
-            <DescriptionListDescription>
-              <Text component="a">RHEL</Text>
-            </DescriptionListDescription>
-          </DescriptionListGroup>
-        </DescriptionList>
-      </StackItem>
-    </Stack>
-  );
+                  <GridItem md={4}>
+                    <TextContent>
+                      <Text component="p">
+                        <Icon isInline status="custom" size="sm">
+                          <CircleNotchIcon />
+                        </Icon>{" "}
+                        OSV
+                      </Text>
+                    </TextContent>
+                  </GridItem>
+                  <GridItem md={8}>{sbomVulnerabilities}</GridItem>
+                </Grid>
+              </DescriptionListDescription>
+            </DescriptionListGroup>
+          </DescriptionList>
+        </CardFooter>
+      </>
+    );
+  };
 
-  const vulnerabilityBody = (item: Data) => <>{item.description}</>;
+  const vulnerabilityCard = (item: Data) => {
+    return (
+      <>
+        <CardHeader
+          selectableActions={{
+            isChecked: false,
+            selectableActionId: `selectable-actions-item-${item.name}`,
+            name: `check-${item.name}`,
+            onChange: () => {},
+          }}
+        >
+          <Label color="purple" variant="outline" isCompact>
+            Vulnerability
+          </Label>
+        </CardHeader>
+        <CardTitle>
+          <Split>
+            <SplitItem isFilled>{item.name}</SplitItem>
+            <SplitItem>
+              <SeverityShieldAndText value="medium" hideLabel />
+            </SplitItem>
+          </Split>
+        </CardTitle>
 
-  const sbomFooter = (item: Data) => (
-    <DescriptionList isCompact>
-      <DescriptionListGroup>
-        <DescriptionListTermHelpText>
-          <Popover
-            headerContent={<div>Vulnerabilities</div>}
-            bodyContent={<div>Vulnerabilities affecting</div>}
-          >
-            <DescriptionListTermHelpTextButton>
-              Vulnerabilities
-            </DescriptionListTermHelpTextButton>
-          </Popover>
-        </DescriptionListTermHelpText>
-        <DescriptionListDescription>
-          <Grid>
-            <GridItem md={4}>
-              <TextContent>
-                <Text component="p">
-                  <Icon isInline status="danger" size="sm">
-                    <RedhatIcon />
-                  </Icon>{" "}
-                  Red Hat
-                </Text>
-              </TextContent>
-            </GridItem>
-            <GridItem md={8}>{sbomVulnerabilities}</GridItem>
+        <CardBody>
+          Apache James MIME4J: Temporary File Information Disclosure in MIME4J
+          TempFileStorageProvider
+        </CardBody>
 
-            <GridItem md={4}>
-              <TextContent>
-                <Text component="p">
-                  <Icon isInline status="info" size="sm">
-                    <GithubIcon />
-                  </Icon>{" "}
-                  GitHub
-                </Text>
-              </TextContent>
-            </GridItem>
-            <GridItem md={8}>{sbomVulnerabilities}</GridItem>
+        <CardFooter>
+          <DescriptionList isCompact>
+            <DescriptionListGroup>
+              <DescriptionListTermHelpText>
+                <Popover
+                  headerContent={<div>Affected SBOMs</div>}
+                  bodyContent={<div>Additional name info</div>}
+                >
+                  <DescriptionListTermHelpTextButton>
+                    SBOMs affected
+                  </DescriptionListTermHelpTextButton>
+                </Popover>
+              </DescriptionListTermHelpText>
+              <DescriptionListDescription>
+                <Grid>
+                  <GridItem md={10}>
+                    <TextContent>
+                      <Text component="p">
+                        <Icon isInline status="danger" size="sm">
+                          <RedhatIcon />
+                        </Icon>{" "}
+                        Red Hat
+                      </Text>
+                    </TextContent>
+                  </GridItem>
+                  <GridItem md={2}>
+                    <Text component="a">10</Text>
+                  </GridItem>
 
-            <GridItem md={4}>
-              <TextContent>
-                <Text component="p">
-                  <Icon isInline status="custom" size="sm">
-                    <CircleNotchIcon />
-                  </Icon>{" "}
-                  OSV
-                </Text>
-              </TextContent>
-            </GridItem>
-            <GridItem md={8}>{sbomVulnerabilities}</GridItem>
-          </Grid>
-        </DescriptionListDescription>
-      </DescriptionListGroup>
-    </DescriptionList>
-  );
+                  <GridItem md={10}>
+                    <TextContent>
+                      <Text component="p">
+                        <Icon isInline status="info" size="sm">
+                          <GithubIcon />
+                        </Icon>{" "}
+                        GitHub
+                      </Text>
+                    </TextContent>
+                  </GridItem>
+                  <GridItem md={2}>
+                    <Text component="a">11</Text>
+                  </GridItem>
 
-  const vulnerabilityFooter = (item: Data) => (
-    <DescriptionList isCompact>
-      <DescriptionListGroup>
-        <DescriptionListTermHelpText>
-          <Popover
-            headerContent={<div>Affected SBOMs</div>}
-            bodyContent={<div>Additional name info</div>}
-          >
-            <DescriptionListTermHelpTextButton>
-              SBOMs affected
-            </DescriptionListTermHelpTextButton>
-          </Popover>
-        </DescriptionListTermHelpText>
-        <DescriptionListDescription>
-          <Grid>
-            <GridItem md={10}>
-              <TextContent>
-                <Text component="p">
-                  <Icon isInline status="danger" size="sm">
-                    <RedhatIcon />
-                  </Icon>{" "}
-                  Red Hat
-                </Text>
-              </TextContent>
-            </GridItem>
-            <GridItem md={2}>
-              <Text component="a">10</Text>
-            </GridItem>
-
-            <GridItem md={10}>
-              <TextContent>
-                <Text component="p">
-                  <Icon isInline status="info" size="sm">
-                    <GithubIcon />
-                  </Icon>{" "}
-                  GitHub
-                </Text>
-              </TextContent>
-            </GridItem>
-            <GridItem md={2}>
-              <Text component="a">11</Text>
-            </GridItem>
-
-            <GridItem md={10}>
-              <TextContent>
-                <Text component="p">
-                  <Icon isInline status="custom" size="sm">
-                    <CircleNotchIcon />
-                  </Icon>{" "}
-                  OSV
-                </Text>
-              </TextContent>
-            </GridItem>
-            <GridItem md={2}>
-              <Text component="a">12</Text>
-            </GridItem>
-          </Grid>
-        </DescriptionListDescription>
-      </DescriptionListGroup>
-    </DescriptionList>
-  );
+                  <GridItem md={10}>
+                    <TextContent>
+                      <Text component="p">
+                        <Icon isInline status="custom" size="sm">
+                          <CircleNotchIcon />
+                        </Icon>{" "}
+                        OSV
+                      </Text>
+                    </TextContent>
+                  </GridItem>
+                  <GridItem md={2}>
+                    <Text component="a">12</Text>
+                  </GridItem>
+                </Grid>
+              </DescriptionListDescription>
+            </DescriptionListGroup>
+          </DescriptionList>
+        </CardFooter>
+      </>
+    );
+  };
 
   const sbomVulnerabilities = (
     <div style={{ height: "24px", width: "150px" }}>
@@ -384,6 +474,189 @@ export const SearchPage: React.FC = () => {
     </div>
   );
 
+  const packageCard = (item: Data) => {
+    return (
+      <>
+        <CardHeader
+          selectableActions={{
+            isChecked: false,
+            selectableActionId: `selectable-actions-item-${item.name}`,
+            name: `check-${item.name}`,
+            onChange: () => {},
+          }}
+        >
+          <Label color="gold" variant="outline" isCompact>
+            Package
+          </Label>
+        </CardHeader>
+        <CardTitle>
+          <Split>
+            <SplitItem isFilled>{item.name}</SplitItem>
+            <SplitItem>
+              <Label color="grey" variant="outline" isCompact>
+                Maven
+              </Label>
+            </SplitItem>
+          </Split>
+        </CardTitle>
+
+        <CardBody>
+          <DescriptionList isCompact>
+            <DescriptionListGroup>
+              <DescriptionListTermHelpText>
+                Namespace
+              </DescriptionListTermHelpText>
+              <DescriptionListDescription>
+                <Text component="p"> org.apache.logging.log4j</Text>
+              </DescriptionListDescription>
+            </DescriptionListGroup>
+          </DescriptionList>
+        </CardBody>
+
+        <CardFooter>
+          <DescriptionList isCompact>
+            <DescriptionListGroup>
+              <DescriptionListTerm>Versions</DescriptionListTerm>
+              <DescriptionListDescription>
+                <List>
+                  {[...Array(3).keys()].reverse().map((key) => (
+                    <ListItem key={key}>
+                      <Grid hasGutter>
+                        <GridItem md={4}>2.11.{key}</GridItem>
+                        <GridItem md={4}>
+                          <Popover
+                            aria-label="Basic popover"
+                            triggerAction="hover"
+                            headerContent={<div>SBOMs</div>}
+                            bodyContent={
+                              <div>57 SBOMs contain this package</div>
+                            }
+                            footerContent={
+                              <>
+                                <a>See SBOMs</a>
+                              </>
+                            }
+                          >
+                            <TextContent>
+                              <Text component="small">
+                                <Icon isInline size="sm">
+                                  <ReceiptIcon />
+                                </Icon>{" "}
+                                <a>15</a>
+                              </Text>
+                            </TextContent>
+                          </Popover>
+                        </GridItem>
+                        <GridItem md={4}>
+                          <Popover
+                            aria-label="Basic popover"
+                            triggerAction="hover"
+                            headerContent={<div>SBOMs</div>}
+                            bodyContent={
+                              <Flex
+                                spaceItems={{ default: "spaceItemsSm" }}
+                                alignItems={{ default: "alignItemsCenter" }}
+                                flexWrap={{ default: "nowrap" }}
+                                style={{ whiteSpace: "nowrap" }}
+                              >
+                                <FlexItem
+                                  style={{ minWidth: 15, textAlign: right }}
+                                >
+                                  57
+                                </FlexItem>
+                                <Divider
+                                  orientation={{ default: "vertical" }}
+                                />
+                                <FlexItem>
+                                  <Flex>
+                                    {Object.entries(severityList)
+                                      .reverse()
+                                      .map(([severity, _count], index) => (
+                                        <FlexItem
+                                          key={index}
+                                          spacer={{ default: "spacerXs" }}
+                                        >
+                                          <Flex
+                                            spaceItems={{
+                                              default: "spaceItemsXs",
+                                            }}
+                                            alignItems={{
+                                              default: "alignItemsCenter",
+                                            }}
+                                            flexWrap={{ default: "nowrap" }}
+                                            style={{ whiteSpace: "nowrap" }}
+                                          >
+                                            <FlexItem>
+                                              <Flex
+                                                spaceItems={{
+                                                  default: "spaceItemsXs",
+                                                }}
+                                                alignItems={{
+                                                  default: "alignItemsCenter",
+                                                }}
+                                                flexWrap={{ default: "nowrap" }}
+                                                style={{ whiteSpace: "nowrap" }}
+                                              >
+                                                <FlexItem>
+                                                  <Tooltip content={severity}>
+                                                    <>
+                                                      {index === 0 && (
+                                                        <SeverityCriticalIcon color="#b1380b" />
+                                                      )}
+                                                      {index === 1 && (
+                                                        <SeverityImportantIcon color="#ca6c0f" />
+                                                      )}
+                                                      {index === 2 && (
+                                                        <SeverityModerateIcon color="#dca614" />
+                                                      )}
+                                                      {index === 3 && (
+                                                        <SeverityMinorIcon color="#707070" />
+                                                      )}
+                                                      {index === 4 && (
+                                                        <SeverityNoneIcon color="#4394e5" />
+                                                      )}
+                                                    </>
+                                                  </Tooltip>
+                                                </FlexItem>
+                                              </Flex>
+                                            </FlexItem>
+                                            <FlexItem>{1}</FlexItem>
+                                          </Flex>
+                                        </FlexItem>
+                                      ))}
+                                  </Flex>
+                                </FlexItem>
+                              </Flex>
+                            }
+                            footerContent={
+                              <>
+                                <a>See all Vulnerabilities</a>
+                              </>
+                            }
+                          >
+                            <TextContent>
+                              <Text component="small">
+                                <Icon isInline size="sm">
+                                  <ShieldVirusIcon />
+                                </Icon>{" "}
+                                <a>57</a>
+                              </Text>
+                            </TextContent>
+                          </Popover>
+                        </GridItem>
+                      </Grid>
+                    </ListItem>
+                  ))}
+                </List>
+                <a>All versions</a>
+              </DescriptionListDescription>
+            </DescriptionListGroup>
+          </DescriptionList>
+        </CardFooter>
+      </>
+    );
+  };
+
   return (
     <>
       <PageSection variant={PageSectionVariants.light}>
@@ -394,6 +667,22 @@ export const SearchPage: React.FC = () => {
         <Toolbar {...toolbarProps}>
           <ToolbarContent>
             <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
+            <ToolbarItem>
+              <ToggleGroup aria-label="Default with single selectable">
+                <ToggleGroupItem
+                  icon={<BoxIcon />}
+                  buttonId="toggle-group-single-1"
+                  isSelected={true}
+                  onChange={() => {}}
+                />
+                <ToggleGroupItem
+                  icon={<ListIcon />}
+                  buttonId="toggle-group-single-2"
+                  isSelected={false}
+                  onChange={() => {}}
+                />
+              </ToggleGroup>
+            </ToolbarItem>
             <ToolbarItem {...paginationToolbarItemProps}>
               <SimplePagination
                 idPrefix="search-table"
@@ -408,31 +697,9 @@ export const SearchPage: React.FC = () => {
         <Gallery hasGutter>
           {currentPageItems.map((item, index) => (
             <Card key={index} isCompact>
-              <CardHeader
-                selectableActions={{
-                  isChecked: false,
-                  selectableActionId: `selectable-actions-item-${index}`,
-                  name: `check-${index}`,
-                  onChange: () => {},
-                }}
-              >
-                {item.type === "sbom" && sbomHeader(item)}
-                {item.type === "vulnerability" && vulnerabilityHeader(item)}
-              </CardHeader>
-              <CardTitle>
-                {item.type === "sbom" && sbomTitle(item)}
-                {item.type === "vulnerability" && vulnerabilityTitle(item)}
-              </CardTitle>
-
-              <CardBody>
-                {item.type === "sbom" && sbomBody(item)}
-                {item.type === "vulnerability" && vulnerabilityBody(item)}
-              </CardBody>
-
-              <CardFooter>
-                {item.type === "sbom" && sbomFooter(item)}
-                {item.type === "vulnerability" && vulnerabilityFooter(item)}
-              </CardFooter>
+              {item.type === "sbom" && sbomCard(item)}
+              {item.type === "vulnerability" && vulnerabilityCard(item)}
+              {item.type === "pkg" && packageCard(item)}
             </Card>
           ))}
         </Gallery>
