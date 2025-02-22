@@ -9,6 +9,7 @@ import type {RsbuildPlugin} from '@rsbuild/core';
 import {
   brandingStrings,
   encodeEnv,
+  proxyMap,
   SERVER_ENV_KEYS,
   TRUSTIFICATION_ENV,
   brandingAssetPath
@@ -115,5 +116,8 @@ export default defineConfig({
         to: ".",
       },
     ],
+  },
+  server: {
+    proxy: proxyMap,
   },
 });

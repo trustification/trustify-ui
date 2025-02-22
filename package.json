@@ -8,8 +8,8 @@
     "url": "https://github.com/trustification/trustify-ui.git"
   },
   "scripts": {
-    "format:check": "npx prettier --check './**/*.{ts,tsx,js,json}'",
-    "format:fix": "npx prettier --write './**/*.{ts,tsx,js,json}'",
+    "format:check": "biome check",
+    "format:fix": "biome format --write",
     "generate": "npm run generate -ws --if-present",
     "clean": "rimraf ./dist && npm run clean -ws --if-present",
     "clean:all": "npm run clean && rimraf ./node_modules ./**/node_modules/",
@@ -21,7 +21,6 @@
     "start:dev": "npm run generate && concurrently -n common,client -c 'white.bold.inverse,green.bold.inverse,blue.bold.inverse' 'npm:start:dev:common' 'npm:start:dev:client'",
     "start": "npm run build -w common -w client && npm run start -w server",
     "test": "npm run test -ws --if-present --",
-    "lint": "npm run lint -ws --if-present --",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -46,7 +45,10 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@chromatic-com/storybook": "^3.2.4",
+    "@rollup/plugin-commonjs": "^26.0.1",
+    "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-run": "^3.0.2",
     "@rollup/plugin-typescript": "^11.1.6",
     "@rollup/plugin-virtual": "^3.0.2",
     "@storybook/addon-essentials": "^8.4.7",
