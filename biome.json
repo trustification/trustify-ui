@@ -13,7 +13,7 @@
   },
   "javascript": {
     "formatter": {
-      "quoteStyle": "single"
+      "quoteStyle": "double"
     }
   },
   "css": {
@@ -26,5 +26,10 @@
     "rules": {
       "recommended": true
     }
+  },
+  "files": {
+    "ignore": [
+      "**/src/mocks/**/*.json"
+    ]
   }
 }

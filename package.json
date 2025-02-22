@@ -21,6 +21,7 @@
     "start:dev": "npm run generate && concurrently -n common,client -c 'white.bold.inverse,green.bold.inverse,blue.bold.inverse' 'npm:start:dev:common' 'npm:start:dev:client'",
     "start": "npm run build -w common -w client && npm run start -w server",
     "test": "npm run test -ws --if-present --",
+    "lint": "biome lint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -40,7 +41,7 @@
   "peerDependencies": {
     "react": "^18",
     "react-dom": "^18",
-    "typescript": "~5.6.2"
+    "typescript": "~5.7.3"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
