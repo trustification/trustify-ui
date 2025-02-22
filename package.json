@@ -8,7 +8,7 @@
     "url": "https://github.com/trustification/trustify-ui.git"
   },
   "scripts": {
-    "format:check": "biome check",
+    "format:check": "biome format",
     "format:fix": "biome format --write",
     "generate": "npm run generate -ws --if-present",
     "clean": "rimraf ./dist && npm run clean -ws --if-present",
@@ -29,11 +29,7 @@
     "package-lock.json": "./scripts/verify_lock.mjs",
     "!(package-lock.json)*": "prettier --ignore-unknown --write"
   },
-  "workspaces": [
-    "common",
-    "client",
-    "server"
-  ],
+  "workspaces": ["common", "client", "server"],
   "engines": {
     "node": "^20",
     "npm": ">=9.5.0"
