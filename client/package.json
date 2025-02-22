@@ -6,12 +6,12 @@
   "type": "module",
   "scripts": {
     "clean": "rimraf ./dist",
-    "build": "tsc -b && vite build",
-    "start:dev": "vite --port 3000",
+    "build": "rsbuild build",
+    "start:dev": "rsbuild dev --open",
     "test": "NODE_ENV=test jest --rootDir=. --config=./config/jest.config.ts",
     "generate": "openapi-ts -f ./config/openapi-ts.config.ts",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "rsbuild preview"
   },
   "lint-staged": {
     "*.{js,cjs,mjs,jsx,ts,cts,mts,tsx}": "eslint --fix",
@@ -51,18 +51,14 @@
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "0.53.5",
-    "@testing-library/jest-dom": "^6.4.6",
-    "@testing-library/react": "^16.0.0",
+    "@rsbuild/core": "^1.2.8",
+    "@rsbuild/plugin-react": "^1.1.0",
     "@types/file-saver": "^2.0.2",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "@vitejs/plugin-react": "^4.3.4",
-    "globals": "^15.14.0",
+    "raw-loader": "^4.0.2",
     "msw": "^2.6.4",
-    "typescript": "~5.6.2",
-    "vite": "^6.0.5",
-    "vite-plugin-ejs": "^1.7.0",
-    "vite-plugin-static-copy": "^2.2.0"
+    "typescript": "^5.7.3"
   },
   "browserslist": {
     "production": [
