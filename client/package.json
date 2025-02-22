@@ -7,7 +7,7 @@
   "scripts": {
     "clean": "rimraf ./dist",
     "build": "rsbuild build",
-    "start:dev": "rsbuild dev --open",
+    "start:dev": "rsbuild dev",
     "test": "NODE_ENV=test jest --rootDir=. --config=./config/jest.config.ts",
     "generate": "openapi-ts -f ./config/openapi-ts.config.ts",
     "lint": "eslint .",

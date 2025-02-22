@@ -1,10 +1,10 @@
 import * as path from "node:path";
 import * as fs from "node:fs";
 
-import {defineConfig} from '@rsbuild/core';
-import {pluginReact} from '@rsbuild/plugin-react';
+import { defineConfig } from "@rsbuild/core";
+import { pluginReact } from "@rsbuild/plugin-react";
 
-import type {RsbuildPlugin} from '@rsbuild/core';
+import type { RsbuildPlugin } from "@rsbuild/core";
 
 import {
   brandingStrings,
@@ -12,7 +12,7 @@ import {
   proxyMap,
   SERVER_ENV_KEYS,
   TRUSTIFICATION_ENV,
-  brandingAssetPath
+  brandingAssetPath,
 } from "@trustify-ui/common";
 
 const brandingPath: string = brandingAssetPath();
@@ -20,7 +20,7 @@ const manifestPath = path.resolve(brandingPath, "manifest.json");
 const faviconPath = path.resolve(brandingPath, "favicon.ico");
 
 export const copyIndex = (): RsbuildPlugin => ({
-  name: 'CopyIndex',
+  name: "CopyIndex",
   setup(api) {
     if (process.env.NODE_ENV === "production") {
       api.onAfterBuild(() => {
@@ -37,12 +37,15 @@ export const copyIndex = (): RsbuildPlugin => ({
 });
 
 export const ignoreProcessEnv = (): RsbuildPlugin => ({
-  name: 'ignore-process-env',
+  name: "ignore-process-env",
   setup(api) {
     if (process.env.NODE_ENV === "development") {
-      api.transform({test: /\.mjs$/}, ({code, resourcePath}) => {
+      api.transform({ test: /\.mjs$/ }, ({ code, resourcePath }) => {
         let newCode = code;
-        if (code.includes("process.env") && resourcePath.includes("/trustify-ui/common/")) {
+        if (
+          code.includes("process.env") &&
+          resourcePath.includes("/common/dist/index.mjs")
+        ) {
           newCode = code.replace(/process\.env/g, "({})");
         }
         return newCode;
@@ -63,7 +66,7 @@ export const ignoreProcessEnv = (): RsbuildPlugin => ({
               fs.writeFileSync(filePath, code);
             }
           }
-        }
+        };
 
         const distDir = path.resolve(__dirname, "dist");
         replaceProcessEnv(distDir);
@@ -73,32 +76,28 @@ export const ignoreProcessEnv = (): RsbuildPlugin => ({
 });
 
 export default defineConfig({
-  plugins: [
-    pluginReact(),
-    copyIndex(),
-    ignoreProcessEnv(),
-  ],
+  plugins: [pluginReact(), copyIndex(), ignoreProcessEnv()],
   html: {
     template: path.join(__dirname, "index.html"),
     templateParameters: {
       ...(process.env.NODE_ENV === "development" && {
         _env: encodeEnv(TRUSTIFICATION_ENV, SERVER_ENV_KEYS),
         branding: brandingStrings,
-      })
-    }
+      }),
+    },
   },
   tools: {
-    rspack(_config, {addRules}) {
+    rspack(_config, { addRules }) {
       addRules([
-          ...(process.env.NODE_ENV === "production" ? [
+        ...(process.env.NODE_ENV === "production"
+          ? [
               {
                 test: /\.html$/,
                 use: "raw-loader", // Ensures HTML remains unprocessed
-              }
-            ] : []
-          )
-        ],
-      );
+              },
+            ]
+          : []),
+      ]);
     },
   },
   output: {
