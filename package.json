@@ -45,11 +45,22 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "@chromatic-com/storybook": "^3.2.4",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
     "@rollup/plugin-virtual": "^3.0.2",
+    "@storybook/addon-essentials": "^8.4.7",
+    "@storybook/addon-interactions": "^8.4.7",
+    "@storybook/blocks": "^8.4.7",
+    "@storybook/react": "^8.4.7",
+    "@storybook/test": "^8.4.7",
+    "concurrently": "^8.2.0",
+    "copyfiles": "^2.4.1",
+    "msw-storybook-addon": "^2.0.4",
     "rimraf": "^5.0.7",
     "rollup": "^3.29.4",
-    "rollup-plugin-copy": "^3.5.0"
+    "rollup-plugin-copy": "^3.5.0",
+    "storybook": "^8.4.7",
+    "storybook-react-rsbuild": "^0.1.10"
   }
 }

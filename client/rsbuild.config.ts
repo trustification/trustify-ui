@@ -78,7 +78,7 @@ export default defineConfig({
     ignoreProcessEnv(),
   ],
   html: {
-    template: "./index.html",
+    template: path.join(__dirname, "index.html"),
     templateParameters: {
       ...(process.env.NODE_ENV === "development" && {
         _env: encodeEnv(TRUSTIFICATION_ENV, SERVER_ENV_KEYS),
