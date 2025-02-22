@@ -21,8 +21,9 @@
     "paths": {
       "@app/*": ["src/app/*"],
       "@mocks/*": ["src/mocks/*"]
-    }
+    },
+    "esModuleInterop": true
   },
-  "include": ["src"]
+  "include": ["src", "types/**/*"]
 }
 

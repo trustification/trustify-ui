@@ -54,7 +54,7 @@ const config: JestConfigWithTsJest = {
     "^.+\\.(js|mjs|ts|mts)x?$": [
       "ts-jest",
       {
-        tsconfig: "tsconfig.app.json", // 👈 Use custom tsconfig here
+        tsconfig: "tsconfig.json", // 👈 Use custom tsconfig here
       },
     ],
   },

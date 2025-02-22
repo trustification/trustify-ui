@@ -51,6 +51,8 @@
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "0.53.5",
+    "@testing-library/jest-dom": "^6.4.6",
+    "@testing-library/react": "^16.0.0",
     "@rsbuild/core": "^1.2.8",
     "@rsbuild/plugin-react": "^1.1.0",
     "@types/file-saver": "^2.0.2",
