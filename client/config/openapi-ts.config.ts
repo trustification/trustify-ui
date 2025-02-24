@@ -1,7 +1,7 @@
 import { defineConfig } from "@hey-api/openapi-ts";
 
 export default defineConfig({
-  plugins: ["@hey-api/client-axios"],
+  client: "@hey-api/client-axios",
   input: "./openapi/trustd.yaml",
   output: {
     path: "src/app/client",
