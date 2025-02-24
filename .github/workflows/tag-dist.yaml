@@ -26,8 +26,6 @@ jobs:
       - name: Install
         working-directory: build
         run: npm clean-install --ignore-scripts
-      - name: Generate
-        run: npm run generate
       - name: Build
         working-directory: build
         run: npm run build
