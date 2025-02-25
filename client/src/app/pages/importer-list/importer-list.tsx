@@ -59,9 +59,11 @@ import {
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 
-import { ANSICOLOR } from "@app/Constants";
+import { ANSICOLOR, DEFAULT_REFETCH_INTERVAL } from "@app/Constants";
 import { ImporterProgress } from "./components/importer-progress";
 import { ImporterStatusIcon } from "./components/importer-status-icon";
+
+const slowRefetchInterval = DEFAULT_REFETCH_INTERVAL * 2;
 
 export const ImporterList: React.FC = () => {
   const { pushNotification } = React.useContext(NotificationsContext);
@@ -89,9 +91,9 @@ export const ImporterList: React.FC = () => {
       (item) => item.state === "running"
     );
     if (isSomeTaskRunning) {
-      setRefetchInterval(5000);
-    } else if (refetchInterval !== 10000) {
-      setRefetchInterval(10000);
+      setRefetchInterval(DEFAULT_REFETCH_INTERVAL);
+    } else if (refetchInterval !== slowRefetchInterval) {
+      setRefetchInterval(slowRefetchInterval);
     }
   }, [importers]);
 

@@ -9,6 +9,7 @@ import {
   listVulnerabilities,
   VulnerabilityDetails,
 } from "@app/client";
+import { DEFAULT_REFETCH_INTERVAL } from "@app/Constants";
 import { requestParamsQuery } from "@app/hooks/table-controls";
 
 export const VulnerabilitiesQueryKey = "vulnerabilities";
@@ -26,7 +27,7 @@ export const useFetchVulnerabilities = (
         query: { ...requestParamsQuery(params) },
       });
     },
-    refetchInterval: !refetchDisabled ? 5000 : false,
+    refetchInterval: !refetchDisabled ? DEFAULT_REFETCH_INTERVAL : false,
     enabled: !disableQuery,
   });
   return {

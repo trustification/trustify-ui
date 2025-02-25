@@ -14,6 +14,7 @@ import {
 } from "@app/client";
 
 import { uploadAdvisory } from "@app/api/rest";
+import { DEFAULT_REFETCH_INTERVAL } from "@app/Constants";
 import { requestParamsQuery } from "@app/hooks/table-controls";
 import { useUpload } from "@app/hooks/useUpload";
 
@@ -39,7 +40,7 @@ export const useFetchAdvisories = (
         query: { ...requestParamsQuery(params) },
       });
     },
-    refetchInterval: !refetchDisabled ? 5000 : false,
+    refetchInterval: !refetchDisabled ? DEFAULT_REFETCH_INTERVAL : false,
     enabled: !disableQuery,
   });
   return {
