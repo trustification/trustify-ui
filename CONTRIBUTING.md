@@ -9,7 +9,7 @@ Thank you for considering contributing to Trustify UI! We appreciate your time a
 - If you find a bug or have a feature request, please create an issue:
 - Check the existing issues to avoid duplicates.
 - Use a clear and descriptive title.
-- Provide as much detail as possible, including steps to reproduce (if applicable).
+- Provide as much details as possible, including steps to reproduce (if applicable).
 
 ### 2. Submitting Pull Requests (PRs)
 
