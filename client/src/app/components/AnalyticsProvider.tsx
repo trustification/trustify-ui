@@ -25,6 +25,7 @@ export const AnalyticsProvider: React.FC<IAnalyticsProviderProps> = ({
 export const AnalyticsContextProvider: React.FC<IAnalyticsProviderProps> = ({
   children,
 }) => {
+  /* eslint-disable react-hooks/rules-of-hooks */
   const auth = (isAuthRequired && useAuth()) || undefined;
   const analytics = React.useMemo(() => {
     return AnalyticsBrowser.load(analyticsSettings);
