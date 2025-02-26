@@ -92,7 +92,16 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
 
   const tableData = React.useMemo(() => {
     return affectedVulnerabilities.map((item) => {
-      const allPackages = item.relatedPackages.flatMap((i) => i.packages);
+      const allPackages = item.relatedPackages
+        .flatMap((i) => i.packages)
+        .reduce((prev, current) => {
+          const existingElement = prev.find((item) => item.id === current.id);
+          if (existingElement) {
+            return prev;
+          } else {
+            return [...prev, current];
+          }
+        }, [] as SbomPackage[]);
       const result: TableData = {
         ...item,
         summary: {
