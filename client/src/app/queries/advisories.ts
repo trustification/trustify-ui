@@ -14,7 +14,6 @@ import {
 } from "@app/client";
 
 import { uploadAdvisory } from "@app/api/rest";
-import { DEFAULT_REFETCH_INTERVAL } from "@app/Constants";
 import { requestParamsQuery } from "@app/hooks/table-controls";
 import { useUpload } from "@app/hooks/useUpload";
 
@@ -29,7 +28,6 @@ export const AdvisoriesQueryKey = "advisories";
 
 export const useFetchAdvisories = (
   params: HubRequestParams = {},
-  refetchDisabled: boolean = false,
   disableQuery: boolean = false
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
@@ -40,7 +38,6 @@ export const useFetchAdvisories = (
         query: { ...requestParamsQuery(params) },
       });
     },
-    refetchInterval: !refetchDisabled ? DEFAULT_REFETCH_INTERVAL : false,
     enabled: !disableQuery,
   });
   return {

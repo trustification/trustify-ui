@@ -22,14 +22,12 @@ import {
 import { useUpload } from "@app/hooks/useUpload";
 
 import { uploadSbom } from "@app/api/rest";
-import { DEFAULT_REFETCH_INTERVAL } from "@app/Constants";
 import { requestParamsQuery } from "../hooks/table-controls";
 
 export const SBOMsQueryKey = "sboms";
 
 export const useFetchSBOMs = (
   params: HubRequestParams = {},
-  refetchDisabled: boolean = false,
   disableQuery: boolean = false
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
@@ -39,7 +37,6 @@ export const useFetchSBOMs = (
         client,
         query: { ...requestParamsQuery(params) },
       }),
-    refetchInterval: !refetchDisabled ? DEFAULT_REFETCH_INTERVAL : false,
     enabled: !disableQuery,
   });
   return {

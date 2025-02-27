@@ -3,7 +3,6 @@ import { AxiosError } from "axios";
 
 import { HubRequestParams } from "@app/api/models";
 
-import { DEFAULT_REFETCH_INTERVAL } from "@app/Constants";
 import { client } from "../axios-config/apiInit";
 import { getPurl, listPackages, listPurl } from "../client";
 import { requestParamsQuery } from "../hooks/table-controls";
@@ -12,7 +11,6 @@ export const PackagesQueryKey = "packages";
 
 export const useFetchPackages = (
   params: HubRequestParams = {},
-  refetchDisabled: boolean = false,
   disableQuery: boolean = false
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
@@ -23,7 +21,6 @@ export const useFetchPackages = (
         query: { ...requestParamsQuery(params) },
       });
     },
-    refetchInterval: !refetchDisabled ? DEFAULT_REFETCH_INTERVAL : false,
     enabled: !disableQuery,
   });
 

@@ -59,7 +59,7 @@ import {
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 
-import { ANSICOLOR, DEFAULT_REFETCH_INTERVAL } from "@app/Constants";
+import { ANSICOLOR } from "@app/Constants";
 import { ImporterProgress } from "./components/importer-progress";
 import { ImporterStatusIcon } from "./components/importer-status-icon";
 
@@ -78,8 +78,6 @@ const getImporterStatus = (importer: Importer): ImporterStatus => {
   }
 };
 
-const slowRefetchInterval = DEFAULT_REFETCH_INTERVAL * 2;
-
 export const ImporterList: React.FC = () => {
   const { pushNotification } = React.useContext(NotificationsContext);
 
@@ -94,23 +92,7 @@ export const ImporterList: React.FC = () => {
     setSelectedRow(row);
   };
 
-  const [refetchInterval, setRefetchInterval] = React.useState(10000);
-  const { importers, isFetching, fetchError } = useFetchImporters(
-    false,
-    refetchInterval
-  );
-
-  // Fetch importers with more frecuency in case any is "running"
-  React.useEffect(() => {
-    const isSomeTaskRunning = importers.some(
-      (item) => item.state === "running"
-    );
-    if (isSomeTaskRunning) {
-      setRefetchInterval(DEFAULT_REFETCH_INTERVAL);
-    } else if (refetchInterval !== slowRefetchInterval) {
-      setRefetchInterval(slowRefetchInterval);
-    }
-  }, [importers]);
+  const { importers, isFetching, fetchError } = useFetchImporters();
 
   // Enable/Disable Importer
 
