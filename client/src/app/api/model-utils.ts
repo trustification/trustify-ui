@@ -7,10 +7,10 @@ import {
   global_palette_black_400 as noneColor,
 } from "@patternfly/react-tokens";
 
-import { Severity } from "@app/client";
+import { ExtendedSeverity } from "./models";
 
 type ListType = {
-  [key in Severity]: {
+  [key in ExtendedSeverity]: {
     name: string;
     color: { name: string; value: string; var: string };
     progressProps: Pick<ProgressProps, "variant">;
@@ -18,6 +18,11 @@ type ListType = {
 };
 
 export const severityList: ListType = {
+  unknown: {
+    name: "Unknown",
+    color: noneColor,
+    progressProps: { variant: undefined },
+  },
   none: {
     name: "None",
     color: noneColor,
@@ -45,23 +50,25 @@ export const severityList: ListType = {
   },
 };
 
-export const getSeverityPriority = (val: Severity) => {
+export const getSeverityPriority = (val: ExtendedSeverity) => {
   switch (val) {
-    case "low":
+    case "unknown":
       return 1;
-    case "medium":
+    case "low":
       return 2;
-    case "high":
+    case "medium":
       return 3;
-    case "critical":
+    case "high":
       return 4;
+    case "critical":
+      return 5;
     default:
       return 0;
   }
 };
 
 export function compareBySeverityFn<T>(
-  severityExtractor: (elem: T) => Severity
+  severityExtractor: (elem: T) => ExtendedSeverity
 ) {
   return (a: T, b: T) => {
     return (
