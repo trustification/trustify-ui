@@ -29,7 +29,10 @@ import {
 } from "@patternfly/react-table";
 
 import { getSeverityPriority } from "@app/api/model-utils";
-import { VulnerabilityStatus } from "@app/api/models";
+import {
+  extendedSeverityFromSeverity,
+  VulnerabilityStatus,
+} from "@app/api/models";
 import {
   PurlSummary,
   SbomAdvisory,
@@ -285,11 +288,11 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                           )}
                         </Td>
                         <Td width={10} {...getTdProps({ columnKey: "cvss" })}>
-                          {item.vulnerability.average_severity && (
-                            <SeverityShieldAndText
-                              value={item.vulnerability.average_severity}
-                            />
-                          )}
+                          <SeverityShieldAndText
+                            value={extendedSeverityFromSeverity(
+                              item.vulnerability.average_severity
+                            )}
+                          />
                         </Td>
                         <Td
                           width={15}
