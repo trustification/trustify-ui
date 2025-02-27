@@ -92,23 +92,7 @@ export const ImporterList: React.FC = () => {
     setSelectedRow(row);
   };
 
-  const [refetchInterval, setRefetchInterval] = React.useState(10000);
-  const { importers, isFetching, fetchError } = useFetchImporters(
-    false,
-    refetchInterval
-  );
-
-  // Fetch importers with more frecuency in case any is "running"
-  React.useEffect(() => {
-    const isSomeTaskRunning = importers.some(
-      (item) => item.state === "running"
-    );
-    if (isSomeTaskRunning) {
-      setRefetchInterval(5000);
-    } else if (refetchInterval !== 10000) {
-      setRefetchInterval(10000);
-    }
-  }, [importers]);
+  const { importers, isFetching, fetchError } = useFetchImporters();
 
   // Enable/Disable Importer
 

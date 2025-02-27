@@ -28,7 +28,6 @@ export const SBOMsQueryKey = "sboms";
 
 export const useFetchSBOMs = (
   params: HubRequestParams = {},
-  refetchDisabled: boolean = false,
   disableQuery: boolean = false
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
@@ -38,7 +37,6 @@ export const useFetchSBOMs = (
         client,
         query: { ...requestParamsQuery(params) },
       }),
-    refetchInterval: !refetchDisabled ? 5000 : false,
     enabled: !disableQuery,
   });
   return {
