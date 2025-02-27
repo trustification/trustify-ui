@@ -5,6 +5,7 @@ import {
   global_info_color_100 as lowColor,
   global_warning_color_100 as moderateColor,
   global_palette_black_400 as noneColor,
+  global_palette_black_300 as unknownColor,
 } from "@patternfly/react-tokens";
 
 import { ExtendedSeverity } from "./models";
@@ -20,7 +21,7 @@ type ListType = {
 export const severityList: ListType = {
   unknown: {
     name: "Unknown",
-    color: noneColor,
+    color: unknownColor,
     progressProps: { variant: undefined },
   },
   none: {
@@ -54,14 +55,16 @@ export const getSeverityPriority = (val: ExtendedSeverity) => {
   switch (val) {
     case "unknown":
       return 1;
-    case "low":
+    case "none":
       return 2;
-    case "medium":
+    case "low":
       return 3;
-    case "high":
+    case "medium":
       return 4;
-    case "critical":
+    case "high":
       return 5;
+    case "critical":
+      return 6;
     default:
       return 0;
   }
