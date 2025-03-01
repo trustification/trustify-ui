@@ -1,34 +1,29 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "include": ["src/**/*", "config/**/*", "types/**/*"],
   "compilerOptions": {
-    "outDir": "dist",
+    "lib": ["DOM", "ES2020"],
+    "jsx": "react-jsx",
+    "target": "ES2020",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "useDefineForClassFields": true,
+
+    "module": "ESNext",
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
     "baseUrl": ".",
     "paths": {
       "@app/*": ["src/app/*"],
-      "@assets/*": [
-        "../node_modules/@patternfly/react-core/dist/styles/assets/*"
-      ],
       "@mocks/*": ["src/mocks/*"]
     },
-    "typeRoots": ["types/", "node_modules/@types", "../node_modules/@types"],
-    "target": "es2020",
-    "module": "es2020",
-    "moduleResolution": "bundler",
-    "allowJs": true,
-    "checkJs": false,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "jsx": "react",
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "strict": true,
-    "noEmit": true
+    "esModuleInterop": true
   },
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs" // node16 == commonjs or es2020 depending on package.json/type
-    }
-  }
+  "include": ["src", "types/**/*"]
 }
+
