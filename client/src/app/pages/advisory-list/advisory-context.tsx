@@ -59,7 +59,7 @@ export const AdvisorySearchProvider: React.FunctionComponent<
     sortableColumns: ["identifier", "severity", "modified"],
     initialSort: {
       columnKey: "modified",
-      direction: "desc"
+      direction: "desc",
     },
     isFilterEnabled: true,
     filterCategories: [
