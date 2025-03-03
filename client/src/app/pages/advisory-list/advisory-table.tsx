@@ -56,7 +56,13 @@ export const AdvisoryTable: React.FC = ({}) => {
             <TableHeaderContentWithControls {...tableControls}>
               <Th {...getThProps({ columnKey: "identifier" })} />
               <Th {...getThProps({ columnKey: "title" })} />
-              <Th {...getThProps({ columnKey: "severity" })} />
+              <Th
+                {...getThProps({ columnKey: "severity" })}
+                info={{
+                  tooltip:
+                    "The calculated value resulting from grouping similar advisories together based on certain criteria.",
+                }}
+              />
               <Th {...getThProps({ columnKey: "modified" })} />
               <Th {...getThProps({ columnKey: "vulnerabilities" })} />
             </TableHeaderContentWithControls>
