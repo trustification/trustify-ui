@@ -145,7 +145,7 @@ export const MonitoringSection: React.FC = () => {
                         legendComponent={
                           <ChartLegend
                             y={10}
-                            x={300}
+                            x={200}
                             colorScale={LEGENDS.map((legend) => {
                               const severity = severityList[legend.severity];
                               return severity.color.value;
