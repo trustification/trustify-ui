@@ -1,7 +1,11 @@
 import React from "react";
 
-import { VulnerabilityStatus } from "@app/api/models";
-import { PurlAdvisory, Severity, VulnerabilityHead } from "@app/client";
+import {
+  ExtendedSeverity,
+  extendedSeverityFromSeverity,
+  VulnerabilityStatus,
+} from "@app/api/models";
+import { PurlAdvisory, VulnerabilityHead } from "@app/client";
 import { useFetchPackageById } from "@app/queries/packages";
 
 const areVulnerabilityOfPackageEqual = (
@@ -15,13 +19,13 @@ const areVulnerabilityOfPackageEqual = (
 };
 
 interface FlatVulnerabilityOfPackage {
-  vulnerability: VulnerabilityHead & { average_severity: Severity };
+  vulnerability: VulnerabilityHead & { average_severity: ExtendedSeverity };
   vulnerabilityStatus: VulnerabilityStatus;
   advisory: PurlAdvisory;
 }
 
 interface VulnerabilityOfPackage {
-  vulnerability: VulnerabilityHead & { average_severity: Severity };
+  vulnerability: VulnerabilityHead & { average_severity: ExtendedSeverity };
   vulnerabilityStatus: VulnerabilityStatus;
   relatedSboms: {
     advisory: PurlAdvisory;
@@ -30,7 +34,7 @@ interface VulnerabilityOfPackage {
 
 type SeveritySummary = {
   total: number;
-  severities: { [key in Severity]: number };
+  severities: { [key in ExtendedSeverity]: number };
 };
 
 interface VulnerabilityOfPackageSummary {
@@ -41,7 +45,7 @@ interface VulnerabilityOfPackageSummary {
 
 const DEFAULT_SEVERITY: SeveritySummary = {
   total: 0,
-  severities: { none: 0, low: 0, medium: 0, high: 0, critical: 0 },
+  severities: { unknown: 0, none: 0, low: 0, medium: 0, high: 0, critical: 0 },
 };
 
 const DEFAULT_SUMMARY: VulnerabilityOfPackageSummary = {
@@ -58,10 +62,14 @@ const advisoryToModels = (advisories: PurlAdvisory[]) => {
     return (
       (advisory.status ?? [])
         .map((pkgStatus) => {
+          const extendedSeverity = extendedSeverityFromSeverity(
+            pkgStatus.average_severity
+          );
+
           const result: FlatVulnerabilityOfPackage = {
             vulnerability: {
               ...pkgStatus.vulnerability,
-              average_severity: pkgStatus.average_severity,
+              average_severity: extendedSeverity,
             },
             vulnerabilityStatus: pkgStatus.status as VulnerabilityStatus,
             advisory: advisory,

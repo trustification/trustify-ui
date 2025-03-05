@@ -71,6 +71,7 @@ export const AdvisorySearchProvider: React.FunctionComponent<
         placeholderText: "Severity",
         type: FilterType.multiselect,
         selectOptions: [
+          { value: "null", label: "Unknown" },
           { value: "none", label: "None" },
           { value: "low", label: "Low" },
           { value: "medium", label: "Medium" },
