@@ -116,8 +116,7 @@ export const MonitoringSection: React.FC = () => {
                   <TextContent>
                     Below is a summary of CVE status for the last 10 ingested
                     SBOMs. To view the details, click the SBOM name or CVE
-                    severity number. You can also select up to 4 SBOMs to watch,
-                    by default you watch the last 4 uploaded SBOMs.
+                    severity number. You can also select up to 4 SBOMs to watch.
                   </TextContent>
                 </StackItem>
                 <StackItem>
