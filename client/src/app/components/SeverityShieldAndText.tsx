@@ -4,10 +4,10 @@ import { Flex, FlexItem, Tooltip } from "@patternfly/react-core";
 import ShieldIcon from "@patternfly/react-icons/dist/esm/icons/shield-alt-icon";
 
 import { severityList } from "@app/api/model-utils";
-import { Severity } from "@app/client";
+import { ExtendedSeverity } from "@app/api/models";
 
 interface SeverityShieldAndTextProps {
-  value: Severity;
+  value: ExtendedSeverity;
   hideLabel?: boolean;
 }
 
@@ -16,7 +16,7 @@ export const SeverityShieldAndText: React.FC<SeverityShieldAndTextProps> = ({
   hideLabel,
 }) => {
   const severityProps = severityList[value];
-  const label = value.charAt(0).toUpperCase() + value.slice(1);
+  const label = severityProps.name;
 
   return (
     <Flex
