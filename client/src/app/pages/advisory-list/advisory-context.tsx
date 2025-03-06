@@ -57,6 +57,10 @@ export const AdvisorySearchProvider: React.FunctionComponent<
     isPaginationEnabled: true,
     isSortEnabled: true,
     sortableColumns: ["identifier", "severity", "modified"],
+    initialSort: {
+      columnKey: "modified",
+      direction: "desc",
+    },
     isFilterEnabled: true,
     filterCategories: [
       {
@@ -71,6 +75,7 @@ export const AdvisorySearchProvider: React.FunctionComponent<
         placeholderText: "Severity",
         type: FilterType.multiselect,
         selectOptions: [
+          { value: "null", label: "Unknown" },
           { value: "none", label: "None" },
           { value: "low", label: "Low" },
           { value: "medium", label: "Medium" },

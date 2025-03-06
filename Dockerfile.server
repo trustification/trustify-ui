@@ -1,7 +1,7 @@
 ######################################################################
 # UI
 ######################################################################
-FROM registry.access.redhat.com/ubi9/nodejs-20:latest AS ui-source
+FROM registry.access.redhat.com/ubi9/nodejs-22:latest AS ui-source
 USER 1001
 COPY --chown=1001 . .
 RUN npm install -g npm@9

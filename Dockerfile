@@ -1,5 +1,5 @@
 # Builder image
-FROM registry.access.redhat.com/ubi9/nodejs-20:latest AS builder
+FROM registry.access.redhat.com/ubi9/nodejs-22:latest AS builder
 
 USER 1001
 COPY --chown=1001 . .
@@ -7,7 +7,7 @@ RUN npm install -g npm@9
 RUN npm clean-install --ignore-scripts && npm run build && npm run dist
 
 # Runner image
-FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:latest
+FROM registry.access.redhat.com/ubi9/nodejs-22-minimal:latest
 
 # Add ps package to allow liveness probe for k8s cluster
 # Add tar package to allow copying files with kubectl scp
@@ -27,7 +27,7 @@ LABEL name="trustify/trustify-ui" \
       io.k8s.display-name="trustify-ui" \
       io.k8s.description="Trustify - User Interface" \
       io.openshift.expose-services="80:http" \
-      io.openshift.tags="operator,trustification,trustify,ui,nodejs20" \
+      io.openshift.tags="operator,trustification,trustify,ui,nodejs22" \
       io.openshift.min-cpu="100m" \
       io.openshift.min-memory="350Mi"
 

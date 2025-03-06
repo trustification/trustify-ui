@@ -3,7 +3,7 @@ import React from "react";
 import { ChartDonut } from "@patternfly/react-charts";
 
 import { compareBySeverityFn, severityList } from "@app/api/model-utils";
-import { Severity } from "@app/client";
+import { ExtendedSeverity } from "@app/api/models";
 import { SeveritySummary } from "@app/hooks/domain-controls/useVulnerabilitiesOfSbom";
 
 export interface SbomVulnerabilitiesDonutChartProps {
@@ -16,7 +16,7 @@ export const SbomVulnerabilitiesDonutChart: React.FC<
   const donutChart = React.useMemo(() => {
     return Object.keys(vulnerabilitiesSummary.severities)
       .map((item) => {
-        const severity = item as Severity;
+        const severity = item as ExtendedSeverity;
         const count = vulnerabilitiesSummary.severities[severity];
         const severityProps = severityList[severity];
         return {
