@@ -57,6 +57,10 @@ export const AdvisorySearchProvider: React.FunctionComponent<
     isPaginationEnabled: true,
     isSortEnabled: true,
     sortableColumns: ["identifier", "severity", "modified"],
+    initialSort: {
+      columnKey: "modified",
+      direction: "desc",
+    },
     isFilterEnabled: true,
     filterCategories: [
       {
