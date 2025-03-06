@@ -11,17 +11,15 @@ import {
   listImporters,
   updateImporter,
 } from "@app/client";
+import { DEFAULT_REFETCH_INTERVAL } from "@app/Constants";
 
 export const ImportersQueryKey = "importers";
 
-export const useFetchImporters = (
-  refetchDisabled: boolean = false,
-  interval = 5000
-) => {
+export const useFetchImporters = (refetchDisabled: boolean = false) => {
   const { isLoading, error, refetch, data } = useQuery({
     queryKey: [ImportersQueryKey],
     queryFn: () => listImporters({ client }),
-    refetchInterval: !refetchDisabled ? interval : false,
+    refetchInterval: !refetchDisabled ? DEFAULT_REFETCH_INTERVAL : false,
   });
 
   return {
@@ -136,7 +134,7 @@ export const useFetchImporterReports = (
   const { data, isLoading, refetch, error } = useQuery({
     queryKey: [ImportersQueryKey, id, "reports"],
     queryFn: () => listImporterReports({ client, path: { name: id } }),
-    refetchInterval: !refetchDisabled ? 5000 : false,
+    refetchInterval: !refetchDisabled ? DEFAULT_REFETCH_INTERVAL : false,
   });
 
   return {
