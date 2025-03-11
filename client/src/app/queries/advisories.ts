@@ -28,7 +28,6 @@ export const AdvisoriesQueryKey = "advisories";
 
 export const useFetchAdvisories = (
   params: HubRequestParams = {},
-  refetchDisabled: boolean = false,
   disableQuery: boolean = false
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
@@ -39,7 +38,6 @@ export const useFetchAdvisories = (
         query: { ...requestParamsQuery(params) },
       });
     },
-    refetchInterval: !refetchDisabled ? 5000 : false,
     enabled: !disableQuery,
   });
   return {
