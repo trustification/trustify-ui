@@ -65,22 +65,22 @@ function useAllEntities(filterText: string, disableSearch: boolean) {
   const {
     isFetching: isFetchingAdvisories,
     result: { data: advisories },
-  } = useFetchAdvisories({ ...params }, true, disableSearch);
+  } = useFetchAdvisories({ ...params }, disableSearch);
 
   const {
     isFetching: isFetchingPackages,
     result: { data: packages },
-  } = useFetchPackages({ ...params }, true, disableSearch);
+  } = useFetchPackages({ ...params }, disableSearch);
 
   const {
     isFetching: isFetchingSBOMs,
     result: { data: sboms },
-  } = useFetchSBOMs({ ...params }, true, disableSearch);
+  } = useFetchSBOMs({ ...params }, disableSearch);
 
   const {
     isFetching: isFetchingVulnerabilities,
     result: { data: vulnerabilities },
-  } = useFetchVulnerabilities({ ...params }, true, disableSearch);
+  } = useFetchVulnerabilities({ ...params }, disableSearch);
 
   const transformedAdvisories: IEntity[] = advisories.map((item) => ({
     id: `advisory-${item.uuid}`,
