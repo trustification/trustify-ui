@@ -1,7 +1,9 @@
 import { saveAs } from "file-saver";
 
+import { downloadSbomLicense } from "@app/api/rest";
 import { client } from "@app/axios-config/apiInit";
 import { downloadAdvisory, downloadSbom } from "@app/client";
+import { getFilenameFromContentDisposition } from "@app/utils/utils";
 
 export const useDownload = () => {
   const onDownloadAdvisory = (id: string, filename?: string) => {
@@ -26,5 +28,24 @@ export const useDownload = () => {
     });
   };
 
-  return { downloadAdvisory: onDownloadAdvisory, downloadSBOM: onDownloadSBOM };
+  const onDownloadSBOMLicenses = (id: string) => {
+    // Using our own definition of the endpoint rather than the `hey-api` auto generated
+    // We could replace this one once https://github.com/hey-api/openapi-ts/issues/1803 is fixed
+    downloadSbomLicense(id).then((response) => {
+      let filename: string | null = null;
+
+      const header = response.headers?.["content-disposition"]?.toString();
+      if (header) {
+        filename = getFilenameFromContentDisposition(header);
+      }
+
+      saveAs(new Blob([response.data as any]), filename || `${id}.tar.gz`);
+    });
+  };
+
+  return {
+    downloadAdvisory: onDownloadAdvisory,
+    downloadSBOM: onDownloadSBOM,
+    downloadSBOMLicenses: onDownloadSBOMLicenses,
+  };
 };

@@ -70,3 +70,10 @@ export const uploadSbom = (formData: FormData, config?: AxiosRequestConfig) => {
     headers: { "Content-Type": getContentTypeFromFile(file) },
   });
 };
+
+export const downloadSbomLicense = (sbomId: string) => {
+  return axios.get<number[]>(`${SBOMS}/${sbomId}/license-export`, {
+    responseType: "arraybuffer",
+    headers: { Accept: "text/plain", responseType: "blob" },
+  });
+};
