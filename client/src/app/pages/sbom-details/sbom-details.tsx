@@ -1,10 +1,14 @@
 import React from "react";
 
 import {
-  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownList,
   Flex,
   FlexItem,
   Label,
+  MenuToggle,
+  MenuToggleElement,
   PageSection,
   Popover,
   Split,
@@ -17,7 +21,6 @@ import {
   Text,
   TextContent,
 } from "@patternfly/react-core";
-import DownloadIcon from "@patternfly/react-icons/dist/esm/icons/download-icon";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
 import { PathParam, useRouteParams } from "@app/Routes";
@@ -31,27 +34,34 @@ import { PackagesBySbom } from "./packages-by-sbom";
 import { VulnerabilitiesBySbom } from "./vulnerabilities-by-sbom";
 
 export const SbomDetails: React.FC = () => {
+  const sbomId = useRouteParams(PathParam.SBOM_ID);
+  const { sbom, isFetching, fetchError } = useFetchSBOMById(sbomId);
+
+  const { downloadSBOM, downloadSBOMLicenses } = useDownload();
+
+  const [isActionsDropdownOpen, setIsActionsDropdownOpen] =
+    React.useState(false);
+
   const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
 
+  // Tab refs
+  const infoTabRef = React.createRef<HTMLElement>();
+  const packagesTabRef = React.createRef<HTMLElement>();
+  const vulnerabilitiesTabRef = React.createRef<HTMLElement>();
+
+  // Tab popover refs
+  const vulnerabilitiesTabPopoverRef = React.createRef<HTMLElement>();
+
   const handleTabClick = (
-    event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent,
+    _event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent,
     tabIndex: string | number
   ) => {
     setActiveTabKey(tabIndex);
   };
 
-  const infoTabRef = React.createRef<HTMLElement>();
-  const packagesTabRef = React.createRef<HTMLElement>();
-  const vulnerabilitiesTabRef = React.createRef<HTMLElement>();
-
-  const vulnerabilitiesTabPopoverRef = React.createRef<HTMLElement>();
-
-  //
-
-  const sbomId = useRouteParams(PathParam.SBOM_ID);
-  const { sbom, isFetching, fetchError } = useFetchSBOMById(sbomId);
-
-  const { downloadSBOM } = useDownload();
+  const handleActionsDropdownToggle = () => {
+    setIsActionsDropdownOpen(!isActionsDropdownOpen);
+  };
 
   return (
     <>
@@ -72,22 +82,49 @@ export const SbomDetails: React.FC = () => {
             </Flex>
           </SplitItem>
           <SplitItem>
-            {!isFetching && (
-              <Button
-                variant="secondary"
-                icon={<DownloadIcon />}
-                onClick={() => {
-                  if (sbomId) {
-                    downloadSBOM(
-                      sbomId,
-                      sbom?.name ? `${sbom?.name}.json` : `${sbomId}.json`
-                    );
-                  }
-                }}
-              >
-                Download
-              </Button>
-            )}
+            <Dropdown
+              isOpen={isActionsDropdownOpen}
+              onSelect={() => setIsActionsDropdownOpen(false)}
+              onOpenChange={(isOpen) => setIsActionsDropdownOpen(isOpen)}
+              popperProps={{ position: "right" }}
+              toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+                <MenuToggle
+                  ref={toggleRef}
+                  onClick={handleActionsDropdownToggle}
+                  isExpanded={isActionsDropdownOpen}
+                >
+                  Actions
+                </MenuToggle>
+              )}
+              ouiaId="BasicDropdown"
+              shouldFocusToggleOnSelect
+            >
+              <DropdownList>
+                <DropdownItem
+                  key="sbom"
+                  onClick={() => {
+                    if (sbomId) {
+                      downloadSBOM(
+                        sbomId,
+                        sbom?.name ? `${sbom?.name}.json` : `${sbomId}.json`
+                      );
+                    }
+                  }}
+                >
+                  Download SBOM
+                </DropdownItem>
+                <DropdownItem
+                  key="license"
+                  onClick={() => {
+                    if (sbomId) {
+                      downloadSBOMLicenses(sbomId);
+                    }
+                  }}
+                >
+                  Download License Report
+                </DropdownItem>
+              </DropdownList>
+            </Dropdown>
           </SplitItem>
         </Split>
       </PageSection>
