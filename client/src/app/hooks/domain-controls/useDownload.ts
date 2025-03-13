@@ -29,8 +29,6 @@ export const useDownload = () => {
   };
 
   const onDownloadSBOMLicenses = (id: string) => {
-    // Using our own definition of the endpoint rather than the `hey-api` auto generated
-    // We could replace this one once https://github.com/hey-api/openapi-ts/issues/1803 is fixed
     downloadSbomLicense(id).then((response) => {
       let filename: string | null = null;
 
