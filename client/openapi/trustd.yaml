@@ -5,7 +5,7 @@ info:
   license:
     name: Apache License, Version 2.0
     identifier: Apache-2.0
-  version: 0.2.0
+  version: 0.2.9
 paths:
   /.well-known/trustify:
     get:
@@ -169,10 +169,9 @@ paths:
       parameters:
       - name: key
         in: path
-        description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
         required: true
         schema:
-          type: string
+          $ref: '#/components/schemas/Id'
       responses:
         '200':
           description: Matching advisory
@@ -190,10 +189,9 @@ paths:
       parameters:
       - name: key
         in: path
-        description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
         required: true
         schema:
-          type: string
+          $ref: '#/components/schemas/Id'
       responses:
         '200':
           description: Matching advisory
@@ -212,10 +210,9 @@ paths:
       parameters:
       - name: key
         in: path
-        description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>'
         required: true
         schema:
-          type: string
+          $ref: '#/components/schemas/Id'
       responses:
         '200':
           description: Download a an advisory
@@ -226,33 +223,12 @@ paths:
                 format: binary
         '404':
           description: The document could not be found
-  /api/v2/ai/completions:
-    post:
-      tags:
-      - ai
-      operationId: completions
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ChatState'
-        required: true
-      responses:
-        '200':
-          description: The resulting completion
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ChatState'
-        '400':
-          description: The request was invalid
-        '404':
-          description: The AI service is not enabled
-  /api/v2/ai/conversations:
+  /api/v2/analysis/component:
     get:
       tags:
-      - ai
-      operationId: listConversations
+      - analysis
+      summary: Retrieve SBOM components (packages) by a complex search.
+      operationId: searchComponent
       parameters:
       - name: q
         in: query
@@ -286,183 +262,54 @@ paths:
           type: integer
           format: int64
           minimum: 0
-      responses:
-        '200':
-          description: The resulting list of conversation summaries
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedResults_ConversationSummary'
-        '404':
-          description: The AI service is not enabled
-    post:
-      tags:
-      - ai
-      operationId: createConversation
-      responses:
-        '200':
-          description: The resulting conversation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Conversation'
-        '400':
-          description: The request was invalid
-        '404':
-          description: The AI service is not enabled
-  /api/v2/ai/conversations/{id}:
-    get:
-      tags:
-      - ai
-      operationId: getConversation
-      parameters:
-      - name: id
-        in: path
-        description: Opaque ID of the conversation
-        required: true
-        schema:
-          type: string
-          format: uuid
-      responses:
-        '200':
-          description: The resulting conversation
-          headers:
-            etag:
-              schema:
-                type: string
-              description: Sequence ID
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Conversation'
-        '400':
-          description: The request was invalid
-        '404':
-          description: The AI service is not enabled
-    put:
-      tags:
-      - ai
-      operationId: updateConversation
-      parameters:
-      - name: id
-        in: path
-        description: Opaque ID of the conversation
-        required: true
-        schema:
-          type: string
-          format: uuid
-      - name: if-match
-        in: header
-        description: The revision to update
+      - name: ancestors
+        in: query
+        description: |-
+          The level of ancestors to return.
+
+          Zero, the default, meaning none.
         required: false
         schema:
-          type:
-          - string
-          - 'null'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/ChatMessage'
-        required: true
-      responses:
-        '200':
-          description: The resulting conversation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Conversation'
-        '400':
-          description: The request was invalid
-        '404':
-          description: The AI service is not enabled or the conversation was not found
-    delete:
-      tags:
-      - ai
-      operationId: deleteConversation
-      parameters:
-      - name: id
-        in: path
-        description: Opaque ID of the conversation
-        required: true
+          type: integer
+          format: int64
+          minimum: 0
+      - name: descendants
+        in: query
+        description: |-
+          The level of descendants to return.
+
+          Zero, the default, meaning none.
+        required: false
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+      - name: relationships
+        in: query
+        description: |-
+          A set of relationships to filter for, deserialized from a
+          comma-delimited string
+
+          An empty set, the default, meaning all relationships.
+        required: false
         schema:
           type: string
-          format: uuid
       responses:
         '200':
-          description: The resulting conversation
+          description: Retrieved component(s) located by search
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Conversation'
-        '400':
-          description: The request was invalid
-        '404':
-          description: The AI service is not enabled or the conversation was not found
-  /api/v2/ai/flags:
-    get:
-      tags:
-      - ai
-      operationId: aiFlags
-      responses:
-        '200':
-          description: The resulting Flags
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AiFlags'
-        '404':
-          description: The AI service is not enabled
-  /api/v2/ai/tools:
-    get:
-      tags:
-      - ai
-      operationId: aiTools
-      responses:
-        '200':
-          description: The resulting list of tools
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AiTool'
-        '404':
-          description: The AI service is not enabled
-  /api/v2/ai/tools/{name}:
-    post:
-      tags:
-      - ai
-      operationId: aiToolCall
-      parameters:
-      - name: name
-        in: path
-        description: Name of the tool to call
-        required: true
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema: {}
-        required: true
-      responses:
-        '200':
-          description: The result of the tool call
-          content:
-            text/plain:
-              schema:
-                type: string
-        '400':
-          description: The tool request was invalid
-        '404':
-          description: The tool was not found
+                $ref: '#/components/schemas/PaginatedResults_Node'
+        '401':
+          description: The user did not provide valid authentication credentials
+        '403':
+          description: The user lacks the required permission
   /api/v2/analysis/component/{key}:
     get:
       tags:
       - analysis
+      summary: Retrieve SBOM components (packages) by name, Package URL, or CPE.
       operationId: getComponent
       parameters:
       - name: key
@@ -471,27 +318,14 @@ paths:
         required: true
         schema:
           type: string
-      responses:
-        '200':
-          description: Retrieve component(s) root components by name, pURL, or CPE.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedResults_BaseSummary'
-  /api/v2/analysis/dep:
-    get:
-      tags:
-      - analysis
-      operationId: searchComponentDeps
-      parameters:
       - name: q
-        in: query
-        required: false
+        in: path
+        required: true
         schema:
           type: string
       - name: sort
-        in: query
-        required: false
+        in: path
+        required: true
         schema:
           type: string
       - name: offset
@@ -516,108 +350,102 @@ paths:
           type: integer
           format: int64
           minimum: 0
-      responses:
-        '200':
-          description: Search component(s) and return their deps.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedResults_DepSummary'
-  /api/v2/analysis/dep/{key}:
-    get:
-      tags:
-      - analysis
-      operationId: getComponentDeps
-      parameters:
-      - name: key
-        in: path
-        description: provide component name or URL-encoded pURL itself
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: Retrieve component(s) dep components by name or pURL.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedResults_DepSummary'
-  /api/v2/analysis/root-component:
-    get:
-      tags:
-      - analysis
-      operationId: searchComponentRootComponents
-      parameters:
-      - name: q
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: sort
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: offset
+      - name: ancestors
         in: query
         description: |-
-          The first item to return, skipping all that come before it.
+          The level of ancestors to return.
 
-          NOTE: The order of items is defined by the API being called.
+          Zero, the default, meaning none.
         required: false
         schema:
           type: integer
           format: int64
           minimum: 0
-      - name: limit
+      - name: descendants
         in: query
         description: |-
-          The maximum number of entries to return.
+          The level of descendants to return.
 
-          Zero means: no limit
+          Zero, the default, meaning none.
         required: false
         schema:
           type: integer
           format: int64
           minimum: 0
-      responses:
-        '200':
-          description: Search component(s) and return their root components.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedResults_AncestorSummary'
-  /api/v2/analysis/root-component/{key}:
-    get:
-      tags:
-      - analysis
-      operationId: getComponentRootComponents
-      parameters:
-      - name: key
-        in: path
-        description: provide component name, URL-encoded pURL, or CPE itself
-        required: true
+      - name: relationships
+        in: query
+        description: |-
+          A set of relationships to filter for, deserialized from a
+          comma-delimited string
+
+          An empty set, the default, meaning all relationships.
+        required: false
         schema:
           type: string
       responses:
         '200':
-          description: Retrieve component(s) root components by name, pURL, or CPE.
+          description: Retrieved component(s) located by name, pURL, or CPE
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedResults_AncestorSummary'
+                $ref: '#/components/schemas/PaginatedResults_Node'
+        '401':
+          description: The user did not provide valid authentication credentials
+        '403':
+          description: The user lacks the required permission
+  /api/v2/analysis/sbom/{sbom}/render.{ext}:
+    get:
+      tags:
+      - analysis
+      summary: Render an SBOM graph
+      operationId: renderSbomGraph
+      parameters:
+      - name: sbom
+        in: path
+        description: ID of the SBOM
+        required: true
+        schema:
+          type: string
+      - name: ext
+        in: path
+        description: Renderer to use
+        required: true
+        schema:
+          type: string
+          enum:
+          - gv
+      responses:
+        '200':
+          description: A rendered version of the SBOM graph in the format requested
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: The user did not provide valid authentication credentials
+        '403':
+          description: The user lacks the required permission
+        '404':
+          description: The SBOM was not found
+        '415':
+          description: Unsupported rendering format
   /api/v2/analysis/status:
     get:
       tags:
       - analysis
+      summary: Get the status of the analysis service.
       operationId: status
       responses:
         '200':
-          description: Analysis status.
+          description: Analysis status
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AnalysisStatus'
+        '401':
+          description: The user did not provide valid authentication credentials
+        '403':
+          description: The user lacks the required permission
   /api/v2/dataset:
     post:
       tags:
@@ -886,52 +714,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedResults_ImporterReport'
-  /api/v2/license:
-    get:
-      tags:
-      - license
-      summary: List licenses
-      operationId: listLicenses
-      parameters:
-      - name: q
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: sort
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: offset
-        in: query
-        description: |-
-          The first item to return, skipping all that come before it.
-
-          NOTE: The order of items is defined by the API being called.
-        required: false
-        schema:
-          type: integer
-          format: int64
-          minimum: 0
-      - name: limit
-        in: query
-        description: |-
-          The maximum number of entries to return.
-
-          Zero means: no limit
-        required: false
-        schema:
-          type: integer
-          format: int64
-          minimum: 0
-      responses:
-        '200':
-          description: Matching licenses
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedResults_LicenseSummary'
   /api/v2/license/spdx/license:
     get:
       tags:
@@ -997,77 +779,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SpdxLicenseDetails'
-  /api/v2/license/{uuid}:
-    get:
-      tags:
-      - license
-      summary: Retrieve license details
-      operationId: getLicenses
-      parameters:
-      - name: uuid
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-      responses:
-        '200':
-          description: The license
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LicenseSummary'
-  /api/v2/license/{uuid}/purl:
-    get:
-      tags:
-      - license
-      summary: Retrieve pURLs covered by a license
-      operationId: getLicensePurls
-      parameters:
-      - name: q
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: sort
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: offset
-        in: query
-        description: |-
-          The first item to return, skipping all that come before it.
-
-          NOTE: The order of items is defined by the API being called.
-        required: false
-        schema:
-          type: integer
-          format: int64
-          minimum: 0
-      - name: limit
-        in: query
-        description: |-
-          The maximum number of entries to return.
-
-          Zero means: no limit
-        required: false
-        schema:
-          type: integer
-          format: int64
-          minimum: 0
-      - name: uuid
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: The versioned pURLs allowing the license
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LicenseSummary'
   /api/v2/organization:
     get:
       tags:
@@ -1514,6 +1225,7 @@ paths:
     get:
       tags:
       - sbom
+      summary: Search for SBOMs
       operationId: listSboms
       parameters:
       - name: q
@@ -1570,12 +1282,6 @@ paths:
         required: true
         schema:
           $ref: '#/components/schemas/Labels'
-      - name: location
-        in: query
-        description: Source the document came from
-        required: true
-        schema:
-          type: string
       requestBody:
         content:
           application/octet-stream:
@@ -1708,14 +1414,14 @@ paths:
     get:
       tags:
       - sbom
+      summary: Get information about an SBOM
       operationId: getSbom
       parameters:
       - name: id
         in: path
-        description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
         required: true
         schema:
-          type: string
+          $ref: '#/components/schemas/Id'
       responses:
         '200':
           description: Matching SBOM
@@ -1728,14 +1434,14 @@ paths:
     delete:
       tags:
       - sbom
+      summary: Delete an SBOM
       operationId: deleteSbom
       parameters:
       - name: id
         in: path
-        description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
         required: true
         schema:
-          type: string
+          $ref: '#/components/schemas/Id'
       responses:
         '200':
           description: Matching SBOM
@@ -1749,14 +1455,14 @@ paths:
     get:
       tags:
       - sbom
+      summary: Get advisories for an SBOM
       operationId: getSbomAdvisories
       parameters:
       - name: id
         in: path
-        description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
         required: true
         schema:
-          type: string
+          $ref: '#/components/schemas/Id'
       responses:
         '200':
           description: Matching SBOM
@@ -1815,6 +1521,30 @@ paths:
           description: Modified the labels of the SBOM
         '404':
           description: The SBOM could not be found
+  /api/v2/sbom/{id}/license-export:
+    get:
+      tags:
+      - sbom
+      operationId: getLicenseExport
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: license gzip files
+          content:
+            application/gzip:
+              schema:
+                type: array
+                items:
+                  type: integer
+                  format: int32
+                  minimum: 0
+        '404':
+          description: The document could not be found
   /api/v2/sbom/{id}/packages:
     get:
       tags:
@@ -1950,14 +1680,14 @@ paths:
     get:
       tags:
       - sbom
+      summary: Download an SBOM
       operationId: downloadSbom
       parameters:
       - name: key
         in: path
-        description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>'
         required: true
         schema:
-          type: string
+          $ref: '#/components/schemas/Id'
       responses:
         '200':
           description: Download a an SBOM
@@ -2367,25 +2097,6 @@ components:
               All CVSS3 scores from the advisory for the given vulnerability.
               May include several, varying by minor version of the CVSS3 vector.
       description: Summary of information from this advisory regarding a single specific vulnerability.
-    AiFlags:
-      type: object
-      required:
-      - completions
-      properties:
-        completions:
-          type: boolean
-    AiTool:
-      type: object
-      required:
-      - name
-      - description
-      - parameters
-      properties:
-        description:
-          type: string
-        name:
-          type: string
-        parameters: {}
     AnalysisStatus:
       type: object
       required:
@@ -2402,46 +2113,6 @@ components:
           format: int32
           description: The number of SBOMs found in the database
           minimum: 0
-    AncNode:
-      type: object
-      required:
-      - sbom_id
-      - node_id
-      - relationship
-      - purl
-      - cpe
-      - name
-      - version
-      properties:
-        cpe:
-          type: array
-          items:
-            $ref: '#/components/schemas/Cpe'
-        name:
-          type: string
-        node_id:
-          type: string
-        purl:
-          type: array
-          items:
-            $ref: '#/components/schemas/Purl'
-        relationship:
-          type: string
-        sbom_id:
-          type: string
-        version:
-          type: string
-    AncestorSummary:
-      allOf:
-      - $ref: '#/components/schemas/BaseSummary'
-      - type: object
-        required:
-        - ancestors
-        properties:
-          ancestors:
-            type: array
-            items:
-              $ref: '#/components/schemas/AncNode'
     BasePurlDetails:
       allOf:
       - $ref: '#/components/schemas/BasePurlHead'
@@ -2509,33 +2180,6 @@ components:
           type: string
     BinaryByteSize:
       type: string
-    ChatMessage:
-      type: object
-      required:
-      - message_type
-      - content
-      - timestamp
-      properties:
-        content:
-          type: string
-        message_type:
-          $ref: '#/components/schemas/MessageType'
-        timestamp:
-          type: string
-          format: date-time
-    ChatState:
-      type: object
-      required:
-      - messages
-      properties:
-        internal_state:
-          type:
-          - string
-          - 'null'
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChatMessage'
     ClearlyDefinedCurationImporter:
       allOf:
       - $ref: '#/components/schemas/CommonImporter'
@@ -2593,42 +2237,6 @@ components:
         period:
           type: string
           description: The period the importer should be run.
-    Conversation:
-      type: object
-      required:
-      - id
-      - messages
-      - updated_at
-      - seq
-      properties:
-        id:
-          type: string
-          format: uuid
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChatMessage'
-        seq:
-          type: integer
-          format: int32
-        updated_at:
-          type: string
-          format: date-time
-    ConversationSummary:
-      type: object
-      required:
-      - id
-      - updated_at
-      - summary
-      properties:
-        id:
-          type: string
-          format: uuid
-        summary:
-          type: string
-        updated_at:
-          type: string
-          format: date-time
     Cpe:
       type: string
       format: uri
@@ -2681,51 +2289,6 @@ components:
         properties:
           source:
             type: string
-    DepNode:
-      type: object
-      required:
-      - sbom_id
-      - node_id
-      - relationship
-      - purl
-      - cpe
-      - name
-      - version
-      - deps
-      properties:
-        cpe:
-          type: array
-          items:
-            $ref: '#/components/schemas/Cpe'
-        deps:
-          type: array
-          items:
-            $ref: '#/components/schemas/DepNode'
-        name:
-          type: string
-        node_id:
-          type: string
-        purl:
-          type: array
-          items:
-            $ref: '#/components/schemas/Purl'
-        relationship:
-          type: string
-        sbom_id:
-          type: string
-        version:
-          type: string
-    DepSummary:
-      allOf:
-      - $ref: '#/components/schemas/BaseSummary'
-      - type: object
-        required:
-        - deps
-        properties:
-          deps:
-            type: array
-            items:
-              $ref: '#/components/schemas/DepNode'
     ExternalReferenceQuery:
       type: object
       properties:
@@ -2741,8 +2304,13 @@ components:
             description: Find by PURL
     Id:
       type: string
-      description: A hash/digest prefixed with its type.
-      example: sha256:dc60aeb735c16a71b6fc56e84ddb8193e3a6d1ef0b7e958d77e78fc039a5d04e
+      description: |-
+        Identifier to a document, prefixed with the ID type.
+
+        Either an internal ID of the document with the `urn:uuid:` scheme. Or using a digest, with the digest prefix. For example, `sha256:`.
+      examples:
+      - urn:uuid:018123ef-a791-40d8-b62a-f70a350245d4
+      - sha256:dc60aeb735c16a71b6fc56e84ddb8193e3a6d1ef0b7e958d77e78fc039a5d04e
     Importer:
       allOf:
       - $ref: '#/components/schemas/ImporterData'
@@ -2921,13 +2489,30 @@ components:
         severity:
           $ref: '#/components/schemas/Severity'
           description: The severity of the message
-    MessageType:
-      type: string
-      enum:
-      - human
-      - system
-      - ai
-      - tool
+    Node:
+      allOf:
+      - $ref: '#/components/schemas/BaseSummary'
+      - type: object
+        properties:
+          ancestors:
+            type:
+            - array
+            - 'null'
+            items:
+              $ref: '#/components/schemas/Node'
+            description: All ancestors of this node. [`None`] if not requested on this level.
+          descendants:
+            type:
+            - array
+            - 'null'
+            items:
+              $ref: '#/components/schemas/Node'
+            description: All descendents of this node. [`None`] if not requested on this level.
+          relationship:
+            oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/Relationship'
+              description: The relationship the node has to it's containing node, if any.
     OrganizationDetails:
       allOf:
       - $ref: '#/components/schemas/OrganizationHead'
@@ -3045,29 +2630,6 @@ components:
           type: integer
           format: int64
           minimum: 0
-    PaginatedResults_AncestorSummary:
-      type: object
-      required:
-      - items
-      - total
-      properties:
-        items:
-          type: array
-          items:
-            allOf:
-            - $ref: '#/components/schemas/BaseSummary'
-            - type: object
-              required:
-              - ancestors
-              properties:
-                ancestors:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/AncNode'
-        total:
-          type: integer
-          format: int64
-          minimum: 0
     PaginatedResults_BasePurlSummary:
       type: object
       required:
@@ -3079,106 +2641,6 @@ components:
           items:
             allOf:
             - $ref: '#/components/schemas/BasePurlHead'
-        total:
-          type: integer
-          format: int64
-          minimum: 0
-    PaginatedResults_BaseSummary:
-      type: object
-      required:
-      - items
-      - total
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            required:
-            - sbom_id
-            - node_id
-            - purl
-            - cpe
-            - name
-            - version
-            - published
-            - document_id
-            - product_name
-            - product_version
-            properties:
-              cpe:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Cpe'
-              document_id:
-                type: string
-              name:
-                type: string
-              node_id:
-                type: string
-              product_name:
-                type: string
-              product_version:
-                type: string
-              published:
-                type: string
-              purl:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Purl'
-              sbom_id:
-                type: string
-              version:
-                type: string
-        total:
-          type: integer
-          format: int64
-          minimum: 0
-    PaginatedResults_ConversationSummary:
-      type: object
-      required:
-      - items
-      - total
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            required:
-            - id
-            - updated_at
-            - summary
-            properties:
-              id:
-                type: string
-                format: uuid
-              summary:
-                type: string
-              updated_at:
-                type: string
-                format: date-time
-        total:
-          type: integer
-          format: int64
-          minimum: 0
-    PaginatedResults_DepSummary:
-      type: object
-      required:
-      - items
-      - total
-      properties:
-        items:
-          type: array
-          items:
-            allOf:
-            - $ref: '#/components/schemas/BaseSummary'
-            - type: object
-              required:
-              - deps
-              properties:
-                deps:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/DepNode'
         total:
           type: integer
           format: int64
@@ -3259,6 +2721,42 @@ components:
           type: integer
           format: int64
           minimum: 0
+    PaginatedResults_Node:
+      type: object
+      required:
+      - items
+      - total
+      properties:
+        items:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/BaseSummary'
+            - type: object
+              properties:
+                ancestors:
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    $ref: '#/components/schemas/Node'
+                  description: All ancestors of this node. [`None`] if not requested on this level.
+                descendants:
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    $ref: '#/components/schemas/Node'
+                  description: All descendents of this node. [`None`] if not requested on this level.
+                relationship:
+                  oneOf:
+                  - type: 'null'
+                  - $ref: '#/components/schemas/Relationship'
+                    description: The relationship the node has to it's containing node, if any.
+        total:
+          type: integer
+          format: int64
+          minimum: 0
     PaginatedResults_ProductSummary:
       type: object
       required:
@@ -3312,6 +2810,7 @@ components:
                     type: string
                   propertyNames:
                     type: string
+                  deprecated: true
                 version:
                   $ref: '#/components/schemas/VersionedPurlHead'
         total:
@@ -3680,26 +3179,27 @@ components:
               type: string
             propertyNames:
               type: string
+            deprecated: true
           version:
             $ref: '#/components/schemas/VersionedPurlHead'
     Relationship:
       type: string
       enum:
-      - contained_by
-      - dependency_of
-      - dev_dependency_of
-      - optional_dependency_of
-      - provided_dependency_of
-      - test_dependency_of
-      - runtime_dependency_of
-      - example_of
-      - generated_from
+      - contains
+      - dependency
+      - dev_dependency
+      - optional_dependency
+      - provided_dependency
+      - test_dependency
+      - runtime_dependency
+      - example
+      - generates
       - ancestor_of
-      - variant_of
-      - build_tool_of
-      - dev_tool_of
-      - described_by
-      - package_of
+      - variant
+      - build_tool
+      - dev_tool
+      - describes
+      - package
       - undefined
     Report:
       type: object

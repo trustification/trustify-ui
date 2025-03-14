@@ -25,6 +25,10 @@ import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { VulnerabilityGallery } from "@app/components/VulnerabilityGallery";
 import { formatDate } from "@app/utils/utils";
 
+import {
+  ExtendedSeverity,
+  extendedSeverityFromSeverity,
+} from "@app/api/models";
 import { AdvisorySearchContext } from "./advisory-context";
 
 export const AdvisoryTable: React.FC = ({}) => {
@@ -69,19 +73,23 @@ export const AdvisoryTable: React.FC = ({}) => {
           numRenderedColumns={numRenderedColumns}
         >
           {currentPageItems.map((item, rowIndex) => {
-            type SeverityGroup = { [key in Severity]: number };
+            type SeverityGroup = { [key in ExtendedSeverity]: number };
             const defaultSeverityGroup: SeverityGroup = {
               critical: 0,
               high: 0,
               medium: 0,
               low: 0,
               none: 0,
+              unknown: 0,
             };
 
-            const severiries = item.vulnerabilities.reduce((prev, current) => {
+            const severities = item.vulnerabilities.reduce((prev, current) => {
+              const extendedSeverity = extendedSeverityFromSeverity(
+                current.severity
+              );
               return {
                 ...prev,
-                [current.severity]: prev[current.severity] + 1,
+                [extendedSeverity]: prev[extendedSeverity] + 1,
               };
             }, defaultSeverityGroup);
 
@@ -131,7 +139,7 @@ export const AdvisoryTable: React.FC = ({}) => {
                       width={20}
                       {...getTdProps({ columnKey: "vulnerabilities" })}
                     >
-                      <VulnerabilityGallery severities={severiries} />
+                      <VulnerabilityGallery severities={severities} />
                     </Td>
                     <Td isActionCell>
                       <ActionsColumn
