@@ -14,6 +14,7 @@ import {
   GridItem,
 } from "@patternfly/react-core";
 
+import { extendedSeverityFromSeverity } from "@app/api/models";
 import { AdvisorySummary, Severity } from "@app/client";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { formatDate } from "@app/utils/utils";
@@ -45,11 +46,11 @@ export const Overview: React.FC<InfoProps> = ({ advisory }) => {
               <DescriptionListGroup>
                 <DescriptionListTerm>Aggregate Severity</DescriptionListTerm>
                 <DescriptionListDescription>
-                  {advisory.average_severity && (
-                    <SeverityShieldAndText
-                      value={advisory.average_severity as Severity}
-                    />
-                  )}
+                  <SeverityShieldAndText
+                    value={extendedSeverityFromSeverity(
+                      advisory.average_severity as Severity
+                    )}
+                  />
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>

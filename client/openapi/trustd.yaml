@@ -5,7 +5,7 @@ info:
   license:
     name: Apache License, Version 2.0
     identifier: Apache-2.0
-  version: 0.2.8
+  version: 0.2.9
 paths:
   /.well-known/trustify:
     get:
@@ -169,10 +169,9 @@ paths:
       parameters:
       - name: key
         in: path
-        description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
         required: true
         schema:
-          type: string
+          $ref: '#/components/schemas/Id'
       responses:
         '200':
           description: Matching advisory
@@ -190,10 +189,9 @@ paths:
       parameters:
       - name: key
         in: path
-        description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
         required: true
         schema:
-          type: string
+          $ref: '#/components/schemas/Id'
       responses:
         '200':
           description: Matching advisory
@@ -212,10 +210,9 @@ paths:
       parameters:
       - name: key
         in: path
-        description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>'
         required: true
         schema:
-          type: string
+          $ref: '#/components/schemas/Id'
       responses:
         '200':
           description: Download a an advisory
@@ -717,52 +714,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedResults_ImporterReport'
-  /api/v2/license:
-    get:
-      tags:
-      - license
-      summary: List licenses
-      operationId: listLicenses
-      parameters:
-      - name: q
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: sort
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: offset
-        in: query
-        description: |-
-          The first item to return, skipping all that come before it.
-
-          NOTE: The order of items is defined by the API being called.
-        required: false
-        schema:
-          type: integer
-          format: int64
-          minimum: 0
-      - name: limit
-        in: query
-        description: |-
-          The maximum number of entries to return.
-
-          Zero means: no limit
-        required: false
-        schema:
-          type: integer
-          format: int64
-          minimum: 0
-      responses:
-        '200':
-          description: Matching licenses
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedResults_LicenseSummary'
   /api/v2/license/spdx/license:
     get:
       tags:
@@ -828,77 +779,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SpdxLicenseDetails'
-  /api/v2/license/{uuid}:
-    get:
-      tags:
-      - license
-      summary: Retrieve license details
-      operationId: getLicenses
-      parameters:
-      - name: uuid
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-      responses:
-        '200':
-          description: The license
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LicenseSummary'
-  /api/v2/license/{uuid}/purl:
-    get:
-      tags:
-      - license
-      summary: Retrieve pURLs covered by a license
-      operationId: getLicensePurls
-      parameters:
-      - name: q
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: sort
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: offset
-        in: query
-        description: |-
-          The first item to return, skipping all that come before it.
-
-          NOTE: The order of items is defined by the API being called.
-        required: false
-        schema:
-          type: integer
-          format: int64
-          minimum: 0
-      - name: limit
-        in: query
-        description: |-
-          The maximum number of entries to return.
-
-          Zero means: no limit
-        required: false
-        schema:
-          type: integer
-          format: int64
-          minimum: 0
-      - name: uuid
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: The versioned pURLs allowing the license
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LicenseSummary'
   /api/v2/organization:
     get:
       tags:
@@ -1345,6 +1225,7 @@ paths:
     get:
       tags:
       - sbom
+      summary: Search for SBOMs
       operationId: listSboms
       parameters:
       - name: q
@@ -1401,12 +1282,6 @@ paths:
         required: true
         schema:
           $ref: '#/components/schemas/Labels'
-      - name: location
-        in: query
-        description: Source the document came from
-        required: true
-        schema:
-          type: string
       requestBody:
         content:
           application/octet-stream:
@@ -1539,14 +1414,14 @@ paths:
     get:
       tags:
       - sbom
+      summary: Get information about an SBOM
       operationId: getSbom
       parameters:
       - name: id
         in: path
-        description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
         required: true
         schema:
-          type: string
+          $ref: '#/components/schemas/Id'
       responses:
         '200':
           description: Matching SBOM
@@ -1559,14 +1434,14 @@ paths:
     delete:
       tags:
       - sbom
+      summary: Delete an SBOM
       operationId: deleteSbom
       parameters:
       - name: id
         in: path
-        description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
         required: true
         schema:
-          type: string
+          $ref: '#/components/schemas/Id'
       responses:
         '200':
           description: Matching SBOM
@@ -1580,14 +1455,14 @@ paths:
     get:
       tags:
       - sbom
+      summary: Get advisories for an SBOM
       operationId: getSbomAdvisories
       parameters:
       - name: id
         in: path
-        description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
         required: true
         schema:
-          type: string
+          $ref: '#/components/schemas/Id'
       responses:
         '200':
           description: Matching SBOM
@@ -1646,6 +1521,30 @@ paths:
           description: Modified the labels of the SBOM
         '404':
           description: The SBOM could not be found
+  /api/v2/sbom/{id}/license-export:
+    get:
+      tags:
+      - sbom
+      operationId: getLicenseExport
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: license gzip files
+          content:
+            application/gzip:
+              schema:
+                type: array
+                items:
+                  type: integer
+                  format: int32
+                  minimum: 0
+        '404':
+          description: The document could not be found
   /api/v2/sbom/{id}/packages:
     get:
       tags:
@@ -1781,14 +1680,14 @@ paths:
     get:
       tags:
       - sbom
+      summary: Download an SBOM
       operationId: downloadSbom
       parameters:
       - name: key
         in: path
-        description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>'
         required: true
         schema:
-          type: string
+          $ref: '#/components/schemas/Id'
       responses:
         '200':
           description: Download a an SBOM
@@ -2405,8 +2304,13 @@ components:
             description: Find by PURL
     Id:
       type: string
-      description: A hash/digest prefixed with its type.
-      example: sha256:dc60aeb735c16a71b6fc56e84ddb8193e3a6d1ef0b7e958d77e78fc039a5d04e
+      description: |-
+        Identifier to a document, prefixed with the ID type.
+
+        Either an internal ID of the document with the `urn:uuid:` scheme. Or using a digest, with the digest prefix. For example, `sha256:`.
+      examples:
+      - urn:uuid:018123ef-a791-40d8-b62a-f70a350245d4
+      - sha256:dc60aeb735c16a71b6fc56e84ddb8193e3a6d1ef0b7e958d77e78fc039a5d04e
     Importer:
       allOf:
       - $ref: '#/components/schemas/ImporterData'
@@ -2906,6 +2810,7 @@ components:
                     type: string
                   propertyNames:
                     type: string
+                  deprecated: true
                 version:
                   $ref: '#/components/schemas/VersionedPurlHead'
         total:
@@ -3274,6 +3179,7 @@ components:
               type: string
             propertyNames:
               type: string
+            deprecated: true
           version:
             $ref: '#/components/schemas/VersionedPurlHead'
     Relationship:

@@ -70,3 +70,7 @@ Open browser at <http://localhost:3000>
 
 > [!NOTE]
 > When using the crate it is expected to build the UI always in Prod mode
+
+## Contributing
+
+We welcome contributions! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting changes.

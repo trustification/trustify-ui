@@ -108,3 +108,10 @@ export const decomposePurl = (purl: string) => {
     return undefined;
   }
 };
+
+export const getFilenameFromContentDisposition = (
+  contentDisposition: string
+): string | null => {
+  const match = contentDisposition.match(/filename="?([^"]+)"?/);
+  return match ? match[1] : null;
+};
