@@ -63,10 +63,6 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
     isPaginationEnabled: true,
     isSortEnabled: true,
     sortableColumns: ["name", "published"],
-    initialSort: {
-      columnKey: "published",
-      direction: "desc",
-    },
     isFilterEnabled: true,
     filterCategories: [
       {
