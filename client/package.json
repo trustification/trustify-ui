@@ -10,6 +10,8 @@
     "build": "npm run generate && rsbuild build",
     "check": "biome check .",
     "check:write": "biome check --write .",
+    "format": "biome format .",
+    "format:fix": "biome format --write .",
     "start:dev": "npm run generate && rsbuild dev",
     "start": "rsbuild preview",
     "test": "NODE_ENV=test jest --rootDir=. --config=./config/jest.config.ts",

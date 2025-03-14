@@ -21,6 +21,8 @@
     "clean:all": "rimraf ./dist ./node_modules",
     "check": "biome check .",
     "check:write": "biome check --write .",
+    "format": "biome format .",
+    "format:fix": "biome format --write .",
     "prebuild": "npm run clean",
     "build": "NODE_ENV=production rollup -c",
     "start:dev": "NODE_ENV=development rollup -c --watch"

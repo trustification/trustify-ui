@@ -36,7 +36,7 @@ jobs:
         run: npm run test -- --coverage --watchAll=false
       ## TODO Enable the format check after migration to RSBuild is done
       # - name: Check
-      #   run: npm run check
+      #   run: npm run format
 
       - name: Crate Format
         working-directory: ./crate
