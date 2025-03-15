@@ -51,7 +51,12 @@ const config: JestConfigWithTsJest = {
 
   // Process js/jsx/mjs/mjsx/ts/tsx/mts/mtsx with `ts-jest`
   transform: {
-    "^.+\\.(js|mjs|ts|mts)x?$": "ts-jest",
+    "^.+\\.(js|mjs|ts|mts)x?$": [
+      "ts-jest",
+      {
+        tsconfig: "tsconfig.json", // 👈 Use custom tsconfig here
+      },
+    ],
   },
 };
 

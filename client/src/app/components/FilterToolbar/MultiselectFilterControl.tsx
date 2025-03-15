@@ -110,7 +110,16 @@ export const MultiselectFilterControl = <TItem,>({
       };
     })
 
-    .filter(Boolean);
+    .reduce(
+      (prev, current) => {
+        if (current) {
+          return [...prev, current];
+        } else {
+          return prev;
+        }
+      },
+      [] as (string | ToolbarChip)[]
+    );
 
   const renderSelectOptions = (
     filter: (option: FilterSelectOptionProps, groupName?: string) => boolean
