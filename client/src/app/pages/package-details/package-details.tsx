@@ -4,15 +4,18 @@ import {
   Flex,
   FlexItem,
   PageSection,
+  Popover,
   Stack,
   StackItem,
   Tab,
+  TabAction,
   TabContent,
   Tabs,
   TabTitleText,
   Text,
   TextContent,
 } from "@patternfly/react-core";
+import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
 import { PathParam, useRouteParams } from "@app/Routes";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
@@ -43,6 +46,8 @@ export const PackageDetails: React.FC = () => {
 
   const vulnerabilitiesTabRef = React.createRef<HTMLElement>();
   const sbomsTabRef = React.createRef<HTMLElement>();
+
+  const sbomsPopupRef = React.createRef<HTMLElement>();
 
   return (
     <>
@@ -86,6 +91,17 @@ export const PackageDetails: React.FC = () => {
           <Tab
             eventKey={1}
             title={<TabTitleText>SBOMs using package</TabTitleText>}
+            actions={
+              <>
+                <TabAction ref={sbomsPopupRef}>
+                  <HelpIcon />
+                </TabAction>
+                <Popover
+                  bodyContent={<div>A list of SBOMs using this package.</div>}
+                  triggerRef={sbomsPopupRef}
+                />
+              </>
+            }
             tabContentId="refTabSbomsSection"
             tabContentRef={sbomsTabRef}
           />
