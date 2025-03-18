@@ -61,13 +61,10 @@ export const MonitoringSection: React.FC = () => {
     result: { data: barchartSboms, total: totalSboms },
     isFetching: isFetchingBarchartSboms,
     fetchError: fetchErrorBarchartSboms,
-  } = useFetchSBOMs(
-    {
-      page: { pageNumber: 1, itemsPerPage: 10 },
-      sort: { field: "ingested", direction: "desc" },
-    },
-    true
-  );
+  } = useFetchSBOMs({
+    page: { pageNumber: 1, itemsPerPage: 10 },
+    sort: { field: "ingested", direction: "desc" },
+  });
 
   const {
     data: barchartSbomsVulnerabilities,
@@ -89,13 +86,10 @@ export const MonitoringSection: React.FC = () => {
     result: { data: advisories, total: totalAdvisories },
     isFetching: isFetchingAdvisories,
     fetchError: fetchErrorAdvisories,
-  } = useFetchAdvisories(
-    {
-      page: { pageNumber: 1, itemsPerPage: 10 },
-      sort: { field: "ingested", direction: "desc" },
-    },
-    true
-  );
+  } = useFetchAdvisories({
+    page: { pageNumber: 1, itemsPerPage: 10 },
+    sort: { field: "ingested", direction: "desc" },
+  });
 
   return (
     <Card>
