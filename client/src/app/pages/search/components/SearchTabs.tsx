@@ -64,16 +64,9 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
   };
 
   const sbomPopoverRef = React.createRef<HTMLElement>();
-
-  const sbomPopover = (popoverRef: React.RefObject<any>) => (
-    <Popover
-      bodyContent={
-        <div>Software Bill of Materials for Products and Containers.</div>
-      }
-      position={"right"}
-      triggerRef={popoverRef}
-    />
-  );
+  const packagePopoverRef = React.createRef<HTMLElement>();
+  const vulnerabilityPopoverRef = React.createRef<HTMLElement>();
+  const advisoryPopoverRef = React.createRef<HTMLElement>();
 
   return (
     <Split hasGutter>
@@ -131,7 +124,16 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
                 >
                   <HelpIcon />
                 </TabAction>
-                {sbomPopover(sbomPopoverRef)}
+                <Popover
+                  bodyContent={
+                    <div>
+                      A list of ingested Software Bill of Materials (SBOM)
+                      documents for products and containers.
+                    </div>
+                  }
+                  position={"right"}
+                  triggerRef={sbomPopoverRef}
+                />
               </>
             }
           >
@@ -147,6 +149,26 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
                 </Badge>
               </TabTitleText>
             }
+            actions={
+              <>
+                <TabAction
+                  aria-label={`Package help popover`}
+                  ref={packagePopoverRef}
+                >
+                  <HelpIcon />
+                </TabAction>
+                <Popover
+                  bodyContent={
+                    <div>
+                      A list of package types and versions with any known
+                      vulnerabilities.
+                    </div>
+                  }
+                  position={"right"}
+                  triggerRef={packagePopoverRef}
+                />
+              </>
+            }
           >
             {packageTable ?? <PackageTable />}
           </Tab>
@@ -160,6 +182,26 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
                 </Badge>
               </TabTitleText>
             }
+            actions={
+              <>
+                <TabAction
+                  aria-label={`Vulnerability help popover`}
+                  ref={vulnerabilityPopoverRef}
+                >
+                  <HelpIcon />
+                </TabAction>
+                <Popover
+                  bodyContent={
+                    <div>
+                      A list of publicly known Common Vulnerabilities and
+                      Exposures (CVE).
+                    </div>
+                  }
+                  position={"right"}
+                  triggerRef={vulnerabilityPopoverRef}
+                />
+              </>
+            }
           >
             {vulnerabilityTable ?? <VulnerabilityTable />}
           </Tab>
@@ -172,6 +214,25 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
                   {advisoryTotalCount}
                 </Badge>
               </TabTitleText>
+            }
+            actions={
+              <>
+                <TabAction
+                  aria-label={`Advisory help popover`}
+                  ref={advisoryPopoverRef}
+                >
+                  <HelpIcon />
+                </TabAction>
+                <Popover
+                  bodyContent={
+                    <div>
+                      A list of available advisories from software vendors.
+                    </div>
+                  }
+                  position={"right"}
+                  triggerRef={advisoryPopoverRef}
+                />
+              </>
             }
           >
             {advisoryTable ?? <AdvisoryTable />}
