@@ -8,16 +8,11 @@
     "target": "es2020",
     "module": "node16",
     "moduleResolution": "node16",
-
     "outDir": "./dist",
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
     "inlineSources": true,
     "resolveJsonModule": true,
-
-    "paths": {
-      "@branding/strings.json": ["./src/branding-strings-stub.json"]
-    }
   }
 }
