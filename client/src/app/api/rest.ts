@@ -1,10 +1,10 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { type AxiosRequestConfig } from "axios";
 
 import { FORM_DATA_FILE_KEY } from "@app/Constants";
-import { AdvisoryDetails, IngestResult } from "@app/client";
+import type { AdvisoryDetails, IngestResult } from "@app/client";
 import { serializeRequestParamsForHub } from "@app/hooks/table-controls/getHubRequestParams";
 
-import { HubPaginatedResult, HubRequestParams } from "./models";
+import type { HubPaginatedResult, HubRequestParams } from "./models";
 
 const API = "/api";
 

@@ -1,4 +1,4 @@
-import { DisallowCharacters } from "@app/utils/type-utils";
+import type { DisallowCharacters } from "@app/utils/type-utils";
 import { objectKeys } from "@app/utils/utils";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";

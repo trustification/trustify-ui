@@ -1,9 +1,9 @@
 import {
-  FilterCategory,
-  FilterValue,
+  type FilterCategory,
+  type FilterValue,
   getFilterLogicOperator,
 } from "@app/components/FilterToolbar";
-import { IFilterState } from "./useFilterState";
+import type { IFilterState } from "./useFilterState";
 
 /**
  * Args for getLocalFilterDerivedState

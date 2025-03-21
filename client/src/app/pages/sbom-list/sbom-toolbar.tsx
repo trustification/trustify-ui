@@ -12,7 +12,7 @@ import { SimplePagination } from "@app/components/SimplePagination";
 
 import { SbomSearchContext } from "./sbom-context";
 
-interface ISbomToolbar {}
+type ISbomToolbar = {};
 
 export const SbomToolbar: React.FC<ISbomToolbar> = ({}) => {
   const { tableControls } = React.useContext(SbomSearchContext);

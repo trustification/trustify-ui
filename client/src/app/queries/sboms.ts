@@ -4,19 +4,19 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 
-import { HubRequestParams } from "@app/api/models";
+import type { HubRequestParams } from "@app/api/models";
 import { client } from "@app/axios-config/apiInit";
 import {
+  type IngestResult,
+  type SbomSummary,
   deleteSbom,
   downloadSbom,
   getSbom,
   getSbomAdvisories,
-  IngestResult,
   listRelatedSboms,
   listSboms,
-  SbomSummary,
   updateSbomLabels,
 } from "@app/client";
 import { useUpload } from "@app/hooks/useUpload";
@@ -28,7 +28,7 @@ export const SBOMsQueryKey = "sboms";
 
 export const useFetchSBOMs = (
   params: HubRequestParams = {},
-  disableQuery: boolean = false,
+  disableQuery = false,
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [SBOMsQueryKey, params],

@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode } from "react";
+import React, { type ReactElement, type ReactNode } from "react";
 
 import {
   Badge,
@@ -9,8 +9,8 @@ import {
   SplitItem,
   Tab,
   TabAction,
-  Tabs,
   TabTitleText,
+  Tabs,
 } from "@patternfly/react-core";
 
 import { FilterPanel } from "@app/components/FilterPanel";

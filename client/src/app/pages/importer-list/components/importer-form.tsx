@@ -1,7 +1,8 @@
-import React, { useContext } from "react";
+import type React from "react";
+import { useContext } from "react";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import { useFieldArray, useForm } from "react-hook-form";
 import { array, boolean, number, object, string } from "yup";
 
@@ -35,7 +36,11 @@ import {
   useUpdateImporterMutation,
 } from "@app/queries/importers";
 
-import { Importer, ImporterConfiguration, SbomImporter } from "@app/client";
+import type {
+  Importer,
+  ImporterConfiguration,
+  SbomImporter,
+} from "@app/client";
 import {
   HookFormPFGroupController,
   HookFormPFSelect,
@@ -46,7 +51,9 @@ import { NotificationsContext } from "@app/components/NotificationsContext";
 
 const getPeriodValue = (period?: string) => {
   try {
-    return period ? parseInt(period.substring(0, period.length - 1)) : null;
+    return period
+      ? Number.parseInt(period.substring(0, period.length - 1))
+      : null;
   } catch (e) {
     return null;
   }

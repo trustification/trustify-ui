@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { Flex, FlexItem, Icon, Tooltip } from "@patternfly/react-core";
 

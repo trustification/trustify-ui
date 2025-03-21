@@ -12,7 +12,7 @@ import {
   EmptyStateHeader,
   EmptyStateVariant,
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
   Select,
   SelectList,
   SelectOption,

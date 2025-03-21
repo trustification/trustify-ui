@@ -1,9 +1,9 @@
-import * as React from "react";
+import type * as React from "react";
 
 import { Radio } from "@patternfly/react-core";
 
-import { ISelectFilterCategory } from "../FilterToolbar";
-import { IFilterControlProps } from "./FilterControl";
+import type { ISelectFilterCategory } from "../FilterToolbar";
+import type { IFilterControlProps } from "./FilterControl";
 
 export interface ISelectFilterControlProps<
   TItem,

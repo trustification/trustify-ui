@@ -11,7 +11,7 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { Severity } from "@app/client";
+import type { Severity } from "@app/client";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
@@ -26,7 +26,7 @@ import { VulnerabilityGallery } from "@app/components/VulnerabilityGallery";
 import { formatDate } from "@app/utils/utils";
 
 import {
-  ExtendedSeverity,
+  type ExtendedSeverity,
   extendedSeverityFromSeverity,
 } from "@app/api/models";
 import { AdvisorySearchContext } from "./advisory-context";

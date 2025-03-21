@@ -1,4 +1,4 @@
-import { FilterValue, IFilterValues } from "@app/components/FilterToolbar";
+import type { FilterValue, IFilterValues } from "@app/components/FilterToolbar";
 import { objectKeys } from "@app/utils/utils";
 
 /**

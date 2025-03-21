@@ -5,12 +5,12 @@
 
 declare module "@hookform/resolvers/yup" {
   // contents of @hookform/resolvers/yup/dist/types.d.ts
-  import {
+  import type {
     FieldValues,
     ResolverOptions,
     ResolverResult,
   } from "react-hook-form";
-  import * as Yup from "yup";
+  import type * as Yup from "yup";
   import type Lazy from "yup/lib/Lazy";
 
   declare type Options<T extends Yup.AnyObjectSchema | Lazy<any>> = Parameters<
@@ -28,7 +28,6 @@ declare module "@hookform/resolvers/yup" {
     context: TContext | undefined,
     options: ResolverOptions<TFieldValues>,
   ) => Promise<ResolverResult<TFieldValues>>;
-  export {};
 
   // contents of @hookform/resolvers/yup/dist/yup.d.ts
   export declare const yupResolver: Resolver;

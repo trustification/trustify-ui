@@ -1,12 +1,13 @@
 import React from "react";
-import axios, {
-  AxiosError,
-  AxiosPromise,
-  AxiosRequestConfig,
-  AxiosResponse,
-  CancelTokenSource,
-} from "axios";
+
 import { FORM_DATA_FILE_KEY } from "@app/Constants";
+import axios, {
+  type AxiosError,
+  type AxiosPromise,
+  type AxiosRequestConfig,
+  type AxiosResponse,
+  type CancelTokenSource,
+} from "axios";
 
 const CANCEL_MESSAGE = "cancelled";
 

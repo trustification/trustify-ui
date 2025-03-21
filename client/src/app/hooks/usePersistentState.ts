@@ -1,11 +1,12 @@
 import React from "react";
-import { IUseUrlParamsArgs, useUrlParams } from "./useUrlParams";
+
+import type { DisallowCharacters } from "@app/utils/type-utils";
 import {
-  UseStorageTypeOptions,
+  type UseStorageTypeOptions,
   useLocalStorage,
   useSessionStorage,
 } from "./useStorage";
-import { DisallowCharacters } from "@app/utils/type-utils";
+import { type IUseUrlParamsArgs, useUrlParams } from "./useUrlParams";
 
 type PersistToStateOptions = { persistTo?: "state" };
 

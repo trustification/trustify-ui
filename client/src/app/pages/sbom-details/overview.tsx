@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import prettyBytes from "pretty-bytes";
 
@@ -16,7 +16,7 @@ import {
   ListItem,
 } from "@patternfly/react-core";
 
-import { SbomSummary } from "@app/client";
+import type { SbomSummary } from "@app/client";
 import { formatDate } from "@app/utils/utils";
 
 interface InfoProps {

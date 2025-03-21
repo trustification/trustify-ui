@@ -1,16 +1,18 @@
 import * as React from "react";
+
 import {
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
   Select,
   SelectList,
   SelectOption,
-  ToolbarChip,
+  type ToolbarChip,
   ToolbarFilter,
 } from "@patternfly/react-core";
-import { IFilterControlProps } from "./FilterControl";
-import { ISelectFilterCategory } from "./FilterToolbar";
 import { css } from "@patternfly/react-styles";
+
+import type { IFilterControlProps } from "./FilterControl";
+import type { ISelectFilterCategory } from "./FilterToolbar";
 
 import "./select-overrides.css";
 

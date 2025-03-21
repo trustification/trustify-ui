@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
-import { useLocation } from "react-router";
 import { useAuth } from "react-oidc-context";
-import { AnalyticsBrowser } from "@segment/analytics-next";
-import ENV from "@app/env";
+import { useLocation } from "react-router";
+
 import { isAuthRequired } from "@app/Constants";
 import { analyticsSettings } from "@app/analytics";
+import ENV from "@app/env";
+import { AnalyticsBrowser } from "@segment/analytics-next";
 
 const AnalyticsContext = React.createContext<AnalyticsBrowser>(undefined!);
 

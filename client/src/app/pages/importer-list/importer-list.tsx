@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import dayjs from "dayjs";
 
 import {
@@ -31,7 +31,7 @@ import {
 
 import {
   ConfirmDialog,
-  ConfirmDialogProps,
+  type ConfirmDialogProps,
 } from "@app/components/ConfirmDialog";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import {
@@ -43,11 +43,11 @@ import { formatDateTime, getAxiosErrorMessage } from "@app/utils/utils";
 
 import { client } from "@app/axios-config/apiInit";
 import {
+  type Importer,
+  type ImporterConfiguration,
+  type Message,
+  type SbomImporter,
   forceRunImporter,
-  Importer,
-  ImporterConfiguration,
-  Message,
-  SbomImporter,
 } from "@app/client";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { IconedStatus } from "@app/components/IconedStatus";

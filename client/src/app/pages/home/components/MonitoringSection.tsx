@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import {
@@ -31,13 +31,13 @@ import {
 } from "@patternfly/react-core";
 
 import { severityList } from "@app/api/model-utils";
-import { SbomHead } from "@app/client";
+import type { ExtendedSeverity } from "@app/api/models";
+import type { SbomHead } from "@app/client";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useVulnerabilitiesOfSboms } from "@app/hooks/domain-controls/useVulnerabilitiesOfSbom";
 import { useFetchAdvisories } from "@app/queries/advisories";
 import { useFetchSBOMs } from "@app/queries/sboms";
 import { formatDateTime } from "@app/utils/utils";
-import { ExtendedSeverity } from "@app/api/models";
 
 interface Legend {
   severity: ExtendedSeverity;

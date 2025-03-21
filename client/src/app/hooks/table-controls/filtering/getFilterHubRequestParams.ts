@@ -1,11 +1,11 @@
-import { HubFilter, HubRequestParams } from "@app/api/models";
-import { objectKeys } from "@app/utils/utils";
+import type { HubFilter, HubRequestParams } from "@app/api/models";
 import {
-  FilterCategory,
+  type FilterCategory,
   getFilterLogicOperator,
 } from "@app/components/FilterToolbar";
-import { IFilterState } from "./useFilterState";
 import { parseInterval } from "@app/components/FilterToolbar/dateUtils";
+import { objectKeys } from "@app/utils/utils";
+import type { IFilterState } from "./useFilterState";
 
 /**
  * Helper function for getFilterHubRequestParams

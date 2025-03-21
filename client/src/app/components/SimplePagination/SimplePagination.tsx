@@ -1,8 +1,8 @@
-import React from "react";
+import type React from "react";
 
 import {
   Pagination,
-  PaginationProps,
+  type PaginationProps,
   PaginationVariant,
 } from "@patternfly/react-core";
 import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";

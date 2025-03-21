@@ -1,9 +1,9 @@
 import { getLocalFilterDerivedState } from "./filtering";
-import { getLocalSortDerivedState } from "./sorting";
 import { getLocalPaginationDerivedState } from "./pagination";
-import {
-  ITableControlLocalDerivedStateArgs,
+import { getLocalSortDerivedState } from "./sorting";
+import type {
   ITableControlDerivedState,
+  ITableControlLocalDerivedStateArgs,
   ITableControlState,
 } from "./types";
 

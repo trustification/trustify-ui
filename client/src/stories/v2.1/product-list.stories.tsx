@@ -1,26 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import React from "react";
-import CodeBranchIcon from "@patternfly/react-icons/dist/esm/icons/code-branch-icon";
-import {
-  BellIcon,
-  CubeIcon,
-  HelpIcon,
-  ThumbtackIcon,
-} from "@patternfly/react-icons";
-import {
-  Table,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Td,
-  ExpandableRowContent,
-  TdProps,
-  IAction,
-  ActionsColumn,
-  ThProps,
-} from "@patternfly/react-table";
-import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
+import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
+import { SBOMVulnerabilities } from "@app/pages/sbom-list/components/SbomVulnerabilities";
 import {
   Badge,
   Button,
@@ -34,9 +13,30 @@ import {
   Popover,
   TextInput,
 } from "@patternfly/react-core";
-import { SBOMVulnerabilities } from "@app/pages/sbom-list/components/SbomVulnerabilities";
+import {
+  BellIcon,
+  CubeIcon,
+  HelpIcon,
+  ThumbtackIcon,
+} from "@patternfly/react-icons";
+import CodeBranchIcon from "@patternfly/react-icons/dist/esm/icons/code-branch-icon";
 import formStyles from "@patternfly/react-styles/css/components/Form/form";
-import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
+import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
+import {
+  ActionsColumn,
+  ExpandableRowContent,
+  type IAction,
+  Table,
+  Tbody,
+  Td,
+  type TdProps,
+  Th,
+  type ThProps,
+  Thead,
+  Tr,
+} from "@patternfly/react-table";
+import type { Meta, StoryObj } from "@storybook/react";
+import React from "react";
 
 // DATA IMPORTS
 

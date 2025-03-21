@@ -14,8 +14,8 @@ import {
 
 import { useDebounceValue } from "usehooks-ts";
 
-import { HubRequestParams } from "@app/api/models";
 import { FILTER_TEXT_CATEGORY_KEY } from "@app/Constants";
+import type { HubRequestParams } from "@app/api/models";
 import { SbomSearchContext } from "@app/pages/sbom-list/sbom-context";
 import { useFetchAdvisories } from "@app/queries/advisories";
 import { useFetchPackages } from "@app/queries/packages";

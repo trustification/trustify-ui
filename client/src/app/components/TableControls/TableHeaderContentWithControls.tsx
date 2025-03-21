@@ -1,4 +1,5 @@
-import React from "react";
+import type React from "react";
+
 import { Th } from "@patternfly/react-table";
 
 export interface ITableHeaderContentWithControlsProps {

@@ -1,6 +1,6 @@
 import * as React from "react";
-import { IActiveItemDerivedState } from "./getActiveItemDerivedState";
-import { IActiveItemState } from "./useActiveItemState";
+import type { IActiveItemDerivedState } from "./getActiveItemDerivedState";
+import type { IActiveItemState } from "./useActiveItemState";
 
 /**
  * Args for useActiveItemEffects

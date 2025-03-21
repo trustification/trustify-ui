@@ -1,10 +1,10 @@
 import * as React from "react";
 
-import { AxiosError, AxiosResponse, CancelTokenSource } from "axios";
-import { FileRejection } from "react-dropzone";
+import type { AxiosError, AxiosResponse, CancelTokenSource } from "axios";
+import type { FileRejection } from "react-dropzone";
 
 import {
-  DropEvent,
+  type DropEvent,
   HelperText,
   HelperTextItem,
   List,

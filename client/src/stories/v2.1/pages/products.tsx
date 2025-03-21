@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import {
   Card,
@@ -64,7 +64,7 @@ import {
 } from "@patternfly/react-icons";
 
 import { severityList } from "@app/api/model-utils";
-import { Severity } from "@app/client";
+import type { Severity } from "@app/client";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";

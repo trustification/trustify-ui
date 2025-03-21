@@ -1,11 +1,11 @@
 import React from "react";
 
 import {
-  ExtendedSeverity,
+  type ExtendedSeverity,
+  type VulnerabilityStatus,
   extendedSeverityFromSeverity,
-  VulnerabilityStatus,
 } from "@app/api/models";
-import { PurlAdvisory, VulnerabilityHead } from "@app/client";
+import type { PurlAdvisory, VulnerabilityHead } from "@app/client";
 import { useFetchPackageById } from "@app/queries/packages";
 
 const areVulnerabilityOfPackageEqual = (

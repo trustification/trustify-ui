@@ -1,11 +1,11 @@
 import React from "react";
 
 import {
-  ExtendedSeverity,
+  type ExtendedSeverity,
+  type VulnerabilityStatus,
   extendedSeverityFromSeverity,
-  VulnerabilityStatus,
 } from "@app/api/models";
-import { SbomAdvisory, SbomPackage, SbomStatus } from "@app/client";
+import type { SbomAdvisory, SbomPackage, SbomStatus } from "@app/client";
 import {
   useFetchSbomsAdvisory,
   useFetchSbomsAdvisoryBatch,

@@ -1,4 +1,5 @@
-import React, { useMemo } from "react";
+import type React from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import {
@@ -26,8 +27,8 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { DecomposedPurl } from "@app/api/models";
-import { PurlSummary } from "@app/client";
+import type { DecomposedPurl } from "@app/api/models";
+import type { PurlSummary } from "@app/client";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { PackageQualifiers } from "@app/components/PackageQualifiers";
 import { SimplePagination } from "@app/components/SimplePagination";

@@ -1,5 +1,5 @@
-import { KeyWithValueType } from "@app/utils/type-utils";
-import { IActiveItemState } from "./useActiveItemState";
+import type { KeyWithValueType } from "@app/utils/type-utils";
+import type { IActiveItemState } from "./useActiveItemState";
 
 /**
  * Args for getActiveItemDerivedState

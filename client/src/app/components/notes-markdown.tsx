@@ -1,7 +1,7 @@
-import React from "react";
+import type React from "react";
+import ReactMarkdown from "react-markdown";
 
 import { Text, TextContent } from "@patternfly/react-core";
-import ReactMarkdown from "react-markdown";
 import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
 import { markdownPFComponents } from "./markdownPFComponents";
 

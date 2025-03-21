@@ -1,6 +1,5 @@
-import React from "react";
+import type React from "react";
 
-import type { Meta, StoryObj } from "@storybook/react";
 import {
   Nav,
   NavItem,
@@ -9,15 +8,16 @@ import {
   PageSidebar,
   SkipToContent,
 } from "@patternfly/react-core";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { NotificationsProvider } from "@app/components/NotificationsContext";
 
-import { HeaderApp } from "@app/layout/header";
-import { PageContentWithDrawerProvider } from "@app/components/PageDrawerContext";
 import { Notifications } from "@app/components/Notifications";
+import { PageContentWithDrawerProvider } from "@app/components/PageDrawerContext";
+import { HeaderApp } from "@app/layout/header";
 
-import { SearchPage } from "./pages/search";
 import { ProductsPage } from "./pages/products";
+import { SearchPage } from "./pages/search";
 
 type Route = "dashboard" | "search" | "products";
 type RouteProps = {

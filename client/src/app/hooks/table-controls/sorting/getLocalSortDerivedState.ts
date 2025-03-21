@@ -1,4 +1,4 @@
-import { ISortState } from "./useSortState";
+import type { ISortState } from "./useSortState";
 
 /**
  * Args for getLocalSortDerivedState

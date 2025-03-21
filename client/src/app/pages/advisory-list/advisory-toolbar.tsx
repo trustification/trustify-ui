@@ -7,7 +7,7 @@ import { SimplePagination } from "@app/components/SimplePagination";
 
 import { AdvisorySearchContext } from "./advisory-context";
 
-interface IAdvisoryToolbar {}
+type IAdvisoryToolbar = {};
 
 export const AdvisoryToolbar: React.FC<IAdvisoryToolbar> = ({}) => {
   const { tableControls } = React.useContext(AdvisorySearchContext);

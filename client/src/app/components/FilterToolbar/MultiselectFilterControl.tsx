@@ -1,9 +1,10 @@
 import * as React from "react";
+
 import {
   Badge,
   Button,
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
   Select,
   SelectGroup,
   SelectList,
@@ -11,17 +12,18 @@ import {
   TextInputGroup,
   TextInputGroupMain,
   TextInputGroupUtilities,
-  ToolbarChip,
+  type ToolbarChip,
   ToolbarFilter,
   Tooltip,
 } from "@patternfly/react-core";
-import { IFilterControlProps } from "./FilterControl";
-import {
-  IMultiselectFilterCategory,
-  FilterSelectOptionProps,
-} from "./FilterToolbar";
-import { css } from "@patternfly/react-styles";
 import { TimesIcon } from "@patternfly/react-icons";
+import { css } from "@patternfly/react-styles";
+
+import type { IFilterControlProps } from "./FilterControl";
+import type {
+  FilterSelectOptionProps,
+  IMultiselectFilterCategory,
+} from "./FilterToolbar";
 
 import "./select-overrides.css";
 
@@ -57,9 +59,7 @@ export const MultiselectFilterControl = <TItem,>({
 
   const flatOptions: FilterSelectOptionProps[] = !hasGroupings
     ? selectOptions
-    : (Object.values(selectOptions).flatMap(
-        (i) => i,
-      ) as FilterSelectOptionProps[]);
+    : (Object.values(selectOptions).flat() as FilterSelectOptionProps[]);
 
   const getOptionFromOptionValue = (optionValue: string) =>
     flatOptions.find(({ value }) => value === optionValue);

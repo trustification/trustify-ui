@@ -1,10 +1,10 @@
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import dayjs from "dayjs";
 import { PackageURL } from "packageurl-js";
 
 import { RENDER_DATETIME_FORMAT, RENDER_DATE_FORMAT } from "@app/Constants";
-import { DecomposedPurl } from "@app/api/models";
-import { ToolbarChip } from "@patternfly/react-core";
+import type { DecomposedPurl } from "@app/api/models";
+import type { ToolbarChip } from "@patternfly/react-core";
 
 // Axios error
 

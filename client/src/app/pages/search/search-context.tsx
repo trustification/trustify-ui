@@ -1,8 +1,8 @@
-import React from "react";
+import type React from "react";
+import { AdvisorySearchProvider } from "../advisory-list/advisory-context";
 import { PackageSearchProvider } from "../package-list/package-context";
 import { SbomSearchProvider } from "../sbom-list/sbom-context";
 import { VulnerabilitySearchProvider } from "../vulnerability-list/vulnerability-context";
-import { AdvisorySearchProvider } from "../advisory-list/advisory-context";
 
 interface Provider<TProps> {
   Component: React.ComponentType<React.PropsWithChildren<TProps>>;

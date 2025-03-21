@@ -2,11 +2,11 @@ import * as React from "react";
 
 import { Checkbox } from "@patternfly/react-core";
 
-import {
+import type {
   FilterSelectOptionProps,
   IMultiselectFilterCategory,
 } from "../FilterToolbar";
-import { IFilterControlProps } from "./FilterControl";
+import type { IFilterControlProps } from "./FilterControl";
 
 export interface IMultiselectFilterControlProps<TItem>
   extends IFilterControlProps<TItem, string> {
@@ -35,9 +35,7 @@ export const CheckboxFilterControl = <TItem,>({
 
   const flatOptions: FilterSelectOptionProps[] = !hasGroupings
     ? selectOptions
-    : (Object.values(selectOptions).flatMap(
-        (i) => i,
-      ) as FilterSelectOptionProps[]);
+    : (Object.values(selectOptions).flat() as FilterSelectOptionProps[]);
 
   const onSelect = (value: string | undefined) => {
     if (value && value !== "No results") {

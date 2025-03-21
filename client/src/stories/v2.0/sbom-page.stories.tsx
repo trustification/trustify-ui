@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import { SbomList } from "@app/pages/sbom-list/sbom-list";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "v2.0/SBOMs/SBOM List",

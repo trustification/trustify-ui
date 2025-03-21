@@ -1,13 +1,14 @@
 import * as React from "react";
+
 import {
   Dropdown,
-  DropdownItem,
   DropdownGroup,
+  DropdownItem,
   DropdownList,
   MenuToggle,
-  SelectOptionProps,
-  ToolbarToggleGroup,
+  type SelectOptionProps,
   ToolbarItem,
+  ToolbarToggleGroup,
 } from "@patternfly/react-core";
 import FilterIcon from "@patternfly/react-icons/dist/esm/icons/filter-icon";
 

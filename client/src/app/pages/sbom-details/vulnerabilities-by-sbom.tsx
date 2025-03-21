@@ -30,10 +30,10 @@ import {
 
 import { getSeverityPriority } from "@app/api/model-utils";
 import {
+  type VulnerabilityStatus,
   extendedSeverityFromSeverity,
-  VulnerabilityStatus,
 } from "@app/api/models";
-import {
+import type {
   PurlSummary,
   SbomAdvisory,
   SbomPackage,

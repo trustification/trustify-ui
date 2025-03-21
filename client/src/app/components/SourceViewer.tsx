@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 
 import { useFetchAdvisorySourceById } from "@app/queries/advisories";
 import { CodeEditor, Language } from "@patternfly/react-code-editor";

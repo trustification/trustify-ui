@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IPaginationState } from "./usePaginationState";
+import type { IPaginationState } from "./usePaginationState";
 
 /**
  * Args for usePaginationEffects

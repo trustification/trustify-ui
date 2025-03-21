@@ -8,7 +8,7 @@ import {
   FlexItem,
   Label,
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
   PageSection,
   Popover,
   Split,
@@ -16,8 +16,8 @@ import {
   Tab,
   TabAction,
   TabContent,
-  Tabs,
   TabTitleText,
+  Tabs,
   Text,
   TextContent,
 } from "@patternfly/react-core";
