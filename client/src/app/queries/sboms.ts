@@ -28,7 +28,7 @@ export const SBOMsQueryKey = "sboms";
 
 export const useFetchSBOMs = (
   params: HubRequestParams = {},
-  disableQuery: boolean = false
+  disableQuery: boolean = false,
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [SBOMsQueryKey, params],
@@ -71,7 +71,7 @@ export const useFetchSBOMById = (id?: string) => {
 
 export const useDeleteSbomMutation = (
   onSuccess: (payload: SbomSummary, id: string) => void,
-  onError?: (err: AxiosError, id: string) => void
+  onError?: (err: AxiosError, id: string) => void,
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -118,7 +118,7 @@ export const useUploadSBOM = () => {
 
 export const useUpdateSbomLabelsMutation = (
   onSuccess: () => void,
-  onError: (err: AxiosError, payload: SbomSummary) => void
+  onError: (err: AxiosError, payload: SbomSummary) => void,
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -139,7 +139,7 @@ export const useUpdateSbomLabelsMutation = (
 
 export const useFetchSbomsByPackageId = (
   purl: string,
-  params: HubRequestParams = {}
+  params: HubRequestParams = {},
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["SBOMsQueryKeysss", "by-package", purl, params],

@@ -55,7 +55,7 @@ export interface IExpansionPropHelpersInternalArgs<TColumnKey extends string> {
  */
 export const useExpansionPropHelpers = <TItem, TColumnKey extends string>(
   args: IExpansionPropHelpersExternalArgs<TItem, TColumnKey> &
-    IExpansionPropHelpersInternalArgs<TColumnKey>
+    IExpansionPropHelpersInternalArgs<TColumnKey>,
 ) => {
   const {
     columnNames,

@@ -14,7 +14,7 @@ const passthroughHandler: RequestHandler = http.all("/api/*", (req) => {
     "%cmsw passthrough%c \u{1fa83} %s",
     "font-weight: bold",
     "font-weight: normal",
-    req.request.url
+    req.request.url,
   );
   return passthrough();
 });

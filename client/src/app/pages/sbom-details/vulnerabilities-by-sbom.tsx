@@ -89,7 +89,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
 
   const affectedVulnerabilities = React.useMemo(() => {
     return vulnerabilities.filter(
-      (item) => item.vulnerabilityStatus === "affected"
+      (item) => item.vulnerabilityStatus === "affected",
     );
   }, [vulnerabilities]);
 
@@ -119,7 +119,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
 
   const tableDataWithUiId = useWithUiId(
     tableData,
-    (d) => `${d.vulnerability.identifier}-${d.vulnerabilityStatus}`
+    (d) => `${d.vulnerability.identifier}-${d.vulnerabilityStatus}`,
   );
 
   const tableControls = useLocalTableControls({
@@ -290,7 +290,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                         <Td width={10} {...getTdProps({ columnKey: "cvss" })}>
                           <SeverityShieldAndText
                             value={extendedSeverityFromSeverity(
-                              item.vulnerability.average_severity
+                              item.vulnerability.average_severity,
                             )}
                           />
                         </Td>
@@ -374,7 +374,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                                       .map((purl, index) => {
                                         if (purl.purlSummary) {
                                           const decomposedPurl = decomposePurl(
-                                            purl.purlSummary.purl
+                                            purl.purlSummary.purl,
                                           );
                                           return (
                                             <Tr key={`${index}-purl`}>

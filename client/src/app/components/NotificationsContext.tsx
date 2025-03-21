@@ -26,7 +26,7 @@ const notificationDefault: Pick<INotification, "hideCloseButton"> = {
 };
 
 export const NotificationsContext = React.createContext<INotificationsContext>(
-  appContextDefaultValue
+  appContextDefaultValue,
 );
 
 export const NotificationsProvider: React.FunctionComponent<
@@ -36,7 +36,7 @@ export const NotificationsProvider: React.FunctionComponent<
 
   const pushNotification = (
     notification: INotification,
-    clearNotificationDelay?: number
+    clearNotificationDelay?: number,
   ) => {
     setNotifications([
       ...notifications,
@@ -47,7 +47,7 @@ export const NotificationsProvider: React.FunctionComponent<
 
   const dismissNotification = (title: string) => {
     const remainingNotifications = notifications.filter(
-      (n) => n.title !== title
+      (n) => n.title !== title,
     );
     setNotifications(remainingNotifications);
   };

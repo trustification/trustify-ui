@@ -28,7 +28,7 @@ export const AdvisoriesQueryKey = "advisories";
 
 export const useFetchAdvisories = (
   params: HubRequestParams = {},
-  disableQuery: boolean = false
+  disableQuery: boolean = false,
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [AdvisoriesQueryKey, params],
@@ -68,7 +68,7 @@ export const useFetchAdvisoryById = (id: string) => {
 
 export const useDeleteAdvisoryMutation = (
   onSuccess?: (payload: AdvisoryDetails, id: string) => void,
-  onError?: (err: AxiosError, id: string) => void
+  onError?: (err: AxiosError, id: string) => void,
 ) => {
   return useMutation({
     mutationFn: async (id: string) => {
@@ -112,7 +112,7 @@ export const useUploadAdvisory = () => {
 
 export const useUpdateAdvisoryLabelsMutation = (
   onSuccess: () => void,
-  onError: (err: AxiosError, payload: AdvisorySummary) => void
+  onError: (err: AxiosError, payload: AdvisorySummary) => void,
 ) => {
   const queryClient = useQueryClient();
   return useMutation({

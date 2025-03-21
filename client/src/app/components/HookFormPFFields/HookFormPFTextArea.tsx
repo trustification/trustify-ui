@@ -17,7 +17,7 @@ export const HookFormPFTextArea = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends Path<TFieldValues> = Path<TFieldValues>,
 >(
-  props: HookFormPFTextAreaProps<TFieldValues, TName>
+  props: HookFormPFTextAreaProps<TFieldValues, TName>,
 ) => {
   const { extractedProps, remainingProps } = extractGroupControllerProps<
     TFieldValues,

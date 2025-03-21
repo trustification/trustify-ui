@@ -42,10 +42,10 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
   const { tableControls: packageTableControls } =
     React.useContext(PackageSearchContext);
   const { tableControls: vulnerabilityTableControls } = React.useContext(
-    VulnerabilitySearchContext
+    VulnerabilitySearchContext,
   );
   const { tableControls: advisoryTableControls } = React.useContext(
-    AdvisorySearchContext
+    AdvisorySearchContext,
   );
 
   const {

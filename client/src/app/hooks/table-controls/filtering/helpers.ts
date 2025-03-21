@@ -6,7 +6,7 @@ import { objectKeys } from "@app/utils/utils";
  * Given a structured filter values object, returns a string to be stored in the feature's PersistTarget (URL params, localStorage, etc).
  */
 export const serializeFilterUrlParams = <TFilterCategoryKey extends string>(
-  filterValues: IFilterValues<TFilterCategoryKey>
+  filterValues: IFilterValues<TFilterCategoryKey>,
 ): { filters?: string | null } => {
   // If a filter value is empty/cleared, don't put it in the object in URL params
   const trimmedFilterValues = { ...filterValues };

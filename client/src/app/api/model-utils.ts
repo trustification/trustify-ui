@@ -71,7 +71,7 @@ export const getSeverityPriority = (val: ExtendedSeverity) => {
 };
 
 export function compareBySeverityFn<T>(
-  severityExtractor: (elem: T) => ExtendedSeverity
+  severityExtractor: (elem: T) => ExtendedSeverity,
 ) {
   return (a: T, b: T) => {
     return (

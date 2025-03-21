@@ -23,7 +23,7 @@ const renderApp = () => {
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </OidcProvider>
-    </React.StrictMode>
+    </React.StrictMode>,
   );
 };
 

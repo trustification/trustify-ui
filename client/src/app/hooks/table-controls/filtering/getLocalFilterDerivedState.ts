@@ -47,18 +47,18 @@ export const getLocalFilterDerivedState = <
     Object.entries<FilterValue>(filterValues).every(([filterKey, values]) => {
       if (!values || values.length === 0) return true;
       const filterCategory = filterCategories.find(
-        (category) => category.categoryKey === filterKey
+        (category) => category.categoryKey === filterKey,
       );
       const defaultMatcher = (filterValue: string, item: TItem) =>
         legacyMatcher(
           filterValue,
-          filterCategory?.getItemValue?.(item) ?? (item as any)[filterKey]
+          filterCategory?.getItemValue?.(item) ?? (item as any)[filterKey],
         );
       const matcher = filterCategory?.matcher ?? defaultMatcher;
       const logicOperator =
         getFilterLogicOperator(filterCategory) === "AND" ? "every" : "some";
       return values[logicOperator]((filterValue) => matcher(filterValue, item));
-    })
+    }),
   );
 
   return { filteredItems };

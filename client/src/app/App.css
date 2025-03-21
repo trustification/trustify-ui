@@ -21,7 +21,5 @@ table.vertical-middle-aligned-table tr td {
 }
 
 .multiple-file-upload-status-item-force-blue .pf-v5-c-progress__indicator {
-  background-color: var(
-    --pf-v5-c-progress__indicator--BackgroundColor
-  ) !important;
+  background-color: var(--pf-v5-c-progress__indicator--BackgroundColor) !important;
 }

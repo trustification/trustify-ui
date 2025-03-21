@@ -47,7 +47,7 @@ export const RadioFilterControl = <TItem, TFilterCategoryKey extends string>({
               }}
             />
           );
-        }
+        },
       )}
     </>
   );
