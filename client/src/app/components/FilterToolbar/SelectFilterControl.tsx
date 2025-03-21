@@ -5,6 +5,7 @@ import {
   Select,
   SelectList,
   SelectOption,
+  ToolbarChip,
   ToolbarFilter,
 } from "@patternfly/react-core";
 import { IFilterControlProps } from "./FilterControl";
@@ -48,7 +49,16 @@ export const SelectFilterControl = <TItem, TFilterCategoryKey extends string>({
         node: chipLabel ?? label ?? value,
       };
     })
-    .filter(Boolean);
+    .reduce(
+      (prev, current) => {
+        if (current) {
+          return [...prev, current];
+        } else {
+          return prev;
+        }
+      },
+      [] as (string | ToolbarChip)[]
+    );
 
   const onFilterSelect = (value: string) => {
     const option = getOptionFromOptionValue(value);
