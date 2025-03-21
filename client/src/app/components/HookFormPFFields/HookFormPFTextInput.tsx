@@ -17,7 +17,7 @@ export const HookFormPFTextInput = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends Path<TFieldValues> = Path<TFieldValues>,
 >(
-  props: HookFormPFTextInputProps<TFieldValues, TName>
+  props: HookFormPFTextInputProps<TFieldValues, TName>,
 ) => {
   const { extractedProps, remainingProps } = extractGroupControllerProps<
     TFieldValues,
@@ -45,7 +45,7 @@ export const HookFormPFTextInput = <
                 ((value && parseInt(value, 10)) || "") as PathValue<
                   TFieldValues,
                   TName
-                >
+                >,
               );
             } else {
               onChange(value as PathValue<TFieldValues, TName>);

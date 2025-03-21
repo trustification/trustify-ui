@@ -44,7 +44,7 @@ export const useSortPropHelpers = <
   TSortableColumnKey extends TColumnKey,
 >(
   args: ISortPropHelpersExternalArgs<TColumnKey, TSortableColumnKey> &
-    ISortPropHelpersInternalArgs<TColumnKey>
+    ISortPropHelpersInternalArgs<TColumnKey>,
 ) => {
   const {
     sortState: { activeSort, setActiveSort },

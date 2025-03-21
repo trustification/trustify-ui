@@ -68,7 +68,7 @@ export const useExpansionState = <
   TPersistenceKeyPrefix extends string = string,
 >(
   args: IExpansionStateArgs &
-    IFeaturePersistenceArgs<TPersistenceKeyPrefix> = {}
+    IFeaturePersistenceArgs<TPersistenceKeyPrefix> = {},
 ): IExpansionState<TColumnKey> => {
   const {
     isExpansionEnabled,

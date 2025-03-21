@@ -17,7 +17,7 @@ interface IColumnStateArgs<TColumnKey extends string> {
 }
 
 export const useColumnState = <TColumnKey extends string>(
-  args: IColumnStateArgs<TColumnKey>
+  args: IColumnStateArgs<TColumnKey>,
 ): IColumnState<TColumnKey> => {
   const [columns, setColumns] = useLocalStorage<ColumnState<TColumnKey>[]>({
     key: args.columnsKey,

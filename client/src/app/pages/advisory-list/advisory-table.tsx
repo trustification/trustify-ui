@@ -85,7 +85,7 @@ export const AdvisoryTable: React.FC = ({}) => {
 
             const severities = item.vulnerabilities.reduce((prev, current) => {
               const extendedSeverity = extendedSeverityFromSeverity(
-                current.severity
+                current.severity,
               );
               return {
                 ...prev,
@@ -149,7 +149,7 @@ export const AdvisoryTable: React.FC = ({}) => {
                             onClick: () => {
                               downloadAdvisory(
                                 item.uuid,
-                                `${item.identifier}.json`
+                                `${item.identifier}.json`,
                               );
                             },
                           },

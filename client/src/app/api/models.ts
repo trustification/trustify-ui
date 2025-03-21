@@ -55,7 +55,7 @@ export interface DecomposedPurl {
 
 export type ExtendedSeverity = Severity | "unknown";
 export const extendedSeverityFromSeverity = (
-  value?: Severity | null
+  value?: Severity | null,
 ): ExtendedSeverity => value ?? "unknown";
 
 // User preferences

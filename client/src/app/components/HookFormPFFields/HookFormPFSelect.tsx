@@ -20,7 +20,7 @@ export const HookFormPFSelect = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends Path<TFieldValues> = Path<TFieldValues>,
 >(
-  props: HookFormPFSelectProps<TFieldValues, TName>
+  props: HookFormPFSelectProps<TFieldValues, TName>,
 ) => {
   const { extractedProps, remainingProps } = extractGroupControllerProps<
     TFieldValues,

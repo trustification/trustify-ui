@@ -37,8 +37,8 @@ export const useCreateImporterMutation = (
     payload: {
       importerName: string;
       configuration: ImporterConfiguration;
-    }
-  ) => void
+    },
+  ) => void,
 ) => {
   const queryClient = useQueryClient();
 
@@ -79,8 +79,8 @@ export const useUpdateImporterMutation = (
   onSuccess: (payload: void) => void,
   onError: (
     err: AxiosError,
-    payload: { importerName: string; configuration: ImporterConfiguration }
-  ) => void
+    payload: { importerName: string; configuration: ImporterConfiguration },
+  ) => void,
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -104,7 +104,7 @@ export const useUpdateImporterMutation = (
 
 export const useDeleteIporterMutation = (
   onSuccess: (id: string) => void,
-  onError: (err: AxiosError, id: string) => void
+  onError: (err: AxiosError, id: string) => void,
 ) => {
   const queryClient = useQueryClient();
 
@@ -129,7 +129,7 @@ export const useDeleteIporterMutation = (
 
 export const useFetchImporterReports = (
   id: string,
-  refetchDisabled: boolean = false
+  refetchDisabled: boolean = false,
 ) => {
   const { data, isLoading, refetch, error } = useQuery({
     queryKey: [ImportersQueryKey, id, "reports"],

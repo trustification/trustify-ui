@@ -85,7 +85,7 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
   };
 
   const successFileCount = Array.from(uploads.values()).filter(
-    (upload) => upload.response
+    (upload) => upload.response,
   ).length;
 
   return (

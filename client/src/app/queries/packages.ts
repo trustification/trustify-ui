@@ -11,7 +11,7 @@ export const PackagesQueryKey = "packages";
 
 export const useFetchPackages = (
   params: HubRequestParams = {},
-  disableQuery: boolean = false
+  disableQuery: boolean = false,
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [PackagesQueryKey, params],
@@ -51,7 +51,7 @@ export const useFetchPackageById = (id: string) => {
 
 export const useFetchPackagesBySbomId = (
   sbomId: string,
-  params: HubRequestParams = {}
+  params: HubRequestParams = {},
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [PackagesQueryKey, "by-sbom", sbomId, params],

@@ -23,7 +23,7 @@ export const useLocalTableControls = <
     TSortableColumnKey,
     TFilterCategoryKey,
     TPersistenceKeyPrefix
-  >
+  >,
 ): ITableControls<
   TItem,
   TColumnKey,

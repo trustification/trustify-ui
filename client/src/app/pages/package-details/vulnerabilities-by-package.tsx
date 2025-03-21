@@ -44,13 +44,13 @@ export const VulnerabilitiesByPackage: React.FC<
 
   const affectedVulnerabilities = React.useMemo(() => {
     return vulnerabilities.filter(
-      (item) => item.vulnerabilityStatus === "affected"
+      (item) => item.vulnerabilityStatus === "affected",
     );
   }, [vulnerabilities]);
 
   const tableDataWithUiId = useWithUiId(
     affectedVulnerabilities,
-    (d) => `${d.vulnerability.identifier}-${d.vulnerabilityStatus}`
+    (d) => `${d.vulnerability.identifier}-${d.vulnerabilityStatus}`,
   );
 
   const tableControls = useLocalTableControls({

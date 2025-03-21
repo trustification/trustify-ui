@@ -91,7 +91,7 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
         name: "name",
         published: "published",
       },
-    })
+    }),
   );
 
   const tableControls = useTableControlProps({

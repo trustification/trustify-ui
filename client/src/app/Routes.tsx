@@ -10,7 +10,7 @@ const AdvisoryList = lazy(() => import("./pages/advisory-list"));
 const AdvisoryDetails = lazy(() => import("./pages/advisory-details"));
 const VulnerabilityList = lazy(() => import("./pages/vulnerability-list"));
 const VulnerabilityDetails = lazy(
-  () => import("./pages/vulnerability-details")
+  () => import("./pages/vulnerability-details"),
 );
 const PackageList = lazy(() => import("./pages/package-list"));
 const PackageDetails = lazy(() => import("./pages/package-details"));
@@ -80,7 +80,7 @@ export const useRouteParams = (pathParam: PathParam) => {
   let value = params[pathParam];
   if (value === undefined) {
     throw new Error(
-      `ASSERTION FAILURE: required path parameter not set: ${pathParam}`
+      `ASSERTION FAILURE: required path parameter not set: ${pathParam}`,
     );
   }
   return value;

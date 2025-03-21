@@ -142,7 +142,7 @@ export const SearchPage: React.FC = () => {
           (item) => ({
             value: `CVE-${item}`,
             label: `CVE-${item}`,
-          })
+          }),
         ),
         placeholderText: "Vulnerability",
         matcher: (filter, item) => {

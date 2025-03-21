@@ -57,7 +57,7 @@ export const SelectFilterControl = <TItem, TFilterCategoryKey extends string>({
           return prev;
         }
       },
-      [] as (string | ToolbarChip)[]
+      [] as (string | ToolbarChip)[],
     );
 
   const onFilterSelect = (value: string) => {
