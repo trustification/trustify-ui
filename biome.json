@@ -29,7 +29,8 @@
   },
   "files": {
     "ignore": [
-      "**/src/mocks/**/*.json"
+      "**/src/mocks/**/*.json",
+      "**/src/app/client/*.ts"
     ]
   }
 }
