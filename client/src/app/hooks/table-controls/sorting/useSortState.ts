@@ -69,7 +69,7 @@ export const useSortState = <
   TPersistenceKeyPrefix extends string = string,
 >(
   args: ISortStateArgs<TSortableColumnKey> &
-    IFeaturePersistenceArgs<TPersistenceKeyPrefix>
+    IFeaturePersistenceArgs<TPersistenceKeyPrefix>,
 ): ISortState<TSortableColumnKey> => {
   const { isSortEnabled, persistTo = "state", persistenceKeyPrefix } = args;
   const sortableColumns = (isSortEnabled && args.sortableColumns) || [];

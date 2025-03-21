@@ -23,6 +23,6 @@ interface Array<T> {
    */
   filter<S extends T>(
     predicate: BooleanConstructor,
-    thisArg?: any
+    thisArg?: any,
   ): Exclude<S, Falsy>[];
 }

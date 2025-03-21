@@ -10,7 +10,7 @@ interface Provider<TProps> {
 }
 
 function composeProviders<TProviders extends Array<Provider<any>>>(
-  providers: TProviders
+  providers: TProviders,
 ): React.ComponentType<React.PropsWithChildren> {
   const ProviderComponent: React.FunctionComponent<React.PropsWithChildren> = ({
     children,
@@ -21,7 +21,7 @@ function composeProviders<TProviders extends Array<Provider<any>>>(
       (prevJSX, { Component: CurrentProvider, props = {} }) => {
         return <CurrentProvider {...props}>{prevJSX}</CurrentProvider>;
       },
-      initialJSX
+      initialJSX,
     );
   };
 
@@ -30,7 +30,7 @@ function composeProviders<TProviders extends Array<Provider<any>>>(
 
 function createProvider<TProps>(
   Component: React.ComponentType<React.PropsWithChildren<TProps>>,
-  props?: Omit<TProps, "children">
+  props?: Omit<TProps, "children">,
 ): Provider<TProps> {
   return { Component, props };
 }

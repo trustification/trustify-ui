@@ -45,7 +45,7 @@ export const useActiveItemState = <
   TPersistenceKeyPrefix extends string = string,
 >(
   args: IActiveItemStateArgs &
-    IFeaturePersistenceArgs<TPersistenceKeyPrefix> = {}
+    IFeaturePersistenceArgs<TPersistenceKeyPrefix> = {},
 ): IActiveItemState => {
   const { isActiveItemEnabled, persistTo, persistenceKeyPrefix } = args;
 

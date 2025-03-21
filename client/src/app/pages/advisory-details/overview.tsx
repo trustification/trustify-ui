@@ -48,7 +48,7 @@ export const Overview: React.FC<InfoProps> = ({ advisory }) => {
                 <DescriptionListDescription>
                   <SeverityShieldAndText
                     value={extendedSeverityFromSeverity(
-                      advisory.average_severity as Severity
+                      advisory.average_severity as Severity,
                     )}
                   />
                 </DescriptionListDescription>

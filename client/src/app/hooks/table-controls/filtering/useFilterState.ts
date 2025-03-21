@@ -61,7 +61,7 @@ export const useFilterState = <
   TPersistenceKeyPrefix extends string = string,
 >(
   args: IFilterStateArgs<TItem, TFilterCategoryKey> &
-    IFeaturePersistenceArgs<TPersistenceKeyPrefix>
+    IFeaturePersistenceArgs<TPersistenceKeyPrefix>,
 ): IFilterState<TFilterCategoryKey> => {
   const { isFilterEnabled, persistTo = "state", persistenceKeyPrefix } = args;
 

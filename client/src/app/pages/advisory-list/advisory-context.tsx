@@ -104,7 +104,7 @@ export const AdvisorySearchProvider: React.FunctionComponent<
         severity: "average_score",
         modified: "modified",
       },
-    })
+    }),
   );
 
   const tableControls = useTableControlProps({

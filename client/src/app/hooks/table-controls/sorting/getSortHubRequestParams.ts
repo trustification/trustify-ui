@@ -46,7 +46,7 @@ export const getSortHubRequestParams = <TSortableColumnKey extends string>({
  */
 export const serializeSortRequestParamsForHub = (
   deserializedParams: HubRequestParams,
-  serializedParams: URLSearchParams
+  serializedParams: URLSearchParams,
 ) => {
   const { sort } = deserializedParams;
   if (sort) {

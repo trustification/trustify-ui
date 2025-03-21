@@ -398,7 +398,7 @@ export type ITableControls<
       args: { columnKey: TColumnKey } & DiscriminatedArgs<
         "isCompoundExpandToggle",
         { item: TItem; rowIndex: number }
-      >
+      >,
     ) => Omit<TdProps, "ref">;
     /**
      * Props for the FilterToolbar component.

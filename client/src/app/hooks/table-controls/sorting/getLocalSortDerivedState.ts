@@ -23,7 +23,7 @@ export interface ILocalSortDerivedStateArgs<
    */
   getSortValues?: (
     // TODO can we require this as non-optional in types that extend this when we know we're configuring a client-computed table?
-    item: TItem
+    item: TItem,
   ) => Record<TSortableColumnKey, string | number | boolean>;
   /**
    * The "source of truth" state for the sort feature (returned by useSortState)

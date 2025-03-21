@@ -39,7 +39,7 @@ export const proxyMap: Record<string, Options> = {
       if (req.cookies?.keycloak_cookie && !req.headers["authorization"]) {
         proxyReq.setHeader(
           "Authorization",
-          `Bearer ${req.cookies.keycloak_cookie}`
+          `Bearer ${req.cookies.keycloak_cookie}`,
         );
       }
     },

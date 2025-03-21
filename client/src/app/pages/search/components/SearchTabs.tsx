@@ -58,7 +58,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
 
   const handleTabClick = (
     _event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent,
-    tabIndex: string | number
+    tabIndex: string | number,
   ) => {
     setActiveTabKey(tabIndex);
   };

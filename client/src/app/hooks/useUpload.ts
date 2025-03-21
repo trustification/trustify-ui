@@ -78,7 +78,7 @@ type Action<T, E> =
 
 const reducer = <T, E>(
   state: Status<T, E>,
-  action: Action<T, E>
+  action: Action<T, E>,
 ): Status<T, E> => {
   switch (action.type) {
     case "queueUpload": {
@@ -149,7 +149,7 @@ export const useUpload = <T, E>({
   parallel: boolean;
   uploadFn: (
     form: FormData,
-    requestConfig: AxiosRequestConfig
+    requestConfig: AxiosRequestConfig,
   ) => AxiosPromise<T>;
   onSuccess?: (response: AxiosResponse<T>, file: File) => void;
   onError?: (error: AxiosError<E>, file: File) => void;

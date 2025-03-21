@@ -13,7 +13,7 @@ import {
 
 const areVulnerabilityOfSbomEqual = (
   a: VulnerabilityOfSbom,
-  b: VulnerabilityOfSbom | FlatVulnerabilityOfSbom
+  b: VulnerabilityOfSbom | FlatVulnerabilityOfSbom,
 ) => {
   return (
     a.vulnerability.identifier === b.vulnerability.identifier &&
@@ -83,7 +83,7 @@ const advisoryToModels = (advisories: SbomAdvisory[]) => {
 
           if (existingElement) {
             const arrayWithoutExistingItem = prev.filter(
-              (item) => !areVulnerabilityOfSbomEqual(item, existingElement)
+              (item) => !areVulnerabilityOfSbomEqual(item, existingElement),
             );
 
             const updatedItemInArray: VulnerabilityOfSbom = {
@@ -118,7 +118,7 @@ const advisoryToModels = (advisories: SbomAdvisory[]) => {
   const summary = vulnerabilities.reduce((prev, current) => {
     const vulnStatus = current.vulnerabilityStatus;
     const severity = extendedSeverityFromSeverity(
-      current.vulnerability.average_severity
+      current.vulnerability.average_severity,
     );
 
     const prevVulnStatusValue = prev.vulnerabilityStatus[vulnStatus];

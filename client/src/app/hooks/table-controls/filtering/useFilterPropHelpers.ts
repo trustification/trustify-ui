@@ -33,7 +33,7 @@ export interface IFilterPropHelpersExternalArgs<
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
 export const useFilterPropHelpers = <TItem, TFilterCategoryKey extends string>(
-  args: IFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey>
+  args: IFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey>,
 ) => {
   const {
     filterState: { filterValues, setFilterValues },
