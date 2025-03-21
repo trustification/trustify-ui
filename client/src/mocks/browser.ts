@@ -22,8 +22,8 @@ const passthroughHandler: RequestHandler = http.all("/api/*", (req) => {
 const handlers = [
   // TODO: Add handlers for a FULL api mock data set
   ...stubNewWork,
-  config.passthrough && passthroughHandler,
-].filter(Boolean);
+  ...(config.passthrough ? [passthroughHandler] : []),
+];
 
 /**
  * A setup MSW browser service worker using the handlers configured in the MOCK env var.
