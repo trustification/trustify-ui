@@ -1,10 +1,10 @@
-import React from "react";
+import type React from "react";
 
 import { Flex, FlexItem, Tooltip } from "@patternfly/react-core";
 import ShieldIcon from "@patternfly/react-icons/dist/esm/icons/shield-alt-icon";
 
 import { severityList } from "@app/api/model-utils";
-import { ExtendedSeverity } from "@app/api/models";
+import type { ExtendedSeverity } from "@app/api/models";
 
 interface SeverityShieldAndTextProps {
   value: ExtendedSeverity;

@@ -1,12 +1,16 @@
 import React, { useEffect } from "react";
-import { useLocation } from "react-router";
 import { useAuth } from "react-oidc-context";
-import { AnalyticsBrowser } from "@segment/analytics-next";
-import ENV from "@app/env";
+import { useLocation } from "react-router";
+
 import { isAuthRequired } from "@app/Constants";
 import { analyticsSettings } from "@app/analytics";
+import ENV from "@app/env";
+import { AnalyticsBrowser } from "@segment/analytics-next";
 
-const AnalyticsContext = React.createContext<AnalyticsBrowser>(undefined!);
+const contextDefaultValue = {} as AnalyticsBrowser;
+
+const AnalyticsContext =
+  React.createContext<AnalyticsBrowser>(contextDefaultValue);
 
 interface IAnalyticsProviderProps {
   children: React.ReactNode;
@@ -35,7 +39,7 @@ export const AnalyticsContextProvider: React.FC<IAnalyticsProviderProps> = ({
     if (auth) {
       const claims = auth.user?.profile;
       analytics.identify(claims?.sub, {
-        /* eslint-disable @typescript-eslint/no-explicit-any */
+        // biome-ignore lint/suspicious/noExplicitAny:
         organization_id: ((claims as any)?.organization as any)?.id,
         domain: claims?.email?.split("@")[1],
       });
@@ -44,6 +48,7 @@ export const AnalyticsContextProvider: React.FC<IAnalyticsProviderProps> = ({
 
   // Watch navigation
   const location = useLocation();
+  // biome-ignore lint/correctness/useExhaustiveDependencies: required to track page changes
   useEffect(() => {
     analytics.page();
   }, [analytics, location]);

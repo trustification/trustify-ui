@@ -1,7 +1,7 @@
-import { KeyWithValueType } from "@app/utils/type-utils";
-import { IExpansionState } from "./useExpansionState";
+import type { KeyWithValueType } from "@app/utils/type-utils";
+import type { TdProps } from "@patternfly/react-table";
 import { getExpansionDerivedState } from "./getExpansionDerivedState";
-import { TdProps } from "@patternfly/react-table";
+import type { IExpansionState } from "./useExpansionState";
 
 /**
  * Args for useExpansionPropHelpers that come from outside useTableControlProps

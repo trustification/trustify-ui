@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import {
   Drawer,
   DrawerActions,
@@ -8,7 +9,7 @@ import {
   DrawerHead,
   DrawerPanelBody,
   DrawerPanelContent,
-  DrawerPanelContentProps,
+  type DrawerPanelContentProps,
 } from "@patternfly/react-core";
 import pageStyles from "@patternfly/react-styles/css/components/Page/page";
 

@@ -1,5 +1,5 @@
-import { KeyWithValueType } from "@app/utils/type-utils";
-import { IExpansionState } from "./useExpansionState";
+import type { KeyWithValueType } from "@app/utils/type-utils";
+import type { IExpansionState } from "./useExpansionState";
 
 /**
  * Args for getExpansionDerivedState

@@ -51,7 +51,7 @@ const AuthEnabledOidcProvider: React.FC<IOidcProviderProps> = ({
     if (!auth.isAuthenticated && !auth.isLoading && !auth.error) {
       auth.signinRedirect();
     }
-  }, [auth.isAuthenticated, auth.isLoading, auth.error]);
+  }, [auth.isAuthenticated, auth.isLoading, auth.error, auth.signinRedirect]);
 
   React.useEffect(() => {
     initInterceptors();
@@ -59,9 +59,11 @@ const AuthEnabledOidcProvider: React.FC<IOidcProviderProps> = ({
 
   if (auth.isAuthenticated) {
     return <Suspense fallback={<AppPlaceholder />}>{children}</Suspense>;
-  } else if (auth.isLoading) {
+  }
+  if (auth.isLoading) {
     return <AppPlaceholder />;
-  } else if (auth.error) {
+  }
+  if (auth.error) {
     return (
       <Bullseye>
         <EmptyState variant={EmptyStateVariant.sm}>
@@ -79,7 +81,6 @@ const AuthEnabledOidcProvider: React.FC<IOidcProviderProps> = ({
         </EmptyState>
       </Bullseye>
     );
-  } else {
-    return <p>Login in...</p>;
   }
+  return <p>Login in...</p>;
 };

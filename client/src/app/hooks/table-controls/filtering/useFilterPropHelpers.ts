@@ -1,9 +1,9 @@
-import {
+import type {
   FilterCategory,
   IFilterToolbarProps,
 } from "@app/components/FilterToolbar";
-import { IFilterState } from "./useFilterState";
-import { ToolbarProps } from "@patternfly/react-core";
+import type { ToolbarProps } from "@patternfly/react-core";
+import type { IFilterState } from "./useFilterState";
 
 /**
  * Args for useFilterPropHelpers that come from outside useTableControlProps

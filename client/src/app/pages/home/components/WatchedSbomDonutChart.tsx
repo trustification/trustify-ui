@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { SbomVulnerabilitiesDonutChart } from "@app/components/SbomVulnerabilitiesDonutChart";

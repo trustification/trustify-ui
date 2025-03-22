@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { type FormEvent, useState } from "react";
 
 import {
   DatePicker,
@@ -15,7 +15,7 @@ import {
   parseInterval,
   toISODateInterval,
 } from "../FilterToolbar/dateUtils";
-import { IFilterControlProps } from "./FilterControl";
+import type { IFilterControlProps } from "./FilterControl";
 
 /**
  * This Filter type enables selecting an closed date range.

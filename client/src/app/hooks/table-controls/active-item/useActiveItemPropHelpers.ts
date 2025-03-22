@@ -1,13 +1,13 @@
-import { TrProps } from "@patternfly/react-table";
+import type { TrProps } from "@patternfly/react-table";
 import {
-  IActiveItemDerivedStateArgs,
+  type IActiveItemDerivedStateArgs,
   getActiveItemDerivedState,
 } from "./getActiveItemDerivedState";
-import { IActiveItemState } from "./useActiveItemState";
 import {
-  IUseActiveItemEffectsArgs,
+  type IUseActiveItemEffectsArgs,
   useActiveItemEffects,
 } from "./useActiveItemEffects";
+import type { IActiveItemState } from "./useActiveItemState";
 
 /**
  * Args for useActiveItemPropHelpers that come from outside useTableControlProps

@@ -1,13 +1,14 @@
 import * as React from "react";
+
 import {
   Dropdown,
-  DropdownItem,
   DropdownGroup,
+  DropdownItem,
   DropdownList,
   MenuToggle,
-  SelectOptionProps,
-  ToolbarToggleGroup,
+  type SelectOptionProps,
   ToolbarItem,
+  ToolbarToggleGroup,
 } from "@patternfly/react-core";
 import FilterIcon from "@patternfly/react-icons/dist/esm/icons/filter-icon";
 
@@ -145,13 +146,12 @@ export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
     (category) => category.categoryKey === currentFilterCategoryKey,
   );
 
-  const filterGroups = filterCategories.reduce(
-    (groups, category) =>
-      !category.filterGroup || groups.includes(category.filterGroup)
-        ? groups
-        : [...groups, category.filterGroup],
-    [] as string[],
-  );
+  const filterGroups = filterCategories.reduce((groups, category) => {
+    if (category.filterGroup && !groups.includes(category.filterGroup)) {
+      groups.push(category.filterGroup);
+    }
+    return groups;
+  }, [] as string[]);
 
   const renderDropdownItems = () => {
     if (filterGroups.length) {
@@ -176,17 +176,17 @@ export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
           </DropdownList>
         </DropdownGroup>
       ));
-    } else {
-      return filterCategories.map((category) => (
-        <DropdownItem
-          id={`filter-category-${category.categoryKey}`}
-          key={category.categoryKey}
-          onClick={() => onCategorySelect(category)}
-        >
-          {category.title}
-        </DropdownItem>
-      ));
     }
+
+    return filterCategories.map((category) => (
+      <DropdownItem
+        id={`filter-category-${category.categoryKey}`}
+        key={category.categoryKey}
+        onClick={() => onCategorySelect(category)}
+      >
+        {category.title}
+      </DropdownItem>
+    ));
   };
 
   return (

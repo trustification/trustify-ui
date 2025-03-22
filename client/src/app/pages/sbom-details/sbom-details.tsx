@@ -8,7 +8,7 @@ import {
   FlexItem,
   Label,
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
   PageSection,
   Popover,
   Split,
@@ -16,8 +16,8 @@ import {
   Tab,
   TabAction,
   TabContent,
-  Tabs,
   TabTitleText,
+  Tabs,
   Text,
   TextContent,
 } from "@patternfly/react-core";
@@ -53,7 +53,7 @@ export const SbomDetails: React.FC = () => {
   const vulnerabilitiesTabPopoverRef = React.createRef<HTMLElement>();
 
   const handleTabClick = (
-    _event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent,
+    _event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
     tabIndex: string | number,
   ) => {
     setActiveTabKey(tabIndex);

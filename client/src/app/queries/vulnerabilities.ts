@@ -1,13 +1,13 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 
-import { HubRequestParams } from "@app/api/models";
+import type { HubRequestParams } from "@app/api/models";
 import { client } from "@app/axios-config/apiInit";
 import {
+  type VulnerabilityDetails,
   deleteVulnerability,
   getVulnerability,
   listVulnerabilities,
-  VulnerabilityDetails,
 } from "@app/client";
 import { requestParamsQuery } from "@app/hooks/table-controls";
 
@@ -15,7 +15,7 @@ export const VulnerabilitiesQueryKey = "vulnerabilities";
 
 export const useFetchVulnerabilities = (
   params: HubRequestParams = {},
-  disableQuery: boolean = false,
+  disableQuery = false,
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [VulnerabilitiesQueryKey, params],

@@ -1,11 +1,11 @@
-import React from "react";
+import type React from "react";
 
 import { Page, SkipToContent } from "@patternfly/react-core";
 
-import { HeaderApp } from "./header";
-import { SidebarApp } from "./sidebar";
 import { Notifications } from "@app/components/Notifications";
 import { PageContentWithDrawerProvider } from "@app/components/PageDrawerContext";
+import { HeaderApp } from "./header";
+import { SidebarApp } from "./sidebar";
 
 interface DefaultLayoutProps {
   children?: React.ReactNode;

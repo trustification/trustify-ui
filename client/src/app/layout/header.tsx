@@ -1,4 +1,5 @@
-import React, { useReducer, useState } from "react";
+import type React from "react";
+import { useReducer, useState } from "react";
 import { useAuth } from "react-oidc-context";
 import { useNavigate } from "react-router-dom";
 
@@ -17,7 +18,7 @@ import {
   MastheadMain,
   MastheadToggle,
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
   PageToggleButton,
   Title,
   Toolbar,
@@ -58,14 +59,13 @@ export const HeaderApp: React.FC = () => {
   };
 
   const logout = () => {
-    auth &&
-      auth
-        .signoutRedirect()
-        .then(() => {})
-        .catch((err) => {
-          console.error("Logout failed:", err);
-          navigate("/");
-        });
+    auth
+      ?.signoutRedirect()
+      .then(() => {})
+      .catch((err) => {
+        console.error("Logout failed:", err);
+        navigate("/");
+      });
   };
 
   return (
@@ -106,7 +106,7 @@ export const HeaderApp: React.FC = () => {
                 id="header-toolbar-tasks"
                 variant="icon-button-group"
                 align={{ default: "alignRight" }}
-              ></ToolbarGroup>
+              />
 
               {/* toolbar items to show at desktop sizes */}
               <ToolbarGroup

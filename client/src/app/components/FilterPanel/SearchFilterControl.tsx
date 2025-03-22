@@ -6,8 +6,8 @@ import {
 } from "@patternfly/react-core";
 import SearchIcon from "@patternfly/react-icons/dist/esm/icons/search-icon";
 import * as React from "react";
-import { ISearchFilterCategory } from "../FilterToolbar";
-import { IFilterControlProps } from "./FilterControl";
+import type { ISearchFilterCategory } from "../FilterToolbar";
+import type { IFilterControlProps } from "./FilterControl";
 
 export interface ISearchFilterControlProps<
   TItem,

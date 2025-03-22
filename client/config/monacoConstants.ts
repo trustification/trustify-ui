@@ -1,4 +1,4 @@
-import { EditorLanguage } from "monaco-editor/esm/metadata";
+import type { EditorLanguage } from "monaco-editor/esm/metadata";
 
 export const LANGUAGES_BY_FILE_EXTENSION = {
   java: "java",

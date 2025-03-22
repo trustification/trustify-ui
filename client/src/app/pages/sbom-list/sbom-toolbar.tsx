@@ -1,20 +1,13 @@
 import React from "react";
 
-import {
-  Button,
-  Toolbar,
-  ToolbarContent,
-  ToolbarItem,
-} from "@patternfly/react-core";
+import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 
 import { FilterToolbar } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
 
 import { SbomSearchContext } from "./sbom-context";
 
-interface ISbomToolbar {}
-
-export const SbomToolbar: React.FC<ISbomToolbar> = ({}) => {
+export const SbomToolbar: React.FC = () => {
   const { tableControls } = React.useContext(SbomSearchContext);
 
   const {

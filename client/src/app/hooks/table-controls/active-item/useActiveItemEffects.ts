@@ -1,6 +1,6 @@
 import * as React from "react";
-import { IActiveItemDerivedState } from "./getActiveItemDerivedState";
-import { IActiveItemState } from "./useActiveItemState";
+import type { IActiveItemDerivedState } from "./getActiveItemDerivedState";
+import type { IActiveItemState } from "./useActiveItemState";
 
 /**
  * Args for useActiveItemEffects
@@ -33,9 +33,10 @@ export const useActiveItemEffects = <TItem>({
   activeItemState: { activeItemId },
   activeItemDerivedState: { activeItem, clearActiveItem },
 }: IUseActiveItemEffectsArgs<TItem>) => {
+  // biome-ignore lint/correctness/useExhaustiveDependencies: TODO fix the exhaustive-deps lint warning here without affecting behavior
   React.useEffect(() => {
     if (!isLoading && activeItemId && !activeItem) {
       clearActiveItem();
     }
-  }, [isLoading, activeItemId, activeItem]); // TODO fix the exhaustive-deps lint warning here without affecting behavior
+  }, [isLoading, activeItemId, activeItem]);
 };

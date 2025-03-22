@@ -1,5 +1,5 @@
-import { ThProps } from "@patternfly/react-table";
-import { ISortState } from "./useSortState";
+import type { ThProps } from "@patternfly/react-table";
+import type { ISortState } from "./useSortState";
 
 /**
  * Args for useSortPropHelpers that come from outside useTableControlProps
@@ -70,7 +70,7 @@ export const useSortPropHelpers = <
                 : undefined,
               direction: activeSort?.direction,
             },
-            onSort: (event, index, direction) => {
+            onSort: (_event, index, direction) => {
               setActiveSort({
                 columnKey: columnKeys[index] as TSortableColumnKey,
                 direction,

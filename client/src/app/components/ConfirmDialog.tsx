@@ -1,8 +1,9 @@
-import React from "react";
+import type React from "react";
+
 import {
   Button,
-  Modal,
   ButtonVariant,
+  Modal,
   ModalVariant,
 } from "@patternfly/react-core";
 
@@ -15,7 +16,7 @@ export interface ConfirmDialogProps {
     | "danger"
     | "warning"
     | "info"
-    /* eslint-disable @typescript-eslint/no-explicit-any */
+    // biome-ignore lint/suspicious/noExplicitAny:
     | React.ComponentType<any>;
   message: string | React.ReactNode;
 

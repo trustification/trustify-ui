@@ -1,11 +1,11 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { HeaderApp } from "@app/layout/header";
-import { fn } from "@storybook/test";
 import * as actual from "@app/hooks/useBranding";
+import { HeaderApp } from "@app/layout/header";
+import type { Meta, StoryObj } from "@storybook/react";
+import { fn } from "@storybook/test";
 
 const useBranding = fn(actual.useBranding).mockName("useBranding");
 
-import { BrandingStrings } from "@trustify-ui/common";
+import type { BrandingStrings } from "@trustify-ui/common";
 
 const meta = {
   title: "Components/Layout/HeaderApp",

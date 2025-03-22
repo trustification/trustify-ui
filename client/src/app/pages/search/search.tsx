@@ -86,7 +86,7 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
   // Search
 
   const onChangeContextSearchValue = (searchValue: string | undefined) => {
-    if (searchValue == undefined) return;
+    if (searchValue === undefined) return;
     sbomTableControls.filterState.setFilterValues({
       ...sbomTableControls.filterState.filterValues,
       [FILTER_TEXT_CATEGORY_KEY]: [searchValue],

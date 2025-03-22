@@ -1,6 +1,7 @@
 import { useMemo } from "react";
+
 import { UI_UNIQUE_ID } from "@app/Constants";
-import { WithUiId } from "@app/api/models";
+import type { WithUiId } from "@app/api/models";
 
 /**
  * Make a shallow copy of `data` and insert a new `UI_UNIQUE_ID` field in each element
