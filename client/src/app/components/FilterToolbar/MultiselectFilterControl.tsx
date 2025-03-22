@@ -49,7 +49,7 @@ export const MultiselectFilterControl = <TItem,>({
 
   React.useEffect(() => {
     setSelectOptions(
-      Array.isArray(category.selectOptions) ? category.selectOptions : []
+      Array.isArray(category.selectOptions) ? category.selectOptions : [],
     );
   }, [category.selectOptions]);
 
@@ -58,14 +58,14 @@ export const MultiselectFilterControl = <TItem,>({
   const flatOptions: FilterSelectOptionProps[] = !hasGroupings
     ? selectOptions
     : (Object.values(selectOptions).flatMap(
-        (i) => i
+        (i) => i,
       ) as FilterSelectOptionProps[]);
 
   const getOptionFromOptionValue = (optionValue: string) =>
     flatOptions.find(({ value }) => value === optionValue);
 
   const [focusedItemIndex, setFocusedItemIndex] = React.useState<number | null>(
-    null
+    null,
   );
 
   const [activeItem, setActiveItem] = React.useState<string | null>(null);
@@ -110,14 +110,23 @@ export const MultiselectFilterControl = <TItem,>({
       };
     })
 
-    .filter(Boolean);
+    .reduce(
+      (prev, current) => {
+        if (current) {
+          return [...prev, current];
+        } else {
+          return prev;
+        }
+      },
+      [] as (string | ToolbarChip)[],
+    );
 
   const renderSelectOptions = (
-    filter: (option: FilterSelectOptionProps, groupName?: string) => boolean
+    filter: (option: FilterSelectOptionProps, groupName?: string) => boolean,
   ) =>
     hasGroupings
       ? Object.entries(
-          selectOptions as Record<string, FilterSelectOptionProps[]>
+          selectOptions as Record<string, FilterSelectOptionProps[]>,
         )
           .sort(([groupA], [groupB]) => groupA.localeCompare(groupB))
           .map(([group, options]): [string, FilterSelectOptionProps[]] => [
@@ -194,10 +203,10 @@ export const MultiselectFilterControl = <TItem,>({
 
       setFocusedItemIndex(indexToFocus);
       const focusedItem = selectOptions.filter(
-        ({ optionProps }) => !optionProps?.isDisabled
+        ({ optionProps }) => !optionProps?.isDisabled,
       )[indexToFocus];
       setActiveItem(
-        `select-multi-typeahead-checkbox-${focusedItem.value.replace(" ", "-")}`
+        `select-multi-typeahead-checkbox-${focusedItem.value.replace(" ", "-")}`,
       );
     }
   };
@@ -212,7 +221,7 @@ export const MultiselectFilterControl = <TItem,>({
         ? category.selectOptions?.filter((menuItem) =>
             String(menuItem.value)
               .toLowerCase()
-              .includes(inputValue.trim().toLowerCase())
+              .includes(inputValue.trim().toLowerCase()),
           )
         : [];
 
@@ -245,11 +254,11 @@ export const MultiselectFilterControl = <TItem,>({
       : firstMenuItem;
 
     const newSelectOptions = flatOptions.filter((menuItem) =>
-      menuItem.value.toLowerCase().includes(inputValue.toLowerCase())
+      menuItem.value.toLowerCase().includes(inputValue.toLowerCase()),
     );
     const selectedItem =
       newSelectOptions.find(
-        (option) => option.value.toLowerCase() === inputValue.toLowerCase()
+        (option) => option.value.toLowerCase() === inputValue.toLowerCase(),
       ) || focusedItem;
 
     switch (event.key) {
@@ -277,7 +286,7 @@ export const MultiselectFilterControl = <TItem,>({
 
   const onTextInputChange = (
     _event: React.FormEvent<HTMLInputElement>,
-    value: string
+    value: string,
   ) => {
     setInputValue(value);
     if (!isFilterDropdownOpen) {

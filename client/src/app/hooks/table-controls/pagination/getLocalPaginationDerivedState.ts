@@ -30,7 +30,7 @@ export const getLocalPaginationDerivedState = <TItem>({
   const pageStartIndex = (pageNumber - 1) * itemsPerPage;
   const currentPageItems = items.slice(
     pageStartIndex,
-    pageStartIndex + itemsPerPage
+    pageStartIndex + itemsPerPage,
   );
   return { currentPageItems };
 };

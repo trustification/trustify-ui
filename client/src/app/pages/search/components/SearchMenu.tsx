@@ -153,7 +153,7 @@ function useAllEntities(filterText: string, disableSearch: boolean) {
 export interface ISearchMenu {
   filterFunction?: (
     list: IEntity[],
-    searchString: string
+    searchString: string,
   ) => React.JSX.Element[];
   onChangeSearch: (searchValue: string | undefined) => void;
 }
@@ -173,7 +173,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
   // Debounce Search value
   const [debouncedSearchValue, setDebouncedSearchValue] = useDebounceValue(
     searchValue,
-    500
+    500,
   );
 
   React.useEffect(() => {
@@ -183,7 +183,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
   // Fetch all entities
   const { isFetching, list: entityList } = useAllEntities(
     debouncedSearchValue,
-    !isSearchValueDirty
+    !isSearchValueDirty,
   );
 
   const [isAutocompleteOpen, setIsAutocompleteOpen] =
@@ -230,7 +230,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
           // the up and down arrow keys move browser focus into the autocomplete menu
         } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
           const firstElement = autocompleteRef.current?.querySelector(
-            "li > button:not(:disabled)"
+            "li > button:not(:disabled)",
           );
           firstElement && (firstElement as HTMLElement)?.focus();
           event.preventDefault(); // by default, the up and down arrow keys scroll the window

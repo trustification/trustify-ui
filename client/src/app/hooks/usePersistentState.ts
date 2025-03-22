@@ -44,7 +44,7 @@ export const usePersistentState = <
     TValue,
     TPersistenceKeyPrefix,
     TURLParamKey
-  >
+  >,
 ): [TValue, (value: TValue) => void] => {
   const {
     defaultValue,
@@ -54,7 +54,7 @@ export const usePersistentState = <
   } = options;
 
   const isUrlParamsOptions = (
-    o: typeof options
+    o: typeof options,
   ): o is PersistToUrlParamsOptions<
     TValue,
     TPersistenceKeyPrefix,
@@ -62,7 +62,7 @@ export const usePersistentState = <
   > => o.persistTo === "urlParams";
 
   const isStorageOptions = (
-    o: typeof options
+    o: typeof options,
   ): o is PersistToStorageOptions<TValue> =>
     o.persistTo === "localStorage" || o.persistTo === "sessionStorage";
 
@@ -80,17 +80,17 @@ export const usePersistentState = <
             keys: [],
             serialize: () => ({}),
             deserialize: () => defaultValue,
-          }
+          },
     ),
     localStorage: useLocalStorage(
       isStorageOptions(options)
         ? { ...options, key: prefixKey(options.key) }
-        : { ...options, isEnabled: false, key: "" }
+        : { ...options, isEnabled: false, key: "" },
     ),
     sessionStorage: useSessionStorage(
       isStorageOptions(options)
         ? { ...options, key: prefixKey(options.key) }
-        : { ...options, isEnabled: false, key: "" }
+        : { ...options, isEnabled: false, key: "" },
     ),
   };
   const [value, setValue] = persistence[persistTo || "state"];

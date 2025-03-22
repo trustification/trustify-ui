@@ -105,7 +105,7 @@ export const ImporterList: React.FC = () => {
 
   const { mutate: updateImporter } = useUpdateImporterMutation(
     () => {},
-    onEnableDisableError
+    onEnableDisableError,
   );
 
   const execEnableDisableImporter = (row: Importer, enable: boolean) => {

@@ -44,7 +44,7 @@ export const DateRangeFilter = <TItem,>({
 
   const validFilters =
     selectedFilters?.filter((interval) =>
-      isValidInterval(parseInterval(interval))
+      isValidInterval(parseInterval(interval)),
     ) ?? [];
   const [from, setFrom] = useState<Date>();
   const [to, setTo] = useState<Date>();
@@ -86,14 +86,14 @@ export const DateRangeFilter = <TItem,>({
 
   const clearSingleRange = (
     _category: string | ToolbarChipGroup,
-    _option: string | ToolbarChip
+    _option: string | ToolbarChip,
   ) => {
     setFilterValue([]);
   };
 
   const onFromDateChange = (
     event: FormEvent<HTMLInputElement>,
-    value: string
+    value: string,
   ) => {
     if (isValidAmericanShortDate(value)) {
       setFrom(parseAmericanDate(value));

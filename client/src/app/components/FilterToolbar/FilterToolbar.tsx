@@ -96,7 +96,7 @@ export const getFilterLogicOperator = <
   TFilterCategoryKey extends string,
 >(
   filterCategory?: FilterCategory<TItem, TFilterCategoryKey>,
-  defaultOperator: "AND" | "OR" = "OR"
+  defaultOperator: "AND" | "OR" = "OR",
 ) =>
   (filterCategory &&
     (filterCategory as IMultiselectFilterCategory<TItem, TFilterCategoryKey>)
@@ -130,7 +130,7 @@ export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
     React.useState(filterCategories[0].categoryKey);
 
   const onCategorySelect = (
-    category: FilterCategory<TItem, TFilterCategoryKey>
+    category: FilterCategory<TItem, TFilterCategoryKey>,
   ) => {
     setCurrentFilterCategoryKey(category.categoryKey);
     setIsCategoryDropdownOpen(false);
@@ -138,11 +138,11 @@ export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
 
   const setFilterValue = (
     category: FilterCategory<TItem, TFilterCategoryKey>,
-    newValue: FilterValue
+    newValue: FilterValue,
   ) => setFilterValues({ ...filterValues, [category.categoryKey]: newValue });
 
   const currentFilterCategory = filterCategories.find(
-    (category) => category.categoryKey === currentFilterCategoryKey
+    (category) => category.categoryKey === currentFilterCategoryKey,
   );
 
   const filterGroups = filterCategories.reduce(
@@ -150,7 +150,7 @@ export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
       !category.filterGroup || groups.includes(category.filterGroup)
         ? groups
         : [...groups, category.filterGroup],
-    [] as string[]
+    [] as string[],
   );
 
   const renderDropdownItems = () => {
@@ -160,7 +160,7 @@ export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
           <DropdownList>
             {filterCategories
               .filter(
-                (filterCategory) => filterCategory.filterGroup === filterGroup
+                (filterCategory) => filterCategory.filterGroup === filterGroup,
               )
               .map((filterCategory) => {
                 return (

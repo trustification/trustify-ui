@@ -71,7 +71,7 @@ export const WatchedSbom: React.FC<WatchedSbomProps> = ({
 
   const onSelectItem = (
     _event: React.MouseEvent<Element, MouseEvent> | undefined,
-    value: string | number | undefined
+    value: string | number | undefined,
   ) => {
     if (value) {
       patch(fieldName, value as string);
@@ -98,7 +98,7 @@ export const WatchedSbom: React.FC<WatchedSbomProps> = ({
 
   const onTextInputChange = (
     _event: React.FormEvent<HTMLInputElement>,
-    value: string
+    value: string,
   ) => {
     setInputValue(value);
   };

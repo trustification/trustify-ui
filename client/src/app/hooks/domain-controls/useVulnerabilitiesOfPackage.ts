@@ -10,7 +10,7 @@ import { useFetchPackageById } from "@app/queries/packages";
 
 const areVulnerabilityOfPackageEqual = (
   a: VulnerabilityOfPackage,
-  b: VulnerabilityOfPackage | FlatVulnerabilityOfPackage
+  b: VulnerabilityOfPackage | FlatVulnerabilityOfPackage,
 ) => {
   return (
     a.vulnerability.identifier === b.vulnerability.identifier &&
@@ -63,7 +63,7 @@ const advisoryToModels = (advisories: PurlAdvisory[]) => {
       (advisory.status ?? [])
         .map((pkgStatus) => {
           const extendedSeverity = extendedSeverityFromSeverity(
-            pkgStatus.average_severity
+            pkgStatus.average_severity,
           );
 
           const result: FlatVulnerabilityOfPackage = {
@@ -84,7 +84,7 @@ const advisoryToModels = (advisories: PurlAdvisory[]) => {
 
           if (existingElement) {
             const arrayWithoutExistingItem = prev.filter(
-              (item) => !areVulnerabilityOfPackageEqual(item, existingElement)
+              (item) => !areVulnerabilityOfPackageEqual(item, existingElement),
             );
 
             const updatedItemInArray: VulnerabilityOfPackage = {

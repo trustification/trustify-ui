@@ -166,7 +166,7 @@ export const MonitoringSection: React.FC = () => {
                                         generateSbomBarName(item, index) ===
                                         sbomName
                                       );
-                                    }
+                                    },
                                   );
                                   if (sbom) {
                                     navigate(`/sboms/${sbom.id}`);
@@ -209,7 +209,7 @@ export const MonitoringSection: React.FC = () => {
                                         vulnerabilityStatus: { affected },
                                       },
                                     },
-                                    index
+                                    index,
                                   ) => {
                                     const sbom = barchartSboms[index];
 
@@ -220,7 +220,7 @@ export const MonitoringSection: React.FC = () => {
                                       y: count,
                                       label: `${severityData.name}: ${count}`,
                                     };
-                                  }
+                                  },
                                 )}
                               />
                             );

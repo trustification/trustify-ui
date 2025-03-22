@@ -46,7 +46,7 @@ export const duplicateFieldCheck = <T>(
   fieldKey: keyof T,
   itemList: T[],
   currentItem: T | null,
-  fieldValue: T[keyof T]
+  fieldValue: T[keyof T],
 ) =>
   (currentItem && currentItem[fieldKey] === fieldValue) ||
   !itemList.some((item) => item[fieldKey] === fieldValue);
@@ -54,13 +54,13 @@ export const duplicateFieldCheck = <T>(
 export const duplicateNameCheck = <T extends { name?: string }>(
   itemList: T[],
   currentItem: T | null,
-  nameValue: T["name"]
+  nameValue: T["name"],
 ) => duplicateFieldCheck("name", itemList, currentItem, nameValue);
 
 export const dedupeFunction = (arr: any[]) =>
   arr?.filter(
     (value, index, self) =>
-      index === self.findIndex((t) => t.value === value.value)
+      index === self.findIndex((t) => t.value === value.value),
   );
 
 export const numStr = (num: number | undefined): string => {
@@ -69,7 +69,7 @@ export const numStr = (num: number | undefined): string => {
 };
 
 export const parseMaybeNumericString = (
-  numOrStr: string | undefined | null
+  numOrStr: string | undefined | null,
 ): string | number | null => {
   if (numOrStr === undefined || numOrStr === null) return null;
   const num = Number(numOrStr);
@@ -82,7 +82,7 @@ export const objectKeys = <T extends Object>(obj: T) =>
 export const getValidatedFromErrors = (
   error: unknown | undefined,
   dirty: boolean | undefined,
-  isTouched: boolean | undefined
+  isTouched: boolean | undefined,
 ) => {
   return error && (dirty || isTouched) ? "error" : "default";
 };
@@ -110,7 +110,7 @@ export const decomposePurl = (purl: string) => {
 };
 
 export const getFilenameFromContentDisposition = (
-  contentDisposition: string
+  contentDisposition: string,
 ): string | null => {
   const match = contentDisposition.match(/filename="?([^"]+)"?/);
   return match ? match[1] : null;

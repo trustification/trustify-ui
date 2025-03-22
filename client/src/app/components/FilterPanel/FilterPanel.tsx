@@ -34,7 +34,7 @@ export const FilterPanel = <TItem, TFilterCategoryKey extends string>({
 >): JSX.Element | null => {
   const setFilterValue = (
     category: FilterCategory<TItem, TFilterCategoryKey>,
-    newValue: FilterValue
+    newValue: FilterValue,
   ) => setFilterValues({ ...filterValues, [category.categoryKey]: newValue });
 
   const clearAllFilters = () => {
@@ -42,7 +42,7 @@ export const FilterPanel = <TItem, TFilterCategoryKey extends string>({
       .filter((filterCategory) => {
         return (
           omitFilterCategoryKeys.find(
-            (categoryKey) => categoryKey === filterCategory.categoryKey
+            (categoryKey) => categoryKey === filterCategory.categoryKey,
           ) === undefined
         );
       })
@@ -64,7 +64,7 @@ export const FilterPanel = <TItem, TFilterCategoryKey extends string>({
           .filter((filterCategory) => {
             return (
               omitFilterCategoryKeys.find(
-                (categoryKey) => categoryKey === filterCategory.categoryKey
+                (categoryKey) => categoryKey === filterCategory.categoryKey,
               ) === undefined
             );
           })

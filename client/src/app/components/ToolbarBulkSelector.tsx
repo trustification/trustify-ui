@@ -85,7 +85,7 @@ export const ToolbarBulkSelector = <T,>({
       onClick={() => {
         onSelectMultiple(
           currentPageItems.map((item: T) => item),
-          true
+          true,
         );
       }}
       data-action="page"

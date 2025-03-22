@@ -54,7 +54,7 @@ export const SbomDetails: React.FC = () => {
 
   const handleTabClick = (
     _event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent,
-    tabIndex: string | number
+    tabIndex: string | number,
   ) => {
     setActiveTabKey(tabIndex);
   };
@@ -106,7 +106,7 @@ export const SbomDetails: React.FC = () => {
                     if (sbomId) {
                       downloadSBOM(
                         sbomId,
-                        sbom?.name ? `${sbom?.name}.json` : `${sbomId}.json`
+                        sbom?.name ? `${sbom?.name}.json` : `${sbomId}.json`,
                       );
                     }
                   }}
