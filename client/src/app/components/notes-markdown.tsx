@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { Content } from "@patternfly/react-core";
 import ReactMarkdown from "react-markdown";

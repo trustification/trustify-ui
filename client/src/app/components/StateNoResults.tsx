@@ -3,7 +3,7 @@ import type React from "react";
 import {
   EmptyState,
   EmptyStateBody,
-  EmptyStateVariant
+  EmptyStateVariant,
 } from "@patternfly/react-core";
 import SearchIcon from "@patternfly/react-icons/dist/esm/icons/search-icon";
 

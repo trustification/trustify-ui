@@ -15,6 +15,7 @@ import {
   Card,
   CardBody,
   CardTitle,
+  Content,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
@@ -26,7 +27,6 @@ import {
   GridItem,
   Stack,
   StackItem,
-  Content,
 } from "@patternfly/react-core";
 
 import { severityList } from "@app/api/model-utils";

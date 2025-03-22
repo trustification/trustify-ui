@@ -6,16 +6,16 @@ import dayjs from "dayjs";
 import {
   Button,
   ButtonVariant,
-  Label,
-  PageSection,
   Content,
+  Label,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  PageSection,
   Toolbar,
   ToolbarContent,
   ToolbarItem,
-  ModalHeader,
-  Modal,
-  ModalFooter,
-  ModalBody,
 } from "@patternfly/react-core";
 import { LogViewer, LogViewerSearch } from "@patternfly/react-log-viewer";
 import {

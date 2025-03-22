@@ -1,8 +1,8 @@
 import React from "react";
 
 import {
-  PageSection,
   Content,
+  PageSection,
   Toolbar,
   ToolbarContent,
   ToolbarGroup,

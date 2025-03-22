@@ -3,10 +3,9 @@ import React, { type FormEvent, useState } from "react";
 import {
   DatePicker,
   InputGroup,
-  isValidDate as isValidJSDate,
-  ToolbarLabel,
-  ToolbarLabelGroup,
   ToolbarFilter,
+  type ToolbarLabel,
+  type ToolbarLabelGroup,
   Tooltip,
   isValidDate as isValidJSDate,
 } from "@patternfly/react-core";
@@ -87,7 +86,7 @@ export const DateRangeFilter = <TItem,>({
 
   const clearSingleRange = (
     _category: string | ToolbarLabelGroup,
-    _option: string | ToolbarLabel
+    _option: string | ToolbarLabel,
   ) => {
     setFilterValue([]);
   };

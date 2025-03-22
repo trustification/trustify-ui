@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { PageSection, Content } from "@patternfly/react-core";
+import { Content, PageSection } from "@patternfly/react-core";
 
 import { AdvisorySearchProvider } from "./advisory-context";
 import { AdvisoryTable } from "./advisory-table";

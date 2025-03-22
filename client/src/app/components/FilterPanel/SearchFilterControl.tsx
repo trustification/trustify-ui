@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import {
   Button,
   ButtonVariant,
@@ -5,7 +7,7 @@ import {
   TextInput,
 } from "@patternfly/react-core";
 import SearchIcon from "@patternfly/react-icons/dist/esm/icons/search-icon";
-import * as React from "react";
+
 import type { ISearchFilterCategory } from "../FilterToolbar";
 import type { IFilterControlProps } from "./FilterControl";
 
@@ -63,7 +65,7 @@ export const SearchFilterControl = <TItem, TFilterCategoryKey extends string>({
         aria-label="search button for search input"
         onClick={onFilterSubmit}
         isDisabled={isDisabled}
-      ></Button>
+      />
     </InputGroup>
   );
 };

@@ -1,6 +1,6 @@
 import type * as React from "react";
 
-import { Button, Stack, StackItem, Content } from "@patternfly/react-core";
+import { Button, Content, Stack, StackItem } from "@patternfly/react-core";
 
 import type {
   FilterCategory,

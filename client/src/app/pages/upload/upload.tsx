@@ -5,12 +5,13 @@ import type { AxiosError, AxiosResponse } from "axios";
 import {
   Card,
   CardBody,
+  Content,
   PageSection,
   Tab,
   TabContent,
   TabContentBody,
   TabTitleText,
-  Content,
+  Tabs,
 } from "@patternfly/react-core";
 
 import { useUploadAdvisory } from "@app/queries/advisories";

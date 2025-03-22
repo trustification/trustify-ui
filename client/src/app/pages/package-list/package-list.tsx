@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { PageSection, Content } from "@patternfly/react-core";
+import { Content, PageSection } from "@patternfly/react-core";
 
 import { PackageSearchProvider } from "./package-context";
 import { PackageTable } from "./package-table";

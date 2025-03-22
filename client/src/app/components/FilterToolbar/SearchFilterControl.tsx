@@ -72,7 +72,7 @@ export const SearchFilterControl = <TItem, TFilterCategoryKey extends string>({
           aria-label="search button for search input"
           onClick={onFilterSubmit}
           isDisabled={isDisabled}
-        ></Button>
+        />
       </InputGroup>
     </ToolbarFilter>
   );

@@ -2,13 +2,14 @@ import React from "react";
 
 import {
   Button,
+  Content,
   PageSection,
   Split,
   SplitItem,
   Tab,
   TabContent,
   TabTitleText,
-  Content,
+  Tabs,
 } from "@patternfly/react-core";
 import DownloadIcon from "@patternfly/react-icons/dist/esm/icons/download-icon";
 

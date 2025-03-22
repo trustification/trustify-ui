@@ -1,6 +1,7 @@
 import React from "react";
 
 import {
+  Content,
   Flex,
   FlexItem,
   PageSection,
@@ -9,7 +10,7 @@ import {
   Tab,
   TabContent,
   TabTitleText,
-  Content,
+  Tabs,
 } from "@patternfly/react-core";
 
 import { PathParam, useRouteParams } from "@app/Routes";

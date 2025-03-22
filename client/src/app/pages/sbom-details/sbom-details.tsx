@@ -1,6 +1,7 @@
 import React from "react";
 
 import {
+  Content,
   Dropdown,
   DropdownItem,
   DropdownList,
@@ -17,7 +18,7 @@ import {
   TabAction,
   TabContent,
   TabTitleText,
-  Content,
+  Tabs,
 } from "@patternfly/react-core";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 

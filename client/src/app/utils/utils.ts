@@ -3,8 +3,8 @@ import dayjs from "dayjs";
 import { PackageURL } from "packageurl-js";
 
 import { RENDER_DATETIME_FORMAT, RENDER_DATE_FORMAT } from "@app/Constants";
-import { DecomposedPurl } from "@app/api/models";
-import { ToolbarLabel } from "@patternfly/react-core";
+import type { DecomposedPurl } from "@app/api/models";
+import type { ToolbarLabel } from "@patternfly/react-core";
 
 // Axios error
 

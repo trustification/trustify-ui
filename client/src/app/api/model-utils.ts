@@ -2,9 +2,10 @@ import type { ProgressProps } from "@patternfly/react-core";
 import {
   t_global_icon_color_severity_critical_default as criticalColor,
   t_global_icon_color_severity_important_default as importantColor,
-  t_global_icon_color_severity_moderate_default as moderateColor,
   t_global_icon_color_severity_minor_default as lowColor,
+  t_global_icon_color_severity_moderate_default as moderateColor,
   t_global_icon_color_severity_none_default as noneColor,
+  t_global_icon_color_severity_undefined_default as unknownColor,
 } from "@patternfly/react-tokens";
 
 import type { ExtendedSeverity } from "./models";

@@ -1,4 +1,4 @@
-import type React from "react";
+import React from "react";
 import { useReducer, useState } from "react";
 import { useAuth } from "react-oidc-context";
 import { useNavigate } from "react-router-dom";
@@ -45,7 +45,7 @@ import { AboutApp } from "./about";
 
 export const HeaderApp: React.FC = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(
-    localStorage.getItem("isDarkTheme") === "true" ? true : false
+    localStorage.getItem("isDarkTheme") === "true",
   );
 
   React.useEffect(() => {

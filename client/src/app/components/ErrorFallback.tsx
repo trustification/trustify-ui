@@ -6,7 +6,7 @@ import {
   Button,
   EmptyState,
   EmptyStateBody,
-  EmptyStateVariant
+  EmptyStateVariant,
 } from "@patternfly/react-core";
 import UserNinjaIcon from "@patternfly/react-icons/dist/esm/icons/user-ninja-icon";
 import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";

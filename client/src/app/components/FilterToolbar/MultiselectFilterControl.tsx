@@ -12,8 +12,8 @@ import {
   TextInputGroup,
   TextInputGroupMain,
   TextInputGroupUtilities,
-  ToolbarLabel,
   ToolbarFilter,
+  type ToolbarLabel,
   Tooltip,
 } from "@patternfly/react-core";
 import { TimesIcon } from "@patternfly/react-icons";

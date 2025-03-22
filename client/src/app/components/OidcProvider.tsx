@@ -9,7 +9,7 @@ import {
   Bullseye,
   EmptyState,
   EmptyStateBody,
-  EmptyStateVariant
+  EmptyStateVariant,
 } from "@patternfly/react-core";
 import ExclamationCircleIcon from "@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon";
 
