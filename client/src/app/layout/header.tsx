@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { useReducer, useState } from "react";
 import { useAuth } from "react-oidc-context";
 import { useNavigate } from "react-router-dom";
@@ -24,15 +24,12 @@ import {
   Split,
   SplitItem,
   Title,
-  ToggleGroup,
-  ToggleGroupItem,
   Toolbar,
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
 } from "@patternfly/react-core";
 
-import { MoonIcon, SunIcon } from "@patternfly/react-icons/";
 import EllipsisVIcon from "@patternfly/react-icons/dist/esm/icons/ellipsis-v-icon";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 import BarsIcon from "@patternfly/react-icons/dist/js/icons/bars-icon";
@@ -44,20 +41,6 @@ import imgAvatar from "../images/avatar.svg";
 import { AboutApp } from "./about";
 
 export const HeaderApp: React.FC = () => {
-  const [isDarkTheme, setIsDarkTheme] = useState(
-    localStorage.getItem("isDarkTheme") === "true",
-  );
-
-  React.useEffect(() => {
-    if (isDarkTheme) {
-      document.documentElement.classList.add("pf-v6-theme-dark");
-      localStorage.setItem("isDarkTheme", "true");
-    } else {
-      document.documentElement.classList.remove("pf-v6-theme-dark");
-      localStorage.setItem("isDarkTheme", "false");
-    }
-  }, [isDarkTheme]);
-
   const {
     masthead: { leftBrand, leftTitle, rightBrand },
   } = useBranding();
@@ -134,24 +117,7 @@ export const HeaderApp: React.FC = () => {
                 id="header-toolbar-tasks"
                 variant="action-group-plain"
                 align={{ default: "alignEnd" }}
-              >
-                <ToolbarItem>
-                  <ToggleGroup aria-label="Default with single selectable">
-                    <ToggleGroupItem
-                      aria-label="light theme"
-                      icon={<SunIcon />}
-                      isSelected={!isDarkTheme}
-                      onChange={() => setIsDarkTheme(false)}
-                    />
-                    <ToggleGroupItem
-                      aria-label="dark theme"
-                      icon={<MoonIcon />}
-                      isSelected={isDarkTheme}
-                      onChange={() => setIsDarkTheme(true)}
-                    />
-                  </ToggleGroup>
-                </ToolbarItem>
-              </ToolbarGroup>
+              />
 
               {/* toolbar items to show at desktop sizes */}
               <ToolbarGroup

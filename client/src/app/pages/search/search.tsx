@@ -127,7 +127,7 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
               variant="action-group-plain"
               align={{ default: "alignEnd" }}
             >
-              <ToolbarGroup visibility={{ default: "hidden", lg: "visible" }}>
+              <ToolbarGroup visibility={{ default: "visible" }}>
                 <ToolbarItem>
                   <SearchMenu onChangeSearch={onChangeContextSearchValue} />
                 </ToolbarItem>
