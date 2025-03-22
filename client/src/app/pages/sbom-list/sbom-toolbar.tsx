@@ -1,11 +1,6 @@
 import React from "react";
 
-import {
-  Button,
-  Toolbar,
-  ToolbarContent,
-  ToolbarItem,
-} from "@patternfly/react-core";
+import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 
 import { FilterToolbar } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";

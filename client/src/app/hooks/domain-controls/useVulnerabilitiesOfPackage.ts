@@ -118,26 +118,29 @@ const advisoryToModels = (advisories: PurlAdvisory[]) => {
     );
   });
 
-  const summary = vulnerabilities.reduce((prev, current) => {
-    const vulnStatus = current.vulnerabilityStatus;
-    const severity = current.vulnerability.average_severity;
+  const summary = vulnerabilities.reduce(
+    (prev, current) => {
+      const vulnStatus = current.vulnerabilityStatus;
+      const severity = current.vulnerability.average_severity;
 
-    const prevVulnStatusValue = prev.vulnerabilityStatus[vulnStatus];
+      const prevVulnStatusValue = prev.vulnerabilityStatus[vulnStatus];
 
-    const result: VulnerabilityOfPackageSummary = Object.assign(prev, {
-      vulnerabilityStatus: {
-        ...prev.vulnerabilityStatus,
-        [vulnStatus]: {
-          total: prevVulnStatusValue.total + 1,
-          severities: {
-            ...prevVulnStatusValue.severities,
-            [severity]: prevVulnStatusValue.severities[severity] + 1,
+      const result: VulnerabilityOfPackageSummary = Object.assign(prev, {
+        vulnerabilityStatus: {
+          ...prev.vulnerabilityStatus,
+          [vulnStatus]: {
+            total: prevVulnStatusValue.total + 1,
+            severities: {
+              ...prevVulnStatusValue.severities,
+              [severity]: prevVulnStatusValue.severities[severity] + 1,
+            },
           },
         },
-      },
-    });
-    return result;
-  }, DEFAULT_SUMMARY);
+      });
+      return result;
+    },
+    { ...DEFAULT_SUMMARY } as VulnerabilityOfPackageSummary,
+  );
 
   return {
     vulnerabilities,

@@ -64,8 +64,6 @@ export const WatchedSbom: React.FC<WatchedSbomProps> = ({
 
   const {
     result: { data: sbomOptions },
-    isFetching: isFetchingSbomOptions,
-    fetchError: fetchErrorSbomOptions,
   } = useFetchSBOMs({
     filters: [{ field: "", operator: "~", value: debouncedInputValue }],
     page: { pageNumber: 1, itemsPerPage: 10 },

@@ -51,8 +51,8 @@ export const usePaginationPropHelpers = (
     itemCount: totalItemCount,
     perPage: itemsPerPage,
     page: pageNumber,
-    onSetPage: (event, pageNumber) => setPageNumber(pageNumber),
-    onPerPageSelect: (event, perPage) => {
+    onSetPage: (_event, pageNumber) => setPageNumber(pageNumber),
+    onPerPageSelect: (_event, perPage) => {
       setPageNumber(1);
       setItemsPerPage(perPage);
     },

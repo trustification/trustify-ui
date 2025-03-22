@@ -5,7 +5,6 @@ import {
   type PaginationProps,
   PaginationVariant,
 } from "@patternfly/react-core";
-import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
 
 export type PaginationStateProps = Pick<
   PaginationProps,
@@ -24,7 +23,6 @@ export const SimplePagination: React.FC<SimplePaginationProps> = ({
   paginationProps,
   isTop,
   isCompact = false,
-  noMargin = false,
   idPrefix = "",
 }) => {
   return (

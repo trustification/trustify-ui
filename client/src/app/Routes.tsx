@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from "react";
+import { Suspense, lazy } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useParams, useRoutes } from "react-router-dom";
 

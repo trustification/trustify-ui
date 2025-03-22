@@ -119,28 +119,31 @@ const advisoryToModels = (advisories: SbomAdvisory[]) => {
     );
   });
 
-  const summary = vulnerabilities.reduce((prev, current) => {
-    const vulnStatus = current.vulnerabilityStatus;
-    const severity = extendedSeverityFromSeverity(
-      current.vulnerability.average_severity,
-    );
+  const summary = vulnerabilities.reduce(
+    (prev, current) => {
+      const vulnStatus = current.vulnerabilityStatus;
+      const severity = extendedSeverityFromSeverity(
+        current.vulnerability.average_severity,
+      );
 
-    const prevVulnStatusValue = prev.vulnerabilityStatus[vulnStatus];
+      const prevVulnStatusValue = prev.vulnerabilityStatus[vulnStatus];
 
-    const result: VulnerabilityOfSbomSummary = Object.assign(prev, {
-      vulnerabilityStatus: {
-        ...prev.vulnerabilityStatus,
-        [vulnStatus]: {
-          total: prevVulnStatusValue.total + 1,
-          severities: {
-            ...prevVulnStatusValue.severities,
-            [severity]: prevVulnStatusValue.severities[severity] + 1,
+      const result: VulnerabilityOfSbomSummary = Object.assign(prev, {
+        vulnerabilityStatus: {
+          ...prev.vulnerabilityStatus,
+          [vulnStatus]: {
+            total: prevVulnStatusValue.total + 1,
+            severities: {
+              ...prevVulnStatusValue.severities,
+              [severity]: prevVulnStatusValue.severities[severity] + 1,
+            },
           },
         },
-      },
-    });
-    return result;
-  }, DEFAULT_SUMMARY);
+      });
+      return result;
+    },
+    { ...DEFAULT_SUMMARY } as VulnerabilityOfSbomSummary,
+  );
 
   return {
     vulnerabilities,
