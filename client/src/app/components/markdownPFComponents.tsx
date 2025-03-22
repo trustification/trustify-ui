@@ -1,4 +1,3 @@
-import * as React from "react";
 import type { Components } from "react-markdown";
 
 import { CodeBlock, CodeBlockCode, Content } from "@patternfly/react-core";

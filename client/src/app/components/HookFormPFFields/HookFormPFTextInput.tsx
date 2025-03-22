@@ -1,4 +1,3 @@
-import * as React from "react";
 import type { FieldValues, Path, PathValue } from "react-hook-form";
 
 import { getValidatedFromErrors } from "@app/utils/utils";

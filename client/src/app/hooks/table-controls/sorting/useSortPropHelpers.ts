@@ -70,7 +70,7 @@ export const useSortPropHelpers = <
                 : undefined,
               direction: activeSort?.direction,
             },
-            onSort: (event, index, direction) => {
+            onSort: (_event, index, direction) => {
               setActiveSort({
                 columnKey: columnKeys[index] as TSortableColumnKey,
                 direction,

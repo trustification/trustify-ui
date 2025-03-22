@@ -53,7 +53,7 @@ export const useCreateImporterMutation = (
         body: payload.configuration,
       });
     },
-    onSuccess: ({ data }, _payload) => {
+    onSuccess: (_, _payload) => {
       onSuccess();
       queryClient.invalidateQueries({ queryKey: [ImportersQueryKey] });
     },
@@ -94,7 +94,7 @@ export const useUpdateImporterMutation = (
         body: payload.configuration,
       });
     },
-    onSuccess: (_res, payload) => {
+    onSuccess: (_res, _payload) => {
       onSuccess();
       queryClient.invalidateQueries({ queryKey: [ImportersQueryKey] });
     },

@@ -23,7 +23,6 @@ export const SimplePagination: React.FC<SimplePaginationProps> = ({
   paginationProps,
   isTop,
   isCompact = false,
-  noMargin = false,
   idPrefix = "",
 }) => {
   return (

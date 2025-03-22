@@ -75,7 +75,6 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
     currentPageItems,
     propHelpers: {
       toolbarProps,
-      filterToolbarProps,
       paginationToolbarItemProps,
       paginationProps,
       tableProps,

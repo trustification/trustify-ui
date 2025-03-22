@@ -28,7 +28,6 @@ export const PackageTable: React.FC = () => {
       getTrProps,
       getTdProps,
     },
-    expansionDerivedState: { isCellExpanded },
   } = tableControls;
 
   return (

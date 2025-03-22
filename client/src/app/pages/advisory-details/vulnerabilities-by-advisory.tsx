@@ -43,7 +43,7 @@ export const VulnerabilitiesByAdvisory: React.FC<
     hasActionsColumn: false,
     isSortEnabled: true,
     sortableColumns: [],
-    getSortValues: (item) => ({}),
+    getSortValues: (_item) => ({}),
     isPaginationEnabled: true,
     isFilterEnabled: false,
     filterCategories: [],
@@ -55,7 +55,6 @@ export const VulnerabilitiesByAdvisory: React.FC<
     numRenderedColumns,
     propHelpers: {
       toolbarProps,
-      filterToolbarProps,
       paginationToolbarItemProps,
       paginationProps,
       tableProps,

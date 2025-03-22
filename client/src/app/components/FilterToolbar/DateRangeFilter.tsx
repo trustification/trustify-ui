@@ -92,7 +92,7 @@ export const DateRangeFilter = <TItem,>({
   };
 
   const onFromDateChange = (
-    event: FormEvent<HTMLInputElement>,
+    _event: FormEvent<HTMLInputElement>,
     value: string,
   ) => {
     if (isValidAmericanShortDate(value)) {
@@ -101,7 +101,10 @@ export const DateRangeFilter = <TItem,>({
     }
   };
 
-  const onToDateChange = (even: FormEvent<HTMLInputElement>, value: string) => {
+  const onToDateChange = (
+    _event: FormEvent<HTMLInputElement>,
+    value: string,
+  ) => {
     if (isValidAmericanShortDate(value)) {
       const newTo = parseAmericanDate(value);
       setTo(newTo);
