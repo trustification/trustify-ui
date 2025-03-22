@@ -1,4 +1,5 @@
-import React from "react";
+import type React from "react";
+
 import {
   Button,
   ButtonVariant,
@@ -17,7 +18,7 @@ export interface ConfirmDialogProps {
     | "danger"
     | "warning"
     | "info"
-    /* eslint-disable @typescript-eslint/no-explicit-any */
+    // biome-ignore lint/suspicious/noExplicitAny:
     | React.ComponentType<any>;
   message: string | React.ReactNode;
 

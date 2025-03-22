@@ -14,8 +14,8 @@ import {
 
 import { useDebounceValue } from "usehooks-ts";
 
-import { HubRequestParams } from "@app/api/models";
 import { FILTER_TEXT_CATEGORY_KEY } from "@app/Constants";
+import type { HubRequestParams } from "@app/api/models";
 import { SbomSearchContext } from "@app/pages/sbom-list/sbom-context";
 import { useFetchAdvisories } from "@app/queries/advisories";
 import { useFetchPackages } from "@app/queries/packages";
@@ -128,17 +128,18 @@ function useAllEntities(filterText: string, disableSearch: boolean) {
   ].sort((a, b) => {
     if (a.title?.includes(filterTextLowerCase)) {
       return -1;
-    } else if (b.title?.includes(filterTextLowerCase)) {
-      return 1;
-    } else {
-      const aIndex = (a.description || "")
-        .toLowerCase()
-        .indexOf(filterTextLowerCase);
-      const bIndex = (b.description || "")
-        .toLowerCase()
-        .indexOf(filterTextLowerCase);
-      return aIndex - bIndex;
     }
+    if (b.title?.includes(filterTextLowerCase)) {
+      return 1;
+    }
+
+    const aIndex = (a.description || "")
+      .toLowerCase()
+      .indexOf(filterTextLowerCase);
+    const bIndex = (b.description || "")
+      .toLowerCase()
+      .indexOf(filterTextLowerCase);
+    return aIndex - bIndex;
   });
 
   return {
@@ -218,6 +219,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
   };
 
   React.useEffect(() => {
+    // biome-ignore lint/suspicious/noExplicitAny:
     const handleMenuKeys = (event: any) => {
       if (
         isAutocompleteOpen &&
@@ -261,6 +263,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
     };
 
     // The autocomplete menu should close if the user clicks outside the menu.
+    // biome-ignore lint/suspicious/noExplicitAny:
     const handleClickOutside = (event: { target: any }) => {
       if (
         isAutocompleteOpen &&

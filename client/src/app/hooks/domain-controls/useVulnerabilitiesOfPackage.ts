@@ -1,11 +1,11 @@
 import React from "react";
 
 import {
-  ExtendedSeverity,
+  type ExtendedSeverity,
+  type VulnerabilityStatus,
   extendedSeverityFromSeverity,
-  VulnerabilityStatus,
 } from "@app/api/models";
-import { PurlAdvisory, VulnerabilityHead } from "@app/client";
+import type { PurlAdvisory, VulnerabilityHead } from "@app/client";
 import { useFetchPackageById } from "@app/queries/packages";
 
 const areVulnerabilityOfPackageEqual = (
@@ -82,6 +82,8 @@ const advisoryToModels = (advisories: PurlAdvisory[]) => {
             return areVulnerabilityOfPackageEqual(item, current);
           });
 
+          let result: VulnerabilityOfPackage[];
+
           if (existingElement) {
             const arrayWithoutExistingItem = prev.filter(
               (item) => !areVulnerabilityOfPackageEqual(item, existingElement),
@@ -97,7 +99,7 @@ const advisoryToModels = (advisories: PurlAdvisory[]) => {
               ],
             };
 
-            return [...arrayWithoutExistingItem, updatedItemInArray];
+            result = [...arrayWithoutExistingItem, updatedItemInArray];
           } else {
             const newItemInArray: VulnerabilityOfPackage = {
               vulnerability: current.vulnerability,
@@ -108,8 +110,10 @@ const advisoryToModels = (advisories: PurlAdvisory[]) => {
                 },
               ],
             };
-            return [...prev, newItemInArray];
+            result = [...prev.slice(), newItemInArray];
           }
+
+          return result;
         }, [] as VulnerabilityOfPackage[])
     );
   });
@@ -120,8 +124,7 @@ const advisoryToModels = (advisories: PurlAdvisory[]) => {
 
     const prevVulnStatusValue = prev.vulnerabilityStatus[vulnStatus];
 
-    const result: VulnerabilityOfPackageSummary = {
-      ...prev,
+    const result: VulnerabilityOfPackageSummary = Object.assign(prev, {
       vulnerabilityStatus: {
         ...prev.vulnerabilityStatus,
         [vulnStatus]: {
@@ -132,7 +135,7 @@ const advisoryToModels = (advisories: PurlAdvisory[]) => {
           },
         },
       },
-    };
+    });
     return result;
   }, DEFAULT_SUMMARY);
 

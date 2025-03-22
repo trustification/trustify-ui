@@ -23,8 +23,8 @@ export const WatchedSbomsSection: React.FC = () => {
       fetchError={fetchError}
       isFetchingState={
         <Grid hasGutter>
-          {Array.from(Array(4).keys()).map((_, index) => (
-            <GridItem key={index} md={3}>
+          {Array.from(Array(4).keys()).map((k) => (
+            <GridItem key={k} md={3}>
               <Card>
                 <CardBody>
                   <Bullseye>

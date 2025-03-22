@@ -1,4 +1,4 @@
-import { ProgressProps } from "@patternfly/react-core";
+import type { ProgressProps } from "@patternfly/react-core";
 import {
   t_global_icon_color_severity_critical_default as criticalColor,
   t_global_icon_color_severity_important_default as importantColor,
@@ -7,7 +7,7 @@ import {
   t_global_icon_color_severity_none_default as noneColor,
 } from "@patternfly/react-tokens";
 
-import { ExtendedSeverity } from "./models";
+import type { ExtendedSeverity } from "./models";
 
 type ListType = {
   [key in ExtendedSeverity]: {

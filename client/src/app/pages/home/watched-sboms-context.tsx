@@ -1,8 +1,8 @@
 import React from "react";
 
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 
-import { WatchedSboms } from "@app/api/models";
+import type { WatchedSboms } from "@app/api/models";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import {
   useFetchWatchedSboms,

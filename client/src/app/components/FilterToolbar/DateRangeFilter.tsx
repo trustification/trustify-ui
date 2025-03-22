@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { type FormEvent, useState } from "react";
 
 import {
   DatePicker,
@@ -8,14 +8,15 @@ import {
   ToolbarLabelGroup,
   ToolbarFilter,
   Tooltip,
+  isValidDate as isValidJSDate,
 } from "@patternfly/react-core";
 
-import { IFilterControlProps } from "./FilterControl";
+import type { IFilterControlProps } from "./FilterControl";
 import {
-  localizeInterval,
   americanDateFormat,
   isValidAmericanShortDate,
   isValidInterval,
+  localizeInterval,
   parseAmericanDate,
   parseInterval,
   toISODateInterval,

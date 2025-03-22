@@ -1,21 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 
+import { DEFAULT_REFETCH_INTERVAL } from "@app/Constants";
 import { client } from "@app/axios-config/apiInit";
 import {
+  type ImporterConfiguration,
   createImporter,
   deleteImporter,
   getImporter,
-  ImporterConfiguration,
   listImporterReports,
   listImporters,
   updateImporter,
 } from "@app/client";
-import { DEFAULT_REFETCH_INTERVAL } from "@app/Constants";
 
 export const ImportersQueryKey = "importers";
 
-export const useFetchImporters = (refetchDisabled: boolean = false) => {
+export const useFetchImporters = (refetchDisabled = false) => {
   const { isLoading, error, refetch, data } = useQuery({
     queryKey: [ImportersQueryKey],
     queryFn: () => listImporters({ client }),
@@ -31,7 +31,7 @@ export const useFetchImporters = (refetchDisabled: boolean = false) => {
 };
 
 export const useCreateImporterMutation = (
-  onSuccess: (res: void) => void,
+  onSuccess: () => void,
   onError: (
     err: AxiosError,
     payload: {
@@ -76,7 +76,7 @@ export const useFetchImporterById = (id: string) => {
 };
 
 export const useUpdateImporterMutation = (
-  onSuccess: (payload: void) => void,
+  onSuccess: () => void,
   onError: (
     err: AxiosError,
     payload: { importerName: string; configuration: ImporterConfiguration },
@@ -129,7 +129,7 @@ export const useDeleteIporterMutation = (
 
 export const useFetchImporterReports = (
   id: string,
-  refetchDisabled: boolean = false,
+  refetchDisabled = false,
 ) => {
   const { data, isLoading, refetch, error } = useQuery({
     queryKey: [ImportersQueryKey, id, "reports"],

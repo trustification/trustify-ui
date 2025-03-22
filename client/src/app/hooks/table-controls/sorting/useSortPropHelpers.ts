@@ -1,5 +1,5 @@
-import { ThProps } from "@patternfly/react-table";
-import { ISortState } from "./useSortState";
+import type { ThProps } from "@patternfly/react-table";
+import type { ISortState } from "./useSortState";
 
 /**
  * Args for useSortPropHelpers that come from outside useTableControlProps

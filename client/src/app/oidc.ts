@@ -1,4 +1,4 @@
-import { OidcClientSettings } from "oidc-client-ts";
+import type { OidcClientSettings } from "oidc-client-ts";
 
 import { isAuthServerEmbedded } from "./Constants";
 import { ENV } from "./env";

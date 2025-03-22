@@ -1,4 +1,4 @@
-import { type RequestHandler } from "msw";
+import type { RequestHandler } from "msw";
 import { config } from "../config";
 
 const enableMe = (me: string) =>

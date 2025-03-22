@@ -1,6 +1,6 @@
-import React from "react";
+import type React from "react";
 
-import { State } from "@app/client";
+import type { State } from "@app/client";
 import { IconedStatus } from "@app/components/IconedStatus";
 
 export interface ImporterStatusIconProps {

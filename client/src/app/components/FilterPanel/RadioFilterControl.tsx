@@ -1,9 +1,9 @@
-import * as React from "react";
+import type * as React from "react";
 
 import { Radio } from "@patternfly/react-core";
 
-import { ISelectFilterCategory } from "../FilterToolbar";
-import { IFilterControlProps } from "./FilterControl";
+import type { ISelectFilterCategory } from "../FilterToolbar";
+import type { IFilterControlProps } from "./FilterControl";
 
 export interface ISelectFilterControlProps<
   TItem,
@@ -36,7 +36,7 @@ export const RadioFilterControl = <TItem, TFilterCategoryKey extends string>({
           return (
             <Radio
               isDisabled={isDisabled}
-              key={index}
+              key={label}
               id={`radio-${index}`}
               name="radio"
               isLabelWrapped

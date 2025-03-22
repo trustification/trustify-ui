@@ -1,4 +1,4 @@
-import { AnalyticsBrowserSettings } from "@segment/analytics-next";
+import type { AnalyticsBrowserSettings } from "@segment/analytics-next";
 import { ENV } from "./env";
 
 export const analyticsSettings: AnalyticsBrowserSettings = {

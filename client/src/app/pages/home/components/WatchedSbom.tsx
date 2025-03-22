@@ -11,7 +11,7 @@ import {
   EmptyStateBody,
   EmptyStateVariant,
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
   Select,
   SelectList,
   SelectOption,
@@ -34,6 +34,8 @@ interface WatchedSbomProps {
   sbomId: string | null;
 }
 
+const defaultDebounce = 500;
+
 export const WatchedSbom: React.FC<WatchedSbomProps> = ({
   fieldName,
   sbomId,
@@ -47,9 +49,9 @@ export const WatchedSbom: React.FC<WatchedSbomProps> = ({
   React.useEffect(() => {
     const delayInputTimeoutId = setTimeout(() => {
       setDebouncedInputValue(inputValue);
-    }, 500);
+    }, defaultDebounce);
     return () => clearTimeout(delayInputTimeoutId);
-  }, [inputValue, 500]);
+  }, [inputValue]);
 
   const [isSelectOpen, setIsSelectOpen] = React.useState(false);
 

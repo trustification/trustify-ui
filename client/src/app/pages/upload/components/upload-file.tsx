@@ -1,10 +1,10 @@
 import * as React from "react";
 
-import { AxiosError, AxiosResponse, CancelTokenSource } from "axios";
-import { FileRejection } from "react-dropzone";
+import type { AxiosError, AxiosResponse, CancelTokenSource } from "axios";
+import type { FileRejection } from "react-dropzone";
 
 import {
-  DropEvent,
+  type DropEvent,
   HelperText,
   HelperTextItem,
   List,
@@ -70,9 +70,9 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
   }, [uploads]);
 
   const removeFiles = (filesToRemove: File[]) => {
-    filesToRemove.forEach((e) => {
+    for (const e of filesToRemove) {
       handleRemoveUpload(e);
-    });
+    }
   };
 
   // callback that will be called by the react dropzone with the newly dropped file objects
@@ -167,8 +167,8 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
           <ModalHeader title="Unsupported files" titleIconVariant="warning" />
           <ModalBody>
             <List>
-              {rejectedFiles.map((e, index) => (
-                <ListItem key={index}>{e.file.name}</ListItem>
+              {rejectedFiles.map((e) => (
+                <ListItem key={e.file.name}>{e.file.name}</ListItem>
               ))}
             </List>
           </ModalBody>

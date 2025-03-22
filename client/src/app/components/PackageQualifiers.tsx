@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { Label } from "@patternfly/react-core";
 
@@ -11,8 +11,8 @@ export const PackageQualifiers: React.FC<PackageQualifiersProps> = ({
 }) => {
   return (
     <>
-      {Object.entries(value).map(([k, v], index) => (
-        <Label key={index} isCompact>{`${k}=${v}`}</Label>
+      {Object.entries(value).map(([k, v]) => (
+        <Label key={`${k}=${v}`} isCompact>{`${k}=${v}`}</Label>
       ))}
     </>
   );
