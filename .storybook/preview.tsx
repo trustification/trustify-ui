@@ -1,10 +1,10 @@
-import React from "react";
+import * as React from "react";
 import "@patternfly/patternfly/patternfly.css";
 import "@patternfly/patternfly/patternfly-addons.css";
 import type { Preview } from "@storybook/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { initialize, mswLoader } from "msw-storybook-addon";
-import { handlers } from "@mocks/handlers";
+import { handlers } from "../client/src/mocks/handlers";
 import { AuthProvider } from "react-oidc-context";
 import { MemoryRouter } from "react-router";
 

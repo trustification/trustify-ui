@@ -32,7 +32,7 @@ export const getLocalTableControlDerivedState = <
       TColumnKey,
       TSortableColumnKey,
       TFilterCategoryKey
-    >
+    >,
 ): ITableControlDerivedState<TItem> => {
   const { items, isPaginationEnabled = true } = args;
   const { filteredItems } = getLocalFilterDerivedState({

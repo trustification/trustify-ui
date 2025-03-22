@@ -22,11 +22,11 @@ declare module "@hookform/resolvers/yup" {
     factoryOptions?: {
       mode?: "async" | "sync";
       rawValues?: boolean;
-    }
+    },
   ) => <TFieldValues extends FieldValues, TContext>(
     values: TFieldValues,
     context: TContext | undefined,
-    options: ResolverOptions<TFieldValues>
+    options: ResolverOptions<TFieldValues>,
   ) => Promise<ResolverResult<TFieldValues>>;
   export {};
 

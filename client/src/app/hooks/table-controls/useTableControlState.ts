@@ -33,7 +33,7 @@ export const useTableControlState = <
     TSortableColumnKey,
     TFilterCategoryKey,
     TPersistenceKeyPrefix
-  >
+  >,
 ): ITableControlState<
   TItem,
   TColumnKey,

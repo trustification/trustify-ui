@@ -31,12 +31,12 @@ export const useSelectionState = <T>({
 
   const selectableItems = React.useMemo(
     () => items.filter(isItemSelectable),
-    [items, isItemSelectable]
+    [items, isItemSelectable],
   );
 
   const isItemSelected = React.useCallback(
     (item: T) => selectedItems.some((i) => isEqual(item, i)),
-    [isEqual, selectedItems]
+    [isEqual, selectedItems],
   );
 
   // If isItemSelectable changes and a selected item is no longer selectable, deselect it
@@ -54,13 +54,19 @@ export const useSelectionState = <T>({
         setSelectedItems(selectedItems.filter((i) => !isEqual(i, item)));
       }
     },
-    [isEqual, isItemSelectable, isItemSelected, selectedItems, setSelectedItems]
+    [
+      isEqual,
+      isItemSelectable,
+      isItemSelected,
+      selectedItems,
+      setSelectedItems,
+    ],
   );
 
   const selectMultiple = React.useCallback(
     (itemsSubset: T[], isSelecting: boolean) => {
       const otherSelectedItems = selectedItems.filter(
-        (selected) => !itemsSubset.some((item) => isEqual(selected, item))
+        (selected) => !itemsSubset.some((item) => isEqual(selected, item)),
       );
       const itemsToSelect = itemsSubset.filter(isItemSelectable);
       if (isSelecting) {
@@ -69,13 +75,13 @@ export const useSelectionState = <T>({
         setSelectedItems(otherSelectedItems);
       }
     },
-    [isEqual, isItemSelectable, selectedItems, setSelectedItems]
+    [isEqual, isItemSelectable, selectedItems, setSelectedItems],
   );
 
   const selectAll = React.useCallback(
     (isSelecting = true) =>
       setSelectedItems(isSelecting ? selectableItems : []),
-    [selectableItems, setSelectedItems]
+    [selectableItems, setSelectedItems],
   );
   const areAllSelected = selectedItems.length === selectableItems.length;
 

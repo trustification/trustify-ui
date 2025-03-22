@@ -27,7 +27,7 @@ export const CheckboxFilterControl = <TItem,>({
 
   React.useEffect(() => {
     setSelectOptions(
-      Array.isArray(category.selectOptions) ? category.selectOptions : []
+      Array.isArray(category.selectOptions) ? category.selectOptions : [],
     );
   }, [category.selectOptions]);
 
@@ -36,7 +36,7 @@ export const CheckboxFilterControl = <TItem,>({
   const flatOptions: FilterSelectOptionProps[] = !hasGroupings
     ? selectOptions
     : (Object.values(selectOptions).flatMap(
-        (i) => i
+        (i) => i,
       ) as FilterSelectOptionProps[]);
 
   const onSelect = (value: string | undefined) => {

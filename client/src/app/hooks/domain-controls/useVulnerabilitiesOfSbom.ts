@@ -1,7 +1,11 @@
 import React from "react";
 
-import { VulnerabilityStatus } from "@app/api/models";
-import { SbomAdvisory, SbomPackage, SbomStatus, Severity } from "@app/client";
+import {
+  ExtendedSeverity,
+  extendedSeverityFromSeverity,
+  VulnerabilityStatus,
+} from "@app/api/models";
+import { SbomAdvisory, SbomPackage, SbomStatus } from "@app/client";
 import {
   useFetchSbomsAdvisory,
   useFetchSbomsAdvisoryBatch,
@@ -9,7 +13,7 @@ import {
 
 const areVulnerabilityOfSbomEqual = (
   a: VulnerabilityOfSbom,
-  b: VulnerabilityOfSbom | FlatVulnerabilityOfSbom
+  b: VulnerabilityOfSbom | FlatVulnerabilityOfSbom,
 ) => {
   return (
     a.vulnerability.identifier === b.vulnerability.identifier &&
@@ -35,7 +39,7 @@ interface VulnerabilityOfSbom {
 
 export type SeveritySummary = {
   total: number;
-  severities: { [key in Severity]: number };
+  severities: { [key in ExtendedSeverity]: number };
 };
 
 export interface VulnerabilityOfSbomSummary {
@@ -46,7 +50,7 @@ export interface VulnerabilityOfSbomSummary {
 
 const DEFAULT_SEVERITY: SeveritySummary = {
   total: 0,
-  severities: { none: 0, low: 0, medium: 0, high: 0, critical: 0 },
+  severities: { unknown: 0, none: 0, low: 0, medium: 0, high: 0, critical: 0 },
 };
 
 const DEFAULT_SUMMARY: VulnerabilityOfSbomSummary = {
@@ -79,7 +83,7 @@ const advisoryToModels = (advisories: SbomAdvisory[]) => {
 
           if (existingElement) {
             const arrayWithoutExistingItem = prev.filter(
-              (item) => !areVulnerabilityOfSbomEqual(item, existingElement)
+              (item) => !areVulnerabilityOfSbomEqual(item, existingElement),
             );
 
             const updatedItemInArray: VulnerabilityOfSbom = {
@@ -113,7 +117,9 @@ const advisoryToModels = (advisories: SbomAdvisory[]) => {
 
   const summary = vulnerabilities.reduce((prev, current) => {
     const vulnStatus = current.vulnerabilityStatus;
-    const severity = current.vulnerability.average_severity;
+    const severity = extendedSeverityFromSeverity(
+      current.vulnerability.average_severity,
+    );
 
     const prevVulnStatusValue = prev.vulnerabilityStatus[vulnStatus];
 

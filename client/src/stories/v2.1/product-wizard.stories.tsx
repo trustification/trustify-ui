@@ -7,13 +7,13 @@ const ProductWizard: React.FC = () => {
     React.ReactNode[]
   >(["SBOM Option 1", "SBOM Option 2", "SBOM Option 3", "SBOM Option 4"]);
   const [chosenOptions, setChosenOptions] = React.useState<React.ReactNode[]>(
-    []
+    [],
   );
 
   const onListChange = (
     event: React.MouseEvent<HTMLElement>,
     newAvailableOptions: React.ReactNode[],
-    newChosenOptions: React.ReactNode[]
+    newChosenOptions: React.ReactNode[],
   ) => {
     setAvailableOptions(newAvailableOptions.sort());
     setChosenOptions(newChosenOptions.sort());

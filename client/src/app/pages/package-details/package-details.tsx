@@ -35,7 +35,7 @@ export const PackageDetails: React.FC = () => {
 
   const handleTabClick = (
     event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent,
-    tabIndex: string | number
+    tabIndex: string | number,
   ) => {
     setActiveTabKey(tabIndex);
   };

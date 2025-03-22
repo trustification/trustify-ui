@@ -120,7 +120,7 @@ export const PackageSearchProvider: React.FunctionComponent<
         namespace: "namespace",
         version: "version",
       },
-    })
+    }),
   );
 
   const enrichedPackages = React.useMemo(() => {

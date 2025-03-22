@@ -18,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+  
       - name: save trustify-ui image
         run: |
           docker build . -t ghcr.io/trustification/trustify-ui:pr-test -f Dockerfile

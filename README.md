@@ -18,11 +18,11 @@ Trustify UI Component
 
 ### Requisites
 
-- NodeJS 20. Use [nvm](https://github.com/nvm-sh/nvm?tab=readme-ov-file#install--update-script) to install NodeJS
+[NodeJS](https://nodejs.org) >= 22. Use [nvm](https://nodejs.org/en/download) to install NodeJS
 
 ```shell
-nvm install 20
-nvm use 20
+nvm install 22
+nvm use 22
 ```
 
 - Backend. Clone [trustify](https://github.com/trustification/trustify) and there execute:
@@ -70,3 +70,7 @@ Open browser at <http://localhost:3000>
 
 > [!NOTE]
 > When using the crate it is expected to build the UI always in Prod mode
+
+## Contributing
+
+We welcome contributions! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting changes.

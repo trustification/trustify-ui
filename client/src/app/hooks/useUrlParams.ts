@@ -30,10 +30,10 @@ export interface IUseUrlParamsArgs<
   keys: DisallowCharacters<TURLParamKey, ":">[];
   defaultValue: TDeserializedParams;
   serialize: (
-    params: Partial<TDeserializedParams>
+    params: Partial<TDeserializedParams>,
   ) => TSerializedParams<TURLParamKey>;
   deserialize: (
-    serializedParams: TSerializedParams<TURLParamKey>
+    serializedParams: TSerializedParams<TURLParamKey>,
   ) => TDeserializedParams;
 }
 
@@ -66,7 +66,7 @@ export const useUrlParams = <
     persistenceKeyPrefix ? `${persistenceKeyPrefix}:${key}` : key;
 
   const withPrefixes = (
-    serializedParams: TSerializedParams<TURLParamKey>
+    serializedParams: TSerializedParams<TURLParamKey>,
   ): TSerializedParams<TPrefixedURLParamKey> =>
     persistenceKeyPrefix
       ? objectKeys(serializedParams).reduce(
@@ -74,7 +74,7 @@ export const useUrlParams = <
             ...obj,
             [withPrefix(key)]: serializedParams[key],
           }),
-          {} as TSerializedParams<TPrefixedURLParamKey>
+          {} as TSerializedParams<TPrefixedURLParamKey>,
         )
       : (serializedParams as TSerializedParams<TPrefixedURLParamKey>);
 
@@ -94,7 +94,7 @@ export const useUrlParams = <
           newPrefixedSerializedParams,
         }),
       },
-      { replace: true }
+      { replace: true },
     );
   };
 
@@ -110,7 +110,7 @@ export const useUrlParams = <
         ...obj,
         [key]: urlParams.get(withPrefix(key)),
       }),
-      {} as TSerializedParams<TURLParamKey>
+      {} as TSerializedParams<TURLParamKey>,
     );
     allParamsEmpty = keys.every((key) => !serializedParams[key]);
     params = allParamsEmpty ? defaultValue : deserialize(serializedParams);

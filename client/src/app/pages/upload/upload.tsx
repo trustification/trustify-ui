@@ -50,7 +50,7 @@ export const ImporterList: React.FC = () => {
                       handleUpload={handleSbomUpload}
                       handleRemoveUpload={handleSbomRemoveUpload}
                       extractSuccessMessage={(
-                        response: AxiosResponse<{ document_id: string }>
+                        response: AxiosResponse<{ document_id: string }>,
                       ) => {
                         return `${response.data.document_id} uploaded`;
                       }}
@@ -71,7 +71,7 @@ export const ImporterList: React.FC = () => {
                       handleUpload={handleAdvisoryUpload}
                       handleRemoveUpload={handleAdvisoryRemoveUpload}
                       extractSuccessMessage={(
-                        response: AxiosResponse<{ document_id: string }>
+                        response: AxiosResponse<{ document_id: string }>,
                       ) => {
                         return `${response.data.document_id} uploaded`;
                       }}

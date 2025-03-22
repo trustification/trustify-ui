@@ -64,6 +64,21 @@ import { ANSICOLOR } from "@app/Constants";
 import { ImporterProgress } from "./components/importer-progress";
 import { ImporterStatusIcon } from "./components/importer-status-icon";
 
+type ImporterStatus = "enabled" | "disabled" | "scheduled" | "running";
+
+const getImporterStatus = (importer: Importer): ImporterStatus => {
+  const importerType = Object.keys(importer.configuration ?? {})[0];
+  const configValues = (importer.configuration as any)[
+    importerType
+  ] as SbomImporter;
+  const isImporterEnabled = configValues?.disabled === false;
+  if (!isImporterEnabled) {
+    return "disabled";
+  } else {
+    return importer.state === "running" ? "running" : "scheduled";
+  }
+};
+
 export const ImporterList: React.FC = () => {
   const { pushNotification } = React.useContext(NotificationsContext);
 
@@ -78,23 +93,7 @@ export const ImporterList: React.FC = () => {
     setSelectedRow(row);
   };
 
-  const [refetchInterval, setRefetchInterval] = React.useState(10000);
-  const { importers, isFetching, fetchError } = useFetchImporters(
-    false,
-    refetchInterval
-  );
-
-  // Fetch importers with more frecuency in case any is "running"
-  React.useEffect(() => {
-    const isSomeTaskRunning = importers.some(
-      (item) => item.state === "running"
-    );
-    if (isSomeTaskRunning) {
-      setRefetchInterval(5000);
-    } else if (refetchInterval !== 10000) {
-      setRefetchInterval(10000);
-    }
-  }, [importers]);
+  const { importers, isFetching, fetchError } = useFetchImporters();
 
   // Enable/Disable Importer
 
@@ -107,7 +106,7 @@ export const ImporterList: React.FC = () => {
 
   const { mutate: updateImporter } = useUpdateImporterMutation(
     () => {},
-    onEnableDisableError
+    onEnableDisableError,
   );
 
   const execEnableDisableImporter = (row: Importer, enable: boolean) => {
@@ -183,6 +182,30 @@ export const ImporterList: React.FC = () => {
         type: FilterType.search,
         placeholderText: "Search by name...",
         getItemValue: (item) => item.name || "",
+      },
+      {
+        categoryKey: "status",
+        title: "Status",
+        type: FilterType.multiselect,
+        logicOperator: "OR",
+        selectOptions: [
+          {
+            value: "scheduled",
+            label: "Scheduled",
+          },
+          {
+            value: "running",
+            label: "Running",
+          },
+          {
+            value: "disabled",
+            label: "Disabled",
+          },
+        ],
+        placeholderText: "Status",
+        matcher: (filter, item) => {
+          return filter === getImporterStatus(item);
+        },
       },
     ],
   });

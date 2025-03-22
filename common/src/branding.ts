@@ -38,11 +38,3 @@ import * as stringsJson from "@branding/strings.json";
 
 export const brandingStrings =
   stringsJson.default as unknown as BrandingStrings;
-
-/**
- * Return the `node_modules/` resolved path for the branding assets.
- */
-export const brandingAssetPath = () =>
-  require
-    .resolve("@trustify-ui/common/package.json")
-    .replace(/(.)\/package.json$/, "$1") + "/dist/branding";

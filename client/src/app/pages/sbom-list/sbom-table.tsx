@@ -40,7 +40,7 @@ export const SbomTable: React.FC = ({}) => {
     expansionDerivedState: { isCellExpanded },
   } = tableControls;
 
-  const { downloadSBOM } = useDownload();
+  const { downloadSBOM, downloadSBOMLicenses } = useDownload();
 
   return (
     <>
@@ -116,9 +116,15 @@ export const SbomTable: React.FC = ({}) => {
                       <ActionsColumn
                         items={[
                           {
-                            title: "Download",
+                            title: "Download SBOM",
                             onClick: () => {
                               downloadSBOM(item.id, `${item.name}.json`);
+                            },
+                          },
+                          {
+                            title: "Download License Report",
+                            onClick: () => {
+                              downloadSBOMLicenses(item.id);
                             },
                           },
                         ]}

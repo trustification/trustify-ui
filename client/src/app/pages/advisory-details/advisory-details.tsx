@@ -27,7 +27,7 @@ export const AdvisoryDetails: React.FC = () => {
 
   const handleTabClick = (
     event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent,
-    tabIndex: string | number
+    tabIndex: string | number,
   ) => {
     setActiveTabKey(tabIndex);
   };
@@ -65,7 +65,7 @@ export const AdvisoryDetails: React.FC = () => {
                       advisoryId,
                       advisory?.identifier
                         ? `${advisory?.identifier}.json`
-                        : `${advisoryId}.json`
+                        : `${advisoryId}.json`,
                     );
                   }
                 }}

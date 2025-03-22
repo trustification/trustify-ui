@@ -3,9 +3,11 @@ name: Tag Dist Build
 on:
   push:
     branches:
-      - main
+      - "main"
+      - "release/*"
     tags:
       - "v*"
+  workflow_dispatch:
 
 concurrency:
   group: tag-dist
@@ -20,7 +22,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - name: Install
         working-directory: build
         run: npm clean-install --ignore-scripts
@@ -37,6 +39,7 @@ jobs:
           git clone "$SOURCE" publish
           cd publish
           git fetch --tags
+          git fetch origin ${{ github.ref_name }}:${{ github.ref_name }} 2>/dev/null || true
           git checkout publish/${{ github.ref_name }} 2>/dev/null || git checkout -b publish/${{ github.ref_name }}
           git merge ${{ github.ref_name }} -X theirs
       - name: Copy dist folder

@@ -11,17 +11,15 @@ import {
   listImporters,
   updateImporter,
 } from "@app/client";
+import { DEFAULT_REFETCH_INTERVAL } from "@app/Constants";
 
 export const ImportersQueryKey = "importers";
 
-export const useFetchImporters = (
-  refetchDisabled: boolean = false,
-  interval = 5000
-) => {
+export const useFetchImporters = (refetchDisabled: boolean = false) => {
   const { isLoading, error, refetch, data } = useQuery({
     queryKey: [ImportersQueryKey],
     queryFn: () => listImporters({ client }),
-    refetchInterval: !refetchDisabled ? interval : false,
+    refetchInterval: !refetchDisabled ? DEFAULT_REFETCH_INTERVAL : false,
   });
 
   return {
@@ -39,8 +37,8 @@ export const useCreateImporterMutation = (
     payload: {
       importerName: string;
       configuration: ImporterConfiguration;
-    }
-  ) => void
+    },
+  ) => void,
 ) => {
   const queryClient = useQueryClient();
 
@@ -81,8 +79,8 @@ export const useUpdateImporterMutation = (
   onSuccess: (payload: void) => void,
   onError: (
     err: AxiosError,
-    payload: { importerName: string; configuration: ImporterConfiguration }
-  ) => void
+    payload: { importerName: string; configuration: ImporterConfiguration },
+  ) => void,
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -106,7 +104,7 @@ export const useUpdateImporterMutation = (
 
 export const useDeleteIporterMutation = (
   onSuccess: (id: string) => void,
-  onError: (err: AxiosError, id: string) => void
+  onError: (err: AxiosError, id: string) => void,
 ) => {
   const queryClient = useQueryClient();
 
@@ -131,12 +129,12 @@ export const useDeleteIporterMutation = (
 
 export const useFetchImporterReports = (
   id: string,
-  refetchDisabled: boolean = false
+  refetchDisabled: boolean = false,
 ) => {
   const { data, isLoading, refetch, error } = useQuery({
     queryKey: [ImportersQueryKey, id, "reports"],
     queryFn: () => listImporterReports({ client, path: { name: id } }),
-    refetchInterval: !refetchDisabled ? 5000 : false,
+    refetchInterval: !refetchDisabled ? DEFAULT_REFETCH_INTERVAL : false,
   });
 
   return {

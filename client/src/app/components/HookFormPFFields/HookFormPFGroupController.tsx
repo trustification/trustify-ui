@@ -96,7 +96,7 @@ export const extractGroupControllerProps = <
   TName extends Path<TFieldValues>,
   TProps extends BaseHookFormPFGroupControllerProps<TFieldValues, TName>,
 >(
-  props: TProps
+  props: TProps,
 ): {
   extractedProps: BaseHookFormPFGroupControllerProps<TFieldValues, TName>;
   remainingProps: Omit<

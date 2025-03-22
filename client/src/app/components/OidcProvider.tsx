@@ -30,7 +30,7 @@ export const OidcProvider: React.FC<IOidcProviderProps> = ({ children }) => {
         window.history.replaceState(
           {},
           document.title,
-          window.location.pathname
+          window.location.pathname,
         )
       }
     >

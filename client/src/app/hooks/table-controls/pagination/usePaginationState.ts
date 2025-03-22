@@ -62,7 +62,7 @@ export type IPaginationStateArgs = DiscriminatedArgs<
 export const usePaginationState = <
   TPersistenceKeyPrefix extends string = string,
 >(
-  args: IPaginationStateArgs & IFeaturePersistenceArgs<TPersistenceKeyPrefix>
+  args: IPaginationStateArgs & IFeaturePersistenceArgs<TPersistenceKeyPrefix>,
 ): IPaginationState => {
   const {
     isPaginationEnabled,

@@ -100,7 +100,7 @@ const ProductList: React.FC<{ products: IProduct[] }> = ({ products }) => {
     "RH Trusted Artifact Signer": "currentVersion",
   });
   const [activeSortIndex, setActiveSortIndex] = React.useState<number | null>(
-    null
+    null,
   );
   const [activeSortDirection, setActiveSortDirection] = React.useState<
     "asc" | "desc" | null
@@ -112,7 +112,7 @@ const ProductList: React.FC<{ products: IProduct[] }> = ({ products }) => {
   const setCellExpanded = (
     product: IProduct,
     columnKey: ColumnKey,
-    isExpanding = true
+    isExpanding = true,
   ) => {
     const newExpandedCells = { ...expandedCells };
     if (isExpanding) {
@@ -127,14 +127,14 @@ const ProductList: React.FC<{ products: IProduct[] }> = ({ products }) => {
     product: IProduct,
     columnKey: ColumnKey,
     rowIndex: number,
-    columnIndex: number
+    columnIndex: number,
   ): TdProps["compoundExpand"] => ({
     isExpanded: expandedCells[product.name] === columnKey,
     onToggle: () =>
       setCellExpanded(
         product,
         columnKey,
-        expandedCells[product.name] !== columnKey
+        expandedCells[product.name] !== columnKey,
       ),
     expandId: "compound-expand",
     rowIndex,
@@ -171,7 +171,7 @@ const ProductList: React.FC<{ products: IProduct[] }> = ({ products }) => {
 
   const getSortableRowValues = React.useCallback(
     (product: IProduct): boolean[] => [isProductFavorited(product)],
-    [isProductFavorited]
+    [isProductFavorited],
   );
 
   let sortedProducts = products;
@@ -364,7 +364,7 @@ const ProductList: React.FC<{ products: IProduct[] }> = ({ products }) => {
                     product,
                     "currentVersion",
                     rowIndex,
-                    1
+                    1,
                   )}
                 >
                   <CodeBranchIcon key="icon" /> {product.currentVersion}
@@ -377,7 +377,7 @@ const ProductList: React.FC<{ products: IProduct[] }> = ({ products }) => {
                     product,
                     "vulnerabilities",
                     rowIndex,
-                    2
+                    2,
                   )}
                 >
                   <SBOMVulnerabilities sbomId={product.sbomId} />
@@ -390,7 +390,7 @@ const ProductList: React.FC<{ products: IProduct[] }> = ({ products }) => {
                     product,
                     "advisories",
                     rowIndex,
-                    3
+                    3,
                   )}
                 >
                   <Badge key={1} screenReaderText="Advisories">
@@ -405,7 +405,7 @@ const ProductList: React.FC<{ products: IProduct[] }> = ({ products }) => {
                     product,
                     "policyViolations",
                     rowIndex,
-                    3
+                    3,
                   )}
                 >
                   <Badge key={2} screenReaderText="Policy Violations">

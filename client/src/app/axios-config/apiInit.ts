@@ -14,7 +14,7 @@ export const client = createClient({
 
 function getUser() {
   const oidcStorage = sessionStorage.getItem(
-    `oidc.user:${OIDC_SERVER_URL}:${OIDC_CLIENT_ID}`
+    `oidc.user:${OIDC_SERVER_URL}:${OIDC_CLIENT_ID}`,
   );
   if (!oidcStorage) {
     return null;
@@ -35,7 +35,7 @@ export const initInterceptors = () => {
     },
     (error) => {
       return Promise.reject(error);
-    }
+    },
   );
 
   axios.interceptors.response.use(
@@ -72,6 +72,6 @@ export const initInterceptors = () => {
       }
 
       return Promise.reject(error);
-    }
+    },
   );
 };

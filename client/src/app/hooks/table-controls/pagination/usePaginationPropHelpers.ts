@@ -30,7 +30,7 @@ export type IPaginationPropHelpersExternalArgs = IUsePaginationEffectsArgs & {
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
 export const usePaginationPropHelpers = (
-  args: IPaginationPropHelpersExternalArgs
+  args: IPaginationPropHelpersExternalArgs,
 ) => {
   const {
     totalItemCount,

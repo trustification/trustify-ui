@@ -29,7 +29,10 @@ import {
 } from "@patternfly/react-table";
 
 import { getSeverityPriority } from "@app/api/model-utils";
-import { VulnerabilityStatus } from "@app/api/models";
+import {
+  extendedSeverityFromSeverity,
+  VulnerabilityStatus,
+} from "@app/api/models";
 import {
   PurlSummary,
   SbomAdvisory,
@@ -86,13 +89,22 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
 
   const affectedVulnerabilities = React.useMemo(() => {
     return vulnerabilities.filter(
-      (item) => item.vulnerabilityStatus === "affected"
+      (item) => item.vulnerabilityStatus === "affected",
     );
   }, [vulnerabilities]);
 
   const tableData = React.useMemo(() => {
     return affectedVulnerabilities.map((item) => {
-      const allPackages = item.relatedPackages.flatMap((i) => i.packages);
+      const allPackages = item.relatedPackages
+        .flatMap((i) => i.packages)
+        .reduce((prev, current) => {
+          const existingElement = prev.find((item) => item.id === current.id);
+          if (existingElement) {
+            return prev;
+          } else {
+            return [...prev, current];
+          }
+        }, [] as SbomPackage[]);
       const result: TableData = {
         ...item,
         summary: {
@@ -107,7 +119,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
 
   const tableDataWithUiId = useWithUiId(
     tableData,
-    (d) => `${d.vulnerability.identifier}-${d.vulnerabilityStatus}`
+    (d) => `${d.vulnerability.identifier}-${d.vulnerabilityStatus}`,
   );
 
   const tableControls = useLocalTableControls({
@@ -276,11 +288,11 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                           )}
                         </Td>
                         <Td width={10} {...getTdProps({ columnKey: "cvss" })}>
-                          {item.vulnerability.average_severity && (
-                            <SeverityShieldAndText
-                              value={item.vulnerability.average_severity}
-                            />
-                          )}
+                          <SeverityShieldAndText
+                            value={extendedSeverityFromSeverity(
+                              item.vulnerability.average_severity,
+                            )}
+                          />
                         </Td>
                         <Td
                           width={15}
@@ -362,7 +374,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                                       .map((purl, index) => {
                                         if (purl.purlSummary) {
                                           const decomposedPurl = decomposePurl(
-                                            purl.purlSummary.purl
+                                            purl.purlSummary.purl,
                                           );
                                           return (
                                             <Tr key={`${index}-purl`}>

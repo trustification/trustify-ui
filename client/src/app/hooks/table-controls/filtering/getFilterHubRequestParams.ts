@@ -14,10 +14,10 @@ import { parseInterval } from "@app/components/FilterToolbar/dateUtils";
  */
 const pushOrMergeFilter = (
   existingFilters: HubFilter[],
-  newFilter: HubFilter
+  newFilter: HubFilter,
 ) => {
   const existingFilterIndex = existingFilters.findIndex(
-    (f) => f.field === newFilter.field
+    (f) => f.field === newFilter.field,
   );
   const existingFilter =
     existingFilterIndex === -1 ? null : existingFilters[existingFilterIndex];
@@ -99,7 +99,7 @@ export const getFilterHubRequestParams = <
     const { filterValues } = filterState;
     objectKeys(filterValues).forEach((categoryKey) => {
       const filterCategory = filterCategories?.find(
-        (category) => category.categoryKey === categoryKey
+        (category) => category.categoryKey === categoryKey,
       );
       const filterValue = filterValues[categoryKey];
       if (!filterCategory || !filterValue) return;
@@ -200,7 +200,7 @@ export const serializeFilterForHub = (filter: HubFilter): string => {
  */
 export const serializeFilterRequestParamsForHub = (
   deserializedParams: HubRequestParams,
-  serializedParams: URLSearchParams
+  serializedParams: URLSearchParams,
 ) => {
   const { filters } = deserializedParams;
   if (filters) {
@@ -215,7 +215,7 @@ export const serializeFilterRequestParamsForHub = (
         })
         .sort((a, b) => a.field.localeCompare(b.field))
         .map(serializeFilterForHub)
-        .join("&")
+        .join("&"),
     );
   }
 };

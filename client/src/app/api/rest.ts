@@ -24,11 +24,11 @@ export interface PaginatedResponse<T> {
 export const getHubPaginatedResult = <T>(
   url: string,
   params: HubRequestParams = {},
-  extraQueryParams: { key: string; value: string }[] = []
+  extraQueryParams: { key: string; value: string }[] = [],
 ): Promise<HubPaginatedResult<T>> => {
   const requestParams = serializeRequestParamsForHub(params);
   extraQueryParams.forEach((param) =>
-    requestParams.append(param.key, param.value)
+    requestParams.append(param.key, param.value),
   );
 
   return axios
@@ -54,7 +54,7 @@ const getContentTypeFromFile = (file: File) => {
 
 export const uploadAdvisory = (
   formData: FormData,
-  config?: AxiosRequestConfig
+  config?: AxiosRequestConfig,
 ) => {
   const file = formData.get(FORM_DATA_FILE_KEY) as File;
   return axios.post<AdvisoryDetails>(`${ADVISORIES}`, file, {
@@ -68,5 +68,14 @@ export const uploadSbom = (formData: FormData, config?: AxiosRequestConfig) => {
   return axios.post<IngestResult>(`${SBOMS}`, file, {
     ...config,
     headers: { "Content-Type": getContentTypeFromFile(file) },
+  });
+};
+
+// Using our own definition of the endpoint rather than the `hey-api` auto generated
+// We could replace this one once https://github.com/hey-api/openapi-ts/issues/1803 is fixed
+export const downloadSbomLicense = (sbomId: string) => {
+  return axios.get<number[]>(`${SBOMS}/${sbomId}/license-export`, {
+    responseType: "arraybuffer",
+    headers: { Accept: "text/plain", responseType: "blob" },
   });
 };

@@ -18,7 +18,7 @@ function customFilterIncludes(list: IEntity[], searchString: string) {
       (option) =>
         option.id.toLowerCase().includes(searchString.toLowerCase()) ||
         option.title?.toLowerCase().includes(searchString.toLowerCase()) ||
-        option.description?.toLowerCase().includes(searchString.toLowerCase())
+        option.description?.toLowerCase().includes(searchString.toLowerCase()),
     )
     .map((option) => (
       <MenuItem
@@ -40,7 +40,7 @@ function customFilterIncludes(list: IEntity[], searchString: string) {
         .filter(
           (option: IEntity) =>
             !option.id.startsWith(searchString.toLowerCase()) &&
-            option.id.includes(searchString.toLowerCase())
+            option.id.includes(searchString.toLowerCase()),
         )
         .map((option: IEntity) => (
           <MenuItem

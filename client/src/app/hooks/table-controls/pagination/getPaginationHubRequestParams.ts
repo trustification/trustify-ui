@@ -33,7 +33,7 @@ export const getPaginationHubRequestParams = ({
  */
 export const serializePaginationRequestParamsForHub = (
   deserializedParams: HubRequestParams,
-  serializedParams: URLSearchParams
+  serializedParams: URLSearchParams,
 ) => {
   const { page } = deserializedParams;
   if (page) {

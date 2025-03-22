@@ -43,7 +43,7 @@ export const useFetchWatchedSboms = () => {
 
 export const useUpdateWatchedSbomsMutation = (
   onSuccess: () => void,
-  onError: (err: AxiosError, payload: WatchedSboms) => void
+  onError: (err: AxiosError, payload: WatchedSboms) => void,
 ) => {
   const queryClient = useQueryClient();
   return useMutation({

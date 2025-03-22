@@ -43,7 +43,7 @@ export const WatchedSbomsProvider: React.FunctionComponent<
 
   const { mutate: updateSboms } = useUpdateWatchedSbomsMutation(
     onUpdateSuccess,
-    onUpdateError
+    onUpdateError,
   );
 
   const patch = (key: string, value: string) => {

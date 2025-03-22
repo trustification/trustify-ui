@@ -120,7 +120,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
   });
 
   const importerType = Object.keys(
-    importer?.configuration ?? {}
+    importer?.configuration ?? {},
   )[0] as ImporterType;
 
   const importerConfiguration = importer?.configuration
@@ -179,7 +179,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
 
   const { mutate: createImporter } = useCreateImporterMutation(
     onCreateSuccess,
-    onCreateError
+    onCreateError,
   );
 
   const onUpdateSuccess = () =>
@@ -196,7 +196,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
   };
   const { mutate: updateImporter } = useUpdateImporterMutation(
     onUpdateSuccess,
-    onUpdateError
+    onUpdateError,
   );
 
   const onSubmit = (formValues: FormValues) => {
@@ -241,7 +241,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
     } else if (getValues().type === "csaf") {
       setValue(
         "source",
-        "https://redhat.com/.well-known/csaf/provider-metadata.json"
+        "https://redhat.com/.well-known/csaf/provider-metadata.json",
       );
       setValue("keys", []);
     }

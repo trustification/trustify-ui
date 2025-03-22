@@ -55,7 +55,7 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
     getHubRequestParams({
       ...tableControlState,
       hubSortFieldKeys: {},
-    })
+    }),
   );
 
   const tableControls = useTableControlProps({

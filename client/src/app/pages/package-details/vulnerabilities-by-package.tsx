@@ -44,13 +44,13 @@ export const VulnerabilitiesByPackage: React.FC<
 
   const affectedVulnerabilities = React.useMemo(() => {
     return vulnerabilities.filter(
-      (item) => item.vulnerabilityStatus === "affected"
+      (item) => item.vulnerabilityStatus === "affected",
     );
   }, [vulnerabilities]);
 
   const tableDataWithUiId = useWithUiId(
     affectedVulnerabilities,
-    (d) => `${d.vulnerability.identifier}-${d.vulnerabilityStatus}`
+    (d) => `${d.vulnerability.identifier}-${d.vulnerabilityStatus}`,
   );
 
   const tableControls = useLocalTableControls({
@@ -67,15 +67,17 @@ export const VulnerabilitiesByPackage: React.FC<
     hasActionsColumn: false,
     isSortEnabled: true,
     sortableColumns: ["identifier", "severity", "published"],
-    getSortValues: (item) => ({
-      identifier: item.vulnerability.identifier,
-      severity: item.vulnerability?.average_severity
-        ? getSeverityPriority(item.vulnerability?.average_severity)
-        : 0,
-      published: item.vulnerability?.published
-        ? dayjs(item.vulnerability?.published).valueOf()
-        : 0,
-    }),
+    getSortValues: (item) => {
+      return {
+        identifier: item.vulnerability.identifier,
+        severity: item.vulnerability?.average_severity
+          ? getSeverityPriority(item.vulnerability?.average_severity)
+          : 0,
+        published: item.vulnerability?.published
+          ? dayjs(item.vulnerability?.published).valueOf()
+          : 0,
+      };
+    },
     isPaginationEnabled: true,
     isFilterEnabled: false,
     filterCategories: [],

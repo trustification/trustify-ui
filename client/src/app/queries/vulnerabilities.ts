@@ -15,7 +15,7 @@ export const VulnerabilitiesQueryKey = "vulnerabilities";
 
 export const useFetchVulnerabilities = (
   params: HubRequestParams = {},
-  refetchDisabled: boolean = false
+  disableQuery: boolean = false,
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [VulnerabilitiesQueryKey, params],
@@ -25,7 +25,7 @@ export const useFetchVulnerabilities = (
         query: { ...requestParamsQuery(params) },
       });
     },
-    refetchInterval: !refetchDisabled ? 5000 : false,
+    enabled: !disableQuery,
   });
   return {
     result: {
@@ -53,7 +53,7 @@ export const useFetchVulnerabilityById = (id: string) => {
 
 export const useDeleteVulnerabilityMutation = (
   onSuccess?: (payload: VulnerabilityDetails, id: string) => void,
-  onError?: (err: AxiosError, id: string) => void
+  onError?: (err: AxiosError, id: string) => void,
 ) => {
   return useMutation({
     mutationFn: async (id: string) => {
