@@ -1,9 +1,8 @@
-import type React from "react";
-
+import type { Meta, StoryObj } from "@storybook/react";
+import React from "react";
+import SearchPage from "@app/pages/search";
 import { NotificationsProvider } from "@app/components/NotificationsContext";
 import { DefaultLayout } from "@app/layout";
-import SearchPage from "@app/pages/search";
-import type { Meta, StoryObj } from "@storybook/react";
 
 const CustomBody: React.FC = () => {
   return <div>Custom body for search page</div>;

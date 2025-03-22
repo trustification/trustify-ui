@@ -1,11 +1,10 @@
 import React from "react";
-
 import { AdvisorySearchContext } from "@app/pages/advisory-list/advisory-context";
-import listResponse from "@mocks/data/advisory/list.json";
 import type { Meta, StoryObj } from "@storybook/react";
-import { composeStories } from "@storybook/react";
+import { SearchTabs, SearchTabsProps } from "./SearchTabs";
+import listResponse from "@mocks/data/advisory/list.json";
 import * as stories from "../../advisory-list/advisory-table.stories";
-import { SearchTabs, type SearchTabsProps } from "./SearchTabs";
+import { composeStories } from "@storybook/react";
 const { PrimaryState } = composeStories(stories);
 
 const tableControlsCustom = {

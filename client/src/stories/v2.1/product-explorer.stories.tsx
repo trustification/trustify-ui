@@ -1,16 +1,15 @@
-import type React from "react";
-
 import type { Meta, StoryObj } from "@storybook/react";
+import React from "react";
 
-import type { ProductDetails } from "@app/client";
 import {
-  Controls,
+  Title,
+  Subtitle,
   Description,
   Primary,
+  Controls,
   Stories,
-  Subtitle,
-  Title,
 } from "@storybook/blocks";
+import { ProductDetails } from "@app/client";
 
 interface IProductExplorer {
   product: ProductDetails;

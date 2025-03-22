@@ -1,6 +1,6 @@
-import { DualListSelector, Wizard, WizardStep } from "@patternfly/react-core";
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
+import { DualListSelector, Wizard, WizardStep } from "@patternfly/react-core";
 
 const ProductWizard: React.FC = () => {
   const [availableOptions, setAvailableOptions] = React.useState<

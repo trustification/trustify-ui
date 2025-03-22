@@ -1,8 +1,7 @@
-import type React from "react";
-
-import { Label, MenuItem } from "@patternfly/react-core";
 import type { Meta, StoryObj } from "@storybook/react";
-import { type IEntity, SearchMenu } from "./SearchMenu";
+import { IEntity, SearchMenu } from "./SearchMenu";
+import { Label, MenuItem } from "@patternfly/react-core";
+import React from "react";
 
 const meta = {
   title: "Components/Search/SearchMenu",

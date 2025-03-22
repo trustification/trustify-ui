@@ -1,9 +1,8 @@
 import React from "react";
-
-import listResponse from "@mocks/data/advisory/list.json";
 import type { Meta, StoryObj } from "@storybook/react";
-import { AdvisorySearchContext } from "./advisory-context";
 import { AdvisoryTable } from "./advisory-table";
+import { AdvisorySearchContext } from "./advisory-context";
+import listResponse from "@mocks/data/advisory/list.json";
 
 const meta = {
   title: "Components/AdvisoryList/AdvisoryTable",
