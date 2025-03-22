@@ -57,7 +57,7 @@ export const useFetchSBOMById = (id?: string) => {
     queryFn: () => {
       return id === undefined
         ? Promise.resolve(undefined)
-        : getSbom({ client, path: { id: id! } });
+        : getSbom({ client, path: { id: id } });
     },
     enabled: id !== undefined,
   });

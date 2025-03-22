@@ -67,15 +67,15 @@ type ImporterStatus = "enabled" | "disabled" | "scheduled" | "running";
 
 const getImporterStatus = (importer: Importer): ImporterStatus => {
   const importerType = Object.keys(importer.configuration ?? {})[0];
+  // biome-ignore lint/suspicious/noExplicitAny:
   const configValues = (importer.configuration as any)[
     importerType
   ] as SbomImporter;
   const isImporterEnabled = configValues?.disabled === false;
   if (!isImporterEnabled) {
     return "disabled";
-  } else {
-    return importer.state === "running" ? "running" : "scheduled";
   }
+  return importer.state === "running" ? "running" : "scheduled";
 };
 
 export const ImporterList: React.FC = () => {
@@ -110,6 +110,7 @@ export const ImporterList: React.FC = () => {
 
   const execEnableDisableImporter = (row: Importer, enable: boolean) => {
     const importerType = Object.keys(row.configuration ?? {})[0];
+    // biome-ignore lint/suspicious/noExplicitAny:
     const currentConfigValues = (row.configuration as any)[
       importerType
     ] as SbomImporter;
@@ -318,6 +319,7 @@ export const ImporterList: React.FC = () => {
             >
               {currentPageItems?.map((item, rowIndex) => {
                 const importerType = Object.keys(item.configuration ?? {})[0];
+                // biome-ignore lint/suspicious/noExplicitAny:
                 const configValues = (item.configuration as any)[
                   importerType
                 ] as SbomImporter;
@@ -485,7 +487,7 @@ const messagesToLogData = (messages: {
           title: `${groupKey.charAt(0).toUpperCase() + groupKey.slice(1)}: "${objectKey}"`,
           body: objectValue
             .map((item) => {
-              let color;
+              let color: string | null = null;
               switch (item.severity) {
                 case "none":
                   color = ANSICOLOR.green;
@@ -677,9 +679,8 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
                     {children}
                   </Button>
                 );
-              } else {
-                return children;
               }
+              return children;
             };
 
             return (

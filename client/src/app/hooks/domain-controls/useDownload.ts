@@ -13,6 +13,7 @@ export const useDownload = () => {
       responseType: "arraybuffer",
       headers: { Accept: "text/plain", responseType: "blob" },
     }).then((response) => {
+      // biome-ignore lint/suspicious/noExplicitAny:
       saveAs(new Blob([response.data as any]), filename || `${id}.json`);
     });
   };
@@ -24,6 +25,7 @@ export const useDownload = () => {
       responseType: "arraybuffer",
       headers: { Accept: "text/plain", responseType: "blob" },
     }).then((response) => {
+      // biome-ignore lint/suspicious/noExplicitAny:
       saveAs(new Blob([response.data as any]), filename || `${id}.json`);
     });
   };
@@ -37,6 +39,7 @@ export const useDownload = () => {
         filename = getFilenameFromContentDisposition(header);
       }
 
+      // biome-ignore lint/suspicious/noExplicitAny:
       saveAs(new Blob([response.data as any]), filename || `${id}.tar.gz`);
     });
   };

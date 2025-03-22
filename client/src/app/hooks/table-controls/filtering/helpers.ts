@@ -10,14 +10,14 @@ export const serializeFilterUrlParams = <TFilterCategoryKey extends string>(
 ): { filters?: string | null } => {
   // If a filter value is empty/cleared, don't put it in the object in URL params
   const trimmedFilterValues = { ...filterValues };
-  objectKeys(trimmedFilterValues).forEach((filterCategoryKey) => {
+  for (const filterCategoryKey of objectKeys(trimmedFilterValues)) {
     if (
       !trimmedFilterValues[filterCategoryKey] ||
       trimmedFilterValues[filterCategoryKey]?.length === 0
     ) {
       delete trimmedFilterValues[filterCategoryKey];
     }
-  });
+  }
   return {
     filters:
       objectKeys(trimmedFilterValues).length > 0

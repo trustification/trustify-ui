@@ -70,10 +70,11 @@ export const useUrlParams = <
   ): TSerializedParams<TPrefixedURLParamKey> =>
     persistenceKeyPrefix
       ? objectKeys(serializedParams).reduce(
-          (obj, key) => ({
-            ...obj,
-            [withPrefix(key)]: serializedParams[key],
-          }),
+          (obj, key) => {
+            return Object.assign(obj, {
+              [withPrefix(key)]: serializedParams[key],
+            });
+          },
           {} as TSerializedParams<TPrefixedURLParamKey>,
         )
       : (serializedParams as TSerializedParams<TPrefixedURLParamKey>);
@@ -106,20 +107,21 @@ export const useUrlParams = <
   let params: TDeserializedParams = defaultValue;
   if (isEnabled) {
     const serializedParams = keys.reduce(
-      (obj, key) => ({
-        ...obj,
-        [key]: urlParams.get(withPrefix(key)),
-      }),
+      (obj, key) => {
+        return Object.assign(obj, {
+          [key]: urlParams.get(withPrefix(key)),
+        });
+      },
       {} as TSerializedParams<TURLParamKey>,
     );
     allParamsEmpty = keys.every((key) => !serializedParams[key]);
     params = allParamsEmpty ? defaultValue : deserialize(serializedParams);
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies:
   React.useEffect(() => {
     if (allParamsEmpty) setParams(defaultValue);
     // Leaving this rule enabled results in a cascade of unnecessary useCallbacks:
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allParamsEmpty]);
 
   return [params, setParams];
@@ -134,7 +136,7 @@ export const trimAndStringifyUrlParams = <TPrefixedURLParamKey extends string>({
 }) => {
   const existingPrefixedSerializedParams =
     Object.fromEntries(existingSearchParams);
-  objectKeys(newPrefixedSerializedParams).forEach((key) => {
+  for (const key of objectKeys(newPrefixedSerializedParams)) {
     // Returning undefined for a property from serialize should result in it being omitted from the partial update.
     if (newPrefixedSerializedParams[key] === undefined) {
       delete newPrefixedSerializedParams[key];
@@ -144,7 +146,8 @@ export const trimAndStringifyUrlParams = <TPrefixedURLParamKey extends string>({
       delete newPrefixedSerializedParams[key];
       delete existingPrefixedSerializedParams[key];
     }
-  });
+  }
+
   const newParams = new URLSearchParams({
     ...existingPrefixedSerializedParams,
     ...newPrefixedSerializedParams,

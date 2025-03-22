@@ -131,7 +131,8 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
   )[0] as ImporterType;
 
   const importerConfiguration = importer?.configuration
-    ? ((importer?.configuration as any)[importerType] as SbomImporter)
+    ? // biome-ignore lint/suspicious/noExplicitAny:
+      ((importer?.configuration as any)[importerType] as SbomImporter)
     : undefined;
 
   const periodValue = getPeriodValue(importerConfiguration?.period);
@@ -177,7 +178,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
       variant: "success",
     });
 
-  const onCreateError = (error: AxiosError) => {
+  const onCreateError = (_error: AxiosError) => {
     pushNotification({
       title: "Error while creating the Importer",
       variant: "danger",
@@ -195,7 +196,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
       variant: "success",
     });
 
-  const onUpdateError = (error: AxiosError) => {
+  const onUpdateError = (_error: AxiosError) => {
     pushNotification({
       title: "Error while updating the Importer",
       variant: "danger",
@@ -208,7 +209,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
 
   const onSubmit = (formValues: FormValues) => {
     const configuration: SbomImporter = {
-      ...importerConfiguration!,
+      ...(importerConfiguration ?? {}),
       description: formValues.description.trim(),
       source: formValues.source.trim(),
       period: `${formValues.periodValue}${formValues.periodUnit.trim()}`,
@@ -266,8 +267,8 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
           fieldId="type"
           isRequired
         >
-          {ALL_IMPORTERS.map((option, index) => (
-            <FormSelectOption key={index} value={option} label={option} />
+          {ALL_IMPORTERS.map((option) => (
+            <FormSelectOption key={option} value={option} label={option} />
           ))}
         </HookFormPFSelect>
         <HookFormPFTextInput
@@ -323,11 +324,9 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
                 text: "Settings",
               }}
               actions={
-                <>
-                  <Button variant="secondary" onClick={fillDemoSettings}>
-                    Fill demo settings
-                  </Button>
-                </>
+                <Button variant="secondary" onClick={fillDemoSettings}>
+                  Fill demo settings
+                </Button>
               }
             />
           }
@@ -379,9 +378,9 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
                       value={value}
                       style={{ width: 110 }}
                     >
-                      {ALL_PERIOD_UNITS.map((option, index) => (
+                      {ALL_PERIOD_UNITS.map((option) => (
                         <FormSelectOption
-                          key={index}
+                          key={option}
                           value={option}
                           label={PERIOD_UNIT_LIST[option].label}
                         />

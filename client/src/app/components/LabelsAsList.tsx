@@ -15,8 +15,8 @@ export const LabelsAsList: React.FC<LabelsAsListProps> = ({
     <LabelGroup isVertical defaultIsOpen={defaultIsOpen} numLabels={2}>
       {Object.entries(value)
         .sort(([keyA], [keyB]) => keyB.localeCompare(keyA))
-        .map(([k, v], index) => (
-          <Label key={index} color="blue">
+        .map(([k, v]) => (
+          <Label key={k} color="blue">
             <Truncate content={`${k}=${v}`} />
           </Label>
         ))}

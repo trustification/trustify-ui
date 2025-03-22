@@ -22,9 +22,13 @@ import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
 export interface SearchTabsProps {
   filterPanelProps: {
+    // biome-ignore lint/suspicious/noExplicitAny:
     advisoryFilterPanelProps?: any;
+    // biome-ignore lint/suspicious/noExplicitAny:
     packageFilterPanelProps?: any;
+    // biome-ignore lint/suspicious/noExplicitAny:
     sbomFilterPanelProps?: any;
+    // biome-ignore lint/suspicious/noExplicitAny:
     vulnerabilityFilterPanelProps?: any;
   };
   packageTable?: ReactElement;
@@ -57,7 +61,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
   } = filterPanelProps;
 
   const handleTabClick = (
-    _event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent,
+    _event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
     tabIndex: string | number,
   ) => {
     setActiveTabKey(tabIndex);
@@ -65,7 +69,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
 
   const sbomPopoverRef = React.createRef<HTMLElement>();
 
-  const sbomPopover = (popoverRef: React.RefObject<any>) => (
+  const sbomPopover = (popoverRef: React.RefObject<unknown>) => (
     <Popover
       bodyContent={
         <div>Software Bill of Materials for Products and Containers.</div>
@@ -125,10 +129,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
             }
             actions={
               <>
-                <TabAction
-                  aria-label={`SBOM help popover`}
-                  ref={sbomPopoverRef}
-                >
+                <TabAction aria-label="SBOM help popover" ref={sbomPopoverRef}>
                   <HelpIcon />
                 </TabAction>
                 {sbomPopover(sbomPopoverRef)}

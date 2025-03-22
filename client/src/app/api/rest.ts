@@ -8,13 +8,9 @@ import type { HubPaginatedResult, HubRequestParams } from "./models";
 
 const API = "/api";
 
-export const ORGANIZATIONS = API + "/v2/organization";
-export const PRODUCTS = API + "/v2/product";
-export const ADVISORIES = API + "/v2/advisory";
-export const VULNERABILITIES = API + "/v2/vulnerability";
-export const SBOMS = API + "/v2/sbom";
-export const PACKAGES = API + "/v2/purl";
-export const IMPORTERS = API + "/v2/importer";
+export const ORGANIZATIONS = `${API}/v2/organization`;
+export const ADVISORIES = `${API}/v2/advisory`;
+export const SBOMS = `${API}/v2/sbom`;
 
 export interface PaginatedResponse<T> {
   items: T[];
@@ -27,9 +23,9 @@ export const getHubPaginatedResult = <T>(
   extraQueryParams: { key: string; value: string }[] = [],
 ): Promise<HubPaginatedResult<T>> => {
   const requestParams = serializeRequestParamsForHub(params);
-  extraQueryParams.forEach((param) =>
-    requestParams.append(param.key, param.value),
-  );
+  for (const param of extraQueryParams) {
+    requestParams.append(param.key, param.value);
+  }
 
   return axios
     .get<PaginatedResponse<T>>(url, {

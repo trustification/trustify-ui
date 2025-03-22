@@ -19,9 +19,9 @@ export const LoadingWrapper = (props: {
         </Bullseye>
       )
     );
-  } else if (props.fetchError) {
-    return props.fetchErrorState || <StateError />;
-  } else {
-    return props.children;
   }
+  if (props.fetchError) {
+    return props.fetchErrorState || <StateError />;
+  }
+  return props.children;
 };

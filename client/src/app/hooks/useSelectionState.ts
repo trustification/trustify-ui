@@ -89,7 +89,8 @@ export const useSelectionState = <T>({
   const selectedItemsInOrder = React.useMemo(() => {
     if (areAllSelected) {
       return selectableItems;
-    } else if (selectedItems.length > 0) {
+    }
+    if (selectedItems.length > 0) {
       return selectableItems.filter(isItemSelected);
     }
     return [];

@@ -81,6 +81,8 @@ const advisoryToModels = (advisories: SbomAdvisory[]) => {
             return areVulnerabilityOfSbomEqual(item, current);
           });
 
+          let result: VulnerabilityOfSbom[];
+
           if (existingElement) {
             const arrayWithoutExistingItem = prev.filter(
               (item) => !areVulnerabilityOfSbomEqual(item, existingElement),
@@ -97,7 +99,7 @@ const advisoryToModels = (advisories: SbomAdvisory[]) => {
               ],
             };
 
-            return [...arrayWithoutExistingItem, updatedItemInArray];
+            result = [...arrayWithoutExistingItem, updatedItemInArray];
           } else {
             const newItemInArray: VulnerabilityOfSbom = {
               vulnerability: current.vulnerability,
@@ -109,8 +111,10 @@ const advisoryToModels = (advisories: SbomAdvisory[]) => {
                 },
               ],
             };
-            return [...prev, newItemInArray];
+            result = [...prev.slice(), newItemInArray];
           }
+
+          return result;
         }, [] as VulnerabilityOfSbom[])
     );
   });
@@ -123,8 +127,7 @@ const advisoryToModels = (advisories: SbomAdvisory[]) => {
 
     const prevVulnStatusValue = prev.vulnerabilityStatus[vulnStatus];
 
-    const result: VulnerabilityOfSbomSummary = {
-      ...prev,
+    const result: VulnerabilityOfSbomSummary = Object.assign(prev, {
       vulnerabilityStatus: {
         ...prev.vulnerabilityStatus,
         [vulnStatus]: {
@@ -135,7 +138,7 @@ const advisoryToModels = (advisories: SbomAdvisory[]) => {
           },
         },
       },
-    };
+    });
     return result;
   }, DEFAULT_SUMMARY);
 

@@ -36,7 +36,7 @@ export const RadioFilterControl = <TItem, TFilterCategoryKey extends string>({
           return (
             <Radio
               isDisabled={isDisabled}
-              key={index}
+              key={label}
               id={`radio-${index}`}
               name="radio"
               isLabelWrapped

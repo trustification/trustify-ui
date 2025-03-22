@@ -69,9 +69,9 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
   }, [uploads]);
 
   const removeFiles = (filesToRemove: File[]) => {
-    filesToRemove.forEach((e) => {
+    for (const e of filesToRemove) {
       handleRemoveUpload(e);
-    });
+    }
   };
 
   // callback that will be called by the react dropzone with the newly dropped file objects
@@ -167,8 +167,8 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
           variant="small"
         >
           <List>
-            {rejectedFiles.map((e, index) => (
-              <ListItem key={index}>{e.file.name}</ListItem>
+            {rejectedFiles.map((e) => (
+              <ListItem key={e.file.name}>{e.file.name}</ListItem>
             ))}
           </List>
         </Modal>

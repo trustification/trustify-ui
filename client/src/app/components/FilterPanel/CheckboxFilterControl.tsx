@@ -41,7 +41,7 @@ export const CheckboxFilterControl = <TItem,>({
     if (value && value !== "No results") {
       let newFilterValue: string[];
 
-      if (filterValue && filterValue.includes(value)) {
+      if (filterValue?.includes(value)) {
         newFilterValue = filterValue.filter((item) => item !== value);
       } else {
         newFilterValue = filterValue ? [...filterValue, value] : [value];
@@ -56,7 +56,7 @@ export const CheckboxFilterControl = <TItem,>({
       {flatOptions.map(({ label, value, optionProps = {} }, index) => {
         return (
           <Checkbox
-            key={index}
+            key={label}
             id={`checkbox-${index}-${category.categoryKey}`}
             isLabelWrapped
             label={label}

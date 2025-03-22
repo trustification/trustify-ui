@@ -18,8 +18,8 @@ export const NotesMarkdown: React.FC<NotesMarkdownProps> = ({
   isCompact,
   notes,
 }) => {
-  return notes.map((e, index) => (
-    <TextContent key={index} className={spacing.mbMd}>
+  return notes.map((e) => (
+    <TextContent key={e.title} className={spacing.mbMd}>
       <Text component={isCompact ? "h4" : "h1"}>
         {e.title} ({e.category.replace("_", " ")})
       </Text>

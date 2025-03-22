@@ -9,6 +9,7 @@ interface Provider<TProps> {
   props?: Omit<TProps, "children">;
 }
 
+// biome-ignore lint/suspicious/noExplicitAny:
 function composeProviders<TProviders extends Array<Provider<any>>>(
   providers: TProviders,
 ): React.ComponentType<React.PropsWithChildren> {
@@ -19,7 +20,11 @@ function composeProviders<TProviders extends Array<Provider<any>>>(
 
     return providers.reduceRight<JSX.Element>(
       (prevJSX, { Component: CurrentProvider, props = {} }) => {
-        return <CurrentProvider {...props}>{prevJSX}</CurrentProvider>;
+        return (
+          <CurrentProvider key={prevJSX.key} {...props}>
+            {prevJSX}
+          </CurrentProvider>
+        );
       },
       initialJSX,
     );

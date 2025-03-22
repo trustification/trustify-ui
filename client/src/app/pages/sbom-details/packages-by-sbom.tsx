@@ -168,7 +168,7 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                       <Flex>
                         <FlexItem
                           spacer={{ default: "spacerSm" }}
-                        >{`${item.decomposedPurl?.name}${item.decomposedPurl?.namespace ? "/" + item.decomposedPurl?.namespace : ""}`}</FlexItem>
+                        >{`${item.decomposedPurl?.name}${item.decomposedPurl?.namespace ? `/${item.decomposedPurl.namespace}` : ""}`}</FlexItem>
                         <FlexItem>
                           <Label isCompact color="blue">
                             {item.decomposedPurl?.type}

@@ -113,10 +113,9 @@ export const MultiselectFilterControl = <TItem,>({
     .reduce(
       (prev, current) => {
         if (current) {
-          return [...prev, current];
-        } else {
-          return prev;
+          prev.push(current);
         }
+        return prev;
       },
       [] as (string | ToolbarChip)[],
     );
@@ -134,8 +133,8 @@ export const MultiselectFilterControl = <TItem,>({
             options?.filter((o) => filter(o, group)) ?? [],
           ])
           .filter(([, groupFiltered]) => groupFiltered?.length)
-          .map(([group, groupFiltered], index) => (
-            <SelectGroup key={`group-${index}`} label={group}>
+          .map(([group, groupFiltered]) => (
+            <SelectGroup key={`group-${group}`} label={group}>
               {groupFiltered.map(({ value, label, optionProps }) => (
                 <SelectOption
                   {...optionProps}
@@ -167,7 +166,7 @@ export const MultiselectFilterControl = <TItem,>({
     if (value && value !== "No results") {
       let newFilterValue: string[];
 
-      if (filterValue && filterValue.includes(value)) {
+      if (filterValue?.includes(value)) {
         newFilterValue = filterValue.filter((item) => item !== value);
       } else {
         newFilterValue = filterValue ? [...filterValue, value] : [value];

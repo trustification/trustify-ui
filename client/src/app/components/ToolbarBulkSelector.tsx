@@ -43,7 +43,7 @@ export const ToolbarBulkSelector = <T,>({
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleCollapseAll = (collapse: boolean) => {
-    onExpandAll && onExpandAll(!collapse);
+    onExpandAll?.(!collapse);
   };
   const collapseAllBtn = () => (
     <Button

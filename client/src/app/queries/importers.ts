@@ -31,7 +31,7 @@ export const useFetchImporters = (refetchDisabled = false) => {
 };
 
 export const useCreateImporterMutation = (
-  onSuccess: (res: void) => void,
+  onSuccess: () => void,
   onError: (
     err: AxiosError,
     payload: {
@@ -76,7 +76,7 @@ export const useFetchImporterById = (id: string) => {
 };
 
 export const useUpdateImporterMutation = (
-  onSuccess: (payload: void) => void,
+  onSuccess: () => void,
   onError: (
     err: AxiosError,
     payload: { importerName: string; configuration: ImporterConfiguration },

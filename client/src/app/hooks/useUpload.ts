@@ -106,6 +106,7 @@ const reducer = <T, E>(
       return {
         ...state,
         uploads: new Map(state.uploads).set(action.payload.file, {
+          // biome-ignore lint/style/noNonNullAssertion: safe
           ...state.uploads.get(action.payload.file)!,
           status: "complete",
 
@@ -117,6 +118,7 @@ const reducer = <T, E>(
       return {
         ...state,
         uploads: new Map(state.uploads).set(action.payload.file, {
+          // biome-ignore lint/style/noNonNullAssertion: safe
           ...state.uploads.get(action.payload.file)!,
           status: "complete",
           error: action.payload.error,
@@ -223,11 +225,11 @@ export const useUpload = <T, E>({
     }
 
     if (parallel) {
-      queue.forEach((queue) => {
-        uploadFn(queue.formData, queue.config)
-          .then(queue.thenFn)
-          .catch(queue.catchFn);
-      });
+      for (const item of queue) {
+        uploadFn(item.formData, item.config)
+          .then(item.thenFn)
+          .catch(item.catchFn);
+      }
     } else {
       queue.reduce(async (prev, next) => {
         await prev;

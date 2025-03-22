@@ -13,6 +13,8 @@ import { OidcProvider } from "@app/components/OidcProvider";
 const queryClient = new QueryClient();
 
 const container = document.getElementById("root");
+
+// biome-ignore lint/style/noNonNullAssertion: container must exist
 const root = createRoot(container!);
 
 const renderApp = () => {
