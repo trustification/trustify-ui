@@ -117,7 +117,7 @@ export const MultiselectFilterControl = <TItem,>({
         }
         return prev;
       },
-      [] as (string | ToolbarChip)[],
+      [] as (string | ToolbarLabel)[],
     );
 
   const renderSelectOptions = (

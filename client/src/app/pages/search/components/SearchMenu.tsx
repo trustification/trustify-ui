@@ -29,16 +29,16 @@ export interface IEntity {
   navLink: string;
   type: string;
   typeColor:
-  | "blue"
-  | "teal"
-  | "green"
-  | "orange"
-  | "purple"
-  | "red"
-  | "orangered"
-  | "grey"
-  | "yellow"
-  | undefined;
+    | "blue"
+    | "teal"
+    | "green"
+    | "orange"
+    | "purple"
+    | "red"
+    | "orangered"
+    | "grey"
+    | "yellow"
+    | undefined;
 }
 
 const entityToMenu = (option: IEntity) => {
@@ -320,7 +320,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
       }}
       ref={searchInputRef}
       id="autocomplete-search"
-      style={{width: 500}}
+      style={{ width: 500 }}
     />
   );
 

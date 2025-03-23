@@ -3,7 +3,6 @@ import type React from "react";
 import { Content } from "@patternfly/react-core";
 import ReactMarkdown from "react-markdown";
 
-import { Text, TextContent } from "@patternfly/react-core";
 import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
 import { markdownPFComponents } from "./markdownPFComponents";
 

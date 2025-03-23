@@ -67,9 +67,7 @@ export const FilterPanel = <TItem, TFilterCategoryKey extends string>({
               <StackItem key={category.categoryKey}>
                 <Stack hasGutter>
                   <StackItem>
-                    <Content>
-                      <Content component="h4">{category.title}</Content>
-                    </Content>
+                    <Content component="h4">{category.title}</Content>
                   </StackItem>
                   <StackItem>
                     <FilterControl<TItem, TFilterCategoryKey>

@@ -65,7 +65,7 @@ const AuthEnabledOidcProvider: React.FC<IOidcProviderProps> = ({
       <Bullseye>
         <EmptyState
           status="danger"
-          titleText=" Auth Error"
+          titleText="Auth Error"
           headingLevel="h4"
           icon={ExclamationCircleIcon}
           variant={EmptyStateVariant.sm}
