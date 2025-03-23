@@ -47,7 +47,6 @@ export const IconedStatus: React.FC<IIconedStatusProps> = ({
   icon,
   className = "",
   label,
-  tooltipCount = 0,
 }: IIconedStatusProps) => {
   const presets: IconedStatusPresetType = {
     Canceled: {

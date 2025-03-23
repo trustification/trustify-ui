@@ -30,25 +30,23 @@ export const RadioFilterControl = <TItem, TFilterCategoryKey extends string>({
 
   return (
     <>
-      {category.selectOptions.map(
-        ({ label, value, optionProps = {} }, index) => {
-          const isSelected = filterValue?.includes(value) || false;
-          return (
-            <Radio
-              isDisabled={isDisabled}
-              key={label}
-              id={`radio-${index}`}
-              name="radio"
-              isLabelWrapped
-              label={label}
-              isChecked={isSelected}
-              onChange={() => {
-                onFilterSelect(value as string);
-              }}
-            />
-          );
-        },
-      )}
+      {category.selectOptions.map(({ label, value }, index) => {
+        const isSelected = filterValue?.includes(value) || false;
+        return (
+          <Radio
+            isDisabled={isDisabled}
+            key={label}
+            id={`radio-${index}`}
+            name="radio"
+            isLabelWrapped
+            label={label}
+            isChecked={isSelected}
+            onChange={() => {
+              onFilterSelect(value as string);
+            }}
+          />
+        );
+      })}
     </>
   );
 };

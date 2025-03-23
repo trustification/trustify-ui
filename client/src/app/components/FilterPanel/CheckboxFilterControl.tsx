@@ -17,7 +17,6 @@ export const CheckboxFilterControl = <TItem,>({
   category,
   filterValue,
   setFilterValue,
-  isDisabled = false,
 }: React.PropsWithChildren<
   IMultiselectFilterControlProps<TItem>
 >): JSX.Element | null => {
@@ -53,7 +52,7 @@ export const CheckboxFilterControl = <TItem,>({
 
   return (
     <>
-      {flatOptions.map(({ label, value, optionProps = {} }, index) => {
+      {flatOptions.map(({ label, value }, index) => {
         return (
           <Checkbox
             key={label}

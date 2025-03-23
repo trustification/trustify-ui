@@ -1,8 +1,8 @@
-import * as React from "react";
+import type { FieldValues, Path } from "react-hook-form";
+
+import { TextArea, type TextAreaProps } from "@patternfly/react-core";
 
 import { getValidatedFromErrors } from "@app/utils/utils";
-import { TextArea, type TextAreaProps } from "@patternfly/react-core";
-import type { FieldValues, Path } from "react-hook-form";
 import {
   type BaseHookFormPFGroupControllerProps,
   HookFormPFGroupController,
