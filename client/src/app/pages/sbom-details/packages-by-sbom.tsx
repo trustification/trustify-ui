@@ -1,4 +1,5 @@
-import React, { useMemo } from "react";
+import type React from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import {
@@ -26,8 +27,9 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { DecomposedPurl } from "@app/api/models";
-import { PurlSummary } from "@app/client";
+import { FILTER_TEXT_CATEGORY_KEY } from "@app/Constants";
+import type { DecomposedPurl } from "@app/api/models";
+import type { PurlSummary } from "@app/client";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { PackageQualifiers } from "@app/components/PackageQualifiers";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -36,7 +38,13 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
-import { useLocalTableControls } from "@app/hooks/table-controls";
+import {
+  getHubRequestParams,
+  useLocalTableControls,
+  useTableControlProps,
+  useTableControlState,
+} from "@app/hooks/table-controls";
+import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchPackagesBySbomId } from "@app/queries/packages";
 import { decomposePurl } from "@app/utils/utils";
 
@@ -49,61 +57,52 @@ interface PackagesProps {
 }
 
 export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
-  const {
-    result: { data: allPackages },
-    isFetching,
-    fetchError,
-  } = useFetchPackagesBySbomId(sbomId, {
-    page: { pageNumber: 1, itemsPerPage: 0 },
-  });
-
-  const tableData = useMemo(() => {
-    return allPackages
-      .flatMap((item) => item.purl)
-      .map((item) => {
-        const result: TableData = {
-          ...item,
-          decomposedPurl: decomposePurl(item.purl),
-        };
-        return result;
-      });
-  }, [allPackages]);
-
-  const tableControls = useLocalTableControls({
+  const tableControlState = useTableControlState({
     tableName: "package-table",
-    idProperty: "uuid",
-    items: tableData,
-    isLoading: isFetching,
     columnNames: {
       name: "Name",
       version: "Version",
-      qualifiers: "Qualifiers",
     },
-    hasActionsColumn: false,
     isSortEnabled: true,
-    sortableColumns: ["name", "version"],
-    getSortValues: (item) => ({
-      name: `${item.decomposedPurl?.name}/${item.decomposedPurl?.namespace}`,
-      version: item.version.version,
-    }),
+    sortableColumns: ["name"],
     isPaginationEnabled: true,
     isFilterEnabled: true,
     filterCategories: [
       {
-        categoryKey: "filterText",
-        title: "Filter tex",
+        categoryKey: FILTER_TEXT_CATEGORY_KEY,
+        title: "Filter text",
+        placeholderText: "Search",
         type: FilterType.search,
-        placeholderText: "Filter",
-        getItemValue: (item) => {
-          return (
-            `${item.decomposedPurl?.name}/${item.decomposedPurl?.namespace}` ||
-            ""
-          );
-        },
       },
     ],
     isExpansionEnabled: true,
     expandableVariant: "single",
+  });
+
+  const {
+    result: { data: packages, total: totalItemCount },
+    isFetching,
+    fetchError,
+  } = useFetchPackagesBySbomId(
+    sbomId,
+    getHubRequestParams({
+      ...tableControlState,
+      hubSortFieldKeys: {
+        name: "name",
+      },
+    }),
+  );
+
+  const tableControls = useTableControlProps({
+    ...tableControlState,
+    idProperty: "id",
+    currentPageItems: packages,
+    totalItemCount,
+    isLoading: isFetching,
+    selectionState: useSelectionState({
+      items: packages,
+      isEqual: (a, b) => a.id === b.id,
+    }),
   });
 
   const {
@@ -144,46 +143,29 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
             <TableHeaderContentWithControls {...tableControls}>
               <Th {...getThProps({ columnKey: "name" })} />
               <Th {...getThProps({ columnKey: "version" })} />
-              <Th {...getThProps({ columnKey: "qualifiers" })} />
             </TableHeaderContentWithControls>
           </Tr>
         </Thead>
         <ConditionalTableBody
           isLoading={isFetching}
           isError={!!fetchError}
-          isNoData={tableData?.length === 0}
+          isNoData={totalItemCount === 0}
           numRenderedColumns={numRenderedColumns}
         >
           {currentPageItems?.map((item, rowIndex) => {
             return (
-              <Tbody key={item.uuid}>
+              <Tbody key={item.id}>
                 <Tr {...getTrProps({ item })}>
                   <TableRowContentWithControls
                     {...tableControls}
                     item={item}
                     rowIndex={rowIndex}
                   >
-                    <Td width={30} {...getTdProps({ columnKey: "name" })}>
-                      <Flex>
-                        <FlexItem
-                          spacer={{ default: "spacerSm" }}
-                        >{`${item.decomposedPurl?.name}${item.decomposedPurl?.namespace ? "/" + item.decomposedPurl?.namespace : ""}`}</FlexItem>
-                        <FlexItem>
-                          <Label isCompact color="blue">
-                            {item.decomposedPurl?.type}
-                          </Label>
-                        </FlexItem>
-                      </Flex>
+                    <Td width={80} {...getTdProps({ columnKey: "name" })}>
+                      {item.name}
                     </Td>
                     <Td width={20} {...getTdProps({ columnKey: "version" })}>
-                      {item.decomposedPurl?.version}
-                    </Td>
-                    <Td width={50} {...getTdProps({ columnKey: "qualifiers" })}>
-                      {item.decomposedPurl?.qualifiers && (
-                        <PackageQualifiers
-                          value={item.decomposedPurl?.qualifiers}
-                        />
-                      )}
+                      {item?.version}
                     </Td>
                   </TableRowContentWithControls>
                 </Tr>
@@ -203,33 +185,35 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                           }}
                         >
                           <DescriptionListGroup>
-                            <DescriptionListTerm>Packages</DescriptionListTerm>
+                            <DescriptionListTerm>Purls</DescriptionListTerm>
                             <DescriptionListDescription>
                               <List>
-                                <ListItem>
-                                  <Link to={`/packages/${item.uuid}`}>
-                                    {item.purl}
-                                  </Link>
-                                </ListItem>
+                                {item.purl.map((purl) => (
+                                  <ListItem key={purl.uuid}>
+                                    <Link to={`/packages/${purl.uuid}`}>
+                                      {purl.purl}
+                                    </Link>
+                                  </ListItem>
+                                ))}
                               </List>
                             </DescriptionListDescription>
                           </DescriptionListGroup>
-                          <DescriptionListGroup>
+                          {/* <DescriptionListGroup>
                             <DescriptionListTerm>
                               Base package
                             </DescriptionListTerm>
                             <DescriptionListDescription>
                               {item.base.purl}
                             </DescriptionListDescription>
-                          </DescriptionListGroup>
-                          <DescriptionListGroup>
+                          </DescriptionListGroup> */}
+                          {/* <DescriptionListGroup>
                             <DescriptionListTerm>Versions</DescriptionListTerm>
                             <DescriptionListDescription>
                               <List>
                                 <ListItem>{item.version.version}</ListItem>
                               </List>
                             </DescriptionListDescription>
-                          </DescriptionListGroup>
+                          </DescriptionListGroup> */}
                         </DescriptionList>
                       </ExpandableRowContent>
                     </Td>
