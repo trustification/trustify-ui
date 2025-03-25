@@ -1,5 +1,4 @@
 import type React from "react";
-import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import {
@@ -7,9 +6,6 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
-  Flex,
-  FlexItem,
-  Label,
   List,
   ListItem,
   Toolbar,
@@ -28,10 +24,7 @@ import {
 } from "@patternfly/react-table";
 
 import { FILTER_TEXT_CATEGORY_KEY } from "@app/Constants";
-import type { DecomposedPurl } from "@app/api/models";
-import type { PurlSummary } from "@app/client";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
-import { PackageQualifiers } from "@app/components/PackageQualifiers";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -40,17 +33,11 @@ import {
 } from "@app/components/TableControls";
 import {
   getHubRequestParams,
-  useLocalTableControls,
   useTableControlProps,
   useTableControlState,
 } from "@app/hooks/table-controls";
 import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchPackagesBySbomId } from "@app/queries/packages";
-import { decomposePurl } from "@app/utils/utils";
-
-interface TableData extends PurlSummary {
-  decomposedPurl?: DecomposedPurl;
-}
 
 interface PackagesProps {
   sbomId: string;
@@ -162,7 +149,7 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                     rowIndex={rowIndex}
                   >
                     <Td width={80} {...getTdProps({ columnKey: "name" })}>
-                      {item.name}
+                      {[item.name, item.group].filter(Boolean).join("/")}
                     </Td>
                     <Td width={20} {...getTdProps({ columnKey: "version" })}>
                       {item?.version}
@@ -179,41 +166,21 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                       className={spacing.pyLg}
                     >
                       <ExpandableRowContent>
-                        <DescriptionList
-                          columnModifier={{
-                            default: "3Col",
-                          }}
-                        >
+                        <DescriptionList>
                           <DescriptionListGroup>
                             <DescriptionListTerm>Purls</DescriptionListTerm>
                             <DescriptionListDescription>
                               <List>
-                                {item.purl.map((purl) => (
-                                  <ListItem key={purl.uuid}>
-                                    <Link to={`/packages/${purl.uuid}`}>
-                                      {purl.purl}
+                                {item.purl.map((item) => (
+                                  <ListItem key={item.uuid}>
+                                    <Link to={`/packages/${item.uuid}`}>
+                                      {item.purl}
                                     </Link>
                                   </ListItem>
                                 ))}
                               </List>
                             </DescriptionListDescription>
-                          </DescriptionListGroup>
-                          {/* <DescriptionListGroup>
-                            <DescriptionListTerm>
-                              Base package
-                            </DescriptionListTerm>
-                            <DescriptionListDescription>
-                              {item.base.purl}
-                            </DescriptionListDescription>
-                          </DescriptionListGroup> */}
-                          {/* <DescriptionListGroup>
-                            <DescriptionListTerm>Versions</DescriptionListTerm>
-                            <DescriptionListDescription>
-                              <List>
-                                <ListItem>{item.version.version}</ListItem>
-                              </List>
-                            </DescriptionListDescription>
-                          </DescriptionListGroup> */}
+                          </DescriptionListGroup>                          
                         </DescriptionList>
                       </ExpandableRowContent>
                     </Td>
