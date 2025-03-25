@@ -106,8 +106,7 @@ const reducer = <T, E>(
       return {
         ...state,
         uploads: new Map(state.uploads).set(action.payload.file, {
-          // biome-ignore lint/style/noNonNullAssertion: safe
-          ...state.uploads.get(action.payload.file)!,
+          ...(state.uploads.get(action.payload.file) || defaultUpload()),
           status: "complete",
 
           response: action.payload.response,
@@ -118,8 +117,7 @@ const reducer = <T, E>(
       return {
         ...state,
         uploads: new Map(state.uploads).set(action.payload.file, {
-          // biome-ignore lint/style/noNonNullAssertion: safe
-          ...state.uploads.get(action.payload.file)!,
+          ...(state.uploads.get(action.payload.file) || defaultUpload()),
           status: "complete",
           error: action.payload.error,
           wasCancelled: action.payload.error?.message === CANCEL_MESSAGE,

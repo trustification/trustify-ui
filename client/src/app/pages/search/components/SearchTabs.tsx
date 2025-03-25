@@ -13,8 +13,17 @@ import {
   Tabs,
 } from "@patternfly/react-core";
 
-import { FilterPanel } from "@app/components/FilterPanel";
+import type {
+  AdvisorySummary,
+  SbomSummary,
+  VulnerabilitySummary,
+} from "@app/client";
+import {
+  FilterPanel,
+  type IFilterPanelProps,
+} from "@app/components/FilterPanel";
 import { AdvisoryTable } from "@app/pages/advisory-list/advisory-table";
+import type { PackageTableData } from "@app/pages/package-list/package-context.tsx";
 import { PackageTable } from "@app/pages/package-list/package-table";
 import { SbomTable } from "@app/pages/sbom-list/sbom-table";
 import { VulnerabilityTable } from "@app/pages/vulnerability-list/vulnerability-table";
@@ -22,14 +31,19 @@ import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
 export interface SearchTabsProps {
   filterPanelProps: {
-    // biome-ignore lint/suspicious/noExplicitAny:
-    advisoryFilterPanelProps?: any;
-    // biome-ignore lint/suspicious/noExplicitAny:
-    packageFilterPanelProps?: any;
-    // biome-ignore lint/suspicious/noExplicitAny:
-    sbomFilterPanelProps?: any;
-    // biome-ignore lint/suspicious/noExplicitAny:
-    vulnerabilityFilterPanelProps?: any;
+    advisoryFilterPanelProps: IFilterPanelProps<
+      AdvisorySummary,
+      "" | "modified" | "average_severity"
+    >;
+    packageFilterPanelProps: IFilterPanelProps<
+      PackageTableData,
+      "" | "type" | "arch"
+    >;
+    sbomFilterPanelProps: IFilterPanelProps<SbomSummary, "" | "published">;
+    vulnerabilityFilterPanelProps: IFilterPanelProps<
+      VulnerabilitySummary,
+      "" | "average_severity" | "published"
+    >;
   };
   packageTable?: ReactElement;
   packageTotalCount: number;
