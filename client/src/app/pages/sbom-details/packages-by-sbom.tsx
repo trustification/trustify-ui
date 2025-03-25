@@ -180,7 +180,7 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                                 ))}
                               </List>
                             </DescriptionListDescription>
-                          </DescriptionListGroup>                          
+                          </DescriptionListGroup>
                         </DescriptionList>
                       </ExpandableRowContent>
                     </Td>
