@@ -30,10 +30,10 @@ import {
 
 import { getSeverityPriority } from "@app/api/model-utils";
 import {
+  type VulnerabilityStatus,
   extendedSeverityFromSeverity,
-  VulnerabilityStatus,
 } from "@app/api/models";
-import {
+import type {
   PurlSummary,
   SbomAdvisory,
   SbomPackage,
@@ -288,11 +288,15 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                           )}
                         </Td>
                         <Td width={10} {...getTdProps({ columnKey: "cvss" })}>
-                          <SeverityShieldAndText
+                          {/* TODO */}
+                          {/* <SeverityShieldAndText
                             value={extendedSeverityFromSeverity(
                               item.vulnerability.average_severity,
                             )}
-                          />
+                            score={item.vulnerability.average_score}
+                            showLabel
+                            showScore                            
+                          /> */}
                         </Td>
                         <Td
                           width={15}

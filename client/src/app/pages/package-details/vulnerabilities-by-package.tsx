@@ -7,8 +7,8 @@ import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
 import { getSeverityPriority } from "@app/api/model-utils";
-import { VulnerabilityStatus } from "@app/api/models";
-import { PurlAdvisory, VulnerabilityDetails } from "@app/client";
+import type { VulnerabilityStatus } from "@app/api/models";
+import type { PurlAdvisory, VulnerabilityDetails } from "@app/client";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
@@ -159,11 +159,15 @@ export const VulnerabilitiesByPackage: React.FC<
                       )}
                     </Td>
                     <Td width={15} {...getTdProps({ columnKey: "severity" })}>
-                      {item.vulnerability?.average_severity && (
+                      {/* TODO */}
+                      {/* {item.vulnerability?.average_severity && (
                         <SeverityShieldAndText
                           value={item.vulnerability.average_severity}
+                          score={item.vulnerability.average_score}
+                          showLabel
+                          showScore
                         />
-                      )}
+                      )} */}
                     </Td>
                     <Td
                       width={10}
