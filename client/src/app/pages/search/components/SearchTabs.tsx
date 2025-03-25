@@ -23,7 +23,7 @@ import {
   type IFilterPanelProps,
 } from "@app/components/FilterPanel";
 import { AdvisoryTable } from "@app/pages/advisory-list/advisory-table";
-import type { PackageTableData } from "@app/pages/package-list/package-context.tsx";
+import type { PackageTableData } from "@app/pages/package-list/package-context";
 import { PackageTable } from "@app/pages/package-list/package-table";
 import { SbomTable } from "@app/pages/sbom-list/sbom-table";
 import { VulnerabilityTable } from "@app/pages/vulnerability-list/vulnerability-table";
