@@ -9,12 +9,9 @@ import {
   Bullseye,
   EmptyState,
   EmptyStateBody,
-  EmptyStateIcon,
   EmptyStateVariant,
-  Title,
 } from "@patternfly/react-core";
 import ExclamationCircleIcon from "@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon";
-import { global_danger_color_200 as globalDangerColor200 } from "@patternfly/react-tokens";
 
 import { AppPlaceholder } from "./AppPlaceholder";
 
@@ -66,14 +63,13 @@ const AuthEnabledOidcProvider: React.FC<IOidcProviderProps> = ({
   if (auth.error) {
     return (
       <Bullseye>
-        <EmptyState variant={EmptyStateVariant.sm}>
-          <EmptyStateIcon
-            icon={ExclamationCircleIcon}
-            color={globalDangerColor200.value}
-          />
-          <Title headingLevel="h2" size="lg">
-            Auth Error
-          </Title>
+        <EmptyState
+          status="danger"
+          titleText="Auth Error"
+          headingLevel="h4"
+          icon={ExclamationCircleIcon}
+          variant={EmptyStateVariant.sm}
+        >
           <EmptyStateBody>
             {`${auth.error.name}: ${auth.error.message}`}. Revisit your OIDC
             configuration or contact your admin.

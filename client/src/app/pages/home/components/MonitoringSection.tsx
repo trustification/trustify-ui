@@ -10,24 +10,23 @@ import {
   ChartStack,
   ChartThemeColor,
   ChartTooltip,
-} from "@patternfly/react-charts";
+} from "@patternfly/react-charts/victory";
 import {
   Card,
   CardBody,
   CardTitle,
+  Content,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
   EmptyState,
   EmptyStateBody,
-  EmptyStateHeader,
   EmptyStateVariant,
   Grid,
   GridItem,
   Stack,
   StackItem,
-  TextContent,
 } from "@patternfly/react-core";
 
 import { severityList } from "@app/api/model-utils";
@@ -109,11 +108,11 @@ export const MonitoringSection: React.FC = () => {
             >
               <Stack hasGutter>
                 <StackItem>
-                  <TextContent>
+                  <Content>
                     Below is a summary of Vulnerability status for your last 10
                     ingested SBOMs. You can click on the SBOM name to be taken
                     to their respective details page.
-                  </TextContent>
+                  </Content>
                 </StackItem>
                 <StackItem>
                   {barchartSboms.length > 0 ? (
@@ -154,7 +153,7 @@ export const MonitoringSection: React.FC = () => {
                           }
                           tickLabelComponent={
                             <ChartLabel
-                              className="pf-v5-c-button pf-m-link pf-m-inline"
+                              className="pf-v6-c-button pf-m-link pf-m-inline"
                               style={[{ fill: "#0066cc" }]}
                               events={{
                                 onClick: (event) => {
@@ -230,11 +229,11 @@ export const MonitoringSection: React.FC = () => {
                       </Chart>
                     </div>
                   ) : (
-                    <EmptyState variant={EmptyStateVariant.xs}>
-                      <EmptyStateHeader
-                        titleText="There is nothing here yet"
-                        headingLevel="h4"
-                      />
+                    <EmptyState
+                      headingLevel="h4"
+                      titleText="There is nothing here yet"
+                      variant={EmptyStateVariant.xs}
+                    >
                       <EmptyStateBody>
                         You can get started by uploading an SBOM. Once your
                         SBOMs are uploaded come back to this page to see your

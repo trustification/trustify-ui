@@ -30,6 +30,9 @@ import {
   FormSelectOption,
   Icon,
   Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
   ModalVariant,
   Popover,
   TextInput,
@@ -445,11 +448,66 @@ const ProductList: React.FC<{ products: IProduct[] }> = ({ products }) => {
       </Table>
       <Modal
         variant={ModalVariant.small}
-        title="Create alert"
-        description="Enter details below to create an alert."
         isOpen={isAlertModalOpen}
         onClose={handleAlertModalToggle}
-        actions={[
+      >
+        <ModalHeader
+          title="Create alert"
+          description="Enter details below to create an alert."
+        ></ModalHeader>
+        <ModalBody>
+          <Form id="alert-modal">
+            <FormGroup
+              label="Name"
+              labelHelp={
+                <Popover
+                  headerContent={<div>Alert name</div>}
+                  bodyContent={<div>Give your alert a name.</div>}
+                >
+                  <button
+                    type="button"
+                    aria-label="More info for name field"
+                    onClick={(e) => e.preventDefault()}
+                    aria-describedby="modal-with-form-form-name"
+                    className={formStyles.formGroupLabelHelp}
+                  >
+                    <HelpIcon />
+                  </button>
+                </Popover>
+              }
+              isRequired
+              fieldId="modal-with-form-form-name"
+            >
+              <TextInput
+                isRequired
+                type="email"
+                id="modal-with-form-form-name"
+                name="modal-with-form-form-name"
+                value={alertNameValue}
+                onChange={handleAlertNameInputChange}
+              />
+            </FormGroup>
+            <FormGroup label="Frequency" fieldId="frequency">
+              <FormSelect
+                value={alertOption}
+                onChange={handleAlertOptionInputChange}
+                id="frequency"
+                name="frequency"
+                aria-label="Frequency"
+              >
+                {options.map((option, index) => (
+                  <FormSelectOption
+                    isDisabled={option.disabled}
+                    key={index}
+                    value={option.value}
+                    label={option.label}
+                  />
+                ))}
+              </FormSelect>
+            </FormGroup>
+          </Form>
+        </ModalBody>
+        <ModalFooter>
           <Button
             key="create"
             variant="primary"
@@ -457,62 +515,11 @@ const ProductList: React.FC<{ products: IProduct[] }> = ({ products }) => {
             onClick={handleAlertModalToggle}
           >
             Confirm
-          </Button>,
+          </Button>
           <Button key="cancel" variant="link" onClick={handleAlertModalToggle}>
             Cancel
-          </Button>,
-        ]}
-      >
-        <Form id="alert-modal">
-          <FormGroup
-            label="Name"
-            labelIcon={
-              <Popover
-                headerContent={<div>Alert name</div>}
-                bodyContent={<div>Give your alert a name.</div>}
-              >
-                <button
-                  type="button"
-                  aria-label="More info for name field"
-                  onClick={(e) => e.preventDefault()}
-                  aria-describedby="modal-with-form-form-name"
-                  className={formStyles.formGroupLabelHelp}
-                >
-                  <HelpIcon />
-                </button>
-              </Popover>
-            }
-            isRequired
-            fieldId="modal-with-form-form-name"
-          >
-            <TextInput
-              isRequired
-              type="email"
-              id="modal-with-form-form-name"
-              name="modal-with-form-form-name"
-              value={alertNameValue}
-              onChange={handleAlertNameInputChange}
-            />
-          </FormGroup>
-          <FormGroup label="Frequency" fieldId="frequency">
-            <FormSelect
-              value={alertOption}
-              onChange={handleAlertOptionInputChange}
-              id="frequency"
-              name="frequency"
-              aria-label="Frequency"
-            >
-              {options.map((option, index) => (
-                <FormSelectOption
-                  isDisabled={option.disabled}
-                  key={index}
-                  value={option.value}
-                  label={option.label}
-                />
-              ))}
-            </FormSelect>
-          </FormGroup>
-        </Form>
+          </Button>
+        </ModalFooter>
       </Modal>
     </>
   );

@@ -12,7 +12,6 @@ import {
   TabTitleText,
   Tabs,
 } from "@patternfly/react-core";
-import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
 import type {
   AdvisorySummary,
@@ -28,6 +27,7 @@ import type { PackageTableData } from "@app/pages/package-list/package-context";
 import { PackageTable } from "@app/pages/package-list/package-table";
 import { SbomTable } from "@app/pages/sbom-list/sbom-table";
 import { VulnerabilityTable } from "@app/pages/vulnerability-list/vulnerability-table";
+import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
 export interface SearchTabsProps {
   filterPanelProps: {
@@ -117,7 +117,6 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
               <FilterPanel
                 omitFilterCategoryKeys={[""]}
                 {...advisoryFilterPanelProps}
-                filterCategories={[]}
               />
             ) : null}
           </CardBody>

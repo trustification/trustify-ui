@@ -15,11 +15,14 @@ import {
   Masthead,
   MastheadBrand,
   MastheadContent,
+  MastheadLogo,
   MastheadMain,
   MastheadToggle,
   MenuToggle,
   type MenuToggleElement,
   PageToggleButton,
+  Split,
+  SplitItem,
   Title,
   Toolbar,
   ToolbarContent,
@@ -73,29 +76,37 @@ export const HeaderApp: React.FC = () => {
       <AboutApp isOpen={isAboutOpen} onClose={toggleIsAboutOpen} />
 
       <Masthead>
-        <MastheadToggle>
-          <PageToggleButton variant="plain" aria-label="Global navigation">
-            <BarsIcon />
-          </PageToggleButton>
-        </MastheadToggle>
         <MastheadMain>
-          <MastheadBrand>
-            {leftBrand ? (
-              <Brand
-                src={leftBrand.src}
-                alt={leftBrand.alt}
-                heights={{ default: leftBrand.height }}
-              />
-            ) : null}
-            {leftTitle ? (
-              <Title
-                className="logo-pointer"
-                headingLevel={leftTitle?.heading ?? "h1"}
-                size={leftTitle?.size ?? "2xl"}
-              >
-                {leftTitle.text}
-              </Title>
-            ) : null}
+          <MastheadToggle>
+            <PageToggleButton variant="plain" aria-label="Global navigation">
+              <BarsIcon />
+            </PageToggleButton>
+          </MastheadToggle>
+          <MastheadBrand data-codemods>
+            <MastheadLogo data-codemods>
+              <Split>
+                <SplitItem>
+                  {leftBrand ? (
+                    <Brand
+                      src={leftBrand.src}
+                      alt={leftBrand.alt}
+                      heights={{ default: leftBrand.height }}
+                    />
+                  ) : null}
+                </SplitItem>
+                <SplitItem isFilled>
+                  {leftTitle ? (
+                    <Title
+                      className="logo-pointer"
+                      headingLevel={leftTitle?.heading ?? "h1"}
+                      size={leftTitle?.size ?? "2xl"}
+                    >
+                      {leftTitle.text}
+                    </Title>
+                  ) : null}
+                </SplitItem>
+              </Split>
+            </MastheadLogo>
           </MastheadBrand>
         </MastheadMain>
         <MastheadContent>
@@ -104,15 +115,15 @@ export const HeaderApp: React.FC = () => {
               {/* toolbar items to always show */}
               <ToolbarGroup
                 id="header-toolbar-tasks"
-                variant="icon-button-group"
-                align={{ default: "alignRight" }}
+                variant="action-group-plain"
+                align={{ default: "alignEnd" }}
               />
 
               {/* toolbar items to show at desktop sizes */}
               <ToolbarGroup
                 id="header-toolbar-desktop"
-                variant="icon-button-group"
-                spacer={{ default: "spacerNone", md: "spacerMd" }}
+                variant="action-group-plain"
+                gap={{ default: "gapNone", md: "gapMd" }}
                 visibility={{
                   default: "hidden",
                   "2xl": "visible",
@@ -123,21 +134,20 @@ export const HeaderApp: React.FC = () => {
               >
                 <ToolbarItem>
                   <Button
+                    icon={<HelpIcon />}
                     id="about-button"
                     aria-label="about button"
                     variant={ButtonVariant.plain}
                     onClick={toggleIsAboutOpen}
-                  >
-                    <HelpIcon />
-                  </Button>
+                  />
                 </ToolbarItem>
               </ToolbarGroup>
 
               {/* toolbar items to show at mobile sizes */}
               <ToolbarGroup
                 id="header-toolbar-mobile"
-                variant="icon-button-group"
-                spacer={{ default: "spacerNone", md: "spacerMd" }}
+                variant="action-group-plain"
+                gap={{ default: "gapNone", md: "gapMd" }}
                 visibility={{ lg: "hidden" }}
               >
                 <ToolbarItem>
@@ -202,7 +212,7 @@ export const HeaderApp: React.FC = () => {
                           }
                           isFullHeight
                           isExpanded={isUserDropdownOpen}
-                          icon={<Avatar src={imgAvatar} alt="" />}
+                          icon={<Avatar src={imgAvatar} alt="" size="sm" />}
                         >
                           {auth.user?.profile.preferred_username ||
                             auth.user?.profile.sub}

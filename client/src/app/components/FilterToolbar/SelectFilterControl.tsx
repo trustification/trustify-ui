@@ -6,8 +6,8 @@ import {
   Select,
   SelectList,
   SelectOption,
-  type ToolbarChip,
   ToolbarFilter,
+  type ToolbarLabel,
 } from "@patternfly/react-core";
 import { css } from "@patternfly/react-styles";
 
@@ -56,7 +56,7 @@ export const SelectFilterControl = <TItem, TFilterCategoryKey extends string>({
         prev.push(current);
       }
       return prev;
-    }, new Array<string | ToolbarChip>());
+    }, new Array<string | ToolbarLabel>());
 
   const onFilterSelect = (value: string) => {
     const option = getOptionFromOptionValue(value);
@@ -97,8 +97,8 @@ export const SelectFilterControl = <TItem, TFilterCategoryKey extends string>({
   return (
     <ToolbarFilter
       id={`filter-control-${category.categoryKey}`}
-      chips={chips}
-      deleteChip={(_, chip) => onFilterClear(chip as string)}
+      labels={chips}
+      deleteLabel={(_, chip) => onFilterClear(chip as string)}
       categoryName={category.title}
       showToolbarItem={showToolbarItem}
     >

@@ -195,9 +195,7 @@ export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
         variant="filter-group"
         toggleIcon={<FilterIcon />}
         breakpoint="2xl"
-        spaceItems={
-          showFiltersSideBySide ? { default: "spaceItemsMd" } : undefined
-        }
+        gap={showFiltersSideBySide ? { default: "gapMd" } : undefined}
       >
         {!showFiltersSideBySide && (
           <ToolbarItem>
