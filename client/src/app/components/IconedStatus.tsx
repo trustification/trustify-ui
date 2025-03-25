@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { Flex, FlexItem, Icon, Tooltip } from "@patternfly/react-core";
 
@@ -47,7 +47,6 @@ export const IconedStatus: React.FC<IIconedStatusProps> = ({
   icon,
   className = "",
   label,
-  tooltipCount = 0,
 }: IIconedStatusProps) => {
   const presets: IconedStatusPresetType = {
     Canceled: {

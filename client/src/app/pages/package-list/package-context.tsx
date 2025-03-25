@@ -1,17 +1,17 @@
 import React from "react";
 
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 
-import { DecomposedPurl } from "@app/api/models";
-import { PurlSummary } from "@app/client";
-import { FilterType } from "@app/components/FilterToolbar";
 import {
   FILTER_TEXT_CATEGORY_KEY,
   TablePersistenceKeyPrefixes,
 } from "@app/Constants";
+import type { DecomposedPurl } from "@app/api/models";
+import type { PurlSummary } from "@app/client";
+import { FilterType } from "@app/components/FilterToolbar";
 import {
+  type ITableControls,
   getHubRequestParams,
-  ITableControls,
   useTableControlProps,
   useTableControlState,
 } from "@app/hooks/table-controls";
@@ -19,7 +19,7 @@ import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchPackages } from "@app/queries/packages";
 import { decomposePurl } from "@app/utils/utils";
 
-interface PackageTableData extends PurlSummary {
+export interface PackageTableData extends PurlSummary {
   decomposedPurl?: DecomposedPurl;
 }
 

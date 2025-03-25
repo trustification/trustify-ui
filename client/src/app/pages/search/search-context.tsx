@@ -1,14 +1,15 @@
-import React from "react";
+import type React from "react";
+import { AdvisorySearchProvider } from "../advisory-list/advisory-context";
 import { PackageSearchProvider } from "../package-list/package-context";
 import { SbomSearchProvider } from "../sbom-list/sbom-context";
 import { VulnerabilitySearchProvider } from "../vulnerability-list/vulnerability-context";
-import { AdvisorySearchProvider } from "../advisory-list/advisory-context";
 
 interface Provider<TProps> {
   Component: React.ComponentType<React.PropsWithChildren<TProps>>;
   props?: Omit<TProps, "children">;
 }
 
+// biome-ignore lint/suspicious/noExplicitAny:
 function composeProviders<TProviders extends Array<Provider<any>>>(
   providers: TProviders,
 ): React.ComponentType<React.PropsWithChildren> {
@@ -19,7 +20,11 @@ function composeProviders<TProviders extends Array<Provider<any>>>(
 
     return providers.reduceRight<JSX.Element>(
       (prevJSX, { Component: CurrentProvider, props = {} }) => {
-        return <CurrentProvider {...props}>{prevJSX}</CurrentProvider>;
+        return (
+          <CurrentProvider key={prevJSX.key} {...props}>
+            {prevJSX}
+          </CurrentProvider>
+        );
       },
       initialJSX,
     );

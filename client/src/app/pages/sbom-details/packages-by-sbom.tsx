@@ -1,4 +1,5 @@
-import React, { useMemo } from "react";
+import type React from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import {
@@ -26,8 +27,8 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { DecomposedPurl } from "@app/api/models";
-import { PurlSummary } from "@app/client";
+import type { DecomposedPurl } from "@app/api/models";
+import type { PurlSummary } from "@app/client";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { PackageQualifiers } from "@app/components/PackageQualifiers";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -165,9 +166,15 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                   >
                     <Td width={30} {...getTdProps({ columnKey: "name" })}>
                       <Flex>
-                        <FlexItem
-                          spacer={{ default: "spacerSm" }}
-                        >{`${item.decomposedPurl?.name}${item.decomposedPurl?.namespace ? "/" + item.decomposedPurl?.namespace : ""}`}</FlexItem>
+                        <FlexItem spacer={{ default: "spacerSm" }}>
+                          {(() => {
+                            const name = item.decomposedPurl?.name || "";
+                            const namespace = item.decomposedPurl?.namespace
+                              ? `/${item.decomposedPurl.namespace}`
+                              : "";
+                            return `${name}${namespace}`;
+                          })()}
+                        </FlexItem>
                         <FlexItem>
                           <Label isCompact color="blue">
                             {item.decomposedPurl?.type}

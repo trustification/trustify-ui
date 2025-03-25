@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { Bullseye, Spinner } from "@patternfly/react-core";
 
@@ -19,9 +19,9 @@ export const LoadingWrapper = (props: {
         </Bullseye>
       )
     );
-  } else if (props.fetchError) {
-    return props.fetchErrorState || <StateError />;
-  } else {
-    return props.children;
   }
+  if (props.fetchError) {
+    return props.fetchErrorState || <StateError />;
+  }
+  return props.children;
 };

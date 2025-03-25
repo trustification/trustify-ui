@@ -35,8 +35,7 @@ jobs:
       - name: Test
         run: npm run test -- --coverage --watchAll=false
       - name: Check
-        run: npm run format
-
+        run: npm run check
       - name: Crate Format
         working-directory: ./crate
         run: cargo fmt --check

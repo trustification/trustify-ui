@@ -1,6 +1,6 @@
-import React from "react";
+import type React from "react";
 
-import { AxiosError, AxiosResponse } from "axios";
+import type { AxiosError, AxiosResponse } from "axios";
 
 import {
   Card,
@@ -10,8 +10,8 @@ import {
   Tab,
   TabContent,
   TabContentBody,
-  Tabs,
   TabTitleText,
+  Tabs,
   Text,
   TextContent,
 } from "@patternfly/react-core";

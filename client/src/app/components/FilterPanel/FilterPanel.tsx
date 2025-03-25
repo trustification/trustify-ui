@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 
 import {
   Button,
@@ -8,7 +8,7 @@ import {
   TextContent,
 } from "@patternfly/react-core";
 
-import {
+import type {
   FilterCategory,
   FilterValue,
   IFilterValues,
@@ -47,7 +47,7 @@ export const FilterPanel = <TItem, TFilterCategoryKey extends string>({
         );
       })
       .reduce((prev, current) => {
-        return { ...prev, [current.categoryKey]: undefined };
+        return Object.assign(prev, { [current.categoryKey]: undefined });
       }, {});
     setFilterValues({ ...filterValues, ...filtersToBeCleared });
   };

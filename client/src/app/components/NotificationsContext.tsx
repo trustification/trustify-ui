@@ -1,5 +1,6 @@
 import * as React from "react";
-import { AlertProps } from "@patternfly/react-core";
+
+import type { AlertProps } from "@patternfly/react-core";
 
 export type INotification = {
   title: string;

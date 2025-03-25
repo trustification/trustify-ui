@@ -1,5 +1,5 @@
+import { http, type RequestHandler, passthrough } from "msw";
 import { setupWorker } from "msw/browser";
-import { http, passthrough, RequestHandler } from "msw";
 
 import config from "./config";
 import stubNewWork from "./stub-new-work";

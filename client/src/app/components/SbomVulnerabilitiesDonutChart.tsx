@@ -3,8 +3,8 @@ import React from "react";
 import { ChartDonut } from "@patternfly/react-charts";
 
 import { compareBySeverityFn, severityList } from "@app/api/model-utils";
-import { ExtendedSeverity } from "@app/api/models";
-import { SeveritySummary } from "@app/hooks/domain-controls/useVulnerabilitiesOfSbom";
+import type { ExtendedSeverity } from "@app/api/models";
+import type { SeveritySummary } from "@app/hooks/domain-controls/useVulnerabilitiesOfSbom";
 
 export interface SbomVulnerabilitiesDonutChartProps {
   vulnerabilitiesSummary: SeveritySummary;
