@@ -14,8 +14,8 @@ import {
 
 import { useDebounceValue } from "usehooks-ts";
 
-import { HubRequestParams } from "@app/api/models";
 import { FILTER_TEXT_CATEGORY_KEY } from "@app/Constants";
+import type { HubRequestParams } from "@app/api/models";
 import { SbomSearchContext } from "@app/pages/sbom-list/sbom-context";
 import { useFetchAdvisories } from "@app/queries/advisories";
 import { useFetchPackages } from "@app/queries/packages";
@@ -127,17 +127,18 @@ function useAllEntities(filterText: string, disableSearch: boolean) {
   ].sort((a, b) => {
     if (a.title?.includes(filterTextLowerCase)) {
       return -1;
-    } else if (b.title?.includes(filterTextLowerCase)) {
-      return 1;
-    } else {
-      const aIndex = (a.description || "")
-        .toLowerCase()
-        .indexOf(filterTextLowerCase);
-      const bIndex = (b.description || "")
-        .toLowerCase()
-        .indexOf(filterTextLowerCase);
-      return aIndex - bIndex;
     }
+    if (b.title?.includes(filterTextLowerCase)) {
+      return 1;
+    }
+
+    const aIndex = (a.description || "")
+      .toLowerCase()
+      .indexOf(filterTextLowerCase);
+    const bIndex = (b.description || "")
+      .toLowerCase()
+      .indexOf(filterTextLowerCase);
+    return aIndex - bIndex;
   });
 
   return {
@@ -153,7 +154,7 @@ function useAllEntities(filterText: string, disableSearch: boolean) {
 export interface ISearchMenu {
   filterFunction?: (
     list: IEntity[],
-    searchString: string
+    searchString: string,
   ) => React.JSX.Element[];
   onChangeSearch: (searchValue: string | undefined) => void;
 }
@@ -173,7 +174,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
   // Debounce Search value
   const [debouncedSearchValue, setDebouncedSearchValue] = useDebounceValue(
     searchValue,
-    500
+    500,
   );
 
   React.useEffect(() => {
@@ -183,7 +184,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
   // Fetch all entities
   const { isFetching, list: entityList } = useAllEntities(
     debouncedSearchValue,
-    !isSearchValueDirty
+    !isSearchValueDirty,
   );
 
   const [isAutocompleteOpen, setIsAutocompleteOpen] =
@@ -217,7 +218,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
   };
 
   React.useEffect(() => {
-    const handleMenuKeys = (event: any) => {
+    const handleMenuKeys = (event: KeyboardEvent) => {
       if (
         isAutocompleteOpen &&
         searchInputRef.current &&
@@ -230,7 +231,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
           // the up and down arrow keys move browser focus into the autocomplete menu
         } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
           const firstElement = autocompleteRef.current?.querySelector(
-            "li > button:not(:disabled)"
+            "li > button:not(:disabled)",
           );
           firstElement && (firstElement as HTMLElement)?.focus();
           event.preventDefault(); // by default, the up and down arrow keys scroll the window
@@ -250,7 +251,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
         // hitting tab will close the autocomplete and but browser focus back on the search input.
       } else if (
         isAutocompleteOpen &&
-        autocompleteRef.current?.contains(event.target) &&
+        autocompleteRef.current?.contains(event.target as Node) &&
         event.key === "Tab"
       ) {
         event.preventDefault();
@@ -260,12 +261,12 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
     };
 
     // The autocomplete menu should close if the user clicks outside the menu.
-    const handleClickOutside = (event: { target: any }) => {
+    const handleClickOutside = (event: { target: EventTarget | null }) => {
       if (
         isAutocompleteOpen &&
         autocompleteRef &&
         autocompleteRef.current &&
-        !autocompleteRef.current.contains(event.target)
+        !autocompleteRef.current.contains(event.target as Node)
       ) {
         setIsAutocompleteOpen(false);
       }

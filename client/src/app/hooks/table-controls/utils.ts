@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 /**
  * Works around problems caused by event propagation when handling a clickable element that contains other clickable elements.
@@ -11,7 +11,7 @@ export const handlePropagatedRowClick = <
   E extends React.KeyboardEvent | React.MouseEvent,
 >(
   event: E | undefined,
-  onRowClick: (event: E) => void
+  onRowClick: (event: E) => void,
 ) => {
   // This recursive parent check is necessary because the event target could be,
   // for example, the SVG icon inside a button rather than the button itself.

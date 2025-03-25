@@ -1,11 +1,11 @@
-import * as React from "react";
-import { FieldValues, Path, PathValue } from "react-hook-form";
-import { TextInput, TextInputProps } from "@patternfly/react-core";
+import type { FieldValues, Path, PathValue } from "react-hook-form";
+
 import { getValidatedFromErrors } from "@app/utils/utils";
+import { TextInput, type TextInputProps } from "@patternfly/react-core";
 import {
-  extractGroupControllerProps,
+  type BaseHookFormPFGroupControllerProps,
   HookFormPFGroupController,
-  BaseHookFormPFGroupControllerProps,
+  extractGroupControllerProps,
 } from "./HookFormPFGroupController";
 
 export type HookFormPFTextInputProps<
@@ -17,7 +17,7 @@ export const HookFormPFTextInput = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends Path<TFieldValues> = Path<TFieldValues>,
 >(
-  props: HookFormPFTextInputProps<TFieldValues, TName>
+  props: HookFormPFTextInputProps<TFieldValues, TName>,
 ) => {
   const { extractedProps, remainingProps } = extractGroupControllerProps<
     TFieldValues,
@@ -42,10 +42,10 @@ export const HookFormPFTextInput = <
           onChange={(_, value) => {
             if (type === "number") {
               onChange(
-                ((value && parseInt(value, 10)) || "") as PathValue<
+                ((value && Number.parseInt(value, 10)) || "") as PathValue<
                   TFieldValues,
                   TName
-                >
+                >,
               );
             } else {
               onChange(value as PathValue<TFieldValues, TName>);

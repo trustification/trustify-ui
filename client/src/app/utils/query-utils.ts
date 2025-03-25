@@ -1,6 +1,7 @@
 import { useMemo } from "react";
+
 import { UI_UNIQUE_ID } from "@app/Constants";
-import { WithUiId } from "@app/api/models";
+import type { WithUiId } from "@app/api/models";
 
 /**
  * Make a shallow copy of `data` and insert a new `UI_UNIQUE_ID` field in each element
@@ -14,7 +15,7 @@ export const useWithUiId = <T>(
   /** Source data to modify. */
   data: T[] | undefined,
   /** Generate the unique id for a specific `T`. */
-  generator: (item: T) => string
+  generator: (item: T) => string,
 ): WithUiId<T>[] => {
   const result = useMemo(() => {
     if (!data || data.length === 0) {

@@ -1,4 +1,4 @@
-import { ISortState } from "./useSortState";
+import type { ISortState } from "./useSortState";
 
 /**
  * Args for getLocalSortDerivedState
@@ -23,7 +23,7 @@ export interface ILocalSortDerivedStateArgs<
    */
   getSortValues?: (
     // TODO can we require this as non-optional in types that extend this when we know we're configuring a client-computed table?
-    item: TItem
+    item: TItem,
   ) => Record<TSortableColumnKey, string | number | boolean>;
   /**
    * The "source of truth" state for the sort feature (returned by useSortState)
@@ -58,12 +58,12 @@ export const getLocalSortDerivedState = <
       const aSortResult = aValue.localeCompare(bValue);
       const bSortResult = bValue.localeCompare(aValue);
       return activeSort.direction === "asc" ? aSortResult : bSortResult;
-    } else if (typeof aValue === "number" && typeof bValue === "number") {
-      return activeSort.direction === "asc" ? aValue - bValue : bValue - aValue;
-    } else {
-      if (aValue > bValue) return activeSort.direction === "asc" ? -1 : 1;
-      if (aValue < bValue) return activeSort.direction === "asc" ? -1 : 1;
     }
+    if (typeof aValue === "number" && typeof bValue === "number") {
+      return activeSort.direction === "asc" ? aValue - bValue : bValue - aValue;
+    }
+    if (aValue > bValue) return activeSort.direction === "asc" ? -1 : 1;
+    if (aValue < bValue) return activeSort.direction === "asc" ? -1 : 1;
 
     return 0;
   });

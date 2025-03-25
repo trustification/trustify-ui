@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { type FormEvent, useState } from "react";
 
 import {
   DatePicker,
@@ -10,12 +10,11 @@ import {
 import {
   americanDateFormat,
   isValidAmericanShortDate,
-  isValidInterval,
   parseAmericanDate,
   parseInterval,
   toISODateInterval,
 } from "../FilterToolbar/dateUtils";
-import { IFilterControlProps } from "./FilterControl";
+import type { IFilterControlProps } from "./FilterControl";
 
 /**
  * This Filter type enables selecting an closed date range.
@@ -28,19 +27,12 @@ import { IFilterControlProps } from "./FilterControl";
  */
 
 export const DateRangeFilter = <TItem,>({
-  category,
   filterValue,
   setFilterValue,
   isDisabled = false,
 }: React.PropsWithChildren<
   IFilterControlProps<TItem, string>
 >): JSX.Element | null => {
-  const selectedFilters = filterValue ?? [];
-
-  const validFilters =
-    selectedFilters?.filter((interval) =>
-      isValidInterval(parseInterval(interval))
-    ) ?? [];
   const [from, setFrom] = useState<Date>();
   const [to, setTo] = useState<Date>();
 
@@ -57,8 +49,8 @@ export const DateRangeFilter = <TItem,>({
   }, [filterValue]);
 
   const onFromDateChange = (
-    event: FormEvent<HTMLInputElement>,
-    value: string
+    _event: FormEvent<HTMLInputElement>,
+    value: string,
   ) => {
     if (isValidAmericanShortDate(value)) {
       setFrom(parseAmericanDate(value));
@@ -66,7 +58,10 @@ export const DateRangeFilter = <TItem,>({
     }
   };
 
-  const onToDateChange = (even: FormEvent<HTMLInputElement>, value: string) => {
+  const onToDateChange = (
+    _event: FormEvent<HTMLInputElement>,
+    value: string,
+  ) => {
     if (isValidAmericanShortDate(value)) {
       const newTo = parseAmericanDate(value);
       setTo(newTo);

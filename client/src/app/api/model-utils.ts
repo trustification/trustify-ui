@@ -1,4 +1,4 @@
-import { ProgressProps } from "@patternfly/react-core";
+import type { ProgressProps } from "@patternfly/react-core";
 import {
   global_palette_purple_400 as criticalColor,
   global_danger_color_100 as importantColor,
@@ -8,7 +8,7 @@ import {
   global_palette_black_300 as unknownColor,
 } from "@patternfly/react-tokens";
 
-import { ExtendedSeverity } from "./models";
+import type { ExtendedSeverity } from "./models";
 
 type ListType = {
   [key in ExtendedSeverity]: {
@@ -71,7 +71,7 @@ export const getSeverityPriority = (val: ExtendedSeverity) => {
 };
 
 export function compareBySeverityFn<T>(
-  severityExtractor: (elem: T) => ExtendedSeverity
+  severityExtractor: (elem: T) => ExtendedSeverity,
 ) {
   return (a: T, b: T) => {
     return (

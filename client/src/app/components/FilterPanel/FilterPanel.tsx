@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 
 import {
   Button,
@@ -8,7 +8,7 @@ import {
   TextContent,
 } from "@patternfly/react-core";
 
-import {
+import type {
   FilterCategory,
   FilterValue,
   IFilterValues,
@@ -34,7 +34,7 @@ export const FilterPanel = <TItem, TFilterCategoryKey extends string>({
 >): JSX.Element | null => {
   const setFilterValue = (
     category: FilterCategory<TItem, TFilterCategoryKey>,
-    newValue: FilterValue
+    newValue: FilterValue,
   ) => setFilterValues({ ...filterValues, [category.categoryKey]: newValue });
 
   const clearAllFilters = () => {
@@ -42,12 +42,12 @@ export const FilterPanel = <TItem, TFilterCategoryKey extends string>({
       .filter((filterCategory) => {
         return (
           omitFilterCategoryKeys.find(
-            (categoryKey) => categoryKey === filterCategory.categoryKey
+            (categoryKey) => categoryKey === filterCategory.categoryKey,
           ) === undefined
         );
       })
       .reduce((prev, current) => {
-        return { ...prev, [current.categoryKey]: undefined };
+        return Object.assign(prev, { [current.categoryKey]: undefined });
       }, {});
     setFilterValues({ ...filterValues, ...filtersToBeCleared });
   };
@@ -64,7 +64,7 @@ export const FilterPanel = <TItem, TFilterCategoryKey extends string>({
           .filter((filterCategory) => {
             return (
               omitFilterCategoryKeys.find(
-                (categoryKey) => categoryKey === filterCategory.categoryKey
+                (categoryKey) => categoryKey === filterCategory.categoryKey,
               ) === undefined
             );
           })

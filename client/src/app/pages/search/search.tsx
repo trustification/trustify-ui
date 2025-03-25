@@ -42,10 +42,10 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
   const { tableControls: packageTableControls } =
     React.useContext(PackageSearchContext);
   const { tableControls: vulnerabilityTableControls } = React.useContext(
-    VulnerabilitySearchContext
+    VulnerabilitySearchContext,
   );
   const { tableControls: advisoryTableControls } = React.useContext(
-    AdvisorySearchContext
+    AdvisorySearchContext,
   );
 
   const {
@@ -86,7 +86,7 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
   // Search
 
   const onChangeContextSearchValue = (searchValue: string | undefined) => {
-    if (searchValue == undefined) return;
+    if (searchValue === undefined) return;
     sbomTableControls.filterState.setFilterValues({
       ...sbomTableControls.filterState.filterValues,
       [FILTER_TEXT_CATEGORY_KEY]: [searchValue],

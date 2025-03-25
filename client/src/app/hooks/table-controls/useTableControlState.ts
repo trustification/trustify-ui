@@ -1,15 +1,15 @@
-import {
+import { useActiveItemState } from "./active-item";
+import { useColumnState } from "./column/useColumnState";
+import { useExpansionState } from "./expansion";
+import { useFilterState } from "./filtering";
+import { usePaginationState } from "./pagination";
+import { useSortState } from "./sorting";
+import type {
   ITableControlState,
   IUseTableControlStateArgs,
   PersistTarget,
   TableFeature,
 } from "./types";
-import { useFilterState } from "./filtering";
-import { useSortState } from "./sorting";
-import { usePaginationState } from "./pagination";
-import { useActiveItemState } from "./active-item";
-import { useExpansionState } from "./expansion";
-import { useColumnState } from "./column/useColumnState";
 
 /**
  * Provides the "source of truth" state for all table features.
@@ -33,7 +33,7 @@ export const useTableControlState = <
     TSortableColumnKey,
     TFilterCategoryKey,
     TPersistenceKeyPrefix
-  >
+  >,
 ): ITableControlState<
   TItem,
   TColumnKey,

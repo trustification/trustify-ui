@@ -30,10 +30,10 @@ import {
 
 import { getSeverityPriority } from "@app/api/model-utils";
 import {
+  type VulnerabilityStatus,
   extendedSeverityFromSeverity,
-  VulnerabilityStatus,
 } from "@app/api/models";
-import {
+import type {
   PurlSummary,
   SbomAdvisory,
   SbomPackage,
@@ -89,7 +89,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
 
   const affectedVulnerabilities = React.useMemo(() => {
     return vulnerabilities.filter(
-      (item) => item.vulnerabilityStatus === "affected"
+      (item) => item.vulnerabilityStatus === "affected",
     );
   }, [vulnerabilities]);
 
@@ -99,11 +99,10 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
         .flatMap((i) => i.packages)
         .reduce((prev, current) => {
           const existingElement = prev.find((item) => item.id === current.id);
-          if (existingElement) {
-            return prev;
-          } else {
-            return [...prev, current];
+          if (!existingElement) {
+            prev.push(current);
           }
+          return prev;
         }, [] as SbomPackage[]);
       const result: TableData = {
         ...item,
@@ -119,7 +118,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
 
   const tableDataWithUiId = useWithUiId(
     tableData,
-    (d) => `${d.vulnerability.identifier}-${d.vulnerabilityStatus}`
+    (d) => `${d.vulnerability.identifier}-${d.vulnerabilityStatus}`,
   );
 
   const tableControls = useLocalTableControls({
@@ -166,7 +165,6 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
     numRenderedColumns,
     propHelpers: {
       toolbarProps,
-      filterToolbarProps,
       paginationToolbarItemProps,
       paginationProps,
       tableProps,
@@ -290,7 +288,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                         <Td width={10} {...getTdProps({ columnKey: "cvss" })}>
                           <SeverityShieldAndText
                             value={extendedSeverityFromSeverity(
-                              item.vulnerability.average_severity
+                              item.vulnerability.average_severity,
                             )}
                           />
                         </Td>
@@ -353,31 +351,30 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                                         };
 
                                         const hasNoPurlsButOnlyName =
-                                          item.name && item.purl.length == 0;
+                                          item.name && item.purl.length === 0;
 
                                         if (hasNoPurlsButOnlyName) {
                                           const result: EnrichedPurlSummary = {
                                             parentName: item.name,
                                           };
                                           return [result];
-                                        } else {
-                                          return item.purl.map((i) => {
-                                            const result: EnrichedPurlSummary =
-                                              {
-                                                parentName: item.name,
-                                                purlSummary: i,
-                                              };
-                                            return result;
-                                          });
                                         }
+
+                                        return item.purl.map((i) => {
+                                          const result: EnrichedPurlSummary = {
+                                            parentName: item.name,
+                                            purlSummary: i,
+                                          };
+                                          return result;
+                                        });
                                       })
                                       .map((purl, index) => {
                                         if (purl.purlSummary) {
                                           const decomposedPurl = decomposePurl(
-                                            purl.purlSummary.purl
+                                            purl.purlSummary.purl,
                                           );
                                           return (
-                                            <Tr key={`${index}-purl`}>
+                                            <Tr key={purl.purlSummary.uuid}>
                                               <Td>{decomposedPurl?.type}</Td>
                                               <Td>
                                                 {decomposedPurl?.namespace}
@@ -402,18 +399,20 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                                               </Td>
                                             </Tr>
                                           );
-                                        } else {
-                                          return (
-                                            <Tr key={`${index}-name`}>
-                                              <Td></Td>
-                                              <Td></Td>
-                                              <Td>{purl.parentName}</Td>
-                                              <Td></Td>
-                                              <Td></Td>
-                                              <Td></Td>
-                                            </Tr>
-                                          );
                                         }
+
+                                        return (
+                                          <Tr
+                                            key={`${purl.parentName}-${index}-name`}
+                                          >
+                                            <Td />
+                                            <Td />
+                                            <Td>{purl.parentName}</Td>
+                                            <Td />
+                                            <Td />
+                                            <Td />
+                                          </Tr>
+                                        );
                                       })}
                                   </Tbody>
                                 </Table>

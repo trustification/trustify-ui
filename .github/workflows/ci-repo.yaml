@@ -34,9 +34,8 @@ jobs:
         run: npm run build-storybook
       - name: Test
         run: npm run test -- --coverage --watchAll=false
-      - name: Format check
-        run: npm run format:check
-
+      - name: Check
+        run: npm run check
       - name: Crate Format
         working-directory: ./crate
         run: cargo fmt --check

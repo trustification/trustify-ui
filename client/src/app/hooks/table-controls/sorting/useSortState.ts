@@ -1,6 +1,6 @@
-import { DiscriminatedArgs } from "@app/utils/type-utils";
-import { IFeaturePersistenceArgs } from "..";
 import { usePersistentState } from "@app/hooks/usePersistentState";
+import type { DiscriminatedArgs } from "@app/utils/type-utils";
+import type { IFeaturePersistenceArgs } from "..";
 
 /**
  * The currently applied sort parameters
@@ -69,7 +69,7 @@ export const useSortState = <
   TPersistenceKeyPrefix extends string = string,
 >(
   args: ISortStateArgs<TSortableColumnKey> &
-    IFeaturePersistenceArgs<TPersistenceKeyPrefix>
+    IFeaturePersistenceArgs<TPersistenceKeyPrefix>,
 ): ISortState<TSortableColumnKey> => {
   const { isSortEnabled, persistTo = "state", persistenceKeyPrefix } = args;
   const sortableColumns = (isSortEnabled && args.sortableColumns) || [];

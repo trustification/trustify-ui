@@ -1,5 +1,5 @@
-import { HubRequestParams } from "@app/api/models";
-import { IPaginationState } from "./usePaginationState";
+import type { HubRequestParams } from "@app/api/models";
+import type { IPaginationState } from "./usePaginationState";
 
 /**
  * Args for getPaginationHubRequestParams
@@ -33,7 +33,7 @@ export const getPaginationHubRequestParams = ({
  */
 export const serializePaginationRequestParamsForHub = (
   deserializedParams: HubRequestParams,
-  serializedParams: URLSearchParams
+  serializedParams: URLSearchParams,
 ) => {
   const { page } = deserializedParams;
   if (page) {

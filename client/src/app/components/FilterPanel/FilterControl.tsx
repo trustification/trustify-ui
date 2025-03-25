@@ -1,17 +1,17 @@
-import * as React from "react";
+import type * as React from "react";
 
 import {
-  FilterCategory,
+  type FilterCategory,
   FilterType,
-  FilterValue,
-  IMultiselectFilterCategory,
-  ISearchFilterCategory,
-  ISelectFilterCategory,
+  type FilterValue,
+  type IMultiselectFilterCategory,
+  type ISearchFilterCategory,
+  type ISelectFilterCategory,
 } from "../FilterToolbar";
-import { SearchFilterControl } from "./SearchFilterControl";
-import { RadioFilterControl } from "./RadioFilterControl";
 import { CheckboxFilterControl } from "./CheckboxFilterControl";
 import { DateRangeFilter } from "./DateRangeFilter";
+import { RadioFilterControl } from "./RadioFilterControl";
+import { SearchFilterControl } from "./SearchFilterControl";
 
 export interface IFilterControlProps<TItem, TFilterCategoryKey extends string> {
   category: FilterCategory<TItem, TFilterCategoryKey>;

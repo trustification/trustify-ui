@@ -1,9 +1,9 @@
-import {
+import type {
   FilterCategory,
   IFilterToolbarProps,
 } from "@app/components/FilterToolbar";
-import { IFilterState } from "./useFilterState";
-import { ToolbarProps } from "@patternfly/react-core";
+import type { ToolbarProps } from "@patternfly/react-core";
+import type { IFilterState } from "./useFilterState";
 
 /**
  * Args for useFilterPropHelpers that come from outside useTableControlProps
@@ -33,7 +33,7 @@ export interface IFilterPropHelpersExternalArgs<
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
 export const useFilterPropHelpers = <TItem, TFilterCategoryKey extends string>(
-  args: IFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey>
+  args: IFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey>,
 ) => {
   const {
     filterState: { filterValues, setFilterValues },

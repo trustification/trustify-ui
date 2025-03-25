@@ -1,29 +1,25 @@
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import dayjs from "dayjs";
 import { PackageURL } from "packageurl-js";
 
 import { RENDER_DATETIME_FORMAT, RENDER_DATE_FORMAT } from "@app/Constants";
-import { DecomposedPurl } from "@app/api/models";
-import { ToolbarChip } from "@patternfly/react-core";
+import type { DecomposedPurl } from "@app/api/models";
+import type { ToolbarChip } from "@patternfly/react-core";
 
 // Axios error
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// biome-ignore lint/suspicious/noExplicitAny:
 export const getAxiosErrorMessage = (axiosError: AxiosError<any>) => {
-  if (
-    axiosError.response &&
-    axiosError.response.data &&
-    axiosError.response.data.errorMessage
-  ) {
+  if (axiosError.response?.data?.errorMessage) {
     return axiosError.response.data.errorMessage;
-  } else if (
+  }
+  if (
     axiosError.response?.data?.error &&
     typeof axiosError?.response?.data?.error === "string"
   ) {
     return axiosError?.response?.data?.error;
-  } else {
-    return axiosError.message;
   }
+  return axiosError.message;
 };
 
 // ToolbarChip
@@ -46,7 +42,7 @@ export const duplicateFieldCheck = <T>(
   fieldKey: keyof T,
   itemList: T[],
   currentItem: T | null,
-  fieldValue: T[keyof T]
+  fieldValue: T[keyof T],
 ) =>
   (currentItem && currentItem[fieldKey] === fieldValue) ||
   !itemList.some((item) => item[fieldKey] === fieldValue);
@@ -54,13 +50,14 @@ export const duplicateFieldCheck = <T>(
 export const duplicateNameCheck = <T extends { name?: string }>(
   itemList: T[],
   currentItem: T | null,
-  nameValue: T["name"]
+  nameValue: T["name"],
 ) => duplicateFieldCheck("name", itemList, currentItem, nameValue);
 
+// biome-ignore lint/suspicious/noExplicitAny:
 export const dedupeFunction = (arr: any[]) =>
   arr?.filter(
     (value, index, self) =>
-      index === self.findIndex((t) => t.value === value.value)
+      index === self.findIndex((t) => t.value === value.value),
   );
 
 export const numStr = (num: number | undefined): string => {
@@ -69,20 +66,21 @@ export const numStr = (num: number | undefined): string => {
 };
 
 export const parseMaybeNumericString = (
-  numOrStr: string | undefined | null
+  numOrStr: string | undefined | null,
 ): string | number | null => {
   if (numOrStr === undefined || numOrStr === null) return null;
   const num = Number(numOrStr);
-  return isNaN(num) ? numOrStr : num;
+  return Number.isNaN(num) ? numOrStr : num;
 };
 
+// biome-ignore lint/complexity/noBannedTypes: safe to use
 export const objectKeys = <T extends Object>(obj: T) =>
   Object.keys(obj) as (keyof T)[];
 
 export const getValidatedFromErrors = (
   error: unknown | undefined,
   dirty: boolean | undefined,
-  isTouched: boolean | undefined
+  isTouched: boolean | undefined,
 ) => {
   return error && (dirty || isTouched) ? "error" : "default";
 };
@@ -110,7 +108,7 @@ export const decomposePurl = (purl: string) => {
 };
 
 export const getFilenameFromContentDisposition = (
-  contentDisposition: string
+  contentDisposition: string,
 ): string | null => {
   const match = contentDisposition.match(/filename="?([^"]+)"?/);
   return match ? match[1] : null;

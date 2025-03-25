@@ -1,5 +1,5 @@
-import { Labels } from "@app/client";
-import { Severity } from "@app/client";
+import type { Labels } from "@app/client";
+import type { Severity } from "@app/client";
 
 export type WithUiId<T> = T & { _ui_unique_id: string };
 
@@ -55,7 +55,7 @@ export interface DecomposedPurl {
 
 export type ExtendedSeverity = Severity | "unknown";
 export const extendedSeverityFromSeverity = (
-  value?: Severity | null
+  value?: Severity | null,
 ): ExtendedSeverity => value ?? "unknown";
 
 // User preferences

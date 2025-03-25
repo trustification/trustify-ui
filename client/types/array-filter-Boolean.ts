@@ -23,6 +23,7 @@ interface Array<T> {
    */
   filter<S extends T>(
     predicate: BooleanConstructor,
-    thisArg?: any
+    // biome-ignore lint/suspicious/noExplicitAny:
+    thisArg?: any,
   ): Exclude<S, Falsy>[];
 }

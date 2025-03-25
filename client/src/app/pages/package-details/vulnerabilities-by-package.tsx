@@ -7,8 +7,6 @@ import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
 import { getSeverityPriority } from "@app/api/model-utils";
-import { VulnerabilityStatus } from "@app/api/models";
-import { PurlAdvisory, VulnerabilityDetails } from "@app/client";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
@@ -22,13 +20,6 @@ import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useWithUiId } from "@app/utils/query-utils";
 import { formatDate } from "@app/utils/utils";
 
-interface TableData {
-  vulnerabilityId: string;
-  advisory: PurlAdvisory;
-  status: VulnerabilityStatus;
-  vulnerability?: VulnerabilityDetails;
-}
-
 interface VulnerabilitiesByPackageProps {
   packageId: string;
 }
@@ -37,20 +28,20 @@ export const VulnerabilitiesByPackage: React.FC<
   VulnerabilitiesByPackageProps
 > = ({ packageId }) => {
   const {
-    data: { vulnerabilities, summary },
+    data: { vulnerabilities },
     isFetching: isFetchingVulnerabilities,
     fetchError: fetchErrorVulnerabilities,
   } = useVulnerabilitiesOfPackage(packageId);
 
   const affectedVulnerabilities = React.useMemo(() => {
     return vulnerabilities.filter(
-      (item) => item.vulnerabilityStatus === "affected"
+      (item) => item.vulnerabilityStatus === "affected",
     );
   }, [vulnerabilities]);
 
   const tableDataWithUiId = useWithUiId(
     affectedVulnerabilities,
-    (d) => `${d.vulnerability.identifier}-${d.vulnerabilityStatus}`
+    (d) => `${d.vulnerability.identifier}-${d.vulnerabilityStatus}`,
   );
 
   const tableControls = useLocalTableControls({
@@ -89,7 +80,6 @@ export const VulnerabilitiesByPackage: React.FC<
     numRenderedColumns,
     propHelpers: {
       toolbarProps,
-      filterToolbarProps,
       paginationToolbarItemProps,
       paginationProps,
       tableProps,

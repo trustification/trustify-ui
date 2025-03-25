@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import {
@@ -31,13 +31,13 @@ import {
 } from "@patternfly/react-core";
 
 import { severityList } from "@app/api/model-utils";
-import { SbomHead } from "@app/client";
+import type { ExtendedSeverity } from "@app/api/models";
+import type { SbomHead } from "@app/client";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useVulnerabilitiesOfSboms } from "@app/hooks/domain-controls/useVulnerabilitiesOfSbom";
 import { useFetchAdvisories } from "@app/queries/advisories";
 import { useFetchSBOMs } from "@app/queries/sboms";
 import { formatDateTime } from "@app/utils/utils";
-import { ExtendedSeverity } from "@app/api/models";
 
 interface Legend {
   severity: ExtendedSeverity;
@@ -158,6 +158,7 @@ export const MonitoringSection: React.FC = () => {
                               style={[{ fill: "#0066cc" }]}
                               events={{
                                 onClick: (event) => {
+                                  // biome-ignore lint/suspicious/noExplicitAny:
                                   const sbomName = (event.target as any)
                                     .innerHTML as string | null;
                                   const sbom = barchartSboms.find(
@@ -166,7 +167,7 @@ export const MonitoringSection: React.FC = () => {
                                         generateSbomBarName(item, index) ===
                                         sbomName
                                       );
-                                    }
+                                    },
                                   );
                                   if (sbom) {
                                     navigate(`/sboms/${sbom.id}`);
@@ -209,7 +210,7 @@ export const MonitoringSection: React.FC = () => {
                                         vulnerabilityStatus: { affected },
                                       },
                                     },
-                                    index
+                                    index,
                                   ) => {
                                     const sbom = barchartSboms[index];
 
@@ -220,7 +221,7 @@ export const MonitoringSection: React.FC = () => {
                                       y: count,
                                       label: `${severityData.name}: ${count}`,
                                     };
-                                  }
+                                  },
                                 )}
                               />
                             );

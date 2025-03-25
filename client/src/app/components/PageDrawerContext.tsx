@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import {
   Drawer,
   DrawerActions,
@@ -8,7 +9,7 @@ import {
   DrawerHead,
   DrawerPanelBody,
   DrawerPanelContent,
-  DrawerPanelContentProps,
+  type DrawerPanelContentProps,
 } from "@patternfly/react-core";
 import pageStyles from "@patternfly/react-styles/css/components/Page/page";
 
@@ -131,7 +132,7 @@ export const PageDrawerContent: React.FC<IPageDrawerContentProps> = ({
   }, []);
   if (numPageDrawerContentInstances > 1) {
     console.warn(
-      `${numPageDrawerContentInstances} instances of PageDrawerContent are currently rendered! Only one instance of this component should be rendered at a time.`
+      `${numPageDrawerContentInstances} instances of PageDrawerContent are currently rendered! Only one instance of this component should be rendered at a time.`,
     );
   }
 
@@ -184,7 +185,7 @@ export const PageDrawerContent: React.FC<IPageDrawerContentProps> = ({
           </DrawerActions>
         </DrawerHead>
         <DrawerPanelBody>{drawerPanelBody}</DrawerPanelBody>
-      </>
+      </>,
     );
   }, [
     children,
