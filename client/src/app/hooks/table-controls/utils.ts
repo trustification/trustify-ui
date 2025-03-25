@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 /**
  * Works around problems caused by event propagation when handling a clickable element that contains other clickable elements.

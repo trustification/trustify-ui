@@ -7,9 +7,7 @@ import { SimplePagination } from "@app/components/SimplePagination";
 
 import { PackageSearchContext } from "./package-context";
 
-interface IPackageToolbar {}
-
-export const PackageToolbar: React.FC<IPackageToolbar> = ({}) => {
+export const PackageToolbar: React.FC = () => {
   const { tableControls } = React.useContext(PackageSearchContext);
 
   const {

@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { Link } from "react-router-dom";
 
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
@@ -75,7 +75,6 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
     currentPageItems,
     propHelpers: {
       toolbarProps,
-      filterToolbarProps,
       paginationToolbarItemProps,
       paginationProps,
       tableProps,

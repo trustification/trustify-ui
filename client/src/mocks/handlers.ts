@@ -1,5 +1,5 @@
+import type { VulnerabilityHead } from "@app/client";
 import { http, HttpResponse } from "msw";
-import { VulnerabilityHead } from "@app/client";
 
 import logo from "../../../branding/images/masthead-logo.svg";
 
@@ -40,19 +40,19 @@ import sbom_c26de2fe81d9 from "./data/sbom/01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9/
 // import sbom_c399c1e9a923 from "./data/sbom/01932ff3-0f91-7543-af38-c399c1e9a923/details.json";
 // import sbom_18044dbbb574 from "./data/sbom/01932ff3-0fbc-7b82-b9c2-18044dbbb574/details.json";
 
-import sbom_5d5e9dc471bd_advisory from "./data/sbom/01932ff3-0fc4-7bf2-8201-5d5e9dc471bd/advisory.json";
-import sbom_c26de2fe81d9_advisory from "./data/sbom/01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9/advisory.json";
 import sbom_f92bac24a6b0_advisory from "./data/sbom/01932ff3-0f06-74e0-b673-f92bac24a6b0/advisory.json";
 import sbom_1fac54a371f3_advisory from "./data/sbom/01932ff3-0f90-7e51-9c9d-1fac54a371f3/advisory.json";
 import sbom_c399c1e9a923_advisory from "./data/sbom/01932ff3-0f91-7543-af38-c399c1e9a923/advisory.json";
 import sbom_18044dbbb574_advisory from "./data/sbom/01932ff3-0fbc-7b82-b9c2-18044dbbb574/advisory.json";
+import sbom_5d5e9dc471bd_advisory from "./data/sbom/01932ff3-0fc4-7bf2-8201-5d5e9dc471bd/advisory.json";
+import sbom_c26de2fe81d9_advisory from "./data/sbom/01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9/advisory.json";
 
-import sbom_5d5e9dc471bd_packages from "./data/sbom/01932ff3-0fc4-7bf2-8201-5d5e9dc471bd/packages.json";
-import sbom_c26de2fe81d9_packages from "./data/sbom/01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9/packages.json";
 import sbom_f92bac24a6b0_packages from "./data/sbom/01932ff3-0f06-74e0-b673-f92bac24a6b0/packages.json";
 import sbom_1fac54a371f3_packages from "./data/sbom/01932ff3-0f90-7e51-9c9d-1fac54a371f3/packages.json";
 import sbom_c399c1e9a923_packages from "./data/sbom/01932ff3-0f91-7543-af38-c399c1e9a923/packages.json";
 import sbom_18044dbbb574_packages from "./data/sbom/01932ff3-0fbc-7b82-b9c2-18044dbbb574/packages.json";
+import sbom_5d5e9dc471bd_packages from "./data/sbom/01932ff3-0fc4-7bf2-8201-5d5e9dc471bd/packages.json";
+import sbom_c26de2fe81d9_packages from "./data/sbom/01932ff3-0fe1-7ca0-8ba6-c26de2fe81d9/packages.json";
 
 import prod_2e167215 from "./data/product/2e167215-42ec-4a71-912c-73082c21cf57/details.json";
 import prod_60d159e4 from "./data/product/60d159e4-48dc-4480-90e8-7e84b8bfb759/details.json";

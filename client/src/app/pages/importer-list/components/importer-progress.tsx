@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import {
   Progress,
@@ -6,7 +6,7 @@ import {
   ProgressSize,
 } from "@patternfly/react-core";
 
-import { Progress as ProgressModel } from "@app/client";
+import type { Progress as ProgressModel } from "@app/client";
 
 export interface ImporterProgressProps {
   value: ProgressModel;

@@ -1,12 +1,12 @@
-import React from "react";
+import type React from "react";
 import { Link } from "react-router-dom";
 
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
-import { AdvisoryVulnerabilitySummary } from "@app/client";
+import type { AdvisoryVulnerabilitySummary } from "@app/client";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
@@ -43,7 +43,7 @@ export const VulnerabilitiesByAdvisory: React.FC<
     hasActionsColumn: false,
     isSortEnabled: true,
     sortableColumns: [],
-    getSortValues: (item) => ({}),
+    getSortValues: (_item) => ({}),
     isPaginationEnabled: true,
     isFilterEnabled: false,
     filterCategories: [],
@@ -55,7 +55,6 @@ export const VulnerabilitiesByAdvisory: React.FC<
     numRenderedColumns,
     propHelpers: {
       toolbarProps,
-      filterToolbarProps,
       paginationToolbarItemProps,
       paginationProps,
       tableProps,

@@ -36,7 +36,7 @@ export const proxyMap: Record<string, Options> = {
     onProxyReq: (proxyReq, req, _res) => {
       // Add the Bearer token to the request if it is not already present, AND if
       // the token is part of the request as a cookie
-      if (req.cookies?.keycloak_cookie && !req.headers["authorization"]) {
+      if (req.cookies?.keycloak_cookie && !req.headers.authorization) {
         proxyReq.setHeader(
           "Authorization",
           `Bearer ${req.cookies.keycloak_cookie}`,

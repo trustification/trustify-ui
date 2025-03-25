@@ -1,48 +1,56 @@
-import { TableProps, TdProps, ThProps, TrProps } from "@patternfly/react-table";
-import {
+import type { IFilterPanelProps } from "@app/components/FilterPanel";
+import type { IFilterToolbarProps } from "@app/components/FilterToolbar";
+import type { IToolbarBulkSelectorProps } from "@app/components/ToolbarBulkSelector";
+import type {
   ISelectionStateArgs,
   useSelectionState,
 } from "@app/hooks/useSelectionState";
-import { DisallowCharacters, DiscriminatedArgs } from "@app/utils/type-utils";
-import {
-  IFilterStateArgs,
-  ILocalFilterDerivedStateArgs,
-  IFilterPropHelpersExternalArgs,
-  IFilterState,
-} from "./filtering";
-import {
-  ILocalSortDerivedStateArgs,
-  ISortPropHelpersExternalArgs,
-  ISortState,
-  ISortStateArgs,
-} from "./sorting";
-import {
-  IPaginationStateArgs,
-  ILocalPaginationDerivedStateArgs,
-  IPaginationPropHelpersExternalArgs,
-  IPaginationState,
-} from "./pagination";
-import {
-  IExpansionDerivedState,
-  IExpansionState,
-  IExpansionStateArgs,
-} from "./expansion";
-import {
+import type {
+  DisallowCharacters,
+  DiscriminatedArgs,
+} from "@app/utils/type-utils";
+import type {
+  PaginationProps,
+  ToolbarItemProps,
+  ToolbarProps,
+} from "@patternfly/react-core";
+import type {
+  TableProps,
+  TdProps,
+  ThProps,
+  TrProps,
+} from "@patternfly/react-table";
+import type {
   IActiveItemDerivedState,
   IActiveItemPropHelpersExternalArgs,
   IActiveItemState,
   IActiveItemStateArgs,
 } from "./active-item";
-import {
-  PaginationProps,
-  ToolbarItemProps,
-  ToolbarProps,
-} from "@patternfly/react-core";
-import { IFilterToolbarProps } from "@app/components/FilterToolbar";
-import { IFilterPanelProps } from "@app/components/FilterPanel";
-import { IToolbarBulkSelectorProps } from "@app/components/ToolbarBulkSelector";
-import { IExpansionPropHelpersExternalArgs } from "./expansion/useExpansionPropHelpers";
-import { IColumnState } from "./column/useColumnState";
+import type { IColumnState } from "./column/useColumnState";
+import type {
+  IExpansionDerivedState,
+  IExpansionState,
+  IExpansionStateArgs,
+} from "./expansion";
+import type { IExpansionPropHelpersExternalArgs } from "./expansion/useExpansionPropHelpers";
+import type {
+  IFilterPropHelpersExternalArgs,
+  IFilterState,
+  IFilterStateArgs,
+  ILocalFilterDerivedStateArgs,
+} from "./filtering";
+import type {
+  ILocalPaginationDerivedStateArgs,
+  IPaginationPropHelpersExternalArgs,
+  IPaginationState,
+  IPaginationStateArgs,
+} from "./pagination";
+import type {
+  ILocalSortDerivedStateArgs,
+  ISortPropHelpersExternalArgs,
+  ISortState,
+  ISortStateArgs,
+} from "./sorting";
 
 // Generic type params used here:
 //   TItem - The actual API objects represented by rows in the table. Can be any object.

@@ -1,29 +1,25 @@
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import dayjs from "dayjs";
 import { PackageURL } from "packageurl-js";
 
 import { RENDER_DATETIME_FORMAT, RENDER_DATE_FORMAT } from "@app/Constants";
-import { DecomposedPurl } from "@app/api/models";
-import { ToolbarChip } from "@patternfly/react-core";
+import type { DecomposedPurl } from "@app/api/models";
+import type { ToolbarChip } from "@patternfly/react-core";
 
 // Axios error
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// biome-ignore lint/suspicious/noExplicitAny:
 export const getAxiosErrorMessage = (axiosError: AxiosError<any>) => {
-  if (
-    axiosError.response &&
-    axiosError.response.data &&
-    axiosError.response.data.errorMessage
-  ) {
+  if (axiosError.response?.data?.errorMessage) {
     return axiosError.response.data.errorMessage;
-  } else if (
+  }
+  if (
     axiosError.response?.data?.error &&
     typeof axiosError?.response?.data?.error === "string"
   ) {
     return axiosError?.response?.data?.error;
-  } else {
-    return axiosError.message;
   }
+  return axiosError.message;
 };
 
 // ToolbarChip
@@ -57,6 +53,7 @@ export const duplicateNameCheck = <T extends { name?: string }>(
   nameValue: T["name"],
 ) => duplicateFieldCheck("name", itemList, currentItem, nameValue);
 
+// biome-ignore lint/suspicious/noExplicitAny:
 export const dedupeFunction = (arr: any[]) =>
   arr?.filter(
     (value, index, self) =>
@@ -73,9 +70,10 @@ export const parseMaybeNumericString = (
 ): string | number | null => {
   if (numOrStr === undefined || numOrStr === null) return null;
   const num = Number(numOrStr);
-  return isNaN(num) ? numOrStr : num;
+  return Number.isNaN(num) ? numOrStr : num;
 };
 
+// biome-ignore lint/complexity/noBannedTypes: safe to use
 export const objectKeys = <T extends Object>(obj: T) =>
   Object.keys(obj) as (keyof T)[];
 
