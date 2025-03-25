@@ -1,16 +1,18 @@
 import * as React from "react";
+
 import {
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
   Select,
   SelectList,
   SelectOption,
-  ToolbarChip,
+  type ToolbarChip,
   ToolbarFilter,
 } from "@patternfly/react-core";
-import { IFilterControlProps } from "./FilterControl";
-import { ISelectFilterCategory } from "./FilterToolbar";
 import { css } from "@patternfly/react-styles";
+
+import type { IFilterControlProps } from "./FilterControl";
+import type { ISelectFilterCategory } from "./FilterToolbar";
 
 import "./select-overrides.css";
 
@@ -49,16 +51,12 @@ export const SelectFilterControl = <TItem, TFilterCategoryKey extends string>({
         node: chipLabel ?? label ?? value,
       };
     })
-    .reduce(
-      (prev, current) => {
-        if (current) {
-          return [...prev, current];
-        } else {
-          return prev;
-        }
-      },
-      [] as (string | ToolbarChip)[],
-    );
+    .reduce((prev, current) => {
+      if (current) {
+        prev.push(current);
+      }
+      return prev;
+    }, new Array<string | ToolbarChip>());
 
   const onFilterSelect = (value: string) => {
     const option = getOptionFromOptionValue(value);

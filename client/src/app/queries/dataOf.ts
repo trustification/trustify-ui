@@ -1,6 +1,6 @@
-import { RequestResult } from "@hey-api/client-axios";
-import { AxiosError } from "axios";
-import { UseQueryResult } from "@tanstack/react-query";
+import type { RequestResult } from "@hey-api/client-axios";
+import type { UseQueryResult } from "@tanstack/react-query";
+import type { AxiosError } from "axios";
 
 export const dataOf = async <Data, Error>(
   promise: RequestResult<Data, Error>,

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 
 import { useFetchAdvisorySourceById } from "@app/queries/advisories";
 import { CodeEditor, Language } from "@patternfly/react-code-editor";
@@ -10,7 +10,7 @@ import { useFetchSBOMSourceById } from "@app/queries/sboms";
 import { LoadingWrapper } from "./LoadingWrapper";
 
 interface SourceViewerProps {
-  source: any;
+  source?: object | string;
   isFetching: boolean;
   fetchError: AxiosError;
   height?: string | "sizeToFit";
@@ -29,11 +29,11 @@ export const SourceViewer: React.FC<SourceViewerProps> = ({
 
     if (typeof source === "object") {
       return [JSON.stringify(source, null, 2), Language.json];
-    } else if (typeof source === "string") {
-      return [source, Language.plaintext];
-    } else {
-      return ["Not supported format", Language.plaintext];
     }
+    if (typeof source === "string") {
+      return [source, Language.plaintext];
+    }
+    return ["Not supported format", Language.plaintext];
   }, [source]);
 
   return (

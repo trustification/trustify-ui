@@ -1,8 +1,8 @@
-import { useTableControlProps } from "./useTableControlProps";
-import { ITableControls, IUseLocalTableControlsArgs } from "./types";
-import { getLocalTableControlDerivedState } from "./getLocalTableControlDerivedState";
-import { useTableControlState } from "./useTableControlState";
 import { useSelectionState } from "../useSelectionState";
+import { getLocalTableControlDerivedState } from "./getLocalTableControlDerivedState";
+import type { ITableControls, IUseLocalTableControlsArgs } from "./types";
+import { useTableControlProps } from "./useTableControlProps";
+import { useTableControlState } from "./useTableControlState";
 
 /**
  * Provides all state, derived state, side-effects and prop helpers needed to manage a local/client-computed table.

@@ -23,7 +23,7 @@ import { formatDate } from "@app/utils/utils";
 import { SBOMVulnerabilities } from "./components/SbomVulnerabilities";
 import { SbomSearchContext } from "./sbom-context";
 
-export const SbomTable: React.FC = ({}) => {
+export const SbomTable: React.FC = () => {
   const { isFetching, fetchError, totalItemCount, tableControls } =
     React.useContext(SbomSearchContext);
 

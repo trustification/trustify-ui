@@ -12,7 +12,6 @@ import {
 } from "@patternfly/react-table";
 
 import type { Severity } from "@app/client";
-import { NotificationsContext } from "@app/components/NotificationsContext";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -31,11 +30,9 @@ import {
 } from "@app/api/models";
 import { AdvisorySearchContext } from "./advisory-context";
 
-export const AdvisoryTable: React.FC = ({}) => {
+export const AdvisoryTable: React.FC = () => {
   const { isFetching, fetchError, totalItemCount, tableControls } =
     React.useContext(AdvisorySearchContext);
-
-  const { pushNotification } = React.useContext(NotificationsContext);
 
   const {
     numRenderedColumns,
@@ -87,10 +84,9 @@ export const AdvisoryTable: React.FC = ({}) => {
               const extendedSeverity = extendedSeverityFromSeverity(
                 current.severity,
               );
-              return {
-                ...prev,
+              return Object.assign(prev, {
                 [extendedSeverity]: prev[extendedSeverity] + 1,
-              };
+              });
             }, defaultSeverityGroup);
 
             return (

@@ -1,12 +1,13 @@
 import React from "react";
-import axios, {
-  AxiosError,
-  AxiosPromise,
-  AxiosRequestConfig,
-  AxiosResponse,
-  CancelTokenSource,
-} from "axios";
+
 import { FORM_DATA_FILE_KEY } from "@app/Constants";
+import axios, {
+  type AxiosError,
+  type AxiosPromise,
+  type AxiosRequestConfig,
+  type AxiosResponse,
+  type CancelTokenSource,
+} from "axios";
 
 const CANCEL_MESSAGE = "cancelled";
 
@@ -105,7 +106,7 @@ const reducer = <T, E>(
       return {
         ...state,
         uploads: new Map(state.uploads).set(action.payload.file, {
-          ...state.uploads.get(action.payload.file)!,
+          ...(state.uploads.get(action.payload.file) || defaultUpload()),
           status: "complete",
 
           response: action.payload.response,
@@ -116,7 +117,7 @@ const reducer = <T, E>(
       return {
         ...state,
         uploads: new Map(state.uploads).set(action.payload.file, {
-          ...state.uploads.get(action.payload.file)!,
+          ...(state.uploads.get(action.payload.file) || defaultUpload()),
           status: "complete",
           error: action.payload.error,
           wasCancelled: action.payload.error?.message === CANCEL_MESSAGE,
@@ -222,11 +223,11 @@ export const useUpload = <T, E>({
     }
 
     if (parallel) {
-      queue.forEach((queue) => {
-        uploadFn(queue.formData, queue.config)
-          .then(queue.thenFn)
-          .catch(queue.catchFn);
-      });
+      for (const item of queue) {
+        uploadFn(item.formData, item.config)
+          .then(item.thenFn)
+          .catch(item.catchFn);
+      }
     } else {
       queue.reduce(async (prev, next) => {
         await prev;

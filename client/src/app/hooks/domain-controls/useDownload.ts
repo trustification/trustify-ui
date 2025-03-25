@@ -13,7 +13,7 @@ export const useDownload = () => {
       responseType: "arraybuffer",
       headers: { Accept: "text/plain", responseType: "blob" },
     }).then((response) => {
-      saveAs(new Blob([response.data as any]), filename || `${id}.json`);
+      saveAs(new Blob([response.data as BlobPart]), filename || `${id}.json`);
     });
   };
 
@@ -24,7 +24,7 @@ export const useDownload = () => {
       responseType: "arraybuffer",
       headers: { Accept: "text/plain", responseType: "blob" },
     }).then((response) => {
-      saveAs(new Blob([response.data as any]), filename || `${id}.json`);
+      saveAs(new Blob([response.data as BlobPart]), filename || `${id}.json`);
     });
   };
 
@@ -37,7 +37,7 @@ export const useDownload = () => {
         filename = getFilenameFromContentDisposition(header);
       }
 
-      saveAs(new Blob([response.data as any]), filename || `${id}.tar.gz`);
+      saveAs(new Blob([response.data as BlobPart]), filename || `${id}.tar.gz`);
     });
   };
 

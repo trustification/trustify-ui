@@ -1,23 +1,23 @@
 // Hub filter/sort/pagination utils
 // TODO these could use some unit tests!
 
-import { HubRequestParams } from "@app/api/models";
+import type { HubRequestParams } from "@app/api/models";
 import {
+  type IGetFilterHubRequestParamsArgs,
   getFilterHubRequestParams,
-  IGetFilterHubRequestParamsArgs,
   serializeFilterForHub,
   serializeFilterRequestParamsForHub,
 } from "./filtering";
 import {
-  getSortHubRequestParams,
-  IGetSortHubRequestParamsArgs,
-  serializeSortRequestParamsForHub,
-} from "./sorting";
-import {
+  type IGetPaginationHubRequestParamsArgs,
   getPaginationHubRequestParams,
-  IGetPaginationHubRequestParamsArgs,
   serializePaginationRequestParamsForHub,
 } from "./pagination";
+import {
+  type IGetSortHubRequestParamsArgs,
+  getSortHubRequestParams,
+  serializeSortRequestParamsForHub,
+} from "./sorting";
 
 // TODO move this outside this directory as part of decoupling Konveyor-specific code from table-controls.
 
