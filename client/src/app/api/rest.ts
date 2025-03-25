@@ -70,7 +70,7 @@ export const uploadSbom = (formData: FormData, config?: AxiosRequestConfig) => {
 // Using our own definition of the endpoint rather than the `hey-api` auto generated
 // We could replace this one once https://github.com/hey-api/openapi-ts/issues/1803 is fixed
 export const downloadSbomLicense = (sbomId: string) => {
-  return axios.get<number[]>(`${SBOMS}/${sbomId}/license-export`, {
+  return axios.get<Blob>(`${SBOMS}/${sbomId}/license-export`, {
     responseType: "arraybuffer",
     headers: { Accept: "text/plain", responseType: "blob" },
   });

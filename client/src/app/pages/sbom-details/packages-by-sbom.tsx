@@ -166,9 +166,15 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                   >
                     <Td width={30} {...getTdProps({ columnKey: "name" })}>
                       <Flex>
-                        <FlexItem
-                          spacer={{ default: "spacerSm" }}
-                        >{`${item.decomposedPurl?.name}${item.decomposedPurl?.namespace ? `/${item.decomposedPurl.namespace}` : ""}`}</FlexItem>
+                        <FlexItem spacer={{ default: "spacerSm" }}>
+                          {(() => {
+                            const name = item.decomposedPurl?.name || "";
+                            const namespace = item.decomposedPurl?.namespace
+                              ? `/${item.decomposedPurl.namespace}`
+                              : "";
+                            return `${name}${namespace}`;
+                          })()}
+                        </FlexItem>
                         <FlexItem>
                           <Label isCompact color="blue">
                             {item.decomposedPurl?.type}

@@ -19,7 +19,7 @@ import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchPackages } from "@app/queries/packages";
 import { decomposePurl } from "@app/utils/utils";
 
-interface PackageTableData extends PurlSummary {
+export interface PackageTableData extends PurlSummary {
   decomposedPurl?: DecomposedPurl;
 }
 

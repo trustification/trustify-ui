@@ -218,8 +218,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
   };
 
   React.useEffect(() => {
-    // biome-ignore lint/suspicious/noExplicitAny:
-    const handleMenuKeys = (event: any) => {
+    const handleMenuKeys = (event: KeyboardEvent) => {
       if (
         isAutocompleteOpen &&
         searchInputRef.current &&
@@ -252,7 +251,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
         // hitting tab will close the autocomplete and but browser focus back on the search input.
       } else if (
         isAutocompleteOpen &&
-        autocompleteRef.current?.contains(event.target) &&
+        autocompleteRef.current?.contains(event.target as Node) &&
         event.key === "Tab"
       ) {
         event.preventDefault();
@@ -262,13 +261,12 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
     };
 
     // The autocomplete menu should close if the user clicks outside the menu.
-    // biome-ignore lint/suspicious/noExplicitAny:
-    const handleClickOutside = (event: { target: any }) => {
+    const handleClickOutside = (event: { target: EventTarget | null }) => {
       if (
         isAutocompleteOpen &&
         autocompleteRef &&
         autocompleteRef.current &&
-        !autocompleteRef.current.contains(event.target)
+        !autocompleteRef.current.contains(event.target as Node)
       ) {
         setIsAutocompleteOpen(false);
       }
