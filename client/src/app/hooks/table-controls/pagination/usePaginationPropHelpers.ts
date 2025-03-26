@@ -1,9 +1,9 @@
-import { PaginationProps, ToolbarItemProps } from "@patternfly/react-core";
-import { IPaginationState } from "./usePaginationState";
+import type { PaginationProps, ToolbarItemProps } from "@patternfly/react-core";
 import {
-  IUsePaginationEffectsArgs,
+  type IUsePaginationEffectsArgs,
   usePaginationEffects,
 } from "./usePaginationEffects";
+import type { IPaginationState } from "./usePaginationState";
 
 /**
  * Args for usePaginationPropHelpers that come from outside useTableControlProps
@@ -51,8 +51,8 @@ export const usePaginationPropHelpers = (
     itemCount: totalItemCount,
     perPage: itemsPerPage,
     page: pageNumber,
-    onSetPage: (event, pageNumber) => setPageNumber(pageNumber),
-    onPerPageSelect: (event, perPage) => {
+    onSetPage: (_event, pageNumber) => setPageNumber(pageNumber),
+    onPerPageSelect: (_event, perPage) => {
       setPageNumber(1);
       setItemsPerPage(perPage);
     },

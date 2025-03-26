@@ -2,11 +2,11 @@ import * as React from "react";
 
 import { Checkbox } from "@patternfly/react-core";
 
-import {
+import type {
   FilterSelectOptionProps,
   IMultiselectFilterCategory,
 } from "../FilterToolbar";
-import { IFilterControlProps } from "./FilterControl";
+import type { IFilterControlProps } from "./FilterControl";
 
 export interface IMultiselectFilterControlProps<TItem>
   extends IFilterControlProps<TItem, string> {
@@ -17,7 +17,6 @@ export const CheckboxFilterControl = <TItem,>({
   category,
   filterValue,
   setFilterValue,
-  isDisabled = false,
 }: React.PropsWithChildren<
   IMultiselectFilterControlProps<TItem>
 >): JSX.Element | null => {
@@ -35,15 +34,13 @@ export const CheckboxFilterControl = <TItem,>({
 
   const flatOptions: FilterSelectOptionProps[] = !hasGroupings
     ? selectOptions
-    : (Object.values(selectOptions).flatMap(
-        (i) => i,
-      ) as FilterSelectOptionProps[]);
+    : (Object.values(selectOptions).flat() as FilterSelectOptionProps[]);
 
   const onSelect = (value: string | undefined) => {
     if (value && value !== "No results") {
       let newFilterValue: string[];
 
-      if (filterValue && filterValue.includes(value)) {
+      if (filterValue?.includes(value)) {
         newFilterValue = filterValue.filter((item) => item !== value);
       } else {
         newFilterValue = filterValue ? [...filterValue, value] : [value];
@@ -55,10 +52,10 @@ export const CheckboxFilterControl = <TItem,>({
 
   return (
     <>
-      {flatOptions.map(({ label, value, optionProps = {} }, index) => {
+      {flatOptions.map(({ label, value }, index) => {
         return (
           <Checkbox
-            key={index}
+            key={label}
             id={`checkbox-${index}-${category.categoryKey}`}
             isLabelWrapped
             label={label}

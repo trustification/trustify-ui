@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
+
 import {
   Button,
   Dropdown,
@@ -6,7 +8,7 @@ import {
   DropdownList,
   MenuToggle,
   MenuToggleCheckbox,
-  PaginationProps,
+  type PaginationProps,
   ToolbarItem,
 } from "@patternfly/react-core";
 
@@ -41,7 +43,7 @@ export const ToolbarBulkSelector = <T,>({
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleCollapseAll = (collapse: boolean) => {
-    onExpandAll && onExpandAll(!collapse);
+    onExpandAll?.(!collapse);
   };
   const collapseAllBtn = () => (
     <Button

@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import {
   DescriptionList,
@@ -7,7 +7,7 @@ import {
   DescriptionListTerm,
 } from "@patternfly/react-core";
 
-import { DecomposedPurl } from "@app/api/models";
+import type { DecomposedPurl } from "@app/api/models";
 
 import { PackageQualifiers } from "./PackageQualifiers";
 
