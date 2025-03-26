@@ -58,6 +58,7 @@ export const AdvisoryTable: React.FC = () => {
               <Th {...getThProps({ columnKey: "identifier" })} />
               <Th {...getThProps({ columnKey: "title" })} />
               <Th {...getThProps({ columnKey: "severity" })} />
+              <Th {...getThProps({ columnKey: "type" })} />
               <Th {...getThProps({ columnKey: "modified" })} />
               <Th {...getThProps({ columnKey: "vulnerabilities" })} />
             </TableHeaderContentWithControls>
@@ -111,7 +112,7 @@ export const AdvisoryTable: React.FC = () => {
                       </NavLink>
                     </Td>
                     <Td
-                      width={40}
+                      width={30}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "title" })}
                     >
@@ -127,6 +128,9 @@ export const AdvisoryTable: React.FC = () => {
                           value={item.average_severity as Severity}
                         />
                       )}
+                    </Td>
+                    <Td width={10} {...getTdProps({ columnKey: "type" })}>
+                      {item.labels.type}
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "modified" })}>
                       {formatDate(item.modified)}

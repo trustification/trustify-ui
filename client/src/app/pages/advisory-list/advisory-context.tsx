@@ -20,7 +20,12 @@ import { useFetchAdvisories } from "@app/queries/advisories";
 interface IAdvisorySearchContext {
   tableControls: ITableControls<
     AdvisorySummary,
-    "identifier" | "title" | "severity" | "modified" | "vulnerabilities",
+    | "identifier"
+    | "title"
+    | "severity"
+    | "type"
+    | "modified"
+    | "vulnerabilities",
     "identifier" | "severity" | "modified",
     "" | "average_severity" | "modified",
     string
@@ -51,6 +56,7 @@ export const AdvisorySearchProvider: React.FunctionComponent<
       identifier: "ID",
       title: "Title",
       severity: "Aggregated Severity",
+      type: "Type",
       modified: "Revision",
       vulnerabilities: "Vulnerabilities",
     },
