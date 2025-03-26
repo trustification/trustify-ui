@@ -128,7 +128,11 @@ export const AdvisoryTable: React.FC = () => {
                         />
                       )}
                     </Td>
-                    <Td width={10} {...getTdProps({ columnKey: "modified" })}>
+                    <Td
+                      width={10}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "modified" })}
+                    >
                       {formatDate(item.modified)}
                     </Td>
                     <Td

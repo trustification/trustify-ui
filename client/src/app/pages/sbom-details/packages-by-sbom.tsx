@@ -182,7 +182,11 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                         </FlexItem>
                       </Flex>
                     </Td>
-                    <Td width={20} {...getTdProps({ columnKey: "version" })}>
+                    <Td
+                      width={20}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "version" })}
+                    >
                       {item.decomposedPurl?.version}
                     </Td>
                     <Td width={50} {...getTdProps({ columnKey: "qualifiers" })}>
