@@ -38,7 +38,7 @@ export const VulnerabilitiesByAdvisory: React.FC<
       discovery: "Discovery",
       release: "Release",
       score: "Score",
-      cwe: "Score",
+      cwe: "CWE",
     },
     hasActionsColumn: false,
     isSortEnabled: true,
