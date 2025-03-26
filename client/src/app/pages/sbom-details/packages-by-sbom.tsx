@@ -168,7 +168,7 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                       <ExpandableRowContent>
                         <DescriptionList>
                           <DescriptionListGroup>
-                            <DescriptionListTerm>Purls</DescriptionListTerm>
+                            <DescriptionListTerm>External identifier</DescriptionListTerm>
                             <DescriptionListDescription>
                               <List>
                                 {item.purl.map((item) => (
