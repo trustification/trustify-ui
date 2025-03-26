@@ -149,15 +149,14 @@ export const VulnerabilitiesByPackage: React.FC<
                       )}
                     </Td>
                     <Td width={15} {...getTdProps({ columnKey: "severity" })}>
-                      {/* TODO */}
-                      {/* {item.vulnerability?.average_severity && (
+                      {item.vulnerability?.average_severity && (
                         <SeverityShieldAndText
                           value={item.vulnerability.average_severity}
                           score={item.vulnerability.average_score}
                           showLabel
                           showScore
                         />
-                      )} */}
+                      )}
                     </Td>
                     <Td
                       width={10}
