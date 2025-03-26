@@ -118,7 +118,11 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
             return (
               <Tbody key={item.id}>
                 <Tr {...getTrProps({ item })}>
-                  <Td width={35} {...getTdProps({ columnKey: "name" })}>
+                  <Td
+                    width={35}
+                    modifier="breakWord"
+                    {...getTdProps({ columnKey: "name" })}
+                  >
                     <Link to={`/sboms/${item.id}`}>{item.name}</Link>
                   </Td>
                   <Td

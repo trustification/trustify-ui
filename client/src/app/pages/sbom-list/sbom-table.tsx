@@ -74,6 +74,7 @@ export const SbomTable: React.FC = () => {
                   >
                     <Td
                       width={25}
+                      modifier="breakWord"
                       {...getTdProps({
                         columnKey: "name",
                         isCompoundExpandToggle: true,
