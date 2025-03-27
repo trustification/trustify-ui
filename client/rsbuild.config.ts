@@ -96,9 +96,9 @@ export default defineConfig({
             ({ file = "" }) => /\/stories\//.test(file),
             ({ file = "" }) => /\/mocks\//.test(file),
             ({ file = "" }) => /\/src\/app\/client\/[^/]+\.ts$/.test(file),
-          ]
-        }
-      }
+          ],
+        },
+      },
     }),
     renameIndex(),
     ignoreProcessEnv(),
