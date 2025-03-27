@@ -4,6 +4,7 @@ import {
   Badge,
   Card,
   CardBody,
+  Icon,
   Popover,
   Split,
   SplitItem,
@@ -13,6 +14,7 @@ import {
   Tabs,
 } from "@patternfly/react-core";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
+import SpinnerIcon from "@patternfly/react-icons/dist/esm/icons/spinner-icon";
 
 import type {
   AdvisorySummary,
@@ -45,14 +47,22 @@ export interface SearchTabsProps {
       "" | "average_severity" | "published"
     >;
   };
+
   packageTable?: ReactElement;
   packageTotalCount: number;
+  isFetchingPackages: boolean;
+
   sbomTable?: ReactElement;
   sbomTotalCount: number;
+  isFetchingSboms: boolean;
+
   vulnerabilityTable?: ReactElement;
   vulnerabilityTotalCount: number;
+  isFetchingVulnerabilities: boolean;
+
   advisoryTable?: ReactNode;
   advisoryTotalCount: number;
+  isFetchingAdvisories: boolean;
 }
 
 export const SearchTabs: React.FC<SearchTabsProps> = ({
@@ -65,6 +75,10 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
   vulnerabilityTotalCount,
   advisoryTable,
   advisoryTotalCount,
+  isFetchingPackages,
+  isFetchingSboms,
+  isFetchingVulnerabilities,
+  isFetchingAdvisories,
 }) => {
   const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
   const {
@@ -137,7 +151,13 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
               <TabTitleText>
                 SBOMs{"  "}
                 <Badge screenReaderText="Search Result Count">
-                  {sbomTotalCount}
+                  {isFetchingSboms ? (
+                    <Icon size="sm">
+                      <SpinnerIcon />
+                    </Icon>
+                  ) : (
+                    sbomTotalCount
+                  )}
                 </Badge>
               </TabTitleText>
             }
@@ -158,7 +178,13 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
               <TabTitleText>
                 Packages{"  "}
                 <Badge screenReaderText="Search Result Count">
-                  {packageTotalCount}
+                  {isFetchingPackages ? (
+                    <Icon size="sm">
+                      <SpinnerIcon />
+                    </Icon>
+                  ) : (
+                    packageTotalCount
+                  )}
                 </Badge>
               </TabTitleText>
             }
@@ -171,7 +197,13 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
               <TabTitleText>
                 Vulnerabilities{"  "}
                 <Badge screenReaderText="Search Result Count">
-                  {vulnerabilityTotalCount}
+                  {isFetchingVulnerabilities ? (
+                    <Icon size="sm">
+                      <SpinnerIcon />
+                    </Icon>
+                  ) : (
+                    vulnerabilityTotalCount
+                  )}
                 </Badge>
               </TabTitleText>
             }
@@ -184,7 +216,13 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
               <TabTitleText>
                 Advisories{"  "}
                 <Badge screenReaderText="Advisory Result Count">
-                  {advisoryTotalCount}
+                  {isFetchingAdvisories ? (
+                    <Icon size="sm">
+                      <SpinnerIcon />
+                    </Icon>
+                  ) : (
+                    advisoryTotalCount
+                  )}
                 </Badge>
               </TabTitleText>
             }
