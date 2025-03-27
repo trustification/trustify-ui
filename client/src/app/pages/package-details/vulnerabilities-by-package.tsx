@@ -4,7 +4,15 @@ import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
-import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
+import {
+  Table,
+  TableText,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@patternfly/react-table";
 
 import { getSeverityPriority } from "@app/api/model-utils";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
@@ -14,6 +22,7 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
+import { TdWithFocusStatus } from "@app/components/TdWithFocusStatus";
 import { VulnerabilityDescription } from "@app/components/VulnerabilityDescription";
 import { useVulnerabilitiesOfPackage } from "@app/hooks/domain-controls/useVulnerabilitiesOfPackage";
 import { useLocalTableControls } from "@app/hooks/table-controls";
@@ -130,28 +139,47 @@ export const VulnerabilitiesByPackage: React.FC<
                     item={item}
                     rowIndex={rowIndex}
                   >
-                    <Td width={15} {...getTdProps({ columnKey: "identifier" })}>
+                    <Td
+                      width={15}
+                      modifier="breakWord"
+                      {...getTdProps({ columnKey: "identifier" })}
+                    >
                       <Link
                         to={`/vulnerabilities/${item.vulnerability.identifier}`}
                       >
                         {item.vulnerability.identifier}
                       </Link>
                     </Td>
-                    <Td
-                      width={60}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "description" })}
-                    >
-                      {item.vulnerability && (
-                        <VulnerabilityDescription
-                          vulnerability={item.vulnerability}
-                        />
+                    <TdWithFocusStatus>
+                      {(isFocused, setIsFocused) => (
+                        <Td
+                          width={60}
+                          modifier="truncate"
+                          onFocus={() => setIsFocused(true)}
+                          onBlur={() => setIsFocused(false)}
+                          tabIndex={0}
+                          {...getTdProps({ columnKey: "description" })}
+                        >
+                          <TableText
+                            focused={isFocused}
+                            wrapModifier="truncate"
+                          >
+                            {item.vulnerability && (
+                              <VulnerabilityDescription
+                                vulnerability={item.vulnerability}
+                              />
+                            )}
+                          </TableText>
+                        </Td>
                       )}
-                    </Td>
+                    </TdWithFocusStatus>
                     <Td width={15} {...getTdProps({ columnKey: "severity" })}>
                       {item.vulnerability?.average_severity && (
                         <SeverityShieldAndText
                           value={item.vulnerability.average_severity}
+                          score={item.vulnerability.average_score}
+                          showLabel
+                          showScore
                         />
                       )}
                     </Td>

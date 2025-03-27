@@ -21,6 +21,7 @@ import {
 import {
   ExpandableRowContent,
   Table,
+  TableText,
   Tbody,
   Td,
   Th,
@@ -49,6 +50,7 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
+import { TdWithFocusStatus } from "@app/components/TdWithFocusStatus";
 import { VulnerabilityDescription } from "@app/components/VulnerabilityDescription";
 import { useVulnerabilitiesOfSbom } from "@app/hooks/domain-controls/useVulnerabilitiesOfSbom";
 import { useLocalTableControls } from "@app/hooks/table-controls";
@@ -267,29 +269,48 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                         item={item}
                         rowIndex={rowIndex}
                       >
-                        <Td width={15} {...getTdProps({ columnKey: "id" })}>
+                        <Td
+                          width={15}
+                          modifier="breakWord"
+                          {...getTdProps({ columnKey: "id" })}
+                        >
                           <Link
                             to={`/vulnerabilities/${item.vulnerability.identifier}`}
                           >
                             {item.vulnerability.identifier}
                           </Link>
                         </Td>
-                        <Td
-                          width={35}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "description" })}
-                        >
-                          {item.vulnerability && (
-                            <VulnerabilityDescription
-                              vulnerability={item.vulnerability}
-                            />
+                        <TdWithFocusStatus>
+                          {(isFocused, setIsFocused) => (
+                            <Td
+                              width={35}
+                              modifier="truncate"
+                              onFocus={() => setIsFocused(true)}
+                              onBlur={() => setIsFocused(false)}
+                              tabIndex={0}
+                              {...getTdProps({ columnKey: "description" })}
+                            >
+                              <TableText
+                                focused={isFocused}
+                                wrapModifier="truncate"
+                              >
+                                {item.vulnerability && (
+                                  <VulnerabilityDescription
+                                    vulnerability={item.vulnerability}
+                                  />
+                                )}
+                              </TableText>
+                            </Td>
                           )}
-                        </Td>
+                        </TdWithFocusStatus>
                         <Td width={10} {...getTdProps({ columnKey: "cvss" })}>
                           <SeverityShieldAndText
                             value={extendedSeverityFromSeverity(
                               item.vulnerability.average_severity,
                             )}
+                            score={item.vulnerability.average_score}
+                            showLabel
+                            showScore
                           />
                         </Td>
                         <Td
