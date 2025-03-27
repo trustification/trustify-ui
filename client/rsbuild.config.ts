@@ -5,6 +5,7 @@ import { defineConfig } from "@rsbuild/core";
 import { pluginReact } from "@rsbuild/plugin-react";
 
 import type { RsbuildPlugin } from "@rsbuild/core";
+import { pluginTypeCheck } from "@rsbuild/plugin-type-check";
 
 import {
   SERVER_ENV_KEYS,
@@ -83,7 +84,25 @@ export const ignoreProcessEnv = (): RsbuildPlugin => ({
 });
 
 export default defineConfig({
-  plugins: [pluginReact(), renameIndex(), ignoreProcessEnv()],
+  plugins: [
+    pluginReact(),
+    pluginTypeCheck({
+      enable: process.env.NODE_ENV === "production",
+      tsCheckerOptions: {
+        issue: {
+          exclude: [
+            ({ file = "" }) => /[\\/]node_modules[\\/]/.test(file),
+            ({ file = "" }) => /^.*\/[^/]+\.stories\.tsx$/.test(file),
+            ({ file = "" }) => /\/stories\//.test(file),
+            ({ file = "" }) => /\/mocks\//.test(file),
+            ({ file = "" }) => /\/src\/app\/client\/[^/]+\.ts$/.test(file),
+          ]
+        }
+      }
+    }),
+    renameIndex(),
+    ignoreProcessEnv(),
+  ],
   html: {
     template: path.join(__dirname, "index.html"),
     templateParameters: {
