@@ -19,13 +19,19 @@ const areVulnerabilityOfPackageEqual = (
 };
 
 interface FlatVulnerabilityOfPackage {
-  vulnerability: VulnerabilityHead & { average_severity: ExtendedSeverity };
+  vulnerability: VulnerabilityHead & {
+    average_severity: ExtendedSeverity;
+    average_score: number;
+  };
   vulnerabilityStatus: VulnerabilityStatus;
   advisory: PurlAdvisory;
 }
 
 interface VulnerabilityOfPackage {
-  vulnerability: VulnerabilityHead & { average_severity: ExtendedSeverity };
+  vulnerability: VulnerabilityHead & {
+    average_severity: ExtendedSeverity;
+    average_score: number;
+  };
   vulnerabilityStatus: VulnerabilityStatus;
   relatedSboms: {
     advisory: PurlAdvisory;
@@ -70,6 +76,7 @@ const advisoryToModels = (advisories: PurlAdvisory[]) => {
             vulnerability: {
               ...pkgStatus.vulnerability,
               average_severity: extendedSeverity,
+              average_score: pkgStatus.average_score,
             },
             vulnerabilityStatus: pkgStatus.status as VulnerabilityStatus,
             advisory: advisory,
