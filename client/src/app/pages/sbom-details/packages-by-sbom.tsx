@@ -156,14 +156,7 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                       modifier="truncate"
                       {...getTdProps({ columnKey: "version" })}
                     >
-                      {item.decomposedPurl?.version}
-                    </Td>
-                    <Td width={50} {...getTdProps({ columnKey: "qualifiers" })}>
-                      {item.decomposedPurl?.qualifiers && (
-                        <PackageQualifiers
-                          value={item.decomposedPurl?.qualifiers}
-                        />
-                      )}
+                      {item?.version}
                     </Td>
                   </TableRowContentWithControls>
                 </Tr>
