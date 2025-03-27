@@ -100,6 +100,7 @@ export const AdvisoryTable: React.FC = () => {
                   >
                     <Td
                       width={15}
+                      modifier="breakWord"
                       {...getTdProps({
                         columnKey: "identifier",
                         isCompoundExpandToggle: true,

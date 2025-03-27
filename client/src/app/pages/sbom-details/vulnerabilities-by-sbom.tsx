@@ -269,7 +269,11 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                         item={item}
                         rowIndex={rowIndex}
                       >
-                        <Td width={15} {...getTdProps({ columnKey: "id" })}>
+                        <Td
+                          width={15}
+                          modifier="breakWord"
+                          {...getTdProps({ columnKey: "id" })}
+                        >
                           <Link
                             to={`/vulnerabilities/${item.vulnerability.identifier}`}
                           >
