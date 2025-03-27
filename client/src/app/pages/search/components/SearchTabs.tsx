@@ -117,7 +117,6 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
               <FilterPanel
                 omitFilterCategoryKeys={[""]}
                 {...advisoryFilterPanelProps}
-                filterCategories={[]}
               />
             ) : null}
           </CardBody>
