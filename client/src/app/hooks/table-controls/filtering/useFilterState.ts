@@ -1,10 +1,14 @@
-import { FilterCategory, IFilterValues } from "@app/components/FilterToolbar";
-import { IFeaturePersistenceArgs } from "../types";
+import { useEffect, useState } from "react";
+
+import type {
+  FilterCategory,
+  IFilterValues,
+} from "@app/components/FilterToolbar";
 import { usePersistentState } from "@app/hooks/usePersistentState";
+import type { DiscriminatedArgs } from "@app/utils/type-utils";
+import type { IFeaturePersistenceArgs } from "../types";
 import { serializeFilterUrlParams } from "./helpers";
 import { deserializeFilterUrlParams } from "./helpers";
-import { DiscriminatedArgs } from "@app/utils/type-utils";
-import { useEffect, useState } from "react";
 
 /**
  * The "source of truth" state for the filter feature.
@@ -61,7 +65,7 @@ export const useFilterState = <
   TPersistenceKeyPrefix extends string = string,
 >(
   args: IFilterStateArgs<TItem, TFilterCategoryKey> &
-    IFeaturePersistenceArgs<TPersistenceKeyPrefix>
+    IFeaturePersistenceArgs<TPersistenceKeyPrefix>,
 ): IFilterState<TFilterCategoryKey> => {
   const { isFilterEnabled, persistTo = "state", persistenceKeyPrefix } = args;
 

@@ -1,11 +1,13 @@
-import * as React from "react";
-import { FieldValues, Path } from "react-hook-form";
-import { FormSelect, FormSelectProps } from "@patternfly/react-core";
+import type * as React from "react";
+import type { FieldValues, Path } from "react-hook-form";
+
 import { getValidatedFromErrors } from "@app/utils/utils";
+import { FormSelect, type FormSelectProps } from "@patternfly/react-core";
+
 import {
-  extractGroupControllerProps,
+  type BaseHookFormPFGroupControllerProps,
   HookFormPFGroupController,
-  BaseHookFormPFGroupControllerProps,
+  extractGroupControllerProps,
 } from "./HookFormPFGroupController";
 
 export type HookFormPFSelectProps<
@@ -20,7 +22,7 @@ export const HookFormPFSelect = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends Path<TFieldValues> = Path<TFieldValues>,
 >(
-  props: HookFormPFSelectProps<TFieldValues, TName>
+  props: HookFormPFSelectProps<TFieldValues, TName>,
 ) => {
   const { extractedProps, remainingProps } = extractGroupControllerProps<
     TFieldValues,

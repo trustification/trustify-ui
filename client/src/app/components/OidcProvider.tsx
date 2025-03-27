@@ -29,13 +29,11 @@ export const OidcProvider: React.FC<IOidcProviderProps> = ({ children }) => {
     <AuthProvider
       {...oidcClientSettings}
       automaticSilentRenew={true}
-      onSigninCallback={() =>
-        window.history.replaceState(
-          {},
-          document.title,
-          window.location.pathname
-        )
-      }
+      onSigninCallback={() => {
+        const params = new URLSearchParams(window.location.search);
+        const relativePath = params.get("state")?.split(";")?.[1];
+        window.history.replaceState({}, document.title, relativePath ?? "/");
+      }}
     >
       <AuthEnabledOidcProvider>{children}</AuthEnabledOidcProvider>
     </AuthProvider>
@@ -49,9 +47,11 @@ const AuthEnabledOidcProvider: React.FC<IOidcProviderProps> = ({
 
   React.useEffect(() => {
     if (!auth.isAuthenticated && !auth.isLoading && !auth.error) {
-      auth.signinRedirect();
+      auth.signinRedirect({
+        url_state: window.location.pathname,
+      });
     }
-  }, [auth.isAuthenticated, auth.isLoading, auth.error]);
+  }, [auth.isAuthenticated, auth.isLoading, auth.error, auth.signinRedirect]);
 
   React.useEffect(() => {
     initInterceptors();
@@ -59,9 +59,11 @@ const AuthEnabledOidcProvider: React.FC<IOidcProviderProps> = ({
 
   if (auth.isAuthenticated) {
     return <Suspense fallback={<AppPlaceholder />}>{children}</Suspense>;
-  } else if (auth.isLoading) {
+  }
+  if (auth.isLoading) {
     return <AppPlaceholder />;
-  } else if (auth.error) {
+  }
+  if (auth.error) {
     return (
       <Bullseye>
         <EmptyState variant={EmptyStateVariant.sm}>
@@ -79,7 +81,6 @@ const AuthEnabledOidcProvider: React.FC<IOidcProviderProps> = ({
         </EmptyState>
       </Bullseye>
     );
-  } else {
-    return <p>Login in...</p>;
   }
+  return <p>Login in...</p>;
 };

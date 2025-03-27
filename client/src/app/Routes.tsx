@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from "react";
+import { Suspense, lazy } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useParams, useRoutes } from "react-router-dom";
 
@@ -10,7 +10,7 @@ const AdvisoryList = lazy(() => import("./pages/advisory-list"));
 const AdvisoryDetails = lazy(() => import("./pages/advisory-details"));
 const VulnerabilityList = lazy(() => import("./pages/vulnerability-list"));
 const VulnerabilityDetails = lazy(
-  () => import("./pages/vulnerability-details")
+  () => import("./pages/vulnerability-details"),
 );
 const PackageList = lazy(() => import("./pages/package-list"));
 const PackageDetails = lazy(() => import("./pages/package-details"));
@@ -54,7 +54,7 @@ export const AppRoutes = () => {
       element: <SBOMDetails />,
     },
     {
-      path: `/importers`,
+      path: "/importers",
       element: <ImporterList />,
     },
     { path: "/upload", element: <Upload /> },
@@ -77,10 +77,10 @@ export const AppRoutes = () => {
 
 export const useRouteParams = (pathParam: PathParam) => {
   const params = useParams();
-  let value = params[pathParam];
+  const value = params[pathParam];
   if (value === undefined) {
     throw new Error(
-      `ASSERTION FAILURE: required path parameter not set: ${pathParam}`
+      `ASSERTION FAILURE: required path parameter not set: ${pathParam}`,
     );
   }
   return value;

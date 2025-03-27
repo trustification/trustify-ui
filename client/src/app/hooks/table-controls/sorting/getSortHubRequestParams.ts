@@ -1,5 +1,5 @@
-import { HubRequestParams } from "@app/api/models";
-import { ISortState } from "./useSortState";
+import type { HubRequestParams } from "@app/api/models";
+import type { ISortState } from "./useSortState";
 
 /**
  * Args for getSortHubRequestParams
@@ -46,7 +46,7 @@ export const getSortHubRequestParams = <TSortableColumnKey extends string>({
  */
 export const serializeSortRequestParamsForHub = (
   deserializedParams: HubRequestParams,
-  serializedParams: URLSearchParams
+  serializedParams: URLSearchParams,
 ) => {
   const { sort } = deserializedParams;
   if (sort) {

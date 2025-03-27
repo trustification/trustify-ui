@@ -10,8 +10,8 @@ import {
   Tab,
   TabAction,
   TabContent,
-  Tabs,
   TabTitleText,
+  Tabs,
   Text,
   TextContent,
 } from "@patternfly/react-core";
@@ -38,8 +38,8 @@ export const PackageDetails: React.FC = () => {
   const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
 
   const handleTabClick = (
-    event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent,
-    tabIndex: string | number
+    _event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
+    tabIndex: string | number,
   ) => {
     setActiveTabKey(tabIndex);
   };

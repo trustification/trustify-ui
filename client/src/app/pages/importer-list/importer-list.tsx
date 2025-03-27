@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import dayjs from "dayjs";
 
 import {
@@ -31,7 +31,7 @@ import {
 
 import {
   ConfirmDialog,
-  ConfirmDialogProps,
+  type ConfirmDialogProps,
 } from "@app/components/ConfirmDialog";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import {
@@ -43,11 +43,11 @@ import { formatDateTime, getAxiosErrorMessage } from "@app/utils/utils";
 
 import { client } from "@app/axios-config/apiInit";
 import {
+  type Importer,
+  type ImporterConfiguration,
+  type Message,
+  type SbomImporter,
   forceRunImporter,
-  Importer,
-  ImporterConfiguration,
-  Message,
-  SbomImporter,
 } from "@app/client";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { IconedStatus } from "@app/components/IconedStatus";
@@ -67,15 +67,15 @@ type ImporterStatus = "enabled" | "disabled" | "scheduled" | "running";
 
 const getImporterStatus = (importer: Importer): ImporterStatus => {
   const importerType = Object.keys(importer.configuration ?? {})[0];
+  // biome-ignore lint/suspicious/noExplicitAny:
   const configValues = (importer.configuration as any)[
     importerType
   ] as SbomImporter;
   const isImporterEnabled = configValues?.disabled === false;
   if (!isImporterEnabled) {
     return "disabled";
-  } else {
-    return importer.state === "running" ? "running" : "scheduled";
   }
+  return importer.state === "running" ? "running" : "scheduled";
 };
 
 export const ImporterList: React.FC = () => {
@@ -92,23 +92,7 @@ export const ImporterList: React.FC = () => {
     setSelectedRow(row);
   };
 
-  const [refetchInterval, setRefetchInterval] = React.useState(10000);
-  const { importers, isFetching, fetchError } = useFetchImporters(
-    false,
-    refetchInterval
-  );
-
-  // Fetch importers with more frecuency in case any is "running"
-  React.useEffect(() => {
-    const isSomeTaskRunning = importers.some(
-      (item) => item.state === "running"
-    );
-    if (isSomeTaskRunning) {
-      setRefetchInterval(5000);
-    } else if (refetchInterval !== 10000) {
-      setRefetchInterval(10000);
-    }
-  }, [importers]);
+  const { importers, isFetching, fetchError } = useFetchImporters();
 
   // Enable/Disable Importer
 
@@ -121,11 +105,12 @@ export const ImporterList: React.FC = () => {
 
   const { mutate: updateImporter } = useUpdateImporterMutation(
     () => {},
-    onEnableDisableError
+    onEnableDisableError,
   );
 
   const execEnableDisableImporter = (row: Importer, enable: boolean) => {
     const importerType = Object.keys(row.configuration ?? {})[0];
+    // biome-ignore lint/suspicious/noExplicitAny:
     const currentConfigValues = (row.configuration as any)[
       importerType
     ] as SbomImporter;
@@ -334,6 +319,7 @@ export const ImporterList: React.FC = () => {
             >
               {currentPageItems?.map((item, rowIndex) => {
                 const importerType = Object.keys(item.configuration ?? {})[0];
+                // biome-ignore lint/suspicious/noExplicitAny:
                 const configValues = (item.configuration as any)[
                   importerType
                 ] as SbomImporter;
@@ -501,7 +487,7 @@ const messagesToLogData = (messages: {
           title: `${groupKey.charAt(0).toUpperCase() + groupKey.slice(1)}: "${objectKey}"`,
           body: objectValue
             .map((item) => {
-              let color;
+              let color: string | null = null;
               switch (item.severity) {
                 case "none":
                   color = ANSICOLOR.green;
@@ -693,9 +679,8 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
                     {children}
                   </Button>
                 );
-              } else {
-                return children;
               }
+              return children;
             };
 
             return (

@@ -23,7 +23,7 @@ import { formatDate } from "@app/utils/utils";
 import { SBOMVulnerabilities } from "./components/SbomVulnerabilities";
 import { SbomSearchContext } from "./sbom-context";
 
-export const SbomTable: React.FC = ({}) => {
+export const SbomTable: React.FC = () => {
   const { isFetching, fetchError, totalItemCount, tableControls } =
     React.useContext(SbomSearchContext);
 
@@ -40,7 +40,7 @@ export const SbomTable: React.FC = ({}) => {
     expansionDerivedState: { isCellExpanded },
   } = tableControls;
 
-  const { downloadSBOM } = useDownload();
+  const { downloadSBOM, downloadSBOMLicenses } = useDownload();
 
   return (
     <>
@@ -100,7 +100,11 @@ export const SbomTable: React.FC = ({}) => {
                     >
                       {item.authors.join(", ")}
                     </Td>
-                    <Td width={10} {...getTdProps({ columnKey: "published" })}>
+                    <Td
+                      width={10}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "published" })}
+                    >
                       {formatDate(item.published)}
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "packages" })}>
@@ -116,9 +120,15 @@ export const SbomTable: React.FC = ({}) => {
                       <ActionsColumn
                         items={[
                           {
-                            title: "Download",
+                            title: "Download SBOM",
                             onClick: () => {
                               downloadSBOM(item.id, `${item.name}.json`);
+                            },
+                          },
+                          {
+                            title: "Download License Report",
+                            onClick: () => {
+                              downloadSBOMLicenses(item.id);
                             },
                           },
                         ]}

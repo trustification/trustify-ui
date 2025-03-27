@@ -1,12 +1,20 @@
-import React from "react";
+import type React from "react";
 import { Link } from "react-router-dom";
 
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
-import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
+import {
+  Table,
+  TableText,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@patternfly/react-table";
 
-import { AdvisoryVulnerabilitySummary } from "@app/client";
+import type { AdvisoryVulnerabilitySummary } from "@app/client";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
@@ -14,6 +22,7 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
+import { TdWithFocusStatus } from "@app/components/TdWithFocusStatus";
 import { VulnerabilityDescription } from "@app/components/VulnerabilityDescription";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { formatDate } from "@app/utils/utils";
@@ -38,12 +47,12 @@ export const VulnerabilitiesByAdvisory: React.FC<
       discovery: "Discovery",
       release: "Release",
       score: "Score",
-      cwe: "Score",
+      cwe: "CWE",
     },
     hasActionsColumn: false,
     isSortEnabled: true,
     sortableColumns: [],
-    getSortValues: (item) => ({}),
+    getSortValues: (_item) => ({}),
     isPaginationEnabled: true,
     isFilterEnabled: false,
     filterCategories: [],
@@ -55,7 +64,6 @@ export const VulnerabilitiesByAdvisory: React.FC<
     numRenderedColumns,
     propHelpers: {
       toolbarProps,
-      filterToolbarProps,
       paginationToolbarItemProps,
       paginationProps,
       tableProps,
@@ -112,13 +120,25 @@ export const VulnerabilitiesByAdvisory: React.FC<
                         {item.identifier}
                       </Link>
                     </Td>
-                    <Td
-                      width={40}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "title" })}
-                    >
-                      <VulnerabilityDescription vulnerability={item} />
-                    </Td>
+                    <TdWithFocusStatus>
+                      {(isFocused, setIsFocused) => (
+                        <Td
+                          width={40}
+                          modifier="truncate"
+                          onFocus={() => setIsFocused(true)}
+                          onBlur={() => setIsFocused(false)}
+                          tabIndex={0}
+                          {...getTdProps({ columnKey: "title" })}
+                        >
+                          <TableText
+                            focused={isFocused}
+                            wrapModifier="truncate"
+                          >
+                            <VulnerabilityDescription vulnerability={item} />
+                          </TableText>
+                        </Td>
+                      )}
+                    </TdWithFocusStatus>
                     <Td width={15} {...getTdProps({ columnKey: "discovery" })}>
                       {formatDate(item.discovered)}
                     </Td>
@@ -135,7 +155,12 @@ export const VulnerabilitiesByAdvisory: React.FC<
                       {...getTdProps({ columnKey: "score" })}
                     >
                       {item.severity && (
-                        <SeverityShieldAndText value={item.severity} />
+                        <SeverityShieldAndText
+                          value={item.severity}
+                          score={item.score}
+                          showLabel
+                          showScore
+                        />
                       )}
                     </Td>
                     <Td

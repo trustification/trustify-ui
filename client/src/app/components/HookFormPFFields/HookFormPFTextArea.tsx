@@ -1,10 +1,11 @@
-import * as React from "react";
-import { FieldValues, Path } from "react-hook-form";
-import { TextArea, TextAreaProps } from "@patternfly/react-core";
+import type { FieldValues, Path } from "react-hook-form";
+
+import { TextArea, type TextAreaProps } from "@patternfly/react-core";
+
 import { getValidatedFromErrors } from "@app/utils/utils";
 import {
+  type BaseHookFormPFGroupControllerProps,
   HookFormPFGroupController,
-  BaseHookFormPFGroupControllerProps,
   extractGroupControllerProps,
 } from "./HookFormPFGroupController";
 
@@ -17,7 +18,7 @@ export const HookFormPFTextArea = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends Path<TFieldValues> = Path<TFieldValues>,
 >(
-  props: HookFormPFTextAreaProps<TFieldValues, TName>
+  props: HookFormPFTextAreaProps<TFieldValues, TName>,
 ) => {
   const { extractedProps, remainingProps } = extractGroupControllerProps<
     TFieldValues,

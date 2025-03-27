@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import prettyBytes from "pretty-bytes";
 
@@ -16,7 +16,7 @@ import {
   ListItem,
 } from "@patternfly/react-core";
 
-import { SbomSummary } from "@app/client";
+import type { SbomSummary } from "@app/client";
 import { formatDate } from "@app/utils/utils";
 
 interface InfoProps {
@@ -118,8 +118,8 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
                   <List>
                     {sbom.described_by
                       .flatMap((e) => e.cpe)
-                      .map((e, index) => (
-                        <ListItem key={index}>{e}</ListItem>
+                      .map((e) => (
+                        <ListItem key={e}>{e}</ListItem>
                       ))}
                     <ListItem>
                       {sbom.described_by

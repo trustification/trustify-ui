@@ -42,13 +42,14 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
   const { tableControls: packageTableControls } =
     React.useContext(PackageSearchContext);
   const { tableControls: vulnerabilityTableControls } = React.useContext(
-    VulnerabilitySearchContext
+    VulnerabilitySearchContext,
   );
   const { tableControls: advisoryTableControls } = React.useContext(
-    AdvisorySearchContext
+    AdvisorySearchContext,
   );
 
   const {
+    isFetching: isFetchingSboms,
     totalItemCount: sbomTotalCount,
     tableControls: {
       propHelpers: { filterPanelProps: sbomFilterPanelProps },
@@ -56,6 +57,7 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
   } = React.useContext(SbomSearchContext);
 
   const {
+    isFetching: isFetchingPackages,
     totalItemCount: packageTotalCount,
     tableControls: {
       propHelpers: { filterPanelProps: packageFilterPanelProps },
@@ -63,6 +65,7 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
   } = React.useContext(PackageSearchContext);
 
   const {
+    isFetching: isFetchingVulnerabilities,
     totalItemCount: vulnerabilityTotalCount,
     tableControls: {
       propHelpers: { filterPanelProps: vulnerabilityFilterPanelProps },
@@ -70,6 +73,7 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
   } = React.useContext(VulnerabilitySearchContext);
 
   const {
+    isFetching: isFetchingAdvisories,
     totalItemCount: advisoryTotalCount,
     tableControls: {
       propHelpers: { filterPanelProps: advisoryFilterPanelProps },
@@ -86,7 +90,7 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
   // Search
 
   const onChangeContextSearchValue = (searchValue: string | undefined) => {
-    if (searchValue == undefined) return;
+    if (searchValue === undefined) return;
     sbomTableControls.filterState.setFilterValues({
       ...sbomTableControls.filterState.filterValues,
       [FILTER_TEXT_CATEGORY_KEY]: [searchValue],
@@ -112,6 +116,10 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
       sbomTotalCount={sbomTotalCount}
       vulnerabilityTotalCount={vulnerabilityTotalCount}
       advisoryTotalCount={advisoryTotalCount}
+      isFetchingPackages={isFetchingPackages}
+      isFetchingSboms={isFetchingSboms}
+      isFetchingVulnerabilities={isFetchingVulnerabilities}
+      isFetchingAdvisories={isFetchingAdvisories}
     />
   );
 

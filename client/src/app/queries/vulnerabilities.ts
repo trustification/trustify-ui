@@ -1,13 +1,13 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 
-import { HubRequestParams } from "@app/api/models";
+import type { HubRequestParams } from "@app/api/models";
 import { client } from "@app/axios-config/apiInit";
 import {
+  type VulnerabilityDetails,
   deleteVulnerability,
   getVulnerability,
   listVulnerabilities,
-  VulnerabilityDetails,
 } from "@app/client";
 import { requestParamsQuery } from "@app/hooks/table-controls";
 
@@ -15,8 +15,7 @@ export const VulnerabilitiesQueryKey = "vulnerabilities";
 
 export const useFetchVulnerabilities = (
   params: HubRequestParams = {},
-  refetchDisabled: boolean = false,
-  disableQuery: boolean = false
+  disableQuery = false,
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [VulnerabilitiesQueryKey, params],
@@ -26,7 +25,6 @@ export const useFetchVulnerabilities = (
         query: { ...requestParamsQuery(params) },
       });
     },
-    refetchInterval: !refetchDisabled ? 5000 : false,
     enabled: !disableQuery,
   });
   return {
@@ -55,7 +53,7 @@ export const useFetchVulnerabilityById = (id: string) => {
 
 export const useDeleteVulnerabilityMutation = (
   onSuccess?: (payload: VulnerabilityDetails, id: string) => void,
-  onError?: (err: AxiosError, id: string) => void
+  onError?: (err: AxiosError, id: string) => void,
 ) => {
   return useMutation({
     mutationFn: async (id: string) => {

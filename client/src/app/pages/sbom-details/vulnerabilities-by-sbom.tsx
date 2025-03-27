@@ -21,6 +21,7 @@ import {
 import {
   ExpandableRowContent,
   Table,
+  TableText,
   Tbody,
   Td,
   Th,
@@ -29,8 +30,11 @@ import {
 } from "@patternfly/react-table";
 
 import { getSeverityPriority } from "@app/api/model-utils";
-import { VulnerabilityStatus } from "@app/api/models";
 import {
+  type VulnerabilityStatus,
+  extendedSeverityFromSeverity,
+} from "@app/api/models";
+import type {
   PurlSummary,
   SbomAdvisory,
   SbomPackage,
@@ -46,6 +50,7 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
+import { TdWithFocusStatus } from "@app/components/TdWithFocusStatus";
 import { VulnerabilityDescription } from "@app/components/VulnerabilityDescription";
 import { useVulnerabilitiesOfSbom } from "@app/hooks/domain-controls/useVulnerabilitiesOfSbom";
 import { useLocalTableControls } from "@app/hooks/table-controls";
@@ -86,7 +91,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
 
   const affectedVulnerabilities = React.useMemo(() => {
     return vulnerabilities.filter(
-      (item) => item.vulnerabilityStatus === "affected"
+      (item) => item.vulnerabilityStatus === "affected",
     );
   }, [vulnerabilities]);
 
@@ -96,11 +101,10 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
         .flatMap((i) => i.packages)
         .reduce((prev, current) => {
           const existingElement = prev.find((item) => item.id === current.id);
-          if (existingElement) {
-            return prev;
-          } else {
-            return [...prev, current];
+          if (!existingElement) {
+            prev.push(current);
           }
+          return prev;
         }, [] as SbomPackage[]);
       const result: TableData = {
         ...item,
@@ -116,7 +120,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
 
   const tableDataWithUiId = useWithUiId(
     tableData,
-    (d) => `${d.vulnerability.identifier}-${d.vulnerabilityStatus}`
+    (d) => `${d.vulnerability.identifier}-${d.vulnerabilityStatus}`,
   );
 
   const tableControls = useLocalTableControls({
@@ -163,7 +167,6 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
     numRenderedColumns,
     propHelpers: {
       toolbarProps,
-      filterToolbarProps,
       paginationToolbarItemProps,
       paginationProps,
       tableProps,
@@ -273,23 +276,38 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                             {item.vulnerability.identifier}
                           </Link>
                         </Td>
-                        <Td
-                          width={35}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "description" })}
-                        >
-                          {item.vulnerability && (
-                            <VulnerabilityDescription
-                              vulnerability={item.vulnerability}
-                            />
+                        <TdWithFocusStatus>
+                          {(isFocused, setIsFocused) => (
+                            <Td
+                              width={35}
+                              modifier="truncate"
+                              onFocus={() => setIsFocused(true)}
+                              onBlur={() => setIsFocused(false)}
+                              tabIndex={0}
+                              {...getTdProps({ columnKey: "description" })}
+                            >
+                              <TableText
+                                focused={isFocused}
+                                wrapModifier="truncate"
+                              >
+                                {item.vulnerability && (
+                                  <VulnerabilityDescription
+                                    vulnerability={item.vulnerability}
+                                  />
+                                )}
+                              </TableText>
+                            </Td>
                           )}
-                        </Td>
+                        </TdWithFocusStatus>
                         <Td width={10} {...getTdProps({ columnKey: "cvss" })}>
-                          {item.vulnerability.average_severity && (
-                            <SeverityShieldAndText
-                              value={item.vulnerability.average_severity}
-                            />
-                          )}
+                          <SeverityShieldAndText
+                            value={extendedSeverityFromSeverity(
+                              item.vulnerability.average_severity,
+                            )}
+                            score={item.vulnerability.average_score}
+                            showLabel
+                            showScore
+                          />
                         </Td>
                         <Td
                           width={15}
@@ -350,31 +368,30 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                                         };
 
                                         const hasNoPurlsButOnlyName =
-                                          item.name && item.purl.length == 0;
+                                          item.name && item.purl.length === 0;
 
                                         if (hasNoPurlsButOnlyName) {
                                           const result: EnrichedPurlSummary = {
                                             parentName: item.name,
                                           };
                                           return [result];
-                                        } else {
-                                          return item.purl.map((i) => {
-                                            const result: EnrichedPurlSummary =
-                                              {
-                                                parentName: item.name,
-                                                purlSummary: i,
-                                              };
-                                            return result;
-                                          });
                                         }
+
+                                        return item.purl.map((i) => {
+                                          const result: EnrichedPurlSummary = {
+                                            parentName: item.name,
+                                            purlSummary: i,
+                                          };
+                                          return result;
+                                        });
                                       })
                                       .map((purl, index) => {
                                         if (purl.purlSummary) {
                                           const decomposedPurl = decomposePurl(
-                                            purl.purlSummary.purl
+                                            purl.purlSummary.purl,
                                           );
                                           return (
-                                            <Tr key={`${index}-purl`}>
+                                            <Tr key={purl.purlSummary.uuid}>
                                               <Td>{decomposedPurl?.type}</Td>
                                               <Td>
                                                 {decomposedPurl?.namespace}
@@ -399,18 +416,20 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                                               </Td>
                                             </Tr>
                                           );
-                                        } else {
-                                          return (
-                                            <Tr key={`${index}-name`}>
-                                              <Td></Td>
-                                              <Td></Td>
-                                              <Td>{purl.parentName}</Td>
-                                              <Td></Td>
-                                              <Td></Td>
-                                              <Td></Td>
-                                            </Tr>
-                                          );
                                         }
+
+                                        return (
+                                          <Tr
+                                            key={`${purl.parentName}-${index}-name`}
+                                          >
+                                            <Td />
+                                            <Td />
+                                            <Td>{purl.parentName}</Td>
+                                            <Td />
+                                            <Td />
+                                            <Td />
+                                          </Tr>
+                                        );
                                       })}
                                   </Tbody>
                                 </Table>

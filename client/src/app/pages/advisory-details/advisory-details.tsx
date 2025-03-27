@@ -2,13 +2,16 @@ import React from "react";
 
 import {
   Button,
+  Flex,
+  FlexItem,
+  Label,
   PageSection,
   Split,
   SplitItem,
   Tab,
   TabContent,
-  Tabs,
   TabTitleText,
+  Tabs,
   Text,
   TextContent,
 } from "@patternfly/react-core";
@@ -27,8 +30,8 @@ export const AdvisoryDetails: React.FC = () => {
   const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
 
   const handleTabClick = (
-    event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent,
-    tabIndex: string | number
+    _event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
+    tabIndex: string | number,
   ) => {
     setActiveTabKey(tabIndex);
   };
@@ -48,12 +51,21 @@ export const AdvisoryDetails: React.FC = () => {
       <PageSection variant="light">
         <Split>
           <SplitItem isFilled>
-            <TextContent>
-              <Text component="h1">
-                {advisory?.document_id ?? advisoryId ?? ""}
-              </Text>
-              <Text component="p">Advisory detail information</Text>
-            </TextContent>
+            <Flex>
+              <FlexItem spacer={{ default: "spacerSm" }}>
+                <TextContent>
+                  <Text component="h1">
+                    {advisory?.document_id ?? advisoryId ?? ""}
+                  </Text>
+                  <Text component="p">Advisory detail information</Text>
+                </TextContent>
+              </FlexItem>
+              <FlexItem>
+                {advisory?.labels.type && (
+                  <Label color="blue">{advisory?.labels.type}</Label>
+                )}
+              </FlexItem>
+            </Flex>
           </SplitItem>
           <SplitItem>
             {!isFetching && (
@@ -66,7 +78,7 @@ export const AdvisoryDetails: React.FC = () => {
                       advisoryId,
                       advisory?.identifier
                         ? `${advisory?.identifier}.json`
-                        : `${advisoryId}.json`
+                        : `${advisoryId}.json`,
                     );
                   }
                 }}
