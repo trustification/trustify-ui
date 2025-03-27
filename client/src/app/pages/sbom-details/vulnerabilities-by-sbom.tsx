@@ -304,6 +304,9 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                             value={extendedSeverityFromSeverity(
                               item.vulnerability.average_severity,
                             )}
+                            score={item.vulnerability.average_score}
+                            showLabel
+                            showScore
                           />
                         </Td>
                         <Td

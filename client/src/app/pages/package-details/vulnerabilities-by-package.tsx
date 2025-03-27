@@ -173,6 +173,9 @@ export const VulnerabilitiesByPackage: React.FC<
                       {item.vulnerability?.average_severity && (
                         <SeverityShieldAndText
                           value={item.vulnerability.average_severity}
+                          score={item.vulnerability.average_score}
+                          showLabel
+                          showScore
                         />
                       )}
                     </Td>

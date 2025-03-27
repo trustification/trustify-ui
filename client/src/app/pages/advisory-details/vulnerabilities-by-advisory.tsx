@@ -155,7 +155,12 @@ export const VulnerabilitiesByAdvisory: React.FC<
                       {...getTdProps({ columnKey: "score" })}
                     >
                       {item.severity && (
-                        <SeverityShieldAndText value={item.severity} />
+                        <SeverityShieldAndText
+                          value={item.severity}
+                          score={item.score}
+                          showLabel
+                          showScore
+                        />
                       )}
                     </Td>
                     <Td

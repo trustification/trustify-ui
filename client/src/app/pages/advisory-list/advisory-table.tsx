@@ -125,6 +125,9 @@ export const AdvisoryTable: React.FC = () => {
                       {item.average_severity && (
                         <SeverityShieldAndText
                           value={item.average_severity as Severity}
+                          score={item.average_score}
+                          showLabel
+                          showScore
                         />
                       )}
                     </Td>
