@@ -193,7 +193,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
             actions={
               <>
                 <TabAction
-                  aria-label={`Package help popover`}
+                  aria-label="Package help popover"
                   ref={packagePopoverRef}
                 >
                   <HelpIcon />
@@ -232,7 +232,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
             actions={
               <>
                 <TabAction
-                  aria-label={`Vulnerability help popover`}
+                  aria-label="Vulnerability help popover"
                   ref={vulnerabilityPopoverRef}
                 >
                   <HelpIcon />
@@ -271,7 +271,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
             actions={
               <>
                 <TabAction
-                  aria-label={`Advisory help popover`}
+                  aria-label="Advisory help popover"
                   ref={advisoryPopoverRef}
                 >
                   <HelpIcon />
