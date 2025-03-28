@@ -2,6 +2,9 @@ import React from "react";
 
 import {
   Button,
+  Flex,
+  FlexItem,
+  Label,
   PageSection,
   Split,
   SplitItem,
@@ -48,12 +51,21 @@ export const AdvisoryDetails: React.FC = () => {
       <PageSection variant="light">
         <Split>
           <SplitItem isFilled>
-            <TextContent>
-              <Text component="h1">
-                {advisory?.document_id ?? advisoryId ?? ""}
-              </Text>
-              <Text component="p">Advisory detail information</Text>
-            </TextContent>
+            <Flex>
+              <FlexItem spacer={{ default: "spacerSm" }}>
+                <TextContent>
+                  <Text component="h1">
+                    {advisory?.document_id ?? advisoryId ?? ""}
+                  </Text>
+                  <Text component="p">Advisory detail information</Text>
+                </TextContent>
+              </FlexItem>
+              <FlexItem>
+                {advisory?.labels.type && (
+                  <Label color="blue">{advisory?.labels.type}</Label>
+                )}
+              </FlexItem>
+            </Flex>
           </SplitItem>
           <SplitItem>
             {!isFetching && (

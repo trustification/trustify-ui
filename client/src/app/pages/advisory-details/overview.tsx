@@ -50,6 +50,9 @@ export const Overview: React.FC<InfoProps> = ({ advisory }) => {
                     value={extendedSeverityFromSeverity(
                       advisory.average_severity as Severity,
                     )}
+                    score={advisory.average_score}
+                    showLabel
+                    showScore
                   />
                 </DescriptionListDescription>
               </DescriptionListGroup>

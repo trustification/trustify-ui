@@ -61,7 +61,11 @@ export const PackageTable: React.FC = () => {
                     item={item}
                     rowIndex={rowIndex}
                   >
-                    <Td width={15} {...getTdProps({ columnKey: "name" })}>
+                    <Td
+                      width={15}
+                      modifier="breakWord"
+                      {...getTdProps({ columnKey: "name" })}
+                    >
                       <NavLink to={`/packages/${item.uuid}`}>
                         {item.decomposedPurl
                           ? item.decomposedPurl?.name

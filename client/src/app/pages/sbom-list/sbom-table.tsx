@@ -74,6 +74,7 @@ export const SbomTable: React.FC = () => {
                   >
                     <Td
                       width={25}
+                      modifier="breakWord"
                       {...getTdProps({
                         columnKey: "name",
                         isCompoundExpandToggle: true,
@@ -100,7 +101,11 @@ export const SbomTable: React.FC = () => {
                     >
                       {item.authors.join(", ")}
                     </Td>
-                    <Td width={10} {...getTdProps({ columnKey: "published" })}>
+                    <Td
+                      width={10}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "published" })}
+                    >
                       {formatDate(item.published)}
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "packages" })}>
