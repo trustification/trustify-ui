@@ -19,7 +19,7 @@
     "preview": "rsbuild preview"
   },
   "dependencies": {
-    "@trustify-ui/common": "file:../common",
+    "@trustify-ui/common": "workspace:common",
     "@hey-api/client-axios": "^0.6.1",
     "@hookform/resolvers": "^2.9.11",
     "@patternfly/patternfly": "^5.4.0",
