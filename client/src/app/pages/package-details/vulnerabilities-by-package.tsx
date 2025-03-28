@@ -139,7 +139,11 @@ export const VulnerabilitiesByPackage: React.FC<
                     item={item}
                     rowIndex={rowIndex}
                   >
-                    <Td width={15} {...getTdProps({ columnKey: "identifier" })}>
+                    <Td
+                      width={15}
+                      modifier="breakWord"
+                      {...getTdProps({ columnKey: "identifier" })}
+                    >
                       <Link
                         to={`/vulnerabilities/${item.vulnerability.identifier}`}
                       >
