@@ -34,7 +34,7 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
-    sortableColumns: [],
+    sortableColumns: ["name"],
     isFilterEnabled: true,
     filterCategories: [
       {
@@ -54,7 +54,9 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
     purl,
     getHubRequestParams({
       ...tableControlState,
-      hubSortFieldKeys: {},
+      hubSortFieldKeys: {
+        name: "name",
+      },
     }),
   );
 
