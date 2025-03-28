@@ -12,12 +12,12 @@
     "format": "biome format .",
     "format:fix": "biome format --write .",
     "prebuild": "bun run clean",
-    "build": "bun run --cwd ../common build && NODE_ENV=production bun build ./src/index.ts --outdir ./dist --target node",
-    "start:dev": "bun run --cwd ./common build && concurrently -n common,client,server -c 'white.bold.inverse,green.bold.inverse,blue.bold.inverse' 'bun:start:dev:common' 'bun:start:dev:client' 'bun:start:dev:server'",
-    "start": "NODE_ENV=production bun run dist/index.js"
+    "build": "NODE_ENV=production bun build ./src/index.ts --outdir ./dist --target node --format esm --sourcemap",
+    "start:dev": "NODE_ENV=development bun --watch ./src/index.ts",
+    "start": "bun run build && bun --sourcemap dist/index.js"
   },
   "dependencies": {
-    "@trustify-ui/common": "workspace:common",
+    "@trustify-ui/common": "workspace:*",
     "@types/express": "^4.17.21",
     "cookie-parser": "^1.4.6",
     "ejs": "^3.1.10",
