@@ -295,9 +295,7 @@ export const MonitoringSection: React.FC = () => {
                             {formatDateTime(advisories?.[0]?.ingested)}
                           </StackItem>
                           <StackItem>
-                            <Link
-                              to={`/advisories/${advisories?.[0]?.uuid}`}
-                            >
+                            <Link to={`/advisories/${advisories?.[0]?.uuid}`}>
                               {advisories?.[0]?.document_id}
                             </Link>
                           </StackItem>
