@@ -39,7 +39,9 @@ export const SeverityShieldAndText: React.FC<SeverityShieldAndTextProps> = ({
         )}
       </FlexItem>
       {showLabel && <FlexItem>{label}</FlexItem>}
-      {showScore && score !== null && <FlexItem>({score})</FlexItem>}
+      {showScore && score !== null && (
+        <FlexItem>({Math.round(score * 10) / 10})</FlexItem>
+      )}
     </Flex>
   );
 };
