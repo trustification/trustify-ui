@@ -27,6 +27,7 @@ export interface BrandingStrings {
     leftBrand?: MastheadBrand;
     leftTitle?: MastheadTitle;
     rightBrand?: MastheadBrand;
+    supportUrl?: string;
   };
 }
 

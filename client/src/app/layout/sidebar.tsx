@@ -1,7 +1,14 @@
 import type React from "react";
 import { NavLink } from "react-router-dom";
 
-import { Nav, NavList, PageSidebar } from "@patternfly/react-core";
+import {
+  Icon,
+  Nav,
+  NavItem,
+  NavList,
+  PageSidebar,
+} from "@patternfly/react-core";
+import ExternalLinkAltIcon from "@patternfly/react-icons/dist/esm/icons/external-link-alt-icon";
 import { css } from "@patternfly/react-styles";
 
 import { LayoutTheme } from "./layout-constants";
@@ -94,6 +101,16 @@ export const SidebarApp: React.FC = () => {
               Upload
             </NavLink>
           </li>
+          <NavItem
+            to={`${window.location.origin}/swagger-ui`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            API&nbsp;
+            <Icon isInline>
+              <ExternalLinkAltIcon />
+            </Icon>
+          </NavItem>
         </NavList>
       </Nav>
     );
