@@ -26,7 +26,7 @@ export const PackageList: React.FC = () => {
           }}
         >
           <PackageSearchProvider>
-            <PackageToolbar />
+            <PackageToolbar showFilters />
             <PackageTable />
           </PackageSearchProvider>
         </div>
