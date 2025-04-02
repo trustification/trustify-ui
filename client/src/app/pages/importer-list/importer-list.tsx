@@ -437,7 +437,6 @@ export const ImporterList: React.FC = () => {
           <SimplePagination
             idPrefix="importer-table"
             isTop={false}
-            isCompact
             paginationProps={paginationProps}
           />
         </div>
@@ -753,7 +752,6 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
       <SimplePagination
         idPrefix="report-table"
         isTop={false}
-        isCompact
         paginationProps={paginationProps}
       />
 

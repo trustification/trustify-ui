@@ -123,7 +123,6 @@ export const PackageTable: React.FC = () => {
       <SimplePagination
         idPrefix="package-table"
         isTop={false}
-        isCompact
         paginationProps={paginationProps}
       />
     </>

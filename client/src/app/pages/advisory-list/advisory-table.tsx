@@ -174,7 +174,6 @@ export const AdvisoryTable: React.FC = () => {
       <SimplePagination
         idPrefix="advisory-table"
         isTop={false}
-        isCompact
         paginationProps={paginationProps}
       />
     </>

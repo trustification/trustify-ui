@@ -200,7 +200,6 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
       <SimplePagination
         idPrefix="package-table"
         isTop={false}
-        isCompact
         paginationProps={paginationProps}
       />
     </>
