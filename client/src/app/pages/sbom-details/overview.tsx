@@ -67,7 +67,7 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
               <DescriptionListGroup>
                 <DescriptionListTerm>Creator</DescriptionListTerm>
                 <DescriptionListDescription aria-label="SBOM's creator">
-                  {sbom.authors}
+                  {sbom.suppliers}
                 </DescriptionListDescription>
               </DescriptionListGroup>
             </DescriptionList>
