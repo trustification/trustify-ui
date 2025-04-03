@@ -26,7 +26,7 @@ export const SbomList: React.FC = () => {
           }}
         >
           <SbomSearchProvider>
-            <SbomToolbar />
+            <SbomToolbar showFilters />
             <SbomTable />
           </SbomSearchProvider>
         </div>
