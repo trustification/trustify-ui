@@ -54,7 +54,7 @@ export const proxyMap: Record<string, Options> = {
       }
     },
   },
-  "/swagger-ui": {
+  "/openapi": {
     target: TRUSTIFICATION_ENV.TRUSTIFY_API_URL || "http://localhost:8080",
     logLevel: process.env.DEBUG ? "debug" : "info",
     changeOrigin: true,

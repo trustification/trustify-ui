@@ -102,7 +102,7 @@ export const SidebarApp: React.FC = () => {
             </NavLink>
           </li>
           <NavItem
-            to={`${window.location.origin}/swagger-ui`}
+            to={`${window.location.origin}/openapi`}
             target="_blank"
             rel="noopener noreferrer"
           >
