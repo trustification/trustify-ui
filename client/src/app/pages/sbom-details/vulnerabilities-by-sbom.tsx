@@ -451,7 +451,6 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
           <SimplePagination
             idPrefix="vulnerability-table"
             isTop={false}
-            isCompact
             paginationProps={paginationProps}
           />
         </StackItem>

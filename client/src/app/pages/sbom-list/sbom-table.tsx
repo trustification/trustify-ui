@@ -145,7 +145,6 @@ export const SbomTable: React.FC = () => {
       <SimplePagination
         idPrefix="sbom-table"
         isTop={false}
-        isCompact
         paginationProps={paginationProps}
       />
     </>

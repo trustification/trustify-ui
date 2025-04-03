@@ -7,7 +7,11 @@ import { SimplePagination } from "@app/components/SimplePagination";
 
 import { SbomSearchContext } from "./sbom-context";
 
-export const SbomToolbar: React.FC = () => {
+interface SbomToolbarProps {
+  showFilters?: boolean;
+}
+
+export const SbomToolbar: React.FC<SbomToolbarProps> = ({ showFilters }) => {
   const { tableControls } = React.useContext(SbomSearchContext);
 
   const {
@@ -23,7 +27,7 @@ export const SbomToolbar: React.FC = () => {
     <>
       <Toolbar {...toolbarProps}>
         <ToolbarContent>
-          <FilterToolbar {...filterToolbarProps} />
+          {showFilters && <FilterToolbar {...filterToolbarProps} />}
           <ToolbarItem {...paginationToolbarItemProps}>
             <SimplePagination
               idPrefix="sbom-table"

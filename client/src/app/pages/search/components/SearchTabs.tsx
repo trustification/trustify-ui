@@ -26,10 +26,14 @@ import {
   type IFilterPanelProps,
 } from "@app/components/FilterPanel";
 import { AdvisoryTable } from "@app/pages/advisory-list/advisory-table";
+import { AdvisoryToolbar } from "@app/pages/advisory-list/advisory-toolbar";
 import type { PackageTableData } from "@app/pages/package-list/package-context";
 import { PackageTable } from "@app/pages/package-list/package-table";
+import { PackageToolbar } from "@app/pages/package-list/package-toolbar";
 import { SbomTable } from "@app/pages/sbom-list/sbom-table";
+import { SbomToolbar } from "@app/pages/sbom-list/sbom-toolbar";
 import { VulnerabilityTable } from "@app/pages/vulnerability-list/vulnerability-table";
+import { VulnerabilityToolbar } from "@app/pages/vulnerability-list/vulnerability-toolbar";
 
 export interface SearchTabsProps {
   filterPanelProps: {
@@ -170,6 +174,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
               </>
             }
           >
+            <SbomToolbar />
             {sbomTable ?? <SbomTable />}
           </Tab>
           <Tab
@@ -189,6 +194,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
               </TabTitleText>
             }
           >
+            <PackageToolbar />
             {packageTable ?? <PackageTable />}
           </Tab>
           <Tab
@@ -208,6 +214,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
               </TabTitleText>
             }
           >
+            <VulnerabilityToolbar />
             {vulnerabilityTable ?? <VulnerabilityTable />}
           </Tab>
           <Tab
@@ -227,6 +234,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
               </TabTitleText>
             }
           >
+            <AdvisoryToolbar />
             {advisoryTable ?? <AdvisoryTable />}
           </Tab>
         </Tabs>
