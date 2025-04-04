@@ -63,7 +63,7 @@ import { ANSICOLOR } from "@app/Constants";
 import { ImporterProgress } from "./components/importer-progress";
 import { ImporterStatusIcon } from "./components/importer-status-icon";
 
-type ImporterStatus = "enabled" | "disabled" | "scheduled" | "running";
+type ImporterStatus = "disabled" | "scheduled" | "running";
 
 const getImporterStatus = (importer: Importer): ImporterStatus => {
   const importerType = Object.keys(importer.configuration ?? {})[0];
@@ -323,8 +323,9 @@ export const ImporterList: React.FC = () => {
                 const configValues = (item.configuration as any)[
                   importerType
                 ] as SbomImporter;
-                const isImporterEnabled = configValues?.disabled === false;
 
+                const importerStatus = getImporterStatus(item);
+                const isImporterDisabled = importerStatus === "disabled";
                 return (
                   <Tbody key={item.name}>
                     <Tr {...getTrProps({ item })}>
@@ -373,30 +374,18 @@ export const ImporterList: React.FC = () => {
                           modifier="truncate"
                           {...getTdProps({ columnKey: "state" })}
                         >
-                          {item.state && isImporterEnabled ? (
-                            item.state === "running" && item.progress ? (
-                              <ImporterProgress value={item.progress} />
-                            ) : (
-                              <ImporterStatusIcon state={item.state} />
-                            )
-                          ) : (
+                          {importerStatus === "disabled" ? (
                             <Label color="orange">Disabled</Label>
+                          ) : importerStatus === "running" && item.progress ? (
+                            <ImporterProgress value={item.progress} />
+                          ) : (
+                            <ImporterStatusIcon state={item.state} />
                           )}
                         </Td>
                         <Td isActionCell>
                           <ActionsColumn
                             items={[
-                              ...(isImporterEnabled
-                                ? [
-                                    {
-                                      title: "Run",
-                                      onClick: () => {
-                                        prepareActionOnRow("run", item);
-                                      },
-                                    },
-                                  ]
-                                : []),
-                              ...(!isImporterEnabled
+                              ...(isImporterDisabled
                                 ? [
                                     {
                                       title: "Enable",
@@ -406,6 +395,13 @@ export const ImporterList: React.FC = () => {
                                     },
                                   ]
                                 : [
+                                    {
+                                      title: "Run",
+                                      onClick: () => {
+                                        prepareActionOnRow("run", item);
+                                      },
+                                      isDisabled: importerStatus === "running",
+                                    },
                                     {
                                       title: "Disable",
                                       onClick: () => {
