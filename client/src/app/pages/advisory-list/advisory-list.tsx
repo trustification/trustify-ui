@@ -26,7 +26,7 @@ export const AdvisoryList: React.FC = () => {
           }}
         >
           <AdvisorySearchProvider>
-            <AdvisoryToolbar />
+            <AdvisoryToolbar showFilters />
             <AdvisoryTable />
           </AdvisorySearchProvider>
         </div>

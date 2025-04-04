@@ -34,7 +34,7 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
-    sortableColumns: [],
+    sortableColumns: ["name"],
     isFilterEnabled: true,
     filterCategories: [
       {
@@ -54,7 +54,9 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
     purl,
     getHubRequestParams({
       ...tableControlState,
-      hubSortFieldKeys: {},
+      hubSortFieldKeys: {
+        name: "name",
+      },
     }),
   );
 
@@ -137,7 +139,7 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
                     modifier="truncate"
                     {...getTdProps({ columnKey: "supplier" })}
                   >
-                    {item.authors.join(", ")}
+                    {item.suppliers.join(", ")}
                   </Td>
                 </Tr>
               </Tbody>
@@ -148,7 +150,6 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
       <SimplePagination
         idPrefix="sbom-table"
         isTop={false}
-        isCompact
         paginationProps={paginationProps}
       />
     </>

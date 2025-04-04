@@ -102,7 +102,7 @@ function useAllEntities(filterText: string, disableSearch: boolean) {
   const transformedSboms: IEntity[] = sboms.map((item) => ({
     id: `sbom-${item.id}`,
     title: item.name,
-    description: item.authors.join(", "),
+    description: item.suppliers.join(", "),
     navLink: `/sboms/${item.id}`,
     type: "SBOM",
     typeColor: "purple",
