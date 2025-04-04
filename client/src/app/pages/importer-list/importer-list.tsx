@@ -104,7 +104,7 @@ export const ImporterList: React.FC = () => {
   };
 
   const { mutate: updateImporter } = useUpdateImporterMutation(
-    () => {},
+    () => { },
     onEnableDisableError,
   );
 
@@ -385,34 +385,31 @@ export const ImporterList: React.FC = () => {
                         <Td isActionCell>
                           <ActionsColumn
                             items={[
-                              ...(importerStatus === "scheduled"
-                                ? [
-                                    {
-                                      title: "Run",
-                                      onClick: () => {
-                                        prepareActionOnRow("run", item);
-                                      },
-                                    },
-                                  ]
-                                : []),
-
                               ...(isImporterDisabled
                                 ? [
-                                    {
-                                      title: "Enable",
-                                      onClick: () => {
-                                        prepareActionOnRow("enable", item);
-                                      },
+                                  {
+                                    title: "Enable",
+                                    onClick: () => {
+                                      prepareActionOnRow("enable", item);
                                     },
-                                  ]
+                                  },
+                                ]
                                 : [
-                                    {
-                                      title: "Disable",
-                                      onClick: () => {
-                                        prepareActionOnRow("disable", item);
-                                      },
+                                  {
+                                    title: "Run",
+                                    onClick: () => {
+                                      prepareActionOnRow("run", item);
                                     },
-                                  ]),
+                                    isDisabled:
+                                      importerStatus === "running",
+                                  },
+                                  {
+                                    title: "Disable",
+                                    onClick: () => {
+                                      prepareActionOnRow("disable", item);
+                                    },
+                                  },
+                                ]),
                             ]}
                           />
                         </Td>
