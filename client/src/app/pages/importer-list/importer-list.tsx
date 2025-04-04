@@ -104,7 +104,7 @@ export const ImporterList: React.FC = () => {
   };
 
   const { mutate: updateImporter } = useUpdateImporterMutation(
-    () => { },
+    () => {},
     onEnableDisableError,
   );
 
@@ -387,29 +387,28 @@ export const ImporterList: React.FC = () => {
                             items={[
                               ...(isImporterDisabled
                                 ? [
-                                  {
-                                    title: "Enable",
-                                    onClick: () => {
-                                      prepareActionOnRow("enable", item);
+                                    {
+                                      title: "Enable",
+                                      onClick: () => {
+                                        prepareActionOnRow("enable", item);
+                                      },
                                     },
-                                  },
-                                ]
+                                  ]
                                 : [
-                                  {
-                                    title: "Run",
-                                    onClick: () => {
-                                      prepareActionOnRow("run", item);
+                                    {
+                                      title: "Run",
+                                      onClick: () => {
+                                        prepareActionOnRow("run", item);
+                                      },
+                                      isDisabled: importerStatus === "running",
                                     },
-                                    isDisabled:
-                                      importerStatus === "running",
-                                  },
-                                  {
-                                    title: "Disable",
-                                    onClick: () => {
-                                      prepareActionOnRow("disable", item);
+                                    {
+                                      title: "Disable",
+                                      onClick: () => {
+                                        prepareActionOnRow("disable", item);
+                                      },
                                     },
-                                  },
-                                ]),
+                                  ]),
                             ]}
                           />
                         </Td>
