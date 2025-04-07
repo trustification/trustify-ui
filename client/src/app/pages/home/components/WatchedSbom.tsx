@@ -67,6 +67,7 @@ export const WatchedSbom: React.FC<WatchedSbomProps> = ({
   } = useFetchSBOMs({
     filters: [{ field: "", operator: "~", value: debouncedInputValue }],
     page: { pageNumber: 1, itemsPerPage: 10 },
+    sort: { field: "ingested", direction: "desc" },
   });
 
   const onSelectItem = (
