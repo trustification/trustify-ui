@@ -61,7 +61,7 @@ export const AdvisoryTable: React.FC = () => {
                 {...getThProps({ columnKey: "severity" })}
                 info={{
                   tooltip:
-                    "The calculated value resulting from grouping similar advisories together based on certain criteria.",
+                    "The average CVSS score for all of the Vulnerabilities linked to this Advisory.",
                 }}
               />
               <Th {...getThProps({ columnKey: "type" })} />

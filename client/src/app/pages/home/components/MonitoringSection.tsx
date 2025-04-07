@@ -110,9 +110,9 @@ export const MonitoringSection: React.FC = () => {
               <Stack hasGutter>
                 <StackItem>
                   <TextContent>
-                    Below is a summary of CVE status for the last 10 ingested
-                    SBOMs. To view the details, click the SBOM name or CVE
-                    severity number. You can also select up to 4 SBOMs to watch.
+                    Below is a summary of Vulnerability status for the last 10
+                    ingested SBOMs. To view the details, click on an SBOM name.
+                    You can also select up to 4 SBOMs to watch.
                   </TextContent>
                 </StackItem>
                 <StackItem>

@@ -163,7 +163,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
                   bodyContent={
                     <div>
                       A list of ingested Software Bill of Materials (SBOM)
-                      documents for products and containers.
+                      documents.
                     </div>
                   }
                   position={"right"}
@@ -201,7 +201,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
                 <Popover
                   bodyContent={
                     <div>
-                      A list of package types and versions with any known
+                      A list of packages along with the count of
                       vulnerabilities.
                     </div>
                   }
@@ -279,7 +279,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
                 <Popover
                   bodyContent={
                     <div>
-                      A list of available advisories from software vendors.
+                      A list of available advisories.
                     </div>
                   }
                   position={"right"}
