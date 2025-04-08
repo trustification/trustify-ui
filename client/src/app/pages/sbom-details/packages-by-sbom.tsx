@@ -184,6 +184,9 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                                     </Link>
                                   </ListItem>
                                 ))}
+                                {item.cpe.map((item) => (
+                                  <ListItem key={item}>{item}</ListItem>
+                                ))}
                               </List>
                             </DescriptionListDescription>
                           </DescriptionListGroup>
