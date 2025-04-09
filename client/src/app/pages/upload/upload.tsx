@@ -62,9 +62,9 @@ export const ImporterList: React.FC = () => {
                       bodyContent={
                         <div>
                           Upload a Software Bill of Materials (SBOM) document.
-                          We accept CycloneDX versions 1.3, 1.4, 1.5 and 1.6, and
-                          System Package Data Exchange (SPDX) versions 2.2, and
-                          2.3.
+                          We accept CycloneDX versions 1.3, 1.4, 1.5 and 1.6,
+                          and System Package Data Exchange (SPDX) versions 2.2,
+                          and 2.3.
                         </div>
                       }
                       triggerRef={sbomPopupRef}

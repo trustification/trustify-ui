@@ -277,11 +277,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
                   <HelpIcon />
                 </TabAction>
                 <Popover
-                  bodyContent={
-                    <div>
-                      A list of available advisories.
-                    </div>
-                  }
+                  bodyContent={<div>A list of available advisories.</div>}
                   position={"right"}
                   triggerRef={advisoryPopoverRef}
                 />
