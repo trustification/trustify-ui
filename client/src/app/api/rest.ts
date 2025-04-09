@@ -42,8 +42,6 @@ const getContentTypeFromFile = (file: File) => {
   let contentType = "application/json";
   if (file.name.endsWith(".bz2")) {
     contentType = "application/json+bzip2";
-  } else if (file.name.endsWith(".gz")) {
-    contentType = "application/json+bzip2";
   }
   return contentType;
 };
