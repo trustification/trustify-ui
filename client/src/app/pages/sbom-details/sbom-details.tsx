@@ -82,49 +82,51 @@ export const SbomDetails: React.FC = () => {
             </Flex>
           </SplitItem>
           <SplitItem>
-            <Dropdown
-              isOpen={isActionsDropdownOpen}
-              onSelect={() => setIsActionsDropdownOpen(false)}
-              onOpenChange={(isOpen) => setIsActionsDropdownOpen(isOpen)}
-              popperProps={{ position: "right" }}
-              toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
-                <MenuToggle
-                  ref={toggleRef}
-                  onClick={handleActionsDropdownToggle}
-                  isExpanded={isActionsDropdownOpen}
-                >
-                  Actions
-                </MenuToggle>
-              )}
-              ouiaId="BasicDropdown"
-              shouldFocusToggleOnSelect
-            >
-              <DropdownList>
-                <DropdownItem
-                  key="sbom"
-                  onClick={() => {
-                    if (sbomId) {
-                      downloadSBOM(
-                        sbomId,
-                        sbom?.name ? `${sbom?.name}.json` : `${sbomId}.json`,
-                      );
-                    }
-                  }}
-                >
-                  Download SBOM
-                </DropdownItem>
-                <DropdownItem
-                  key="license"
-                  onClick={() => {
-                    if (sbomId) {
-                      downloadSBOMLicenses(sbomId);
-                    }
-                  }}
-                >
-                  Download License Report
-                </DropdownItem>
-              </DropdownList>
-            </Dropdown>
+            {sbom && (
+              <Dropdown
+                isOpen={isActionsDropdownOpen}
+                onSelect={() => setIsActionsDropdownOpen(false)}
+                onOpenChange={(isOpen) => setIsActionsDropdownOpen(isOpen)}
+                popperProps={{ position: "right" }}
+                toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+                  <MenuToggle
+                    ref={toggleRef}
+                    onClick={handleActionsDropdownToggle}
+                    isExpanded={isActionsDropdownOpen}
+                  >
+                    Actions
+                  </MenuToggle>
+                )}
+                ouiaId="BasicDropdown"
+                shouldFocusToggleOnSelect
+              >
+                <DropdownList>
+                  <DropdownItem
+                    key="sbom"
+                    onClick={() => {
+                      if (sbomId) {
+                        downloadSBOM(
+                          sbomId,
+                          sbom?.name ? `${sbom?.name}.json` : `${sbomId}.json`,
+                        );
+                      }
+                    }}
+                  >
+                    Download SBOM
+                  </DropdownItem>
+                  <DropdownItem
+                    key="license"
+                    onClick={() => {
+                      if (sbomId) {
+                        downloadSBOMLicenses(sbomId);
+                      }
+                    }}
+                  >
+                    Download License Report
+                  </DropdownItem>
+                </DropdownList>
+              </Dropdown>
+            )}
           </SplitItem>
         </Split>
       </PageSection>
