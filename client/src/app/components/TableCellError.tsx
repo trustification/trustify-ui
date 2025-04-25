@@ -9,5 +9,5 @@ interface TableCellErrorProps {
 }
 
 export const TableCellError: React.FC<TableCellErrorProps> = ({ error }) => {
-  return <Label color="red">{error.code} Error</Label>;
+  return <Label color="red">{error.status} Error</Label>;
 };
