@@ -281,6 +281,7 @@ const ProductList: React.FC<{ products: IProduct[] }> = ({ products }) => {
                           {vuln.average_severity && (
                             <SeverityShieldAndText
                               value={vuln.average_severity}
+                              score={5}
                             />
                           )}
                         </Td>
@@ -311,6 +312,7 @@ const ProductList: React.FC<{ products: IProduct[] }> = ({ products }) => {
                           {adv.average_severity && (
                             <SeverityShieldAndText
                               value={adv.average_severity}
+                              score={5}
                             />
                           )}
                         </Td>
