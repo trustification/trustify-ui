@@ -14,6 +14,7 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
+import { extendedSeverityFromSeverity } from "@app/api/models";
 import type { AdvisoryVulnerabilitySummary } from "@app/client";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -160,8 +161,8 @@ export const VulnerabilitiesByAdvisory: React.FC<
                     >
                       {item.severity && (
                         <SeverityShieldAndText
-                          value={item.severity}
-                          score={item.score}
+                          value={extendedSeverityFromSeverity(item.severity)}
+                          score={item.score ?? null}
                           showLabel
                           showScore
                         />
