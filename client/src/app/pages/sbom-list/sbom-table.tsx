@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
+import { Modal } from "@patternfly/react-core";
 import {
   ActionsColumn,
   Table,
@@ -20,12 +21,19 @@ import {
 import { useDownload } from "@app/hooks/domain-controls/useDownload";
 import { formatDate } from "@app/utils/utils";
 
+import type { SbomSummary } from "@app/client";
+import { SBOMEditLabelsForm } from "./components/SBOMEditLabelsForm";
 import { SBOMVulnerabilities } from "./components/SbomVulnerabilities";
 import { SbomSearchContext } from "./sbom-context";
 
 export const SbomTable: React.FC = () => {
   const { isFetching, fetchError, totalItemCount, tableControls } =
     React.useContext(SbomSearchContext);
+
+  const [editLabelsModalState, setEditLabelsModalState] =
+    React.useState<SbomSummary | null>(null);
+  const isEditLabelsModalOpen = editLabelsModalState !== null;
+  const rowLabelsToUpdate = editLabelsModalState;
 
   const {
     numRenderedColumns,
@@ -41,6 +49,10 @@ export const SbomTable: React.FC = () => {
   } = tableControls;
 
   const { downloadSBOM, downloadSBOMLicenses } = useDownload();
+
+  const closeEditLabelsModal = () => {
+    setEditLabelsModalState(null);
+  };
 
   return (
     <>
@@ -121,6 +133,15 @@ export const SbomTable: React.FC = () => {
                       <ActionsColumn
                         items={[
                           {
+                            title: "Edit labels",
+                            onClick: () => {
+                              setEditLabelsModalState(item);
+                            },
+                          },
+                          {
+                            isSeparator: true,
+                          },
+                          {
                             title: "Download SBOM",
                             onClick: () => {
                               downloadSBOM(item.id, `${item.name}.json`);
@@ -147,6 +168,20 @@ export const SbomTable: React.FC = () => {
         isTop={false}
         paginationProps={paginationProps}
       />
+
+      <Modal
+        isOpen={isEditLabelsModalOpen}
+        variant="medium"
+        title="Edit labels"
+        onClose={closeEditLabelsModal}
+      >
+        {rowLabelsToUpdate && (
+          <SBOMEditLabelsForm
+            sbom={rowLabelsToUpdate}
+            onClose={closeEditLabelsModal}
+          />
+        )}
+      </Modal>
     </>
   );
 };

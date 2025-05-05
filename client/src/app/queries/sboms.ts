@@ -10,6 +10,7 @@ import type { HubRequestParams } from "@app/api/models";
 import { client } from "@app/axios-config/apiInit";
 import {
   type IngestResult,
+  type Labels,
   type SbomSummary,
   deleteSbom,
   downloadSbom,
@@ -118,7 +119,7 @@ export const useUploadSBOM = () => {
 
 export const useUpdateSbomLabelsMutation = (
   onSuccess: () => void,
-  onError: (err: AxiosError, payload: SbomSummary) => void,
+  onError: (err: AxiosError, payload: { id: string; labels: Labels }) => void,
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
