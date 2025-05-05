@@ -34,7 +34,6 @@ import { SbomTable } from "@app/pages/sbom-list/sbom-table";
 import { SbomToolbar } from "@app/pages/sbom-list/sbom-toolbar";
 import { VulnerabilityTable } from "@app/pages/vulnerability-list/vulnerability-table";
 import { VulnerabilityToolbar } from "@app/pages/vulnerability-list/vulnerability-toolbar";
-import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
 export interface SearchTabsProps {
   filterPanelProps: {

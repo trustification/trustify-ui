@@ -2,10 +2,10 @@ import React from "react";
 
 import {
   Button,
+  Content,
   Flex,
   FlexItem,
   Label,
-  Content,
   PageSection,
   Split,
   SplitItem,
@@ -47,7 +47,7 @@ export const AdvisoryDetails: React.FC = () => {
 
   return (
     <>
-      <PageSection variant="light">
+      <PageSection>
         <Split>
           <SplitItem isFilled>
             <Flex>
@@ -88,7 +88,7 @@ export const AdvisoryDetails: React.FC = () => {
           </SplitItem>
         </Split>
       </PageSection>
-      <PageSection type="nav">
+      <PageSection type="tabs">
         <Tabs
           mountOnEnter
           activeKey={activeTabKey}
