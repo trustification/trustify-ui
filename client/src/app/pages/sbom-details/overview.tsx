@@ -12,18 +12,11 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
-  Divider,
-  FormGroup,
   Grid,
   GridItem,
   List,
   ListItem,
   Modal,
-  Panel,
-  PanelFooter,
-  PanelHeader,
-  PanelMain,
-  PanelMainBody,
 } from "@patternfly/react-core";
 import PenIcon from "@patternfly/react-icons/dist/esm/icons/pen-icon";
 
