@@ -2,8 +2,6 @@ import type React from "react";
 
 import { AboutModal, Content, ContentVariants } from "@patternfly/react-core";
 
-import backgroundImage from "@app/images/pfbg-icon.svg";
-
 import ENV from "@app/env";
 import useBranding from "@app/hooks/useBranding";
 
@@ -28,15 +26,14 @@ export const AboutApp: React.FC<IButtonAboutAppProps> = ({
       productName={about.displayName}
       brandImageAlt="Logo"
       brandImageSrc={about.imageSrc ?? TRANSPARENT_1x1_GIF}
-      backgroundImageSrc={backgroundImage}
       trademark={`COPYRIGHT © 2020, ${new Date().getFullYear()}`}
     >
       <Content>
         <Content component={ContentVariants.p}>
-          {about.displayName} is vendor-neutral, thought-leadering, mostly
-          informational collection of resources devoted to making Software
-          Supply Chains easier to create, manage, consume and ultimately… to
-          trust!
+          {about.displayName} is a proactive service that assists in risk
+          management of Open Source Software (OSS) packages and dependencies.{" "}
+          {about.displayName} brings awareness to and remediation of OSS
+          vulnerabilities discovered within the software supply chain.
         </Content>
 
         {about.documentationUrl ? (

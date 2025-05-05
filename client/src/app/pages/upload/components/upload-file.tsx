@@ -95,7 +95,7 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
         onFileDrop={handleFileDrop}
         dropzoneProps={{
           accept: {
-            "application/xml": [".json", ".bz2", ".gz"],
+            "application/xml": [".json", ".bz2"],
           },
           onDropRejected: handleDropRejected,
           useFsAccessApi: false, // Required to make playwright work
@@ -105,7 +105,7 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
           titleIcon={<UploadIcon />}
           titleText="Drag and drop files here"
           titleTextSeparator="or"
-          infoText="Accepted file types: .json, .bz2, .gz"
+          infoText="Accepted file types: .json, .bz2"
         />
         {showStatus && (
           <MultipleFileUploadStatus

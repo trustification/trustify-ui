@@ -103,7 +103,7 @@ function useAllEntities(filterText: string, disableSearch: boolean) {
   const transformedSboms: IEntity[] = sboms.map((item) => ({
     id: `sbom-${item.id}`,
     title: item.name,
-    description: item.authors.join(", "),
+    description: item.suppliers.join(", "),
     navLink: `/sboms/${item.id}`,
     type: "SBOM",
     typeColor: "purple",
@@ -164,13 +164,16 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
   // Search value initial value
   const { tableControls: sbomTableControls } =
     React.useContext(SbomSearchContext);
-  const initialSearchValue =
-    sbomTableControls.filterState.filterValues[FILTER_TEXT_CATEGORY_KEY]?.[0] ||
-    "";
 
   // Search value
-  const [searchValue, setSearchValue] = React.useState(initialSearchValue);
+  const [searchValue, setSearchValue] = React.useState("");
   const [isSearchValueDirty, setIsSearchValueDirty] = React.useState(false);
+
+  React.useEffect(() => {
+    const searchValueFromTableControls =
+      sbomTableControls.filterState.filterValues[FILTER_TEXT_CATEGORY_KEY]?.[0];
+    setSearchValue(searchValueFromTableControls ?? "");
+  }, [sbomTableControls.filterState]);
 
   // Debounce Search value
   const [debouncedSearchValue, setDebouncedSearchValue] = useDebounceValue(

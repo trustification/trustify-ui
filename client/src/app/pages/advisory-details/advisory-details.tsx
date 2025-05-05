@@ -2,6 +2,9 @@ import React from "react";
 
 import {
   Button,
+  Flex,
+  FlexItem,
+  Label,
   Content,
   PageSection,
   Split,
@@ -44,15 +47,24 @@ export const AdvisoryDetails: React.FC = () => {
 
   return (
     <>
-      <PageSection hasBodyWrapper={false}>
+      <PageSection variant="light">
         <Split>
           <SplitItem isFilled>
-            <Content>
-              <Content component="h1">
-                {advisory?.document_id ?? advisoryId ?? ""}
-              </Content>
-              <Content component="p">Advisory detail information</Content>
-            </Content>
+            <Flex>
+              <FlexItem spacer={{ default: "spacerSm" }}>
+                <Content>
+                  <Content component="h1">
+                    {advisory?.document_id ?? advisoryId ?? ""}
+                  </Content>
+                  <Content component="p">Advisory detail information</Content>
+                </Content>
+              </FlexItem>
+              <FlexItem>
+                {advisory?.labels.type && (
+                  <Label color="blue">{advisory?.labels.type}</Label>
+                )}
+              </FlexItem>
+            </Flex>
           </SplitItem>
           <SplitItem>
             {!isFetching && (
@@ -76,7 +88,7 @@ export const AdvisoryDetails: React.FC = () => {
           </SplitItem>
         </Split>
       </PageSection>
-      <PageSection hasBodyWrapper={false}>
+      <PageSection type="nav">
         <Tabs
           mountOnEnter
           activeKey={activeTabKey}
@@ -98,7 +110,7 @@ export const AdvisoryDetails: React.FC = () => {
           />
         </Tabs>
       </PageSection>
-      <PageSection hasBodyWrapper={false}>
+      <PageSection>
         <TabContent
           eventKey={0}
           id="refTabInfoSection"

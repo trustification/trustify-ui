@@ -11,6 +11,7 @@ on:
       - "release/*"
   workflow_dispatch:
   workflow_call:
+  merge_group:
 
 jobs:
   ci:

@@ -17,7 +17,7 @@ export const PackageList: React.FC = () => {
       <PageSection hasBodyWrapper={false}>
         <div>
           <PackageSearchProvider>
-            <PackageToolbar />
+            <PackageToolbar showFilters />
             <PackageTable />
           </PackageSearchProvider>
         </div>

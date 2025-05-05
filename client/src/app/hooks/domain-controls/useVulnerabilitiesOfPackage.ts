@@ -19,13 +19,19 @@ const areVulnerabilityOfPackageEqual = (
 };
 
 interface FlatVulnerabilityOfPackage {
-  vulnerability: VulnerabilityHead & { average_severity: ExtendedSeverity };
+  vulnerability: VulnerabilityHead & {
+    average_severity: ExtendedSeverity;
+    average_score: number;
+  };
   vulnerabilityStatus: VulnerabilityStatus;
   advisory: PurlAdvisory;
 }
 
 interface VulnerabilityOfPackage {
-  vulnerability: VulnerabilityHead & { average_severity: ExtendedSeverity };
+  vulnerability: VulnerabilityHead & {
+    average_severity: ExtendedSeverity;
+    average_score: number;
+  };
   vulnerabilityStatus: VulnerabilityStatus;
   relatedSboms: {
     advisory: PurlAdvisory;
@@ -58,65 +64,64 @@ const DEFAULT_SUMMARY: VulnerabilityOfPackageSummary = {
 };
 
 const advisoryToModels = (advisories: PurlAdvisory[]) => {
-  const vulnerabilities = advisories.flatMap((advisory) => {
-    return (
-      (advisory.status ?? [])
-        .map((pkgStatus) => {
-          const extendedSeverity = extendedSeverityFromSeverity(
-            pkgStatus.average_severity,
-          );
+  const vulnerabilities = advisories
+    .flatMap((advisory) => {
+      return (advisory.status ?? []).map((pkgStatus) => {
+        const extendedSeverity = extendedSeverityFromSeverity(
+          pkgStatus.average_severity,
+        );
 
-          const result: FlatVulnerabilityOfPackage = {
-            vulnerability: {
-              ...pkgStatus.vulnerability,
-              average_severity: extendedSeverity,
+        const result: FlatVulnerabilityOfPackage = {
+          vulnerability: {
+            ...pkgStatus.vulnerability,
+            average_severity: extendedSeverity,
+            average_score: pkgStatus.average_score,
+          },
+          vulnerabilityStatus: pkgStatus.status as VulnerabilityStatus,
+          advisory: advisory,
+        };
+        return result;
+      });
+    })
+    // group
+    .reduce((prev, current) => {
+      const existingElement = prev.find((item) => {
+        return areVulnerabilityOfPackageEqual(item, current);
+      });
+
+      let result: VulnerabilityOfPackage[];
+
+      if (existingElement) {
+        const arrayWithoutExistingItem = prev.filter(
+          (item) => !areVulnerabilityOfPackageEqual(item, existingElement),
+        );
+
+        const updatedItemInArray: VulnerabilityOfPackage = {
+          ...existingElement,
+          relatedSboms: [
+            ...existingElement.relatedSboms,
+            {
+              advisory: current.advisory,
             },
-            vulnerabilityStatus: pkgStatus.status as VulnerabilityStatus,
-            advisory: advisory,
-          };
-          return result;
-        })
-        // group
-        .reduce((prev, current) => {
-          const existingElement = prev.find((item) => {
-            return areVulnerabilityOfPackageEqual(item, current);
-          });
+          ],
+        };
 
-          let result: VulnerabilityOfPackage[];
+        result = [...arrayWithoutExistingItem, updatedItemInArray];
+      } else {
+        const newItemInArray: VulnerabilityOfPackage = {
+          vulnerability: current.vulnerability,
+          vulnerabilityStatus: current.vulnerabilityStatus,
+          relatedSboms: [
+            {
+              advisory: current.advisory,
+            },
+          ],
+        };
+        result = [...prev.slice(), newItemInArray];
+      }
 
-          if (existingElement) {
-            const arrayWithoutExistingItem = prev.filter(
-              (item) => !areVulnerabilityOfPackageEqual(item, existingElement),
-            );
-
-            const updatedItemInArray: VulnerabilityOfPackage = {
-              ...existingElement,
-              relatedSboms: [
-                ...existingElement.relatedSboms,
-                {
-                  advisory: current.advisory,
-                },
-              ],
-            };
-
-            result = [...arrayWithoutExistingItem, updatedItemInArray];
-          } else {
-            const newItemInArray: VulnerabilityOfPackage = {
-              vulnerability: current.vulnerability,
-              vulnerabilityStatus: current.vulnerabilityStatus,
-              relatedSboms: [
-                {
-                  advisory: current.advisory,
-                },
-              ],
-            };
-            result = [...prev.slice(), newItemInArray];
-          }
-
-          return result;
-        }, [] as VulnerabilityOfPackage[])
-    );
-  });
+      return result;
+    }, [] as VulnerabilityOfPackage[]);
 
   const summary = vulnerabilities.reduce(
     (prev, current) => {

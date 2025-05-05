@@ -17,7 +17,7 @@ export const SbomList: React.FC = () => {
       <PageSection hasBodyWrapper={false}>
         <div>
           <SbomSearchProvider>
-            <SbomToolbar />
+            <SbomToolbar showFilters />
             <SbomTable />
           </SbomSearchProvider>
         </div>

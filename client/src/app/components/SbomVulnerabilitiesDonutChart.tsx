@@ -26,7 +26,8 @@ export const SbomVulnerabilitiesDonutChart: React.FC<
           color: severityProps.color.value,
         };
       })
-      .sort(compareBySeverityFn((item) => item.severity));
+      .sort(compareBySeverityFn((item) => item.severity))
+      .reverse();
   }, [vulnerabilitiesSummary]);
 
   return (

@@ -321,7 +321,7 @@ export const SearchPage: React.FC = () => {
           <Split>
             <SplitItem isFilled>{item.name}</SplitItem>
             <SplitItem>
-              <SeverityShieldAndText value="medium" hideLabel />
+              <SeverityShieldAndText value="medium" score={5} />
             </SplitItem>
           </Split>
         </CardTitle>

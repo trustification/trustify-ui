@@ -17,7 +17,7 @@ export const AdvisoryList: React.FC = () => {
       <PageSection hasBodyWrapper={false}>
         <div>
           <AdvisorySearchProvider>
-            <AdvisoryToolbar />
+            <AdvisoryToolbar showFilters />
             <AdvisoryTable />
           </AdvisorySearchProvider>
         </div>

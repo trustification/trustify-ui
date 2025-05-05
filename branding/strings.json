@@ -16,6 +16,7 @@
       "height": "40px"
     },
     "leftTitle": null,
-    "rightBrand": null
+    "rightBrand": null,
+    "supportUrl": "https://github.com/trustification/trustify/issues"
   }
 }

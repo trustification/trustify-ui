@@ -2,11 +2,13 @@ import type React from "react";
 import { NavLink } from "react-router-dom";
 
 import {
+  Icon,
   Nav,
+  NavItem,
   NavList,
   PageSidebar,
-  PageSidebarBody,
 } from "@patternfly/react-core";
+import ExternalLinkAltIcon from "@patternfly/react-icons/dist/esm/icons/external-link-alt-icon";
 import { css } from "@patternfly/react-styles";
 
 const LINK_CLASS = "pf-v6-c-nav__link";
@@ -97,6 +99,16 @@ export const SidebarApp: React.FC = () => {
               Upload
             </NavLink>
           </li>
+          <NavItem
+            to={`${window.location.origin}/openapi`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            API&nbsp;
+            <Icon isInline>
+              <ExternalLinkAltIcon />
+            </Icon>
+          </NavItem>
         </NavList>
       </Nav>
     );

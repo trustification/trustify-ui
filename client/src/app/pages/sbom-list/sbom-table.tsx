@@ -74,6 +74,7 @@ export const SbomTable: React.FC = () => {
                   >
                     <Td
                       width={25}
+                      modifier="breakWord"
                       {...getTdProps({
                         columnKey: "name",
                         isCompoundExpandToggle: true,
@@ -98,9 +99,13 @@ export const SbomTable: React.FC = () => {
                       modifier="truncate"
                       {...getTdProps({ columnKey: "supplier" })}
                     >
-                      {item.authors.join(", ")}
+                      {item.suppliers.join(", ")}
                     </Td>
-                    <Td width={10} {...getTdProps({ columnKey: "published" })}>
+                    <Td
+                      width={10}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "published" })}
+                    >
                       {formatDate(item.published)}
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "packages" })}>
@@ -140,7 +145,6 @@ export const SbomTable: React.FC = () => {
       <SimplePagination
         idPrefix="sbom-table"
         isTop={false}
-        isCompact
         paginationProps={paginationProps}
       />
     </>

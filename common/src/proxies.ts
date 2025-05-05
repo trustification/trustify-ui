@@ -54,4 +54,14 @@ export const proxyMap: Record<string, Options> = {
       }
     },
   },
+  "/openapi": {
+    target: TRUSTIFICATION_ENV.TRUSTIFY_API_URL || "http://localhost:8080",
+    logLevel: process.env.DEBUG ? "debug" : "info",
+    changeOrigin: true,
+  },
+  "/openapi.json": {
+    target: TRUSTIFICATION_ENV.TRUSTIFY_API_URL || "http://localhost:8080",
+    logLevel: process.env.DEBUG ? "debug" : "info",
+    changeOrigin: true,
+  },
 };
