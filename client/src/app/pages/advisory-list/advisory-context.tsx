@@ -56,7 +56,7 @@ export const AdvisorySearchProvider: React.FunctionComponent<
       identifier: "ID",
       title: "Title",
       severity: "Aggregated Severity",
-      type: "Type",
+      labels: "Labels",
       modified: "Revision",
       vulnerabilities: "Vulnerabilities",
     },

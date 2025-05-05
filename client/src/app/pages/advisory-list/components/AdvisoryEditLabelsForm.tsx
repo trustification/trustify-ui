@@ -6,7 +6,6 @@ import type { AdvisorySummary } from "@app/client";
 import { EditLabelsForm } from "@app/components/EditLabelsForm";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import { useUpdateAdvisoryLabelsMutation } from "@app/queries/advisories";
-import { useUpdateSbomLabelsMutation } from "@app/queries/sboms";
 
 interface AdvisoryEditLabelsFormProps {
   advisory: AdvisorySummary;
