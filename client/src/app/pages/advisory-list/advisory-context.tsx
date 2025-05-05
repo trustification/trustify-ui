@@ -23,7 +23,7 @@ interface IAdvisorySearchContext {
     | "identifier"
     | "title"
     | "severity"
-    | "type"
+    | "labels"
     | "modified"
     | "vulnerabilities",
     "identifier" | "severity" | "modified",

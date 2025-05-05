@@ -24,7 +24,7 @@ interface ISbomSearchContext {
     | "version"
     | "packages"
     | "published"
-    | "supplier"
+    | "labels"
     | "vulnerabilities",
     "name" | "published",
     "" | "published",
@@ -55,7 +55,7 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
     columnNames: {
       name: "Name",
       version: "Version",
-      supplier: "Supplier",
+      labels: "Labels",
       published: "Created on",
       packages: "Dependencies",
       vulnerabilities: "Vulnerabilities",

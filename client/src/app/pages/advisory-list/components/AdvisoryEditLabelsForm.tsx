@@ -2,25 +2,26 @@ import React from "react";
 
 import type { AxiosError } from "axios";
 
-import type { SbomSummary } from "@app/client";
+import type { AdvisorySummary } from "@app/client";
 import { EditLabelsForm } from "@app/components/EditLabelsForm";
 import { NotificationsContext } from "@app/components/NotificationsContext";
+import { useUpdateAdvisoryLabelsMutation } from "@app/queries/advisories";
 import { useUpdateSbomLabelsMutation } from "@app/queries/sboms";
 
-interface SBOMEditLabelsFormProps {
-  sbom: SbomSummary;
+interface AdvisoryEditLabelsFormProps {
+  advisory: AdvisorySummary;
   onClose: () => void;
 }
 
-export const SBOMEditLabelsForm: React.FC<SBOMEditLabelsFormProps> = ({
-  sbom,
+export const AdvisoryEditLabelsForm: React.FC<AdvisoryEditLabelsFormProps> = ({
+  advisory,
   onClose,
 }) => {
   const { pushNotification } = React.useContext(NotificationsContext);
 
   const onUpdateSuccess = () => {
     pushNotification({
-      title: `Labels updated for SBOM ${sbom.name}`,
+      title: `Labels updated for Advisory ${advisory.document_id}`,
       variant: "success",
     });
     onClose();
@@ -28,24 +29,24 @@ export const SBOMEditLabelsForm: React.FC<SBOMEditLabelsFormProps> = ({
 
   const onUpdateError = (_error: AxiosError) => {
     pushNotification({
-      title: `Error while updating labels for SBOM ${sbom.name}`,
+      title: `Error while updating labels for Advisory ${advisory.document_id}`,
       variant: "danger",
     });
   };
 
-  const { mutate: updateLabels, isPending } = useUpdateSbomLabelsMutation(
+  const { mutate: updateLabels, isPending } = useUpdateAdvisoryLabelsMutation(
     onUpdateSuccess,
     onUpdateError,
   );
 
   const onSave = (value: { [key: string]: string }) => {
-    updateLabels({ id: sbom.id, labels: value });
+    updateLabels({ id: advisory.uuid, labels: value });
   };
 
   return (
     <EditLabelsForm
-      title={`Labels of SBOM: ${sbom.name}`}
-      value={sbom.labels}
+      title={`Labels of Advisory: ${advisory.document_id}`}
+      value={advisory.labels}
       isDisabled={isPending}
       onSave={onSave}
       onClose={onClose}

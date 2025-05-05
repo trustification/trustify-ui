@@ -22,6 +22,7 @@ import { useDownload } from "@app/hooks/domain-controls/useDownload";
 import { formatDate } from "@app/utils/utils";
 
 import type { SbomSummary } from "@app/client";
+import { LabelsAsList } from "@app/components/LabelsAsList";
 import { SBOMEditLabelsForm } from "./components/SBOMEditLabelsForm";
 import { SBOMVulnerabilities } from "./components/SbomVulnerabilities";
 import { SbomSearchContext } from "./sbom-context";
@@ -62,7 +63,7 @@ export const SbomTable: React.FC = () => {
             <TableHeaderContentWithControls {...tableControls}>
               <Th {...getThProps({ columnKey: "name" })} />
               <Th {...getThProps({ columnKey: "version" })} />
-              <Th {...getThProps({ columnKey: "supplier" })} />
+              <Th {...getThProps({ columnKey: "labels" })} />
               <Th {...getThProps({ columnKey: "published" })} />
               <Th {...getThProps({ columnKey: "packages" })} />
               <Th {...getThProps({ columnKey: "vulnerabilities" })} />
@@ -109,9 +110,9 @@ export const SbomTable: React.FC = () => {
                     <Td
                       width={20}
                       modifier="truncate"
-                      {...getTdProps({ columnKey: "supplier" })}
+                      {...getTdProps({ columnKey: "labels" })}
                     >
-                      {item.suppliers.join(", ")}
+                      <LabelsAsList value={item.labels} />
                     </Td>
                     <Td
                       width={10}

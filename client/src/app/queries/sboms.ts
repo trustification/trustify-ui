@@ -80,9 +80,9 @@ export const useDeleteSbomMutation = (
       const response = await deleteSbom({ client, path: { id } });
       return response.data as SbomSummary;
     },
-    onSuccess: (response, id) => {
+    onSuccess: async (response, id) => {
       onSuccess(response, id);
-      queryClient.invalidateQueries({ queryKey: [SBOMsQueryKey] });
+      await queryClient.invalidateQueries({ queryKey: [SBOMsQueryKey] });
     },
     onError: onError,
   });
@@ -109,8 +109,8 @@ export const useUploadSBOM = () => {
     uploadFn: (formData, config) => {
       return uploadSbom(formData, config);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
         queryKey: [SBOMsQueryKey],
       });
     },
@@ -130,9 +130,9 @@ export const useUpdateSbomLabelsMutation = (
         body: obj.labels,
       });
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       onSuccess();
-      queryClient.invalidateQueries({ queryKey: [SBOMsQueryKey] });
+      await queryClient.invalidateQueries({ queryKey: [SBOMsQueryKey] });
     },
     onError: onError,
   });

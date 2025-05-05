@@ -5,7 +5,7 @@ import type { HubRequestParams } from "@app/api/models";
 import { client } from "@app/axios-config/apiInit";
 import {
   type AdvisoryDetails,
-  type AdvisorySummary,
+  type Labels,
   deleteAdvisory,
   downloadAdvisory,
   getAdvisory,
@@ -102,8 +102,8 @@ export const useUploadAdvisory = () => {
     uploadFn: (formData, config) => {
       return uploadAdvisory(formData, config);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
         queryKey: [AdvisoriesQueryKey],
       });
     },
@@ -112,20 +112,20 @@ export const useUploadAdvisory = () => {
 
 export const useUpdateAdvisoryLabelsMutation = (
   onSuccess: () => void,
-  onError: (err: AxiosError, payload: AdvisorySummary) => void,
+  onError: (err: AxiosError, payload: { id: string; labels: Labels }) => void,
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (obj) => {
       return updateAdvisoryLabels({
         client,
-        path: { id: obj.uuid },
-        body: obj.labels ?? {},
+        path: { id: obj.id },
+        body: obj.labels,
       });
     },
-    onSuccess: (_res, _payload) => {
+    onSuccess: async (_res, _payload) => {
       onSuccess();
-      queryClient.invalidateQueries({ queryKey: [AdvisoriesQueryKey] });
+      await queryClient.invalidateQueries({ queryKey: [AdvisoriesQueryKey] });
     },
     onError: onError,
   });

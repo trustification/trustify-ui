@@ -1,4 +1,8 @@
 import React from "react";
+import { useForm } from "react-hook-form";
+
+import { yupResolver } from "@hookform/resolvers/yup";
+import { object, string } from "yup";
 
 import {
   ActionGroup,
@@ -12,8 +16,13 @@ import {
   LabelGroup,
   Stack,
   StackItem,
-  TextInput,
 } from "@patternfly/react-core";
+
+import { HookFormPFTextInput } from "./HookFormPFFields";
+
+type FormValues = {
+  label: string;
+};
 
 interface EditLabelsFormProps {
   title: string;
@@ -30,30 +39,46 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
   onSave,
   onClose,
 }) => {
-  const [inputKey, setInputKey] = React.useState("");
-  const [inputValue, setInputValue] = React.useState("");
+  const validationSchema = object().shape({
+    label: string()
+      .trim()
+      .matches(/^[^=][^=]*=?[^=]*$/)
+      .max(120),
+  });
 
-  const [labels, setLabels] = React.useState(
+  const { handleSubmit, control, reset } = useForm<FormValues>({
+    defaultValues: {
+      label: "",
+    },
+    resolver: yupResolver(validationSchema),
+    mode: "onChange",
+  });
+
+  const [labelArray, setLabelArray] = React.useState(
     Object.entries(value).sort(([keyA], [keyB]) => keyB.localeCompare(keyA)),
   );
 
-  const addLabel = () => {
-    if (!inputKey) {
+  const onAddLabel = (formValues: FormValues) => {
+    if (!formValues.label) {
       return;
     }
 
-    const newLabels = labels.filter(([key]) => key !== inputKey);
-    setLabels([...newLabels, [inputKey, inputValue]]);
+    const [newKey, newValue] = formValues.label.split("=");
 
-    setInputKey("");
-    setInputValue("");
+    const newLabels = labelArray.filter(([key]) => key !== newKey);
+    setLabelArray([...newLabels, [newKey, newValue ?? ""]]);
+
+    reset();
   };
 
-  const save = () => {
-    const value: { [key: string]: string } = labels.reduce((prev, [k, v]) => {
-      return Object.assign(prev, { [k]: v });
-    }, {});
-    onSave(value);
+  const onSaveForm = () => {
+    const labelsObject: { [key: string]: string } = labelArray.reduce(
+      (prev, [k, v]) => {
+        return Object.assign(prev, { [k]: v });
+      },
+      {},
+    );
+    onSave(labelsObject);
   };
 
   return (
@@ -72,17 +97,17 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
               defaultIsOpen
               numLabels={10}
             >
-              {labels.map(([k, v], index) => (
+              {labelArray.map(([k, v], index) => (
                 <Label
                   key={`${k}=${v}`}
                   color="blue"
                   onClose={() => {
-                    const newLabels = [...labels];
+                    const newLabels = [...labelArray];
                     newLabels.splice(index, 1);
-                    setLabels(newLabels);
+                    setLabelArray(newLabels);
                   }}
                 >
-                  {`${k}=${v}`}
+                  {`${v ? `${k}=${v}` : `${k}`}`}
                 </Label>
               ))}
             </LabelGroup>
@@ -90,43 +115,24 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
         </div>
       </StackItem>
       <StackItem>
-        <Form
-          onSubmit={(e) => {
-            addLabel();
-            e.preventDefault();
-          }}
-        >
+        <Form onSubmit={handleSubmit(onAddLabel)}>
           <Grid hasGutter>
-            <GridItem md={5}>
-              <FormGroup label="Key" isRequired fieldId="key">
-                <TextInput
-                  isRequired
-                  type="text"
-                  id="key"
-                  name="key"
-                  value={inputKey}
-                  onChange={(_, value) => setInputKey(value)}
-                />
-              </FormGroup>
-            </GridItem>
-            <GridItem md={5}>
-              <FormGroup label="Value" isRequired fieldId="value">
-                <TextInput
-                  isRequired
-                  type="text"
-                  id="value"
-                  name="value"
-                  value={inputValue}
-                  onChange={(_, value) => setInputValue(value)}
-                />
-              </FormGroup>
+            <GridItem md={10}>
+              <HookFormPFTextInput
+                control={control}
+                name="label"
+                label="Label"
+                fieldId="label"
+                isRequired
+                isDisabled={isDisabled}
+              />
             </GridItem>
             <GridItem md={2}>
               <FormGroup label="Action">
                 <Button
                   type="submit"
                   variant={ButtonVariant.secondary}
-                  onClick={addLabel}
+                  isDisabled={isDisabled}
                 >
                   Add
                 </Button>
@@ -136,12 +142,12 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
 
           <ActionGroup>
             <Button
-              type="submit"
+              type="button"
               id="submit"
               aria-label="submit"
               variant={ButtonVariant.primary}
               isDisabled={isDisabled}
-              onClick={save}
+              onClick={onSaveForm}
             >
               Save
             </Button>
