@@ -14,7 +14,7 @@ import {
   DescriptionListTerm,
   Grid,
   GridItem,
-  Modal
+  Modal,
 } from "@patternfly/react-core";
 import PenIcon from "@patternfly/react-icons/dist/esm/icons/pen-icon";
 
