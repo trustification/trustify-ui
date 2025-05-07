@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
+import { Modal } from "@patternfly/react-core";
 import {
   ActionsColumn,
   Table,
@@ -20,12 +21,20 @@ import {
 import { useDownload } from "@app/hooks/domain-controls/useDownload";
 import { formatDate } from "@app/utils/utils";
 
+import type { SbomSummary } from "@app/client";
+import { LabelsAsList } from "@app/components/LabelsAsList";
+import { SBOMEditLabelsForm } from "./components/SBOMEditLabelsForm";
 import { SBOMVulnerabilities } from "./components/SbomVulnerabilities";
 import { SbomSearchContext } from "./sbom-context";
 
 export const SbomTable: React.FC = () => {
   const { isFetching, fetchError, totalItemCount, tableControls } =
     React.useContext(SbomSearchContext);
+
+  const [editLabelsModalState, setEditLabelsModalState] =
+    React.useState<SbomSummary | null>(null);
+  const isEditLabelsModalOpen = editLabelsModalState !== null;
+  const rowLabelsToUpdate = editLabelsModalState;
 
   const {
     numRenderedColumns,
@@ -42,6 +51,10 @@ export const SbomTable: React.FC = () => {
 
   const { downloadSBOM, downloadSBOMLicenses } = useDownload();
 
+  const closeEditLabelsModal = () => {
+    setEditLabelsModalState(null);
+  };
+
   return (
     <>
       <Table {...tableProps} aria-label="sbom-table">
@@ -50,7 +63,7 @@ export const SbomTable: React.FC = () => {
             <TableHeaderContentWithControls {...tableControls}>
               <Th {...getThProps({ columnKey: "name" })} />
               <Th {...getThProps({ columnKey: "version" })} />
-              <Th {...getThProps({ columnKey: "supplier" })} />
+              <Th {...getThProps({ columnKey: "labels" })} />
               <Th {...getThProps({ columnKey: "published" })} />
               <Th {...getThProps({ columnKey: "packages" })} />
               <Th {...getThProps({ columnKey: "vulnerabilities" })} />
@@ -97,9 +110,9 @@ export const SbomTable: React.FC = () => {
                     <Td
                       width={20}
                       modifier="truncate"
-                      {...getTdProps({ columnKey: "supplier" })}
+                      {...getTdProps({ columnKey: "labels" })}
                     >
-                      {item.suppliers.join(", ")}
+                      <LabelsAsList value={item.labels} />
                     </Td>
                     <Td
                       width={10}
@@ -120,6 +133,15 @@ export const SbomTable: React.FC = () => {
                     <Td isActionCell>
                       <ActionsColumn
                         items={[
+                          {
+                            title: "Edit labels",
+                            onClick: () => {
+                              setEditLabelsModalState(item);
+                            },
+                          },
+                          {
+                            isSeparator: true,
+                          },
                           {
                             title: "Download SBOM",
                             onClick: () => {
@@ -147,6 +169,20 @@ export const SbomTable: React.FC = () => {
         isTop={false}
         paginationProps={paginationProps}
       />
+
+      <Modal
+        isOpen={isEditLabelsModalOpen}
+        variant="medium"
+        title="Edit labels"
+        onClose={closeEditLabelsModal}
+      >
+        {rowLabelsToUpdate && (
+          <SBOMEditLabelsForm
+            sbom={rowLabelsToUpdate}
+            onClose={closeEditLabelsModal}
+          />
+        )}
+      </Modal>
     </>
   );
 };

@@ -54,9 +54,9 @@ export const useUpdateWatchedSbomsMutation = (
         body: obj,
       });
     },
-    onSuccess: (_res, _payload) => {
+    onSuccess: async (_res, _payload) => {
       onSuccess();
-      queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: [DashboardQueryKey, WATCHED_SBOMS_KEY],
       });
     },
