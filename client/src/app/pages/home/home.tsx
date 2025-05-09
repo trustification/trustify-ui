@@ -9,7 +9,7 @@ import { WatchedSbomsProvider } from "./watched-sboms-context";
 export const Home: React.FC = () => {
   return (
     <>
-      <PageSection>
+      <PageSection hasBodyWrapper={false}>
         <Stack hasGutter>
           <StackItem>
             <MonitoringSection />

@@ -5,15 +5,13 @@ import type { AxiosError, AxiosResponse } from "axios";
 import {
   Card,
   CardBody,
+  Content,
   PageSection,
-  PageSectionVariants,
   Tab,
   TabContent,
   TabContentBody,
   TabTitleText,
   Tabs,
-  Text,
-  TextContent,
 } from "@patternfly/react-core";
 
 import { useUploadAdvisory } from "@app/queries/advisories";
@@ -35,12 +33,12 @@ export const ImporterList: React.FC = () => {
 
   return (
     <>
-      <PageSection variant={PageSectionVariants.light}>
-        <TextContent>
-          <Text component="h1">Upload</Text>
-        </TextContent>
+      <PageSection hasBodyWrapper={false}>
+        <Content>
+          <Content component="h1">Upload</Content>
+        </Content>
       </PageSection>
-      <PageSection>
+      <PageSection hasBodyWrapper={false}>
         <Card>
           <CardBody>
             <Tabs defaultActiveKey={0}>

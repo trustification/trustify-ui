@@ -1,7 +1,8 @@
 import type React from "react";
+
+import { Content } from "@patternfly/react-core";
 import ReactMarkdown from "react-markdown";
 
-import { Text, TextContent } from "@patternfly/react-core";
 import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
 import { markdownPFComponents } from "./markdownPFComponents";
 
@@ -19,11 +20,11 @@ export const NotesMarkdown: React.FC<NotesMarkdownProps> = ({
   notes,
 }) => {
   return notes.map((e) => (
-    <TextContent key={e.title} className={spacing.mbMd}>
-      <Text component={isCompact ? "h4" : "h1"}>
+    <Content key={e.title} className={spacing.mbMd}>
+      <Content component={isCompact ? "h4" : "h1"}>
         {e.title} ({e.category.replace("_", " ")})
-      </Text>
+      </Content>
       <ReactMarkdown components={markdownPFComponents}>{e.text}</ReactMarkdown>
-    </TextContent>
+    </Content>
   ));
 };
