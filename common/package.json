@@ -13,18 +13,17 @@
     },
     "./package.json": "./package.json"
   },
-  "types": "./dist",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "scripts": {
-    "clean": "rimraf ./dist",
-    "clean:all": "rimraf ./dist ./node_modules",
-    "check": "biome check .",
-    "check:write": "biome check --write .",
-    "format": "biome format .",
-    "format:fix": "biome format --write .",
-    "prebuild": "npm run clean",
-    "build": "NODE_ENV=production rollup -c",
-    "start:dev": "NODE_ENV=development rollup -c --watch"
+    "clean": "bunx rimraf ./dist",
+    "clean:all": "bunx rimraf ./dist ./node_modules",
+    "prebuild": "bun run clean && bun run generate-strings",
+    "generate-strings": "bun --eval \"import fs from 'fs'; import ejs from 'ejs'; const json = JSON.parse(fs.readFileSync('../branding/strings.json', 'utf8')); fs.writeFileSync('src/branding-strings.ts', ejs.render('export const strings = <%= JSON.stringify(json) %>; export default strings;', { json }))\"",
+    "build": "mkdir -p dist && bun build ./src/index.ts --outdir ./dist --target node --format esm --sourcemap && mv dist/index.js dist/index.mjs && bun build ./src/index.ts --outdir ./dist --target node --format cjs --sourcemap && mv dist/index.js dist/index.cjs && bun run copy-assets",
+    "copy-assets": "bun --eval \"import fs from 'fs'; import { mkdirSync, cpSync } from 'fs'; mkdirSync('dist/branding', { recursive: true }); cpSync('../branding', 'dist/branding', { recursive: true })\""
+  },
+  "devDependencies": {
+    "ejs": "^3.1.10"
   }
 }

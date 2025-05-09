@@ -20,8 +20,9 @@
     "baseUrl": ".",
     "paths": {
       "@app/*": ["src/app/*"],
-      "@mocks/*": ["src/mocks/*"]
-    },
+      "@mocks/*": ["src/mocks/*"],
+      "@trustify-ui/common": ["../common/src/index.ts"]  // Point to source or dist
+    },    
     "esModuleInterop": true
   },
   "include": ["src", "types/**/*"]
