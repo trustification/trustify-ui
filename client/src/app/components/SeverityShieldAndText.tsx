@@ -1,22 +1,26 @@
-import React from "react";
+import type React from "react";
 
 import { Flex, FlexItem, Tooltip } from "@patternfly/react-core";
 import ShieldIcon from "@patternfly/react-icons/dist/esm/icons/shield-alt-icon";
 
 import { severityList } from "@app/api/model-utils";
-import { Severity } from "@app/client";
+import type { ExtendedSeverity } from "@app/api/models";
 
 interface SeverityShieldAndTextProps {
-  value: Severity;
-  hideLabel?: boolean;
+  value: ExtendedSeverity;
+  score: number | null;
+  showScore?: boolean;
+  showLabel?: boolean;
 }
 
 export const SeverityShieldAndText: React.FC<SeverityShieldAndTextProps> = ({
   value,
-  hideLabel,
+  score,
+  showScore,
+  showLabel,
 }) => {
   const severityProps = severityList[value];
-  const label = value.charAt(0).toUpperCase() + value.slice(1);
+  const label = severityProps.name;
 
   return (
     <Flex
@@ -26,15 +30,18 @@ export const SeverityShieldAndText: React.FC<SeverityShieldAndTextProps> = ({
       style={{ whiteSpace: "nowrap" }}
     >
       <FlexItem>
-        {hideLabel ? (
+        {showLabel ? (
+          <ShieldIcon color={severityProps.color.value} />
+        ) : (
           <Tooltip content={label}>
             <ShieldIcon color={severityProps.color.value} />
           </Tooltip>
-        ) : (
-          <ShieldIcon color={severityProps.color.value} />
         )}
       </FlexItem>
-      {!hideLabel && <FlexItem>{label}</FlexItem>}
+      {showLabel && <FlexItem>{label}</FlexItem>}
+      {showScore && score !== null && (
+        <FlexItem>({Math.round(score * 10) / 10})</FlexItem>
+      )}
     </Flex>
   );
 };

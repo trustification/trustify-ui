@@ -1,8 +1,8 @@
 import React from "react";
 
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 
-import { WatchedSboms } from "@app/api/models";
+import type { WatchedSboms } from "@app/api/models";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import {
   useFetchWatchedSboms,
@@ -43,7 +43,7 @@ export const WatchedSbomsProvider: React.FunctionComponent<
 
   const { mutate: updateSboms } = useUpdateWatchedSbomsMutation(
     onUpdateSuccess,
-    onUpdateError
+    onUpdateError,
   );
 
   const patch = (key: string, value: string) => {

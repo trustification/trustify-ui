@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 
-import { HubRequestParams } from "@app/api/models";
+import type { HubRequestParams } from "@app/api/models";
 
 import { client } from "../axios-config/apiInit";
 import { getPurl, listPackages, listPurl } from "../client";
@@ -11,7 +11,7 @@ export const PackagesQueryKey = "packages";
 
 export const useFetchPackages = (
   params: HubRequestParams = {},
-  refetchDisabled: boolean = false
+  disableQuery = false,
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [PackagesQueryKey, params],
@@ -21,7 +21,7 @@ export const useFetchPackages = (
         query: { ...requestParamsQuery(params) },
       });
     },
-    refetchInterval: !refetchDisabled ? 5000 : false,
+    enabled: !disableQuery,
   });
 
   return {
@@ -51,7 +51,7 @@ export const useFetchPackageById = (id: string) => {
 
 export const useFetchPackagesBySbomId = (
   sbomId: string,
-  params: HubRequestParams = {}
+  params: HubRequestParams = {},
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [PackagesQueryKey, "by-sbom", sbomId, params],

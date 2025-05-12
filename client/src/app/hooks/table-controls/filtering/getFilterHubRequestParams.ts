@@ -1,11 +1,11 @@
-import { HubFilter, HubRequestParams } from "@app/api/models";
-import { objectKeys } from "@app/utils/utils";
+import type { HubFilter, HubRequestParams } from "@app/api/models";
 import {
-  FilterCategory,
+  type FilterCategory,
   getFilterLogicOperator,
 } from "@app/components/FilterToolbar";
-import { IFilterState } from "./useFilterState";
 import { parseInterval } from "@app/components/FilterToolbar/dateUtils";
+import { objectKeys } from "@app/utils/utils";
+import type { IFilterState } from "./useFilterState";
 
 /**
  * Helper function for getFilterHubRequestParams
@@ -14,10 +14,10 @@ import { parseInterval } from "@app/components/FilterToolbar/dateUtils";
  */
 const pushOrMergeFilter = (
   existingFilters: HubFilter[],
-  newFilter: HubFilter
+  newFilter: HubFilter,
 ) => {
   const existingFilterIndex = existingFilters.findIndex(
-    (f) => f.field === newFilter.field
+    (f) => f.field === newFilter.field,
   );
   const existingFilter =
     existingFilterIndex === -1 ? null : existingFilters[existingFilterIndex];
@@ -97,12 +97,12 @@ export const getFilterHubRequestParams = <
   const filters: HubFilter[] = [];
   if (filterState) {
     const { filterValues } = filterState;
-    objectKeys(filterValues).forEach((categoryKey) => {
+    for (const categoryKey of objectKeys(filterValues)) {
       const filterCategory = filterCategories?.find(
-        (category) => category.categoryKey === categoryKey
+        (category) => category.categoryKey === categoryKey,
       );
       const filterValue = filterValues[categoryKey];
-      if (!filterCategory || !filterValue) return;
+      if (!filterCategory || !filterValue) break;
       const serverFilterField = filterCategory.serverFilterField || categoryKey;
       const serverFilterValue =
         filterCategory.getServerFilterValue?.(filterValue) || filterValue;
@@ -157,10 +157,12 @@ export const getFilterHubRequestParams = <
           });
         }
       }
-    });
+    }
   }
   if (implicitFilters) {
-    implicitFilters.forEach((filter) => filters.push(filter));
+    for (const filter of implicitFilters) {
+      filters.push(filter);
+    }
   }
   return { filters };
 };
@@ -185,11 +187,7 @@ export const serializeFilterForHub = (filter: HubFilter): string => {
         ? `"${value}"`
         : `${value.list.join(value.operator === "OR" ? "|" : ",")}`;
 
-  if (!field) {
-    return joinedValue;
-  } else {
-    return `${field}${operator}${joinedValue}`;
-  }
+  return !field ? joinedValue : `${field}${operator}${joinedValue}`;
 };
 
 /**
@@ -200,7 +198,7 @@ export const serializeFilterForHub = (filter: HubFilter): string => {
  */
 export const serializeFilterRequestParamsForHub = (
   deserializedParams: HubRequestParams,
-  serializedParams: URLSearchParams
+  serializedParams: URLSearchParams,
 ) => {
   const { filters } = deserializedParams;
   if (filters) {
@@ -215,7 +213,7 @@ export const serializeFilterRequestParamsForHub = (
         })
         .sort((a, b) => a.field.localeCompare(b.field))
         .map(serializeFilterForHub)
-        .join("&")
+        .join("&"),
     );
   }
 };

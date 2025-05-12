@@ -7,9 +7,13 @@ import { SimplePagination } from "@app/components/SimplePagination";
 
 import { AdvisorySearchContext } from "./advisory-context";
 
-interface IAdvisoryToolbar {}
+interface AdvisoryToolbarProps {
+  showFilters?: boolean;
+}
 
-export const AdvisoryToolbar: React.FC<IAdvisoryToolbar> = ({}) => {
+export const AdvisoryToolbar: React.FC<AdvisoryToolbarProps> = ({
+  showFilters,
+}) => {
   const { tableControls } = React.useContext(AdvisorySearchContext);
 
   const {
@@ -25,7 +29,7 @@ export const AdvisoryToolbar: React.FC<IAdvisoryToolbar> = ({}) => {
     <>
       <Toolbar {...toolbarProps}>
         <ToolbarContent>
-          <FilterToolbar {...filterToolbarProps} />
+          {showFilters && <FilterToolbar {...filterToolbarProps} />}
           <ToolbarItem {...paginationToolbarItemProps}>
             <SimplePagination
               idPrefix="advisory-table"

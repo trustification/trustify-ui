@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import prettyBytes from "pretty-bytes";
 
@@ -14,7 +14,8 @@ import {
   GridItem,
 } from "@patternfly/react-core";
 
-import { AdvisorySummary, Severity } from "@app/client";
+import { extendedSeverityFromSeverity } from "@app/api/models";
+import type { AdvisorySummary, Severity } from "@app/client";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { formatDate } from "@app/utils/utils";
 
@@ -45,11 +46,14 @@ export const Overview: React.FC<InfoProps> = ({ advisory }) => {
               <DescriptionListGroup>
                 <DescriptionListTerm>Aggregate Severity</DescriptionListTerm>
                 <DescriptionListDescription>
-                  {advisory.average_severity && (
-                    <SeverityShieldAndText
-                      value={advisory.average_severity as Severity}
-                    />
-                  )}
+                  <SeverityShieldAndText
+                    value={extendedSeverityFromSeverity(
+                      advisory.average_severity as Severity,
+                    )}
+                    score={advisory.average_score}
+                    showLabel
+                    showScore
+                  />
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>

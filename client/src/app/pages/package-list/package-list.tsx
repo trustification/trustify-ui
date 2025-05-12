@@ -1,11 +1,6 @@
-import React from "react";
+import type React from "react";
 
-import {
-  PageSection,
-  PageSectionVariants,
-  Text,
-  TextContent,
-} from "@patternfly/react-core";
+import { Content, PageSection } from "@patternfly/react-core";
 
 import { PackageSearchProvider } from "./package-context";
 import { PackageTable } from "./package-table";
@@ -14,19 +9,15 @@ import { PackageToolbar } from "./package-toolbar";
 export const PackageList: React.FC = () => {
   return (
     <>
-      <PageSection variant={PageSectionVariants.light}>
-        <TextContent>
-          <Text component="h1">Packages</Text>
-        </TextContent>
+      <PageSection hasBodyWrapper={false}>
+        <Content>
+          <Content component="h1">Packages</Content>
+        </Content>
       </PageSection>
-      <PageSection>
-        <div
-          style={{
-            backgroundColor: "var(--pf-v5-global--BackgroundColor--100)",
-          }}
-        >
+      <PageSection hasBodyWrapper={false}>
+        <div>
           <PackageSearchProvider>
-            <PackageToolbar />
+            <PackageToolbar showFilters />
             <PackageTable />
           </PackageSearchProvider>
         </div>

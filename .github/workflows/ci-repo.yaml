@@ -3,14 +3,15 @@ name: CI (repo level)
 on:
   push:
     branches:
-      - main
-      - "release-*"
+      - "main"
+      - "release/*"
   pull_request:
     branches:
-      - main
-      - "release-*"
+      - "main"
+      - "release/*"
   workflow_dispatch:
   workflow_call:
+  merge_group:
 
 jobs:
   ci:
@@ -20,7 +21,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - name: Verify package-lock.json
         run: ./scripts/verify_lock.mjs
@@ -34,9 +35,8 @@ jobs:
         run: npm run build-storybook
       - name: Test
         run: npm run test -- --coverage --watchAll=false
-      - name: Format check
-        run: npm run format:check
-
+      - name: Check
+        run: npm run check
       - name: Crate Format
         working-directory: ./crate
         run: cargo fmt --check

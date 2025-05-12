@@ -1,9 +1,10 @@
 import * as React from "react";
+
 import {
   Badge,
   Button,
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
   Select,
   SelectGroup,
   SelectList,
@@ -11,17 +12,18 @@ import {
   TextInputGroup,
   TextInputGroupMain,
   TextInputGroupUtilities,
-  ToolbarChip,
   ToolbarFilter,
+  type ToolbarLabel,
   Tooltip,
 } from "@patternfly/react-core";
-import { IFilterControlProps } from "./FilterControl";
-import {
-  IMultiselectFilterCategory,
-  FilterSelectOptionProps,
-} from "./FilterToolbar";
-import { css } from "@patternfly/react-styles";
 import { TimesIcon } from "@patternfly/react-icons";
+import { css } from "@patternfly/react-styles";
+
+import type { IFilterControlProps } from "./FilterControl";
+import type {
+  FilterSelectOptionProps,
+  IMultiselectFilterCategory,
+} from "./FilterToolbar";
 
 import "./select-overrides.css";
 
@@ -49,7 +51,7 @@ export const MultiselectFilterControl = <TItem,>({
 
   React.useEffect(() => {
     setSelectOptions(
-      Array.isArray(category.selectOptions) ? category.selectOptions : []
+      Array.isArray(category.selectOptions) ? category.selectOptions : [],
     );
   }, [category.selectOptions]);
 
@@ -57,15 +59,13 @@ export const MultiselectFilterControl = <TItem,>({
 
   const flatOptions: FilterSelectOptionProps[] = !hasGroupings
     ? selectOptions
-    : (Object.values(selectOptions).flatMap(
-        (i) => i
-      ) as FilterSelectOptionProps[]);
+    : (Object.values(selectOptions).flat() as FilterSelectOptionProps[]);
 
   const getOptionFromOptionValue = (optionValue: string) =>
     flatOptions.find(({ value }) => value === optionValue);
 
   const [focusedItemIndex, setFocusedItemIndex] = React.useState<number | null>(
-    null
+    null,
   );
 
   const [activeItem, setActiveItem] = React.useState<string | null>(null);
@@ -73,7 +73,7 @@ export const MultiselectFilterControl = <TItem,>({
   const [inputValue, setInputValue] = React.useState<string>("");
 
   const onFilterClearAll = () => setFilterValue([]);
-  const onFilterClear = (chip: string | ToolbarChip) => {
+  const onFilterClear = (chip: string | ToolbarLabel) => {
     const value = typeof chip === "string" ? chip : chip.key;
 
     if (value) {
@@ -110,14 +110,22 @@ export const MultiselectFilterControl = <TItem,>({
       };
     })
 
-    .filter(Boolean);
+    .reduce(
+      (prev, current) => {
+        if (current) {
+          prev.push(current);
+        }
+        return prev;
+      },
+      [] as (string | ToolbarLabel)[],
+    );
 
   const renderSelectOptions = (
-    filter: (option: FilterSelectOptionProps, groupName?: string) => boolean
+    filter: (option: FilterSelectOptionProps, groupName?: string) => boolean,
   ) =>
     hasGroupings
       ? Object.entries(
-          selectOptions as Record<string, FilterSelectOptionProps[]>
+          selectOptions as Record<string, FilterSelectOptionProps[]>,
         )
           .sort(([groupA], [groupB]) => groupA.localeCompare(groupB))
           .map(([group, options]): [string, FilterSelectOptionProps[]] => [
@@ -125,8 +133,8 @@ export const MultiselectFilterControl = <TItem,>({
             options?.filter((o) => filter(o, group)) ?? [],
           ])
           .filter(([, groupFiltered]) => groupFiltered?.length)
-          .map(([group, groupFiltered], index) => (
-            <SelectGroup key={`group-${index}`} label={group}>
+          .map(([group, groupFiltered]) => (
+            <SelectGroup key={`group-${group}`} label={group}>
               {groupFiltered.map(({ value, label, optionProps }) => (
                 <SelectOption
                   {...optionProps}
@@ -158,7 +166,7 @@ export const MultiselectFilterControl = <TItem,>({
     if (value && value !== "No results") {
       let newFilterValue: string[];
 
-      if (filterValue && filterValue.includes(value)) {
+      if (filterValue?.includes(value)) {
         newFilterValue = filterValue.filter((item) => item !== value);
       } else {
         newFilterValue = filterValue ? [...filterValue, value] : [value];
@@ -194,10 +202,10 @@ export const MultiselectFilterControl = <TItem,>({
 
       setFocusedItemIndex(indexToFocus);
       const focusedItem = selectOptions.filter(
-        ({ optionProps }) => !optionProps?.isDisabled
+        ({ optionProps }) => !optionProps?.isDisabled,
       )[indexToFocus];
       setActiveItem(
-        `select-multi-typeahead-checkbox-${focusedItem.value.replace(" ", "-")}`
+        `select-multi-typeahead-checkbox-${focusedItem.value.replace(" ", "-")}`,
       );
     }
   };
@@ -212,7 +220,7 @@ export const MultiselectFilterControl = <TItem,>({
         ? category.selectOptions?.filter((menuItem) =>
             String(menuItem.value)
               .toLowerCase()
-              .includes(inputValue.trim().toLowerCase())
+              .includes(inputValue.trim().toLowerCase()),
           )
         : [];
 
@@ -245,11 +253,11 @@ export const MultiselectFilterControl = <TItem,>({
       : firstMenuItem;
 
     const newSelectOptions = flatOptions.filter((menuItem) =>
-      menuItem.value.toLowerCase().includes(inputValue.toLowerCase())
+      menuItem.value.toLowerCase().includes(inputValue.toLowerCase()),
     );
     const selectedItem =
       newSelectOptions.find(
-        (option) => option.value.toLowerCase() === inputValue.toLowerCase()
+        (option) => option.value.toLowerCase() === inputValue.toLowerCase(),
       ) || focusedItem;
 
     switch (event.key) {
@@ -277,7 +285,7 @@ export const MultiselectFilterControl = <TItem,>({
 
   const onTextInputChange = (
     _event: React.FormEvent<HTMLInputElement>,
-    value: string
+    value: string,
   ) => {
     setInputValue(value);
     if (!isFilterDropdownOpen) {
@@ -317,6 +325,7 @@ export const MultiselectFilterControl = <TItem,>({
         <TextInputGroupUtilities>
           {!!inputValue && (
             <Button
+              icon={<TimesIcon aria-hidden />}
               variant="plain"
               onClick={() => {
                 setInputValue("");
@@ -324,9 +333,7 @@ export const MultiselectFilterControl = <TItem,>({
                 textInputRef?.current?.focus();
               }}
               aria-label="Clear input value"
-            >
-              <TimesIcon aria-hidden />
-            </Button>
+            />
           )}
           {filterValue?.length ? (
             <Badge isRead>{filterValue.length}</Badge>
@@ -339,9 +346,9 @@ export const MultiselectFilterControl = <TItem,>({
   return (
     <ToolbarFilter
       id={`filter-control-${category.categoryKey}`}
-      chips={chips}
-      deleteChip={(_, chip) => onFilterClear(chip)}
-      deleteChipGroup={onFilterClearAll}
+      labels={chips}
+      deleteLabel={(_, chip) => onFilterClear(chip)}
+      deleteLabelGroup={onFilterClearAll}
       categoryName={category.title}
       showToolbarItem={showToolbarItem}
     >

@@ -1,7 +1,8 @@
-import React, { useContext } from "react";
+import type React from "react";
+import { useContext } from "react";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import { useFieldArray, useForm } from "react-hook-form";
 import { array, boolean, number, object, string } from "yup";
 
@@ -35,7 +36,11 @@ import {
   useUpdateImporterMutation,
 } from "@app/queries/importers";
 
-import { Importer, ImporterConfiguration, SbomImporter } from "@app/client";
+import type {
+  Importer,
+  ImporterConfiguration,
+  SbomImporter,
+} from "@app/client";
 import {
   HookFormPFGroupController,
   HookFormPFSelect,
@@ -46,7 +51,9 @@ import { NotificationsContext } from "@app/components/NotificationsContext";
 
 const getPeriodValue = (period?: string) => {
   try {
-    return period ? parseInt(period.substring(0, period.length - 1)) : null;
+    return period
+      ? Number.parseInt(period.substring(0, period.length - 1))
+      : null;
   } catch (e) {
     return null;
   }
@@ -120,11 +127,12 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
   });
 
   const importerType = Object.keys(
-    importer?.configuration ?? {}
+    importer?.configuration ?? {},
   )[0] as ImporterType;
 
   const importerConfiguration = importer?.configuration
-    ? ((importer?.configuration as any)[importerType] as SbomImporter)
+    ? // biome-ignore lint/suspicious/noExplicitAny:
+      ((importer?.configuration as any)[importerType] as SbomImporter)
     : undefined;
 
   const periodValue = getPeriodValue(importerConfiguration?.period);
@@ -170,7 +178,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
       variant: "success",
     });
 
-  const onCreateError = (error: AxiosError) => {
+  const onCreateError = (_error: AxiosError) => {
     pushNotification({
       title: "Error while creating the Importer",
       variant: "danger",
@@ -179,7 +187,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
 
   const { mutate: createImporter } = useCreateImporterMutation(
     onCreateSuccess,
-    onCreateError
+    onCreateError,
   );
 
   const onUpdateSuccess = () =>
@@ -188,7 +196,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
       variant: "success",
     });
 
-  const onUpdateError = (error: AxiosError) => {
+  const onUpdateError = (_error: AxiosError) => {
     pushNotification({
       title: "Error while updating the Importer",
       variant: "danger",
@@ -196,12 +204,12 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
   };
   const { mutate: updateImporter } = useUpdateImporterMutation(
     onUpdateSuccess,
-    onUpdateError
+    onUpdateError,
   );
 
   const onSubmit = (formValues: FormValues) => {
     const configuration: SbomImporter = {
-      ...importerConfiguration!,
+      ...(importerConfiguration ?? {}),
       description: formValues.description.trim(),
       source: formValues.source.trim(),
       period: `${formValues.periodValue}${formValues.periodUnit.trim()}`,
@@ -241,7 +249,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
     } else if (getValues().type === "csaf") {
       setValue(
         "source",
-        "https://redhat.com/.well-known/csaf/provider-metadata.json"
+        "https://redhat.com/.well-known/csaf/provider-metadata.json",
       );
       setValue("keys", []);
     }
@@ -259,8 +267,8 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
           fieldId="type"
           isRequired
         >
-          {ALL_IMPORTERS.map((option, index) => (
-            <FormSelectOption key={index} value={option} label={option} />
+          {ALL_IMPORTERS.map((option) => (
+            <FormSelectOption key={option} value={option} label={option} />
           ))}
         </HookFormPFSelect>
         <HookFormPFTextInput
@@ -299,7 +307,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
                 bodyContent="Whether or not the Importer is enabled to be executed continuously"
                 className="popover"
               >
-                <span className={`${spacing.mlSm} pf-v5-c-icon pf-m-info`}>
+                <span className={`${spacing.mlSm} pf-v6-c-icon pf-m-info`}>
                   <QuestionCircleIcon />
                 </span>
               </Popover>
@@ -316,11 +324,9 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
                 text: "Settings",
               }}
               actions={
-                <>
-                  <Button variant="secondary" onClick={fillDemoSettings}>
-                    Fill demo settings
-                  </Button>
-                </>
+                <Button variant="secondary" onClick={fillDemoSettings}>
+                  Fill demo settings
+                </Button>
               }
             />
           }
@@ -372,9 +378,9 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
                       value={value}
                       style={{ width: 110 }}
                     >
-                      {ALL_PERIOD_UNITS.map((option, index) => (
+                      {ALL_PERIOD_UNITS.map((option) => (
                         <FormSelectOption
-                          key={index}
+                          key={option}
                           value={option}
                           label={PERIOD_UNIT_LIST[option].label}
                         />
@@ -407,7 +413,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
                   bodyContent="Enables v3 signatures"
                   className="popover"
                 >
-                  <span className={`${spacing.mlSm} pf-v5-c-icon pf-m-info`}>
+                  <span className={`${spacing.mlSm} pf-v6-c-icon pf-m-info`}>
                     <QuestionCircleIcon />
                   </span>
                 </Popover>
@@ -441,12 +447,13 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
                       </SplitItem>
                       <SplitItem>
                         <Button
+                          icon={<MinusIcon />}
                           variant="tertiary"
                           onClick={() => {
                             removeKeys(index);
                           }}
                         >
-                          <MinusIcon /> Remove
+                          Remove
                         </Button>
                       </SplitItem>
                     </Split>
@@ -455,10 +462,11 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
               })}
               <StackItem>
                 <Button
+                  icon={<PlusCircleIcon />}
                   variant="tertiary"
                   onClick={() => appendKeys({ value: "" })}
                 >
-                  <PlusCircleIcon /> Add Key
+                  Add Key
                 </Button>
               </StackItem>
             </Stack>

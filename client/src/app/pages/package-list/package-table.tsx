@@ -28,7 +28,6 @@ export const PackageTable: React.FC = () => {
       getTrProps,
       getTdProps,
     },
-    expansionDerivedState: { isCellExpanded },
   } = tableControls;
 
   return (
@@ -62,7 +61,11 @@ export const PackageTable: React.FC = () => {
                     item={item}
                     rowIndex={rowIndex}
                   >
-                    <Td width={15} {...getTdProps({ columnKey: "name" })}>
+                    <Td
+                      width={15}
+                      modifier="breakWord"
+                      {...getTdProps({ columnKey: "name" })}
+                    >
                       <NavLink to={`/packages/${item.uuid}`}>
                         {item.decomposedPurl
                           ? item.decomposedPurl?.name
@@ -120,7 +123,6 @@ export const PackageTable: React.FC = () => {
       <SimplePagination
         idPrefix="package-table"
         isTop={false}
-        isCompact
         paginationProps={paginationProps}
       />
     </>

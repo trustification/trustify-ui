@@ -9,10 +9,9 @@ import {
   CardTitle,
   EmptyState,
   EmptyStateBody,
-  EmptyStateHeader,
   EmptyStateVariant,
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
   Select,
   SelectList,
   SelectOption,
@@ -35,6 +34,8 @@ interface WatchedSbomProps {
   sbomId: string | null;
 }
 
+const defaultDebounce = 500;
+
 export const WatchedSbom: React.FC<WatchedSbomProps> = ({
   fieldName,
   sbomId,
@@ -48,9 +49,9 @@ export const WatchedSbom: React.FC<WatchedSbomProps> = ({
   React.useEffect(() => {
     const delayInputTimeoutId = setTimeout(() => {
       setDebouncedInputValue(inputValue);
-    }, 500);
+    }, defaultDebounce);
     return () => clearTimeout(delayInputTimeoutId);
-  }, [inputValue, 500]);
+  }, [inputValue]);
 
   const [isSelectOpen, setIsSelectOpen] = React.useState(false);
 
@@ -62,19 +63,15 @@ export const WatchedSbom: React.FC<WatchedSbomProps> = ({
 
   const {
     result: { data: sbomOptions },
-    isFetching: isFetchingSbomOptions,
-    fetchError: fetchErrorSbomOptions,
-  } = useFetchSBOMs(
-    {
-      filters: [{ field: "", operator: "~", value: debouncedInputValue }],
-      page: { pageNumber: 1, itemsPerPage: 10 },
-    },
-    true
-  );
+  } = useFetchSBOMs({
+    filters: [{ field: "", operator: "~", value: debouncedInputValue }],
+    page: { pageNumber: 1, itemsPerPage: 10 },
+    sort: { field: "ingested", direction: "desc" },
+  });
 
   const onSelectItem = (
     _event: React.MouseEvent<Element, MouseEvent> | undefined,
-    value: string | number | undefined
+    value: string | number | undefined,
   ) => {
     if (value) {
       patch(fieldName, value as string);
@@ -101,7 +98,7 @@ export const WatchedSbom: React.FC<WatchedSbomProps> = ({
 
   const onTextInputChange = (
     _event: React.FormEvent<HTMLInputElement>,
-    value: string
+    value: string,
   ) => {
     setInputValue(value);
   };
@@ -129,11 +126,11 @@ export const WatchedSbom: React.FC<WatchedSbomProps> = ({
               </StackItem>
             </Stack>
           ) : (
-            <EmptyState variant={EmptyStateVariant.xs}>
-              <EmptyStateHeader
-                titleText="There is nothing here yet"
-                headingLevel="h4"
-              />
+            <EmptyState
+              headingLevel="h4"
+              titleText="There is nothing here yet"
+              variant={EmptyStateVariant.xs}
+            >
               <EmptyStateBody>
                 You can get started by uploading an SBOM. Once your SBOMs are
                 uploaded come back to this page to change the SBOMs you would
@@ -174,12 +171,11 @@ export const WatchedSbom: React.FC<WatchedSbomProps> = ({
                   {...(!inputValue ? { style: { display: "none" } } : {})}
                 >
                   <Button
+                    icon={<TimesIcon aria-hidden />}
                     variant="plain"
                     onClick={onClearButtonClick}
                     aria-label="Clear input value"
-                  >
-                    <TimesIcon aria-hidden />
-                  </Button>
+                  />
                 </TextInputGroupUtilities>
               </TextInputGroup>
             </MenuToggle>

@@ -35,7 +35,7 @@ export function parseMock(str?: string): {
   str
     ?.toLowerCase()
     .split(".")
-    .map((p) => p.trim())
+    .map((p) => p.trim())    
     .forEach((part) => {
       if (part.match(regexOff)) {
         off = true;

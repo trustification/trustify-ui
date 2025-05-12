@@ -1,21 +1,20 @@
-import React from "react";
+import type React from "react";
 
 import {
   EmptyState,
   EmptyStateBody,
-  EmptyStateIcon,
   EmptyStateVariant,
-  Title,
 } from "@patternfly/react-core";
 import SearchIcon from "@patternfly/react-icons/dist/esm/icons/search-icon";
 
 export const StateNoResults: React.FC = () => {
   return (
-    <EmptyState variant={EmptyStateVariant.sm}>
-      <EmptyStateIcon icon={SearchIcon} />
-      <Title headingLevel="h2" size="lg">
-        No results found
-      </Title>
+    <EmptyState
+      titleText="No results found"
+      headingLevel="h4"
+      icon={SearchIcon}
+      variant={EmptyStateVariant.sm}
+    >
       <EmptyStateBody>
         No results match the filter criteria. Remove all filters or clear all
         filters to show results.

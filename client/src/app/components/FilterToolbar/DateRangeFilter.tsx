@@ -1,21 +1,21 @@
-import React, { FormEvent, useState } from "react";
+import React, { type FormEvent, useState } from "react";
 
 import {
   DatePicker,
   InputGroup,
-  isValidDate as isValidJSDate,
-  ToolbarChip,
-  ToolbarChipGroup,
   ToolbarFilter,
+  type ToolbarLabel,
+  type ToolbarLabelGroup,
   Tooltip,
+  isValidDate as isValidJSDate,
 } from "@patternfly/react-core";
 
-import { IFilterControlProps } from "./FilterControl";
+import type { IFilterControlProps } from "./FilterControl";
 import {
-  localizeInterval,
   americanDateFormat,
   isValidAmericanShortDate,
   isValidInterval,
+  localizeInterval,
   parseAmericanDate,
   parseInterval,
   toISODateInterval,
@@ -44,7 +44,7 @@ export const DateRangeFilter = <TItem,>({
 
   const validFilters =
     selectedFilters?.filter((interval) =>
-      isValidInterval(parseInterval(interval))
+      isValidInterval(parseInterval(interval)),
     ) ?? [];
   const [from, setFrom] = useState<Date>();
   const [to, setTo] = useState<Date>();
@@ -85,15 +85,15 @@ export const DateRangeFilter = <TItem,>({
   };
 
   const clearSingleRange = (
-    _category: string | ToolbarChipGroup,
-    _option: string | ToolbarChip
+    _category: string | ToolbarLabelGroup,
+    _option: string | ToolbarLabel,
   ) => {
     setFilterValue([]);
   };
 
   const onFromDateChange = (
-    event: FormEvent<HTMLInputElement>,
-    value: string
+    _event: FormEvent<HTMLInputElement>,
+    value: string,
   ) => {
     if (isValidAmericanShortDate(value)) {
       setFrom(parseAmericanDate(value));
@@ -101,7 +101,10 @@ export const DateRangeFilter = <TItem,>({
     }
   };
 
-  const onToDateChange = (even: FormEvent<HTMLInputElement>, value: string) => {
+  const onToDateChange = (
+    _event: FormEvent<HTMLInputElement>,
+    value: string,
+  ) => {
     if (isValidAmericanShortDate(value)) {
       const newTo = parseAmericanDate(value);
       setTo(newTo);
@@ -115,9 +118,9 @@ export const DateRangeFilter = <TItem,>({
   return (
     <ToolbarFilter
       key={category.categoryKey}
-      chips={validFilters.flatMap(rangeToOption)}
-      deleteChip={clearSingleRange}
-      deleteChipGroup={() => setFilterValue([])}
+      labels={validFilters.flatMap(rangeToOption)}
+      deleteLabel={clearSingleRange}
+      deleteLabelGroup={() => setFilterValue([])}
       categoryName={category.title}
       showToolbarItem={showToolbarItem}
     >

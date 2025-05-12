@@ -1,23 +1,23 @@
 // Hub filter/sort/pagination utils
 // TODO these could use some unit tests!
 
-import { HubRequestParams } from "@app/api/models";
+import type { HubRequestParams } from "@app/api/models";
 import {
+  type IGetFilterHubRequestParamsArgs,
   getFilterHubRequestParams,
-  IGetFilterHubRequestParamsArgs,
   serializeFilterForHub,
   serializeFilterRequestParamsForHub,
 } from "./filtering";
 import {
-  getSortHubRequestParams,
-  IGetSortHubRequestParamsArgs,
-  serializeSortRequestParamsForHub,
-} from "./sorting";
-import {
+  type IGetPaginationHubRequestParamsArgs,
   getPaginationHubRequestParams,
-  IGetPaginationHubRequestParamsArgs,
   serializePaginationRequestParamsForHub,
 } from "./pagination";
+import {
+  type IGetSortHubRequestParamsArgs,
+  getSortHubRequestParams,
+  serializeSortRequestParamsForHub,
+} from "./sorting";
 
 // TODO move this outside this directory as part of decoupling Konveyor-specific code from table-controls.
 
@@ -37,7 +37,7 @@ export const getHubRequestParams = <
 >(
   args: IGetFilterHubRequestParamsArgs<TItem, TFilterCategoryKey> &
     IGetSortHubRequestParamsArgs<TSortableColumnKey> &
-    IGetPaginationHubRequestParamsArgs
+    IGetPaginationHubRequestParamsArgs,
 ): HubRequestParams => ({
   ...getFilterHubRequestParams(args),
   ...getSortHubRequestParams(args),
@@ -50,7 +50,7 @@ export const getHubRequestParams = <
  * - Used internally by the application's useFetch[Resource] hooks
  */
 export const serializeRequestParamsForHub = (
-  deserializedParams: HubRequestParams
+  deserializedParams: HubRequestParams,
 ): URLSearchParams => {
   const serializedParams = new URLSearchParams();
   serializeFilterRequestParamsForHub(deserializedParams, serializedParams);
@@ -80,7 +80,7 @@ interface HubRequestParamsQuery {
  * Like serializeRequestParamsForHub but returns a plain object instead of URLSearchParams.
  */
 export const requestParamsQuery = (
-  p: HubRequestParams
+  p: HubRequestParams,
 ): HubRequestParamsQuery => {
   let limit = undefined as number | undefined;
   let offset = undefined as number | undefined;

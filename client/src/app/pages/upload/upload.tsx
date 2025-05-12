@@ -1,19 +1,17 @@
-import React from "react";
+import type React from "react";
 
-import { AxiosError, AxiosResponse } from "axios";
+import type { AxiosError, AxiosResponse } from "axios";
 
 import {
   Card,
   CardBody,
+  Content,
   PageSection,
-  PageSectionVariants,
   Tab,
   TabContent,
   TabContentBody,
-  Tabs,
   TabTitleText,
-  Text,
-  TextContent,
+  Tabs,
 } from "@patternfly/react-core";
 
 import { useUploadAdvisory } from "@app/queries/advisories";
@@ -35,12 +33,12 @@ export const ImporterList: React.FC = () => {
 
   return (
     <>
-      <PageSection variant={PageSectionVariants.light}>
-        <TextContent>
-          <Text component="h1">Upload</Text>
-        </TextContent>
+      <PageSection hasBodyWrapper={false}>
+        <Content>
+          <Content component="h1">Upload</Content>
+        </Content>
       </PageSection>
-      <PageSection>
+      <PageSection hasBodyWrapper={false}>
         <Card>
           <CardBody>
             <Tabs defaultActiveKey={0}>
@@ -52,7 +50,7 @@ export const ImporterList: React.FC = () => {
                       handleUpload={handleSbomUpload}
                       handleRemoveUpload={handleSbomRemoveUpload}
                       extractSuccessMessage={(
-                        response: AxiosResponse<{ document_id: string }>
+                        response: AxiosResponse<{ document_id: string }>,
                       ) => {
                         return `${response.data.document_id} uploaded`;
                       }}
@@ -73,7 +71,7 @@ export const ImporterList: React.FC = () => {
                       handleUpload={handleAdvisoryUpload}
                       handleRemoveUpload={handleAdvisoryRemoveUpload}
                       extractSuccessMessage={(
-                        response: AxiosResponse<{ document_id: string }>
+                        response: AxiosResponse<{ document_id: string }>,
                       ) => {
                         return `${response.data.document_id} uploaded`;
                       }}

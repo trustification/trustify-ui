@@ -1,14 +1,8 @@
-import * as React from "react";
+import type * as React from "react";
 
-import {
-  Button,
-  Stack,
-  StackItem,
-  Text,
-  TextContent,
-} from "@patternfly/react-core";
+import { Button, Content, Stack, StackItem } from "@patternfly/react-core";
 
-import {
+import type {
   FilterCategory,
   FilterValue,
   IFilterValues,
@@ -34,7 +28,7 @@ export const FilterPanel = <TItem, TFilterCategoryKey extends string>({
 >): JSX.Element | null => {
   const setFilterValue = (
     category: FilterCategory<TItem, TFilterCategoryKey>,
-    newValue: FilterValue
+    newValue: FilterValue,
   ) => setFilterValues({ ...filterValues, [category.categoryKey]: newValue });
 
   const clearAllFilters = () => {
@@ -42,12 +36,12 @@ export const FilterPanel = <TItem, TFilterCategoryKey extends string>({
       .filter((filterCategory) => {
         return (
           omitFilterCategoryKeys.find(
-            (categoryKey) => categoryKey === filterCategory.categoryKey
+            (categoryKey) => categoryKey === filterCategory.categoryKey,
           ) === undefined
         );
       })
       .reduce((prev, current) => {
-        return { ...prev, [current.categoryKey]: undefined };
+        return Object.assign(prev, { [current.categoryKey]: undefined });
       }, {});
     setFilterValues({ ...filterValues, ...filtersToBeCleared });
   };
@@ -64,7 +58,7 @@ export const FilterPanel = <TItem, TFilterCategoryKey extends string>({
           .filter((filterCategory) => {
             return (
               omitFilterCategoryKeys.find(
-                (categoryKey) => categoryKey === filterCategory.categoryKey
+                (categoryKey) => categoryKey === filterCategory.categoryKey,
               ) === undefined
             );
           })
@@ -73,9 +67,7 @@ export const FilterPanel = <TItem, TFilterCategoryKey extends string>({
               <StackItem key={category.categoryKey}>
                 <Stack hasGutter>
                   <StackItem>
-                    <TextContent>
-                      <Text component="h4">{category.title}</Text>
-                    </TextContent>
+                    <Content component="h4">{category.title}</Content>
                   </StackItem>
                   <StackItem>
                     <FilterControl<TItem, TFilterCategoryKey>

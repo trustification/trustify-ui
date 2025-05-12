@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { PageSection, Stack, StackItem } from "@patternfly/react-core";
 
@@ -9,7 +9,7 @@ import { WatchedSbomsProvider } from "./watched-sboms-context";
 export const Home: React.FC = () => {
   return (
     <>
-      <PageSection>
+      <PageSection hasBodyWrapper={false}>
         <Stack hasGutter>
           <StackItem>
             <MonitoringSection />

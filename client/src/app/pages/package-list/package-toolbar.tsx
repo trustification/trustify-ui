@@ -7,9 +7,13 @@ import { SimplePagination } from "@app/components/SimplePagination";
 
 import { PackageSearchContext } from "./package-context";
 
-interface IPackageToolbar {}
+interface PackageToolbarProps {
+  showFilters?: boolean;
+}
 
-export const PackageToolbar: React.FC<IPackageToolbar> = ({}) => {
+export const PackageToolbar: React.FC<PackageToolbarProps> = ({
+  showFilters,
+}) => {
   const { tableControls } = React.useContext(PackageSearchContext);
 
   const {
@@ -24,7 +28,7 @@ export const PackageToolbar: React.FC<IPackageToolbar> = ({}) => {
   return (
     <Toolbar {...toolbarProps}>
       <ToolbarContent>
-        <FilterToolbar {...filterToolbarProps} />
+        {showFilters && <FilterToolbar {...filterToolbarProps} />}
         <ToolbarItem {...paginationToolbarItemProps}>
           <SimplePagination
             idPrefix="package-table"

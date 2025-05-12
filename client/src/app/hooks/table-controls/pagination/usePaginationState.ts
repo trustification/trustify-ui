@@ -1,6 +1,6 @@
 import { usePersistentState } from "@app/hooks/usePersistentState";
-import { IFeaturePersistenceArgs } from "../types";
-import { DiscriminatedArgs } from "@app/utils/type-utils";
+import type { DiscriminatedArgs } from "@app/utils/type-utils";
+import type { IFeaturePersistenceArgs } from "../types";
 
 /**
  * The currently applied pagination parameters
@@ -62,7 +62,7 @@ export type IPaginationStateArgs = DiscriminatedArgs<
 export const usePaginationState = <
   TPersistenceKeyPrefix extends string = string,
 >(
-  args: IPaginationStateArgs & IFeaturePersistenceArgs<TPersistenceKeyPrefix>
+  args: IPaginationStateArgs & IFeaturePersistenceArgs<TPersistenceKeyPrefix>,
 ): IPaginationState => {
   const {
     isPaginationEnabled,
@@ -105,8 +105,8 @@ export const usePaginationState = <
             const { pageNumber, itemsPerPage } = urlParams || {};
             return pageNumber && itemsPerPage
               ? {
-                  pageNumber: parseInt(pageNumber, 10),
-                  itemsPerPage: parseInt(itemsPerPage, 10),
+                  pageNumber: Number.parseInt(pageNumber, 10),
+                  itemsPerPage: Number.parseInt(itemsPerPage, 10),
                 }
               : defaultValue;
           },

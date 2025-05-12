@@ -1,11 +1,8 @@
 import React from "react";
 
 import {
+  Content,
   PageSection,
-  PageSectionVariants,
-  SearchInput,
-  Text,
-  TextContent,
   Toolbar,
   ToolbarContent,
   ToolbarGroup,
@@ -43,13 +40,14 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
   const { tableControls: packageTableControls } =
     React.useContext(PackageSearchContext);
   const { tableControls: vulnerabilityTableControls } = React.useContext(
-    VulnerabilitySearchContext
+    VulnerabilitySearchContext,
   );
   const { tableControls: advisoryTableControls } = React.useContext(
-    AdvisorySearchContext
+    AdvisorySearchContext,
   );
 
   const {
+    isFetching: isFetchingSboms,
     totalItemCount: sbomTotalCount,
     tableControls: {
       propHelpers: { filterPanelProps: sbomFilterPanelProps },
@@ -57,6 +55,7 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
   } = React.useContext(SbomSearchContext);
 
   const {
+    isFetching: isFetchingPackages,
     totalItemCount: packageTotalCount,
     tableControls: {
       propHelpers: { filterPanelProps: packageFilterPanelProps },
@@ -64,6 +63,7 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
   } = React.useContext(PackageSearchContext);
 
   const {
+    isFetching: isFetchingVulnerabilities,
     totalItemCount: vulnerabilityTotalCount,
     tableControls: {
       propHelpers: { filterPanelProps: vulnerabilityFilterPanelProps },
@@ -71,6 +71,7 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
   } = React.useContext(VulnerabilitySearchContext);
 
   const {
+    isFetching: isFetchingAdvisories,
     totalItemCount: advisoryTotalCount,
     tableControls: {
       propHelpers: { filterPanelProps: advisoryFilterPanelProps },
@@ -87,7 +88,7 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
   // Search
 
   const onChangeContextSearchValue = (searchValue: string | undefined) => {
-    if (searchValue == undefined) return;
+    if (searchValue === undefined) return;
     sbomTableControls.filterState.setFilterValues({
       ...sbomTableControls.filterState.filterValues,
       [FILTER_TEXT_CATEGORY_KEY]: [searchValue],
@@ -113,25 +114,29 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
       sbomTotalCount={sbomTotalCount}
       vulnerabilityTotalCount={vulnerabilityTotalCount}
       advisoryTotalCount={advisoryTotalCount}
+      isFetchingPackages={isFetchingPackages}
+      isFetchingSboms={isFetchingSboms}
+      isFetchingVulnerabilities={isFetchingVulnerabilities}
+      isFetchingAdvisories={isFetchingAdvisories}
     />
   );
 
   return (
     <>
-      <PageSection variant={PageSectionVariants.light}>
+      <PageSection hasBodyWrapper={false}>
         <Toolbar isStatic>
           <ToolbarContent>
-            <ToolbarGroup align={{ default: "alignLeft" }}>
-              <TextContent>
-                <Text component="h1">Search Results</Text>
-              </TextContent>
+            <ToolbarGroup align={{ default: "alignStart" }}>
+              <Content>
+                <Content component="h1">Search Results</Content>
+              </Content>
             </ToolbarGroup>
             <ToolbarGroup
-              variant="icon-button-group"
-              align={{ default: "alignRight" }}
+              variant="action-group-plain"
+              align={{ default: "alignEnd" }}
             >
-              <ToolbarGroup visibility={{ default: "hidden", lg: "visible" }}>
-                <ToolbarItem widths={{ default: "500px" }}>
+              <ToolbarGroup visibility={{ default: "visible" }}>
+                <ToolbarItem>
                   <SearchMenu onChangeSearch={onChangeContextSearchValue} />
                 </ToolbarItem>
               </ToolbarGroup>
@@ -139,7 +144,9 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
           </ToolbarContent>
         </Toolbar>
       </PageSection>
-      <PageSection>{searchBodyOverride || searchTabs}</PageSection>
+      <PageSection hasBodyWrapper={false}>
+        {searchBodyOverride || searchTabs}
+      </PageSection>
     </>
   );
 };

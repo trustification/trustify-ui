@@ -1,21 +1,22 @@
 import * as React from "react";
 
-import { AxiosError, AxiosResponse, CancelTokenSource } from "axios";
-import { FileRejection } from "react-dropzone";
+import type { AxiosError, AxiosResponse, CancelTokenSource } from "axios";
+import type { FileRejection } from "react-dropzone";
 
 import {
-  DropEvent,
+  type DropEvent,
   HelperText,
   HelperTextItem,
   List,
   ListItem,
   Modal,
+  ModalBody,
+  ModalHeader,
   MultipleFileUpload,
   MultipleFileUploadMain,
   MultipleFileUploadStatus,
   MultipleFileUploadStatusItem,
   Spinner,
-  Text,
 } from "@patternfly/react-core";
 
 import FileIcon from "@patternfly/react-icons/dist/esm/icons/file-code-icon";
@@ -69,9 +70,9 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
   }, [uploads]);
 
   const removeFiles = (filesToRemove: File[]) => {
-    filesToRemove.forEach((e) => {
+    for (const e of filesToRemove) {
       handleRemoveUpload(e);
-    });
+    }
   };
 
   // callback that will be called by the react dropzone with the newly dropped file objects
@@ -85,7 +86,7 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
   };
 
   const successFileCount = Array.from(uploads.values()).filter(
-    (upload) => upload.response
+    (upload) => upload.response,
   ).length;
 
   return (
@@ -94,7 +95,7 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
         onFileDrop={handleFileDrop}
         dropzoneProps={{
           accept: {
-            "application/xml": [".json", ".bz2", ".gz"],
+            "application/xml": [".json", ".bz2"],
           },
           onDropRejected: handleDropRejected,
           useFsAccessApi: false, // Required to make playwright work
@@ -104,7 +105,7 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
           titleIcon={<UploadIcon />}
           titleText="Drag and drop files here"
           titleTextSeparator="or"
-          infoText="Accepted file types: .json, .bz2, .gz"
+          infoText="Accepted file types: .json, .bz2"
         />
         {showStatus && (
           <MultipleFileUploadStatus
@@ -159,18 +160,18 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
 
         <Modal
           isOpen={rejectedFiles.length > 0}
-          title="Unsupported files"
-          titleIconVariant="warning"
-          showClose
           aria-label="unsupported file upload attempted"
           onClose={() => setRejectedFiles([])}
           variant="small"
         >
-          <List>
-            {rejectedFiles.map((e, index) => (
-              <ListItem key={index}>{e.file.name}</ListItem>
-            ))}
-          </List>
+          <ModalHeader title="Unsupported files" titleIconVariant="warning" />
+          <ModalBody>
+            <List>
+              {rejectedFiles.map((e) => (
+                <ListItem key={e.file.name}>{e.file.name}</ListItem>
+              ))}
+            </List>
+          </ModalBody>
         </Modal>
       </MultipleFileUpload>
     </>

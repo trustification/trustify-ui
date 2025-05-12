@@ -1,40 +1,72 @@
-import React, { ReactElement, ReactNode } from "react";
+import React, { type ReactElement, type ReactNode } from "react";
 
 import {
   Badge,
   Card,
   CardBody,
+  Icon,
   Popover,
   Split,
   SplitItem,
   Tab,
   TabAction,
-  Tabs,
   TabTitleText,
+  Tabs,
 } from "@patternfly/react-core";
-
-import { FilterPanel } from "@app/components/FilterPanel";
-import { AdvisoryTable } from "@app/pages/advisory-list/advisory-table";
-import { PackageTable } from "@app/pages/package-list/package-table";
-import { SbomTable } from "@app/pages/sbom-list/sbom-table";
-import { VulnerabilityTable } from "@app/pages/vulnerability-list/vulnerability-table";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
+import SpinnerIcon from "@patternfly/react-icons/dist/esm/icons/spinner-icon";
+
+import type {
+  AdvisorySummary,
+  SbomSummary,
+  VulnerabilitySummary,
+} from "@app/client";
+import {
+  FilterPanel,
+  type IFilterPanelProps,
+} from "@app/components/FilterPanel";
+import { AdvisoryTable } from "@app/pages/advisory-list/advisory-table";
+import { AdvisoryToolbar } from "@app/pages/advisory-list/advisory-toolbar";
+import type { PackageTableData } from "@app/pages/package-list/package-context";
+import { PackageTable } from "@app/pages/package-list/package-table";
+import { PackageToolbar } from "@app/pages/package-list/package-toolbar";
+import { SbomTable } from "@app/pages/sbom-list/sbom-table";
+import { SbomToolbar } from "@app/pages/sbom-list/sbom-toolbar";
+import { VulnerabilityTable } from "@app/pages/vulnerability-list/vulnerability-table";
+import { VulnerabilityToolbar } from "@app/pages/vulnerability-list/vulnerability-toolbar";
 
 export interface SearchTabsProps {
   filterPanelProps: {
-    advisoryFilterPanelProps?: any;
-    packageFilterPanelProps?: any;
-    sbomFilterPanelProps?: any;
-    vulnerabilityFilterPanelProps?: any;
+    advisoryFilterPanelProps: IFilterPanelProps<
+      AdvisorySummary,
+      "" | "modified" | "average_severity"
+    >;
+    packageFilterPanelProps: IFilterPanelProps<
+      PackageTableData,
+      "" | "type" | "arch"
+    >;
+    sbomFilterPanelProps: IFilterPanelProps<SbomSummary, "" | "published">;
+    vulnerabilityFilterPanelProps: IFilterPanelProps<
+      VulnerabilitySummary,
+      "" | "average_severity" | "published"
+    >;
   };
+
   packageTable?: ReactElement;
   packageTotalCount: number;
+  isFetchingPackages: boolean;
+
   sbomTable?: ReactElement;
   sbomTotalCount: number;
+  isFetchingSboms: boolean;
+
   vulnerabilityTable?: ReactElement;
   vulnerabilityTotalCount: number;
+  isFetchingVulnerabilities: boolean;
+
   advisoryTable?: ReactNode;
   advisoryTotalCount: number;
+  isFetchingAdvisories: boolean;
 }
 
 export const SearchTabs: React.FC<SearchTabsProps> = ({
@@ -47,6 +79,10 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
   vulnerabilityTotalCount,
   advisoryTable,
   advisoryTotalCount,
+  isFetchingPackages,
+  isFetchingSboms,
+  isFetchingVulnerabilities,
+  isFetchingAdvisories,
 }) => {
   const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
   const {
@@ -57,15 +93,15 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
   } = filterPanelProps;
 
   const handleTabClick = (
-    _event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent,
-    tabIndex: string | number
+    _event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
+    tabIndex: string | number,
   ) => {
     setActiveTabKey(tabIndex);
   };
 
   const sbomPopoverRef = React.createRef<HTMLElement>();
 
-  const sbomPopover = (popoverRef: React.RefObject<any>) => (
+  const sbomPopover = (popoverRef: React.RefObject<unknown>) => (
     <Popover
       bodyContent={
         <div>Software Bill of Materials for Products and Containers.</div>
@@ -106,6 +142,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
       </SplitItem>
       <SplitItem isFilled>
         <Tabs
+          mountOnEnter
           isBox
           activeKey={activeTabKey}
           onSelect={handleTabClick}
@@ -118,22 +155,26 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
               <TabTitleText>
                 SBOMs{"  "}
                 <Badge screenReaderText="Search Result Count">
-                  {sbomTotalCount}
+                  {isFetchingSboms ? (
+                    <Icon size="sm">
+                      <SpinnerIcon />
+                    </Icon>
+                  ) : (
+                    sbomTotalCount
+                  )}
                 </Badge>
               </TabTitleText>
             }
             actions={
               <>
-                <TabAction
-                  aria-label={`SBOM help popover`}
-                  ref={sbomPopoverRef}
-                >
+                <TabAction aria-label="SBOM help popover" ref={sbomPopoverRef}>
                   <HelpIcon />
                 </TabAction>
                 {sbomPopover(sbomPopoverRef)}
               </>
             }
           >
+            <SbomToolbar />
             {sbomTable ?? <SbomTable />}
           </Tab>
           <Tab
@@ -142,11 +183,18 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
               <TabTitleText>
                 Packages{"  "}
                 <Badge screenReaderText="Search Result Count">
-                  {packageTotalCount}
+                  {isFetchingPackages ? (
+                    <Icon size="sm">
+                      <SpinnerIcon />
+                    </Icon>
+                  ) : (
+                    packageTotalCount
+                  )}
                 </Badge>
               </TabTitleText>
             }
           >
+            <PackageToolbar />
             {packageTable ?? <PackageTable />}
           </Tab>
           <Tab
@@ -155,11 +203,18 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
               <TabTitleText>
                 Vulnerabilities{"  "}
                 <Badge screenReaderText="Search Result Count">
-                  {vulnerabilityTotalCount}
+                  {isFetchingVulnerabilities ? (
+                    <Icon size="sm">
+                      <SpinnerIcon />
+                    </Icon>
+                  ) : (
+                    vulnerabilityTotalCount
+                  )}
                 </Badge>
               </TabTitleText>
             }
           >
+            <VulnerabilityToolbar />
             {vulnerabilityTable ?? <VulnerabilityTable />}
           </Tab>
           <Tab
@@ -168,11 +223,18 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
               <TabTitleText>
                 Advisories{"  "}
                 <Badge screenReaderText="Advisory Result Count">
-                  {advisoryTotalCount}
+                  {isFetchingAdvisories ? (
+                    <Icon size="sm">
+                      <SpinnerIcon />
+                    </Icon>
+                  ) : (
+                    advisoryTotalCount
+                  )}
                 </Badge>
               </TabTitleText>
             }
           >
+            <AdvisoryToolbar />
             {advisoryTable ?? <AdvisoryTable />}
           </Tab>
         </Tabs>

@@ -1,9 +1,9 @@
 import { getLocalFilterDerivedState } from "./filtering";
-import { getLocalSortDerivedState } from "./sorting";
 import { getLocalPaginationDerivedState } from "./pagination";
-import {
-  ITableControlLocalDerivedStateArgs,
+import { getLocalSortDerivedState } from "./sorting";
+import type {
   ITableControlDerivedState,
+  ITableControlLocalDerivedStateArgs,
   ITableControlState,
 } from "./types";
 
@@ -32,7 +32,7 @@ export const getLocalTableControlDerivedState = <
       TColumnKey,
       TSortableColumnKey,
       TFilterCategoryKey
-    >
+    >,
 ): ITableControlDerivedState<TItem> => {
   const { items, isPaginationEnabled = true } = args;
   const { filteredItems } = getLocalFilterDerivedState({

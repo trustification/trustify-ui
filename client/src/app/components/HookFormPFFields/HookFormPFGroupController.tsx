@@ -1,17 +1,18 @@
-import * as React from "react";
+import type * as React from "react";
+
 import {
   FormGroup,
-  FormGroupProps,
+  type FormGroupProps,
   FormHelperText,
   HelperText,
   HelperTextItem,
 } from "@patternfly/react-core";
 import {
-  Control,
+  type Control,
   Controller,
-  ControllerProps,
-  FieldValues,
-  Path,
+  type ControllerProps,
+  type FieldValues,
+  type Path,
 } from "react-hook-form";
 
 // We have separate interfaces for these props with and without `renderInput` for convenience.
@@ -64,7 +65,7 @@ export const HookFormPFGroupController = <
         error?.message && (isDirty || isTouched) && !errorsSuppressed;
       return (
         <FormGroup
-          labelIcon={labelIcon}
+          labelHelp={labelIcon}
           label={label}
           fieldId={fieldId}
           className={className}
@@ -96,7 +97,7 @@ export const extractGroupControllerProps = <
   TName extends Path<TFieldValues>,
   TProps extends BaseHookFormPFGroupControllerProps<TFieldValues, TName>,
 >(
-  props: TProps
+  props: TProps,
 ): {
   extractedProps: BaseHookFormPFGroupControllerProps<TFieldValues, TName>;
   remainingProps: Omit<

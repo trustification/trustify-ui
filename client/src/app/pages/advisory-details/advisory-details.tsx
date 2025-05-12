@@ -2,15 +2,17 @@ import React from "react";
 
 import {
   Button,
+  Content,
+  Flex,
+  FlexItem,
+  Label,
   PageSection,
   Split,
   SplitItem,
   Tab,
   TabContent,
-  Tabs,
   TabTitleText,
-  Text,
-  TextContent,
+  Tabs,
 } from "@patternfly/react-core";
 import DownloadIcon from "@patternfly/react-icons/dist/esm/icons/download-icon";
 
@@ -27,8 +29,8 @@ export const AdvisoryDetails: React.FC = () => {
   const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
 
   const handleTabClick = (
-    event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent,
-    tabIndex: string | number
+    _event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
+    tabIndex: string | number,
   ) => {
     setActiveTabKey(tabIndex);
   };
@@ -45,15 +47,24 @@ export const AdvisoryDetails: React.FC = () => {
 
   return (
     <>
-      <PageSection variant="light">
+      <PageSection>
         <Split>
           <SplitItem isFilled>
-            <TextContent>
-              <Text component="h1">
-                {advisory?.document_id ?? advisoryId ?? ""}
-              </Text>
-              <Text component="p">Advisory detail information</Text>
-            </TextContent>
+            <Flex>
+              <FlexItem spacer={{ default: "spacerSm" }}>
+                <Content>
+                  <Content component="h1">
+                    {advisory?.document_id ?? advisoryId ?? ""}
+                  </Content>
+                  <Content component="p">Advisory detail information</Content>
+                </Content>
+              </FlexItem>
+              <FlexItem>
+                {advisory?.labels.type && (
+                  <Label color="blue">{advisory?.labels.type}</Label>
+                )}
+              </FlexItem>
+            </Flex>
           </SplitItem>
           <SplitItem>
             {!isFetching && (
@@ -66,7 +77,7 @@ export const AdvisoryDetails: React.FC = () => {
                       advisoryId,
                       advisory?.identifier
                         ? `${advisory?.identifier}.json`
-                        : `${advisoryId}.json`
+                        : `${advisoryId}.json`,
                     );
                   }
                 }}
@@ -77,7 +88,7 @@ export const AdvisoryDetails: React.FC = () => {
           </SplitItem>
         </Split>
       </PageSection>
-      <PageSection type="nav">
+      <PageSection type="tabs">
         <Tabs
           mountOnEnter
           activeKey={activeTabKey}

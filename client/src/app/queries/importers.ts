@@ -1,12 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 
+import { DEFAULT_REFETCH_INTERVAL } from "@app/Constants";
 import { client } from "@app/axios-config/apiInit";
 import {
+  type ImporterConfiguration,
   createImporter,
   deleteImporter,
   getImporter,
-  ImporterConfiguration,
   listImporterReports,
   listImporters,
   updateImporter,
@@ -14,14 +15,11 @@ import {
 
 export const ImportersQueryKey = "importers";
 
-export const useFetchImporters = (
-  refetchDisabled: boolean = false,
-  interval = 5000
-) => {
+export const useFetchImporters = (refetchDisabled = false) => {
   const { isLoading, error, refetch, data } = useQuery({
     queryKey: [ImportersQueryKey],
     queryFn: () => listImporters({ client }),
-    refetchInterval: !refetchDisabled ? interval : false,
+    refetchInterval: !refetchDisabled ? DEFAULT_REFETCH_INTERVAL : false,
   });
 
   return {
@@ -33,14 +31,14 @@ export const useFetchImporters = (
 };
 
 export const useCreateImporterMutation = (
-  onSuccess: (res: void) => void,
+  onSuccess: () => void,
   onError: (
     err: AxiosError,
     payload: {
       importerName: string;
       configuration: ImporterConfiguration;
-    }
-  ) => void
+    },
+  ) => void,
 ) => {
   const queryClient = useQueryClient();
 
@@ -55,7 +53,7 @@ export const useCreateImporterMutation = (
         body: payload.configuration,
       });
     },
-    onSuccess: ({ data }, _payload) => {
+    onSuccess: (_, _payload) => {
       onSuccess();
       queryClient.invalidateQueries({ queryKey: [ImportersQueryKey] });
     },
@@ -78,11 +76,11 @@ export const useFetchImporterById = (id: string) => {
 };
 
 export const useUpdateImporterMutation = (
-  onSuccess: (payload: void) => void,
+  onSuccess: () => void,
   onError: (
     err: AxiosError,
-    payload: { importerName: string; configuration: ImporterConfiguration }
-  ) => void
+    payload: { importerName: string; configuration: ImporterConfiguration },
+  ) => void,
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -96,7 +94,7 @@ export const useUpdateImporterMutation = (
         body: payload.configuration,
       });
     },
-    onSuccess: (_res, payload) => {
+    onSuccess: (_res, _payload) => {
       onSuccess();
       queryClient.invalidateQueries({ queryKey: [ImportersQueryKey] });
     },
@@ -106,7 +104,7 @@ export const useUpdateImporterMutation = (
 
 export const useDeleteIporterMutation = (
   onSuccess: (id: string) => void,
-  onError: (err: AxiosError, id: string) => void
+  onError: (err: AxiosError, id: string) => void,
 ) => {
   const queryClient = useQueryClient();
 
@@ -131,12 +129,12 @@ export const useDeleteIporterMutation = (
 
 export const useFetchImporterReports = (
   id: string,
-  refetchDisabled: boolean = false
+  refetchDisabled = false,
 ) => {
   const { data, isLoading, refetch, error } = useQuery({
     queryKey: [ImportersQueryKey, id, "reports"],
     queryFn: () => listImporterReports({ client, path: { name: id } }),
-    refetchInterval: !refetchDisabled ? 5000 : false,
+    refetchInterval: !refetchDisabled ? DEFAULT_REFETCH_INTERVAL : false,
   });
 
   return {

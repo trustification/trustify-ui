@@ -1,10 +1,9 @@
-import React from "react";
+import type React from "react";
+
 import {
   EmptyState,
   EmptyStateBody,
-  EmptyStateIcon,
   EmptyStateVariant,
-  Title,
 } from "@patternfly/react-core";
 import CubesIcon from "@patternfly/react-icons/dist/esm/icons/cubes-icon";
 
@@ -18,11 +17,12 @@ export const NoDataEmptyState: React.FC<NoDataEmptyStateProps> = ({
   description,
 }) => {
   return (
-    <EmptyState variant={EmptyStateVariant.sm}>
-      <EmptyStateIcon icon={CubesIcon} />
-      <Title headingLevel="h2" size="lg">
-        {title}
-      </Title>
+    <EmptyState
+      titleText={title}
+      headingLevel="h4"
+      icon={CubesIcon}
+      variant={EmptyStateVariant.sm}
+    >
       {description && <EmptyStateBody>{description}</EmptyStateBody>}
     </EmptyState>
   );

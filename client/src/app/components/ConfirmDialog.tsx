@@ -1,9 +1,12 @@
-import React from "react";
+import type React from "react";
+
 import {
   Button,
-  Modal,
   ButtonVariant,
-  ModalVariant,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
 } from "@patternfly/react-core";
 
 export interface ConfirmDialogProps {
@@ -15,7 +18,7 @@ export interface ConfirmDialogProps {
     | "danger"
     | "warning"
     | "info"
-    /* eslint-disable @typescript-eslint/no-explicit-any */
+    // biome-ignore lint/suspicious/noExplicitAny:
     | React.ComponentType<any>;
   message: string | React.ReactNode;
 
@@ -72,15 +75,23 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   return (
     <Modal
       id="confirm-dialog"
-      variant={ModalVariant.small}
-      title={title}
-      titleIconVariant={titleIconVariant}
+      variant="small"
       isOpen={isOpen}
       onClose={onClose}
       aria-label="Confirm dialog"
-      actions={onCancel ? [confirmBtn, cancelBtn] : [confirmBtn]}
     >
-      {message}
+      <ModalHeader title={title} titleIconVariant={titleIconVariant} />
+      <ModalBody>{message}</ModalBody>
+      <ModalFooter>
+        {onCancel ? (
+          <>
+            {confirmBtn}
+            {cancelBtn}
+          </>
+        ) : (
+          <>{confirmBtn}</>
+        )}
+      </ModalFooter>
     </Modal>
   );
 };

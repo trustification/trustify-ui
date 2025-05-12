@@ -36,10 +36,10 @@ export const proxyMap: Record<string, Options> = {
     onProxyReq: (proxyReq, req, _res) => {
       // Add the Bearer token to the request if it is not already present, AND if
       // the token is part of the request as a cookie
-      if (req.cookies?.keycloak_cookie && !req.headers["authorization"]) {
+      if (req.cookies?.keycloak_cookie && !req.headers.authorization) {
         proxyReq.setHeader(
           "Authorization",
-          `Bearer ${req.cookies.keycloak_cookie}`
+          `Bearer ${req.cookies.keycloak_cookie}`,
         );
       }
     },
@@ -53,5 +53,15 @@ export const proxyMap: Record<string, Options> = {
         res.redirect("/");
       }
     },
+  },
+  "/openapi": {
+    target: TRUSTIFICATION_ENV.TRUSTIFY_API_URL || "http://localhost:8080",
+    logLevel: process.env.DEBUG ? "debug" : "info",
+    changeOrigin: true,
+  },
+  "/openapi.json": {
+    target: TRUSTIFICATION_ENV.TRUSTIFY_API_URL || "http://localhost:8080",
+    logLevel: process.env.DEBUG ? "debug" : "info",
+    changeOrigin: true,
   },
 };

@@ -1,11 +1,12 @@
 import React from "react";
-import { IUseUrlParamsArgs, useUrlParams } from "./useUrlParams";
+
+import type { DisallowCharacters } from "@app/utils/type-utils";
 import {
-  UseStorageTypeOptions,
+  type UseStorageTypeOptions,
   useLocalStorage,
   useSessionStorage,
 } from "./useStorage";
-import { DisallowCharacters } from "@app/utils/type-utils";
+import { type IUseUrlParamsArgs, useUrlParams } from "./useUrlParams";
 
 type PersistToStateOptions = { persistTo?: "state" };
 
@@ -44,7 +45,7 @@ export const usePersistentState = <
     TValue,
     TPersistenceKeyPrefix,
     TURLParamKey
-  >
+  >,
 ): [TValue, (value: TValue) => void] => {
   const {
     defaultValue,
@@ -54,7 +55,7 @@ export const usePersistentState = <
   } = options;
 
   const isUrlParamsOptions = (
-    o: typeof options
+    o: typeof options,
   ): o is PersistToUrlParamsOptions<
     TValue,
     TPersistenceKeyPrefix,
@@ -62,7 +63,7 @@ export const usePersistentState = <
   > => o.persistTo === "urlParams";
 
   const isStorageOptions = (
-    o: typeof options
+    o: typeof options,
   ): o is PersistToStorageOptions<TValue> =>
     o.persistTo === "localStorage" || o.persistTo === "sessionStorage";
 
@@ -80,17 +81,17 @@ export const usePersistentState = <
             keys: [],
             serialize: () => ({}),
             deserialize: () => defaultValue,
-          }
+          },
     ),
     localStorage: useLocalStorage(
       isStorageOptions(options)
         ? { ...options, key: prefixKey(options.key) }
-        : { ...options, isEnabled: false, key: "" }
+        : { ...options, isEnabled: false, key: "" },
     ),
     sessionStorage: useSessionStorage(
       isStorageOptions(options)
         ? { ...options, key: prefixKey(options.key) }
-        : { ...options, isEnabled: false, key: "" }
+        : { ...options, isEnabled: false, key: "" },
     ),
   };
   const [value, setValue] = persistence[persistTo || "state"];

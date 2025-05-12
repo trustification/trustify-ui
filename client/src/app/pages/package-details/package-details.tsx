@@ -1,6 +1,7 @@
 import React from "react";
 
 import {
+  Content,
   Flex,
   FlexItem,
   PageSection,
@@ -8,13 +9,12 @@ import {
   StackItem,
   Tab,
   TabContent,
-  Tabs,
   TabTitleText,
-  Text,
-  TextContent,
+  Tabs,
 } from "@patternfly/react-core";
 
 import { PathParam, useRouteParams } from "@app/Routes";
+import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { PackageQualifiers } from "@app/components/PackageQualifiers";
 import { useFetchPackageById } from "@app/queries/packages";
 import { decomposePurl } from "@app/utils/utils";
@@ -24,7 +24,7 @@ import { VulnerabilitiesByPackage } from "./vulnerabilities-by-package";
 
 export const PackageDetails: React.FC = () => {
   const packageId = useRouteParams(PathParam.PACKAGE_ID);
-  const { pkg } = useFetchPackageById(packageId);
+  const { pkg, isFetching, fetchError } = useFetchPackageById(packageId);
 
   const decomposedPurl = React.useMemo(() => {
     return pkg ? decomposePurl(pkg.purl) : undefined;
@@ -34,8 +34,8 @@ export const PackageDetails: React.FC = () => {
   const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
 
   const handleTabClick = (
-    event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent,
-    tabIndex: string | number
+    _event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
+    tabIndex: string | number,
   ) => {
     setActiveTabKey(tabIndex);
   };
@@ -45,14 +45,14 @@ export const PackageDetails: React.FC = () => {
 
   return (
     <>
-      <PageSection variant="light">
+      <PageSection hasBodyWrapper={false}>
         <Stack>
           <StackItem>
-            <TextContent>
-              <Text component="h1">
+            <Content>
+              <Content component="h1">
                 {decomposedPurl?.name ?? packageId ?? ""}
-              </Text>
-            </TextContent>
+              </Content>
+            </Content>
           </StackItem>
           <StackItem>
             <Flex>
@@ -68,7 +68,7 @@ export const PackageDetails: React.FC = () => {
           </StackItem>
         </Stack>
       </PageSection>
-      <PageSection type="nav">
+      <PageSection hasBodyWrapper={false}>
         <Tabs
           mountOnEnter
           activeKey={activeTabKey}
@@ -90,7 +90,7 @@ export const PackageDetails: React.FC = () => {
           />
         </Tabs>
       </PageSection>
-      <PageSection>
+      <PageSection hasBodyWrapper={false}>
         <TabContent
           eventKey={0}
           id="refTabVulnerabilitiesSection"
@@ -106,7 +106,9 @@ export const PackageDetails: React.FC = () => {
           aria-label="SBOMs using the Package"
           hidden
         >
-          {packageId && <SbomsByPackage packageId={packageId} />}
+          <LoadingWrapper isFetching={isFetching} fetchError={fetchError}>
+            {pkg?.purl && <SbomsByPackage purl={pkg.purl} />}
+          </LoadingWrapper>
         </TabContent>
       </PageSection>
     </>

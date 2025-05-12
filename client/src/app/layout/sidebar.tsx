@@ -1,20 +1,26 @@
-import React from "react";
+import type React from "react";
 import { NavLink } from "react-router-dom";
 
-import { Nav, NavList, PageSidebar } from "@patternfly/react-core";
+import {
+  Icon,
+  Nav,
+  NavItem,
+  NavList,
+  PageSidebar,
+  PageSidebarBody,
+} from "@patternfly/react-core";
+import ExternalLinkAltIcon from "@patternfly/react-icons/dist/esm/icons/external-link-alt-icon";
 import { css } from "@patternfly/react-styles";
 
-import { LayoutTheme } from "./layout-constants";
-
-const LINK_CLASS = "pf-v5-c-nav__link";
+const LINK_CLASS = "pf-v6-c-nav__link";
 const ACTIVE_LINK_CLASS = "pf-m-current";
 
 export const SidebarApp: React.FC = () => {
   const renderPageNav = () => {
     return (
-      <Nav id="nav-sidebar" aria-label="Nav" theme={LayoutTheme}>
+      <Nav id="nav-sidebar" aria-label="Nav">
         <NavList>
-          <li className="pf-v5-c-nav__item">
+          <li className="pf-v6-c-nav__item">
             <NavLink
               to="/"
               className={({ isActive }) => {
@@ -24,7 +30,7 @@ export const SidebarApp: React.FC = () => {
               Dashboard
             </NavLink>
           </li>
-          <li className="pf-v5-c-nav__item">
+          <li className="pf-v6-c-nav__item">
             <NavLink
               to="/search"
               className={({ isActive }) => {
@@ -34,7 +40,7 @@ export const SidebarApp: React.FC = () => {
               Search
             </NavLink>
           </li>
-          <li className="pf-v5-c-nav__item">
+          <li className="pf-v6-c-nav__item">
             <NavLink
               to="/sboms"
               className={({ isActive }) => {
@@ -44,7 +50,7 @@ export const SidebarApp: React.FC = () => {
               SBOMs
             </NavLink>
           </li>
-          <li className="pf-v5-c-nav__item">
+          <li className="pf-v6-c-nav__item">
             <NavLink
               to="/vulnerabilities"
               className={({ isActive }) => {
@@ -54,7 +60,7 @@ export const SidebarApp: React.FC = () => {
               Vulnerabilities
             </NavLink>
           </li>
-          <li className="pf-v5-c-nav__item">
+          <li className="pf-v6-c-nav__item">
             <NavLink
               to="/packages"
               className={({ isActive }) => {
@@ -64,7 +70,7 @@ export const SidebarApp: React.FC = () => {
               Packages
             </NavLink>
           </li>
-          <li className="pf-v5-c-nav__item">
+          <li className="pf-v6-c-nav__item">
             <NavLink
               to="/advisories"
               className={({ isActive }) => {
@@ -74,7 +80,7 @@ export const SidebarApp: React.FC = () => {
               Advisories
             </NavLink>
           </li>
-          <li className="pf-v5-c-nav__item">
+          <li className="pf-v6-c-nav__item">
             <NavLink
               to="/importers"
               className={({ isActive }) => {
@@ -84,7 +90,7 @@ export const SidebarApp: React.FC = () => {
               Importers
             </NavLink>
           </li>
-          <li className="pf-v5-c-nav__item">
+          <li className="pf-v6-c-nav__item">
             <NavLink
               to="/upload"
               className={({ isActive }) => {
@@ -94,10 +100,24 @@ export const SidebarApp: React.FC = () => {
               Upload
             </NavLink>
           </li>
+          <NavItem
+            to={`${window.location.origin}/openapi`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            API&nbsp;
+            <Icon isInline>
+              <ExternalLinkAltIcon />
+            </Icon>
+          </NavItem>
         </NavList>
       </Nav>
     );
   };
 
-  return <PageSidebar theme={LayoutTheme}>{renderPageNav()}</PageSidebar>;
+  return (
+    <PageSidebar>
+      <PageSidebarBody>{renderPageNav()}</PageSidebarBody>
+    </PageSidebar>
+  );
 };

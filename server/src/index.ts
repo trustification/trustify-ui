@@ -3,24 +3,26 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import express from "express";
-import ejs from "ejs";
 import cookieParser from "cookie-parser";
-import { createHttpTerminator } from "http-terminator";
+import ejs from "ejs";
+import express from "express";
 import { createProxyMiddleware } from "http-proxy-middleware";
+import { createHttpTerminator } from "http-terminator";
 
 import {
-  encodeEnv,
-  TRUSTIFICATION_ENV,
   SERVER_ENV_KEYS,
-  proxyMap,
+  TRUSTIFICATION_ENV,
   brandingStrings,
+  encodeEnv,
+  proxyMap,
 } from "@trustify-ui/common";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const pathToClientDist = path.join(__dirname, "../../client/dist");
 
-const port = parseInt(TRUSTIFICATION_ENV.PORT, 10) || 8080;
+const port = TRUSTIFICATION_ENV.PORT
+  ? Number.parseInt(TRUSTIFICATION_ENV.PORT, 10)
+  : 8080;
 
 const app = express();
 app.set("x-powered-by", false);

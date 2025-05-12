@@ -1,7 +1,9 @@
 import { saveAs } from "file-saver";
 
+import { downloadSbomLicense } from "@app/api/rest";
 import { client } from "@app/axios-config/apiInit";
 import { downloadAdvisory, downloadSbom } from "@app/client";
+import { getFilenameFromContentDisposition } from "@app/utils/utils";
 
 export const useDownload = () => {
   const onDownloadAdvisory = (id: string, filename?: string) => {
@@ -11,7 +13,7 @@ export const useDownload = () => {
       responseType: "arraybuffer",
       headers: { Accept: "text/plain", responseType: "blob" },
     }).then((response) => {
-      saveAs(new Blob([response.data as any]), filename || `${id}.json`);
+      saveAs(new Blob([response.data as BlobPart]), filename || `${id}.json`);
     });
   };
 
@@ -22,9 +24,26 @@ export const useDownload = () => {
       responseType: "arraybuffer",
       headers: { Accept: "text/plain", responseType: "blob" },
     }).then((response) => {
-      saveAs(new Blob([response.data as any]), filename || `${id}.json`);
+      saveAs(new Blob([response.data as BlobPart]), filename || `${id}.json`);
     });
   };
 
-  return { downloadAdvisory: onDownloadAdvisory, downloadSBOM: onDownloadSBOM };
+  const onDownloadSBOMLicenses = (id: string) => {
+    downloadSbomLicense(id).then((response) => {
+      let filename: string | null = null;
+
+      const header = response.headers?.["content-disposition"]?.toString();
+      if (header) {
+        filename = getFilenameFromContentDisposition(header);
+      }
+
+      saveAs(new Blob([response.data as BlobPart]), filename || `${id}.tar.gz`);
+    });
+  };
+
+  return {
+    downloadAdvisory: onDownloadAdvisory,
+    downloadSBOM: onDownloadSBOM,
+    downloadSBOMLicenses: onDownloadSBOMLicenses,
+  };
 };

@@ -1,16 +1,16 @@
 import React from "react";
 
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 
-import { SbomSummary } from "@app/client";
-import { FilterType } from "@app/components/FilterToolbar";
 import {
   FILTER_TEXT_CATEGORY_KEY,
   TablePersistenceKeyPrefixes,
 } from "@app/Constants";
+import type { SbomSummary } from "@app/client";
+import { FilterType } from "@app/components/FilterToolbar";
 import {
+  type ITableControls,
   getHubRequestParams,
-  ITableControls,
   useTableControlProps,
   useTableControlState,
 } from "@app/hooks/table-controls";
@@ -91,7 +91,7 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
         name: "name",
         published: "published",
       },
-    })
+    }),
   );
 
   const tableControls = useTableControlProps({

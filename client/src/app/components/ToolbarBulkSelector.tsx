@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
+
 import {
   Button,
   Dropdown,
@@ -6,7 +8,7 @@ import {
   DropdownList,
   MenuToggle,
   MenuToggleCheckbox,
-  PaginationProps,
+  type PaginationProps,
   ToolbarItem,
 } from "@patternfly/react-core";
 
@@ -41,7 +43,7 @@ export const ToolbarBulkSelector = <T,>({
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleCollapseAll = (collapse: boolean) => {
-    onExpandAll && onExpandAll(!collapse);
+    onExpandAll?.(!collapse);
   };
   const collapseAllBtn = () => (
     <Button
@@ -85,7 +87,7 @@ export const ToolbarBulkSelector = <T,>({
       onClick={() => {
         onSelectMultiple(
           currentPageItems.map((item: T) => item),
-          true
+          true,
         );
       }}
       data-action="page"
@@ -116,23 +118,21 @@ export const ToolbarBulkSelector = <T,>({
             <MenuToggle
               ref={toggleRef}
               onClick={() => setIsOpen(!isOpen)}
-              splitButtonOptions={{
-                items: [
-                  <MenuToggleCheckbox
-                    id="bulk-selected-items-checkbox"
-                    key="bulk-select-checkbox"
-                    aria-label="Select all"
-                    onChange={() => {
-                      if (getBulkSelectState() !== false) {
-                        onSelectAll(false);
-                      } else {
-                        onSelectAll(true);
-                      }
-                    }}
-                    isChecked={getBulkSelectState()}
-                  />,
-                ],
-              }}
+              splitButtonItems={[
+                <MenuToggleCheckbox
+                  id="bulk-selected-items-checkbox"
+                  key="bulk-select-checkbox"
+                  aria-label="Select all"
+                  onChange={() => {
+                    if (getBulkSelectState() !== false) {
+                      onSelectAll(false);
+                    } else {
+                      onSelectAll(true);
+                    }
+                  }}
+                  isChecked={getBulkSelectState()}
+                />,
+              ]}
             />
           )}
         >

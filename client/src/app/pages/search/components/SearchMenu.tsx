@@ -1,9 +1,6 @@
-import { HubRequestParams } from "@app/api/models";
-import { FILTER_TEXT_CATEGORY_KEY } from "@app/Constants";
-import { useFetchAdvisories } from "@app/queries/advisories";
-import { useFetchPackages } from "@app/queries/packages";
-import { useFetchSBOMs } from "@app/queries/sboms";
-import { useFetchVulnerabilities } from "@app/queries/vulnerabilities";
+import React from "react";
+import { Link } from "react-router-dom";
+
 import {
   Label,
   Menu,
@@ -12,9 +9,18 @@ import {
   MenuList,
   Popper,
   SearchInput,
+  Spinner,
 } from "@patternfly/react-core";
-import React from "react";
-import { Link } from "react-router-dom";
+
+import { useDebounceValue } from "usehooks-ts";
+
+import { FILTER_TEXT_CATEGORY_KEY } from "@app/Constants";
+import type { HubRequestParams } from "@app/api/models";
+import { SbomSearchContext } from "@app/pages/sbom-list/sbom-context";
+import { useFetchAdvisories } from "@app/queries/advisories";
+import { useFetchPackages } from "@app/queries/packages";
+import { useFetchSBOMs } from "@app/queries/sboms";
+import { useFetchVulnerabilities } from "@app/queries/vulnerabilities";
 
 export interface IEntity {
   id: string;
@@ -23,14 +29,15 @@ export interface IEntity {
   navLink: string;
   type: string;
   typeColor:
-    | "purple"
-    | "orange"
     | "blue"
-    | "cyan"
+    | "teal"
     | "green"
+    | "orange"
+    | "purple"
     | "red"
+    | "orangered"
     | "grey"
-    | "gold"
+    | "yellow"
     | undefined;
 }
 
@@ -48,66 +55,36 @@ const entityToMenu = (option: IEntity) => {
   );
 };
 
-// Filter function
-export function filterEntityListByValue(list: IEntity[], searchString: string) {
-  // When the value of the search input changes, build a list of no more than 10 autocomplete options.
-  // Options which start with the search input value are listed first, followed by options which contain
-  // the search input value.
-  let options: React.JSX.Element[] = list
-    .filter(
-      (option) =>
-        option.id.toLowerCase().startsWith(searchString.toLowerCase()) ||
-        option.title?.toLowerCase().startsWith(searchString.toLowerCase()) ||
-        option.description?.toLowerCase().startsWith(searchString.toLowerCase())
-    )
-    .map(entityToMenu);
-
-  if (options.length > 10) {
-    options = options.slice(0, 10);
-  } else {
-    options = [
-      ...options,
-      ...list
-        .filter(
-          (option: IEntity) =>
-            !option.id.startsWith(searchString.toLowerCase()) &&
-            option.id.includes(searchString.toLowerCase())
-        )
-        .map(entityToMenu),
-    ].slice(0, 10);
-  }
-
-  return options;
-}
-
-function useAllEntities(filterText: string) {
+function useAllEntities(filterText: string, disableSearch: boolean) {
   const params: HubRequestParams = {
     filters: [
       { field: FILTER_TEXT_CATEGORY_KEY, operator: "~", value: filterText },
     ],
-    page: { pageNumber: 1, itemsPerPage: 10 },
+    page: { pageNumber: 1, itemsPerPage: 5 },
   };
 
   const {
+    isFetching: isFetchingAdvisories,
     result: { data: advisories },
-  } = useFetchAdvisories({ ...params });
+  } = useFetchAdvisories({ ...params }, disableSearch);
 
   const {
+    isFetching: isFetchingPackages,
     result: { data: packages },
-  } = useFetchPackages({ ...params });
+  } = useFetchPackages({ ...params }, disableSearch);
 
   const {
+    isFetching: isFetchingSBOMs,
     result: { data: sboms },
-  } = useFetchSBOMs({ ...params });
+  } = useFetchSBOMs({ ...params }, disableSearch);
 
   const {
+    isFetching: isFetchingVulnerabilities,
     result: { data: vulnerabilities },
-  } = useFetchVulnerabilities({ ...params });
-
-  const tmpArray: IEntity[] = [];
+  } = useFetchVulnerabilities({ ...params }, disableSearch);
 
   const transformedAdvisories: IEntity[] = advisories.map((item) => ({
-    id: item.document_id,
+    id: `advisory-${item.uuid}`,
     title: item.document_id,
     description: item.title?.substring(0, 75),
     navLink: `/advisories/${item.uuid}`,
@@ -116,24 +93,24 @@ function useAllEntities(filterText: string) {
   }));
 
   const transformedPackages: IEntity[] = packages.map((item) => ({
-    id: item.uuid,
+    id: `package-${item.uuid}`,
     title: item.purl,
     navLink: `/packages/${item.uuid}`,
     type: "Package",
-    typeColor: "cyan",
+    typeColor: "teal",
   }));
 
   const transformedSboms: IEntity[] = sboms.map((item) => ({
-    id: item.id,
+    id: `sbom-${item.id}`,
     title: item.name,
-    description: item.authors.join(", "),
+    description: item.suppliers.join(", "),
     navLink: `/sboms/${item.id}`,
     type: "SBOM",
     typeColor: "purple",
   }));
 
   const transformedVulnerabilities: IEntity[] = vulnerabilities.map((item) => ({
-    id: item.identifier,
+    id: `vulnerability-${item.identifier}`,
     title: item.identifier,
     description: item.description?.substring(0, 75),
     navLink: `/vulnerabilities/${item.identifier}`,
@@ -141,39 +118,79 @@ function useAllEntities(filterText: string) {
     typeColor: "orange",
   }));
 
-  tmpArray.push(
+  const filterTextLowerCase = filterText.toLowerCase();
+
+  const list = [
+    ...transformedVulnerabilities,
+    ...transformedSboms,
     ...transformedAdvisories,
     ...transformedPackages,
-    ...transformedSboms,
-    ...transformedVulnerabilities
-  );
+  ].sort((a, b) => {
+    if (a.title?.includes(filterTextLowerCase)) {
+      return -1;
+    }
+    if (b.title?.includes(filterTextLowerCase)) {
+      return 1;
+    }
+
+    const aIndex = (a.description || "")
+      .toLowerCase()
+      .indexOf(filterTextLowerCase);
+    const bIndex = (b.description || "")
+      .toLowerCase()
+      .indexOf(filterTextLowerCase);
+    return aIndex - bIndex;
+  });
 
   return {
-    list: tmpArray,
-    defaultValue: "",
+    isFetching:
+      isFetchingAdvisories ||
+      isFetchingPackages ||
+      isFetchingSBOMs ||
+      isFetchingVulnerabilities,
+    list,
   };
 }
 
 export interface ISearchMenu {
   filterFunction?: (
     list: IEntity[],
-    searchString: string
+    searchString: string,
   ) => React.JSX.Element[];
   onChangeSearch: (searchValue: string | undefined) => void;
 }
 
-export const SearchMenu: React.FC<ISearchMenu> = ({
-  filterFunction = filterEntityListByValue,
-  onChangeSearch,
-}) => {
-  const { list: entityList, defaultValue } = useAllEntities("");
+export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
+  // Search value initial value
+  const { tableControls: sbomTableControls } =
+    React.useContext(SbomSearchContext);
 
-  const [searchValue, setSearchValue] = React.useState<string | undefined>(
-    defaultValue
+  // Search value
+  const [searchValue, setSearchValue] = React.useState("");
+  const [isSearchValueDirty, setIsSearchValueDirty] = React.useState(false);
+
+  React.useEffect(() => {
+    const searchValueFromTableControls =
+      sbomTableControls.filterState.filterValues[FILTER_TEXT_CATEGORY_KEY]?.[0];
+    setSearchValue(searchValueFromTableControls ?? "");
+  }, [sbomTableControls.filterState]);
+
+  // Debounce Search value
+  const [debouncedSearchValue, setDebouncedSearchValue] = useDebounceValue(
+    searchValue,
+    500,
   );
-  const [autocompleteOptions, setAutocompleteOptions] = React.useState<
-    React.JSX.Element[]
-  >([]);
+
+  React.useEffect(() => {
+    setDebouncedSearchValue(searchValue);
+  }, [setDebouncedSearchValue, searchValue]);
+
+  // Fetch all entities
+  const { isFetching, list: entityList } = useAllEntities(
+    debouncedSearchValue,
+    !isSearchValueDirty,
+  );
+
   const [isAutocompleteOpen, setIsAutocompleteOpen] =
     React.useState<boolean>(false);
 
@@ -188,17 +205,12 @@ export const SearchMenu: React.FC<ISearchMenu> = ({
       searchInputRef.current.contains(document.activeElement)
     ) {
       setIsAutocompleteOpen(true);
-
-      const options = filterFunction(entityList, newValue);
-
-      // The menu is hidden if there are no options
-      setIsAutocompleteOpen(options.length > 0);
-      setAutocompleteOptions(options);
     } else {
       setIsAutocompleteOpen(false);
     }
 
     setSearchValue(newValue);
+    setIsSearchValueDirty(true);
   };
 
   const onClearSearchValue = () => {
@@ -210,7 +222,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({
   };
 
   React.useEffect(() => {
-    const handleMenuKeys = (event: any) => {
+    const handleMenuKeys = (event: KeyboardEvent) => {
       if (
         isAutocompleteOpen &&
         searchInputRef.current &&
@@ -223,7 +235,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({
           // the up and down arrow keys move browser focus into the autocomplete menu
         } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
           const firstElement = autocompleteRef.current?.querySelector(
-            "li > button:not(:disabled)"
+            "li > button:not(:disabled)",
           );
           firstElement && (firstElement as HTMLElement)?.focus();
           event.preventDefault(); // by default, the up and down arrow keys scroll the window
@@ -243,7 +255,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({
         // hitting tab will close the autocomplete and but browser focus back on the search input.
       } else if (
         isAutocompleteOpen &&
-        autocompleteRef.current?.contains(event.target) &&
+        autocompleteRef.current?.contains(event.target as Node) &&
         event.key === "Tab"
       ) {
         event.preventDefault();
@@ -253,12 +265,12 @@ export const SearchMenu: React.FC<ISearchMenu> = ({
     };
 
     // The autocomplete menu should close if the user clicks outside the menu.
-    const handleClickOutside = (event: { target: any }) => {
+    const handleClickOutside = (event: { target: EventTarget | null }) => {
       if (
         isAutocompleteOpen &&
         autocompleteRef &&
         autocompleteRef.current &&
-        !autocompleteRef.current.contains(event.target)
+        !autocompleteRef.current.contains(event.target as Node)
       ) {
         setIsAutocompleteOpen(false);
       }
@@ -273,9 +285,26 @@ export const SearchMenu: React.FC<ISearchMenu> = ({
   }, [isAutocompleteOpen]);
 
   const autocomplete = (
-    <Menu ref={autocompleteRef} style={{ maxWidth: "450px" }}>
+    <Menu
+      ref={autocompleteRef}
+      style={{
+        width: "450px",
+        maxHeight: "450px",
+        overflow: "scroll",
+        overflowX: "hidden",
+        overflowY: "auto",
+      }}
+    >
       <MenuContent>
-        <MenuList>{autocompleteOptions}</MenuList>
+        <MenuList>
+          {isFetching ? (
+            <MenuItem itemId="loading">
+              <Spinner size="sm" />
+            </MenuItem>
+          ) : (
+            entityList.map(entityToMenu)
+          )}
+        </MenuList>
       </MenuContent>
     </Menu>
   );
@@ -292,6 +321,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({
       }}
       ref={searchInputRef}
       id="autocomplete-search"
+      style={{ width: 500 }}
     />
   );
 
@@ -301,7 +331,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({
       triggerRef={searchInputRef}
       popper={autocomplete}
       popperRef={autocompleteRef}
-      isVisible={isAutocompleteOpen}
+      isVisible={(isAutocompleteOpen && entityList.length > 0) || isFetching}
       enableFlip={false}
       // append the autocomplete menu to the search input in the DOM for the sake of the keyboard navigation experience
       appendTo={() =>
