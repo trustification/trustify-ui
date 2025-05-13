@@ -7,28 +7,50 @@ import {
   Button,
   ButtonVariant,
   Content,
+  DataList,
+  DataListAction,
+  DataListCell,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
+  Dropdown,
+  DropdownItem,
+  DropdownList,
+  Flex,
+  FlexItem,
+  Icon,
   Label,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
+  MenuToggle,
+  type MenuToggleElement,
   PageSection,
+  Select,
+  SelectList,
+  SelectOption,
+  Skeleton,
   Toolbar,
   ToolbarContent,
+  ToolbarGroup,
   ToolbarItem,
+  Tooltip,
 } from "@patternfly/react-core";
-import { LogViewer, LogViewerSearch } from "@patternfly/react-log-viewer";
-import {
-  ActionsColumn,
-  Caption,
-  ExpandableRowContent,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from "@patternfly/react-table";
+
+import { ActionsColumn } from "@patternfly/react-table";
+
+import BoxesIcon from "@patternfly/react-icons/dist/esm/icons/boxes-icon";
+import CalendarAltIcon from "@patternfly/react-icons/dist/esm/icons/calendar-alt-icon";
+import CheckCircleIcon from "@patternfly/react-icons/dist/esm/icons/check-circle-icon";
+import ClockIcon from "@patternfly/react-icons/dist/esm/icons/clock-icon";
+import CodeBranchIcon from "@patternfly/react-icons/dist/esm/icons/code-branch-icon";
+import CubeIcon from "@patternfly/react-icons/dist/esm/icons/cube-icon";
+import FileAltIcon from "@patternfly/react-icons/dist/esm/icons/file-alt-icon";
+import InProgressIcon from "@patternfly/react-icons/dist/esm/icons/in-progress-icon";
+import InfoCircleIcon from "@patternfly/react-icons/dist/esm/icons/info-circle-icon";
+import MinusIcon from "@patternfly/react-icons/dist/esm/icons/minus-icon";
+import PendingIcon from "@patternfly/react-icons/dist/esm/icons/pending-icon";
+import RunningIcon from "@patternfly/react-icons/dist/esm/icons/running-icon";
+import SortAmountDownIcon from "@patternfly/react-icons/dist/esm/icons/sort-amount-down-icon";
+import SortAmountUpIcon from "@patternfly/react-icons/dist/esm/icons/sort-amount-up-icon";
+import TimesCircleIcon from "@patternfly/react-icons/dist/esm/icons/times-circle-icon";
 
 import {
   ConfirmDialog,
@@ -36,47 +58,68 @@ import {
 } from "@app/components/ConfirmDialog";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import {
-  useFetchImporterReports,
   useFetchImporters,
   useUpdateImporterMutation,
 } from "@app/queries/importers";
-import { formatDateTime, getAxiosErrorMessage } from "@app/utils/utils";
+import { getAxiosErrorMessage } from "@app/utils/utils";
 
 import { client } from "@app/axios-config/apiInit";
 import {
   type Importer,
   type ImporterConfiguration,
-  type Message,
   type SbomImporter,
   forceRunImporter,
 } from "@app/client";
-import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
-import { IconedStatus } from "@app/components/IconedStatus";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
-  ConditionalTableBody,
-  TableHeaderContentWithControls,
-  TableRowContentWithControls,
-} from "@app/components/TableControls";
-import { useLocalTableControls } from "@app/hooks/table-controls";
+  type IActiveSort,
+  useLocalTableControls,
+} from "@app/hooks/table-controls";
 
-import { ANSICOLOR } from "@app/Constants";
+import { ConditionalDataListBody } from "@app/components/DataListControls/ConditionalDataListBody";
+import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
+import { LoadingWrapper } from "@app/components/LoadingWrapper";
+import { useWithUiId } from "@app/utils/query-utils";
+import { ImporterDetailDrawer } from "./components/importer-detail-drawer";
 import { ImporterProgress } from "./components/importer-progress";
-import { ImporterStatusIcon } from "./components/importer-status-icon";
+import { WatchImporterReport } from "./components/watch-importer-report";
 
+type ImporterCategory = "Advisory" | "SBOM" | "License";
 type ImporterStatus = "disabled" | "scheduled" | "running";
 
-const getImporterStatus = (importer: Importer): ImporterStatus => {
-  const importerType = Object.keys(importer.configuration ?? {})[0];
+interface ListData {
+  importer: Importer;
+  type: string;
+  category: ImporterCategory;
+  configuration: SbomImporter;
+  status: ImporterStatus;
+}
+
+export const getConfiguration = (importer: Importer) => {
+  const type = Object.keys(importer.configuration ?? {})[0];
+
   // biome-ignore lint/suspicious/noExplicitAny:
-  const configValues = (importer.configuration as any)[
-    importerType
-  ] as SbomImporter;
-  const isImporterEnabled = configValues?.disabled === false;
-  if (!isImporterEnabled) {
-    return "disabled";
-  }
-  return importer.state === "running" ? "running" : "scheduled";
+  const configuration = (importer.configuration as any)[type] as SbomImporter;
+
+  const category = type.includes("sbom")
+    ? "SBOM"
+    : type.includes("clearlyDefined")
+      ? "License"
+      : "Advisory";
+
+  const status: ImporterStatus =
+    configuration?.disabled === true
+      ? "disabled"
+      : importer.state === "running"
+        ? "running"
+        : "scheduled";
+
+  return {
+    type,
+    category: category as ImporterCategory,
+    configuration,
+    status,
+  };
 };
 
 export const ImporterList: React.FC = () => {
@@ -84,16 +127,45 @@ export const ImporterList: React.FC = () => {
 
   // Actions that each row can trigger
   type RowAction = "enable" | "disable" | "run";
-  const [selectedRow, setSelectedRow] = React.useState<Importer | null>(null);
+  const [selectedRow, setSelectedRow] = React.useState<ListData | null>(null);
   const [selectedRowAction, setSelectedRowAction] =
     React.useState<RowAction | null>(null);
 
-  const prepareActionOnRow = (action: RowAction, row: Importer) => {
+  const prepareActionOnRow = (action: RowAction, row: ListData) => {
     setSelectedRowAction(action);
     setSelectedRow(row);
   };
 
+  //
+  const [viewDetails, setViewDetails] = React.useState<ListData | null>(null);
+
+  //
+
+  const [isSortByOpen, setIsSortByOpen] = React.useState<boolean>(false);
+
+  //
+
   const { importers, isFetching, fetchError } = useFetchImporters();
+
+  const tableData = React.useMemo(() => {
+    return importers.map((item) => {
+      const { configuration, type, category, status } = getConfiguration(item);
+
+      const result: ListData = {
+        importer: item,
+        configuration,
+        type,
+        category,
+        status,
+      };
+      return result;
+    });
+  }, [importers]);
+
+  const tableDataWithUiId = useWithUiId(
+    tableData,
+    (item) => item.importer.name,
+  );
 
   // Enable/Disable Importer
 
@@ -109,24 +181,18 @@ export const ImporterList: React.FC = () => {
     onEnableDisableError,
   );
 
-  const execEnableDisableImporter = (row: Importer, enable: boolean) => {
-    const importerType = Object.keys(row.configuration ?? {})[0];
-    // biome-ignore lint/suspicious/noExplicitAny:
-    const currentConfigValues = (row.configuration as any)[
-      importerType
-    ] as SbomImporter;
-
+  const execEnableDisableImporter = (row: ListData, enable: boolean) => {
     const newConfigValues: SbomImporter = {
-      ...currentConfigValues,
+      ...row.configuration,
       disabled: !enable,
     };
 
     const payload = {
-      [importerType]: newConfigValues,
+      [row.type]: newConfigValues,
     } as ImporterConfiguration;
 
     updateImporter({
-      importerName: row.name,
+      importerName: row.importer.name,
       configuration: payload,
     });
   };
@@ -156,8 +222,8 @@ export const ImporterList: React.FC = () => {
   // Table config
   const tableControls = useLocalTableControls({
     tableName: "importers-table",
-    idProperty: "name",
-    items: importers,
+    idProperty: "_ui_unique_id",
+    items: tableDataWithUiId,
     columnNames: {
       name: "Name",
       type: "Type",
@@ -166,15 +232,17 @@ export const ImporterList: React.FC = () => {
       period: "Period",
       state: "State",
     },
-    hasActionsColumn: true,
+    hasActionsColumn: false,
     isSortEnabled: true,
-    sortableColumns: ["name"],
+    sortableColumns: ["name", "type"],
+    initialSort: { columnKey: "name", direction: "asc" },
     getSortValues: (item) => ({
-      name: item.name,
+      name: item.importer.name,
+      type: item.importer.name,
     }),
     isPaginationEnabled: true,
-    isExpansionEnabled: true,
-    expandableVariant: "single",
+    isExpansionEnabled: false,
+    initialItemsPerPage: 20,
     isFilterEnabled: true,
     filterCategories: [
       {
@@ -182,7 +250,7 @@ export const ImporterList: React.FC = () => {
         title: "Name",
         type: FilterType.search,
         placeholderText: "Search by name...",
-        getItemValue: (item) => item.name || "",
+        getItemValue: (item) => item.importer.name || "",
       },
       {
         categoryKey: "status",
@@ -205,7 +273,31 @@ export const ImporterList: React.FC = () => {
         ],
         placeholderText: "Status",
         matcher: (filter, item) => {
-          return filter === getImporterStatus(item);
+          return filter === item.status;
+        },
+      },
+      {
+        categoryKey: "category",
+        title: "Category",
+        type: FilterType.multiselect,
+        logicOperator: "OR",
+        selectOptions: [
+          {
+            value: "Advisory",
+            label: "Advisory",
+          },
+          {
+            value: "SBOM",
+            label: "SBOM",
+          },
+          {
+            value: "License",
+            label: "License",
+          },
+        ],
+        placeholderText: "Category",
+        matcher: (filter, item) => {
+          return filter === item.category;
         },
       },
     ],
@@ -225,6 +317,8 @@ export const ImporterList: React.FC = () => {
       getTdProps,
     },
     expansionDerivedState: { isCellExpanded },
+    sortableColumns,
+    sortState: { activeSort, setActiveSort },
   } = tableControls;
 
   // Dialog confirm config
@@ -242,7 +336,7 @@ export const ImporterList: React.FC = () => {
       confirmDialogProps = {
         title: "Enable Importer",
         titleIconVariant: "info",
-        message: `Are you sure you want to enable the Importer ${selectedRow?.name}?`,
+        message: `Are you sure you want to enable the Importer ${selectedRow?.importer.name}?`,
         confirmBtnVariant: ButtonVariant.primary,
         confirmBtnLabel: "Enable",
         cancelBtnLabel: "Cancel",
@@ -252,7 +346,7 @@ export const ImporterList: React.FC = () => {
       confirmDialogProps = {
         title: "Disable Importer",
         titleIconVariant: "info",
-        message: `Are you sure you want to disable the Importer ${selectedRow?.name}?`,
+        message: `Are you sure you want to disable the Importer ${selectedRow?.importer.name}?`,
         confirmBtnVariant: ButtonVariant.primary,
         confirmBtnLabel: "Disable",
         cancelBtnLabel: "Cancel",
@@ -262,7 +356,7 @@ export const ImporterList: React.FC = () => {
       confirmDialogProps = {
         title: "Run Importer",
         titleIconVariant: "info",
-        message: `Are you sure you want to run the Importer ${selectedRow?.name}?`,
+        message: `Are you sure you want to run the Importer ${selectedRow?.importer.name}?`,
         confirmBtnVariant: ButtonVariant.primary,
         confirmBtnLabel: "Run",
         cancelBtnLabel: "Cancel",
@@ -275,16 +369,82 @@ export const ImporterList: React.FC = () => {
 
   return (
     <>
-      <PageSection hasBodyWrapper={false}>
+      <PageSection>
         <Content>
-          <Content component="h1">Importers</Content>
+          <h1>Data sources</h1>
         </Content>
       </PageSection>
-      <PageSection hasBodyWrapper={false}>
+      <PageSection>
         <div>
           <Toolbar {...toolbarProps}>
             <ToolbarContent>
               <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
+              <ToolbarGroup variant="filter-group">
+                <ToolbarItem>
+                  {activeSort && (
+                    <Button
+                      variant="control"
+                      onClick={() => {
+                        setActiveSort({
+                          columnKey: activeSort.columnKey,
+                          direction:
+                            activeSort?.direction === "asc" ? "desc" : "asc",
+                        });
+                      }}
+                    >
+                      {activeSort.direction === "asc" ? (
+                        <SortAmountDownIcon />
+                      ) : (
+                        <SortAmountUpIcon />
+                      )}
+                    </Button>
+                  )}
+                </ToolbarItem>
+                <ToolbarItem>
+                  <Select
+                    id="sort-by"
+                    isOpen={isSortByOpen}
+                    selected={activeSort?.columnKey}
+                    onSelect={(_e, value) => {
+                      setActiveSort({
+                        columnKey: value as any,
+                        direction: activeSort?.direction ?? "asc",
+                      });
+                    }}
+                    onOpenChange={(isOpen) => setIsSortByOpen(isOpen)}
+                    toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+                      <MenuToggle
+                        ref={toggleRef}
+                        onClick={() => setIsSortByOpen(!isSortByOpen)}
+                        isExpanded={isSortByOpen}
+                        // icon={<SortAmountDownIcon />}
+                        style={
+                          {
+                            width: "200px",
+                          } as React.CSSProperties
+                        }
+                      >
+                        {activeSort?.columnKey}
+                      </MenuToggle>
+                    )}
+                    shouldFocusToggleOnSelect
+                  >
+                    <SelectList>
+                      {sortableColumns?.map((e) => (
+                        <SelectOption
+                          key={e}
+                          value={e}
+                          // onClick={() => {
+                          //   console.log(e);
+                          // }}
+                        >
+                          {e}
+                        </SelectOption>
+                      ))}
+                    </SelectList>
+                  </Select>
+                </ToolbarItem>
+              </ToolbarGroup>
               <ToolbarItem {...paginationToolbarItemProps}>
                 <SimplePagination
                   idPrefix="importer-table"
@@ -295,138 +455,346 @@ export const ImporterList: React.FC = () => {
             </ToolbarContent>
           </Toolbar>
 
-          <Table {...tableProps} aria-label="Importer table">
-            <Thead>
-              <Tr>
-                <TableHeaderContentWithControls {...tableControls}>
-                  <Th {...getThProps({ columnKey: "name" })} />
-                  <Th {...getThProps({ columnKey: "type" })} />
-                  <Th {...getThProps({ columnKey: "description" })} />
-                  <Th {...getThProps({ columnKey: "source" })} />
-                  <Th {...getThProps({ columnKey: "period" })} />
-                  <Th {...getThProps({ columnKey: "state" })} />
-                </TableHeaderContentWithControls>
-              </Tr>
-            </Thead>
-            <ConditionalTableBody
+          <DataList
+            aria-label="Importer table"
+            selectedDataListItemId={viewDetails?.importer.name}
+          >
+            <ConditionalDataListBody
               isLoading={isFetching}
               isError={!!fetchError}
               isNoData={importers.length === 0}
               numRenderedColumns={numRenderedColumns}
             >
-              {currentPageItems?.map((item, rowIndex) => {
-                const importerType = Object.keys(item.configuration ?? {})[0];
-                // biome-ignore lint/suspicious/noExplicitAny:
-                const configValues = (item.configuration as any)[
-                  importerType
-                ] as SbomImporter;
-
-                const importerStatus = getImporterStatus(item);
-                const isImporterDisabled = importerStatus === "disabled";
+              {currentPageItems?.map((item) => {
                 return (
-                  <Tbody key={item.name}>
-                    <Tr {...getTrProps({ item })}>
-                      <TableRowContentWithControls
-                        {...tableControls}
-                        item={item}
-                        rowIndex={rowIndex}
-                      >
-                        <Td
-                          width={15}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "name" })}
-                        >
-                          {item.name}
-                        </Td>
-                        <Td
-                          width={10}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "type" })}
-                        >
-                          {importerType}
-                        </Td>
-                        <Td
-                          width={20}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "description" })}
-                        >
-                          {configValues?.description}
-                        </Td>
-                        <Td
-                          width={20}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "source" })}
-                        >
-                          {configValues?.source}
-                        </Td>
-                        <Td
-                          width={10}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "period" })}
-                        >
-                          {configValues?.period}
-                        </Td>
-                        <Td
-                          width={10}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "state" })}
-                        >
-                          {importerStatus === "disabled" ? (
-                            <Label color="orange">Disabled</Label>
-                          ) : importerStatus === "running" && item.progress ? (
-                            <ImporterProgress value={item.progress} />
-                          ) : (
-                            <ImporterStatusIcon state={item.state} />
+                  <WatchImporterReport
+                    key={item._ui_unique_id}
+                    importer={item.importer}
+                  >
+                    {({ reports, isFetching, fetchError }) => {
+                      const lastReport = reports[0] ? reports[0] : null;
+
+                      let mainIcon = (
+                        <Icon size="xl">
+                          <MinusIcon />
+                        </Icon>
+                      );
+                      if (item.status === "running") {
+                        mainIcon = (
+                          <Icon size="xl" status="info">
+                            <InProgressIcon />
+                          </Icon>
+                        );
+                      } else if (lastReport) {
+                        if (lastReport.error) {
+                          mainIcon = (
+                            <Icon size="xl" status="danger">
+                              <TimesCircleIcon />
+                            </Icon>
+                          );
+                        } else {
+                          mainIcon = (
+                            <Icon size="xl" status="success">
+                              <CheckCircleIcon />
+                            </Icon>
+                          );
+                        }
+                      }
+
+                      //
+
+                      let lastStatusComponent = null;
+
+                      let duration: number | undefined;
+                      if (
+                        lastReport?.report?.startDate &&
+                        lastReport?.report?.endDate
+                      ) {
+                        const fromDate = dayjs(lastReport.report.startDate);
+                        const toDate = dayjs(lastReport.report.endDate);
+                        duration = toDate.diff(fromDate);
+                      }
+
+                      const numberDocuments =
+                        item.status === "running"
+                          ? item.importer.progress?.total
+                          : lastReport?.report?.numberOfItems;
+
+                      lastStatusComponent = (
+                        <Flex direction={{ default: "column" }}>
+                          <FlexItem>
+                            <Flex spaceItems={{ default: "spaceItemsSm" }}>
+                              <FlexItem>
+                                <Tooltip content={<div>Completed</div>}>
+                                  <span>
+                                    <CalendarAltIcon />{" "}
+                                    {lastReport?.report?.endDate
+                                      ? dayjs(
+                                          lastReport.report.endDate,
+                                        ).fromNow()
+                                      : "-"}
+                                  </span>
+                                </Tooltip>
+                              </FlexItem>
+                            </Flex>
+                          </FlexItem>
+                          <FlexItem>
+                            <Flex spaceItems={{ default: "spaceItemsSm" }}>
+                              <FlexItem>
+                                <Tooltip content={<div>Duration</div>}>
+                                  <span>
+                                    <ClockIcon />{" "}
+                                    {duration
+                                      ? dayjs.duration(duration).humanize()
+                                      : "-"}
+                                  </span>
+                                </Tooltip>
+                              </FlexItem>
+                            </Flex>
+                          </FlexItem>
+                          <FlexItem>
+                            <Flex spaceItems={{ default: "spaceItemsSm" }}>
+                              <FlexItem>
+                                <Tooltip
+                                  content={<div>Documents ingested</div>}
+                                >
+                                  <span>
+                                    <FileAltIcon /> {numberDocuments} documents
+                                  </span>
+                                </Tooltip>
+                              </FlexItem>
+                            </Flex>
+                          </FlexItem>
+                        </Flex>
+                      );
+
+                      let currentStatus = null;
+                      switch (item.status) {
+                        case "running":
+                          {
+                            const timeRemaining = item.importer.progress
+                              ?.estimatedSecondsRemaining
+                              ? item.importer.progress
+                                  ?.estimatedSecondsRemaining * 1000
+                              : undefined;
+                            currentStatus = item.importer.progress ? (
+                              <ImporterProgress
+                                value={item.importer.progress}
+                                timeRemaining={timeRemaining}
+                              />
+                            ) : null;
+                          }
+                          break;
+                        case "scheduled":
+                          currentStatus = (
+                            <Flex spaceItems={{ default: "spaceItemsSm" }}>
+                              <FlexItem>
+                                <PendingIcon /> Scheduled
+                              </FlexItem>
+                            </Flex>
+                          );
+                          break;
+                        case "disabled":
+                          currentStatus = (
+                            <Label color="yellow">Disabled</Label>
+                          );
+                          break;
+                        default:
+                          break;
+                      }
+
+                      return (
+                        <LoadingWrapper
+                          isFetching={isFetching}
+                          fetchError={fetchError}
+                          isFetchingState={
+                            <DataListItem>
+                              <DataListItemRow>
+                                <DataListItemCells
+                                  dataListCells={[...Array(5).keys()].map(
+                                    (element) => (
+                                      <DataListCell key={element}>
+                                        <Skeleton />
+                                      </DataListCell>
+                                    ),
+                                  )}
+                                />
+                              </DataListItemRow>
+                            </DataListItem>
+                          }
+                          fetchErrorState={(error) => (
+                            <DataListItem>
+                              <DataListItemRow>
+                                <DataListItemCells
+                                  dataListCells={[
+                                    <DataListCell key="error">
+                                      <Flex>
+                                        <FlexItem>
+                                          <Icon size="md" status="danger">
+                                            <InfoCircleIcon />
+                                          </Icon>
+                                        </FlexItem>
+                                        <FlexItem>
+                                          <Content>Error {error.code}</Content>
+                                        </FlexItem>
+                                        <FlexItem>
+                                          There was an error retrieving data.
+                                          Check your connection and try again.
+                                        </FlexItem>
+                                      </Flex>
+                                    </DataListCell>,
+                                  ]}
+                                />
+                              </DataListItemRow>
+                            </DataListItem>
                           )}
-                        </Td>
-                        <Td isActionCell>
-                          <ActionsColumn
-                            items={[
-                              ...(isImporterDisabled
-                                ? [
-                                    {
-                                      title: "Enable",
-                                      onClick: () => {
-                                        prepareActionOnRow("enable", item);
-                                      },
-                                    },
-                                  ]
-                                : [
-                                    {
-                                      title: "Run",
-                                      onClick: () => {
-                                        prepareActionOnRow("run", item);
-                                      },
-                                      isDisabled: importerStatus === "running",
-                                    },
-                                    {
-                                      title: "Disable",
-                                      onClick: () => {
-                                        prepareActionOnRow("disable", item);
-                                      },
-                                    },
-                                  ]),
-                            ]}
-                          />
-                        </Td>
-                      </TableRowContentWithControls>
-                    </Tr>
-                    {isCellExpanded(item) ? (
-                      <Tr isExpanded>
-                        <Td colSpan={7}>
-                          <div className="pf-v6-u-m-md">
-                            <ExpandableRowContent>
-                              <ImporterExpandedArea importer={item} />
-                            </ExpandableRowContent>
-                          </div>
-                        </Td>
-                      </Tr>
-                    ) : null}
-                  </Tbody>
+                        >
+                          <DataListItem id={item.importer.name}>
+                            <DataListItemRow>
+                              <DataListItemCells
+                                dataListCells={[
+                                  <DataListCell key="icon" isIcon>
+                                    {mainIcon}
+                                  </DataListCell>,
+                                  <DataListCell
+                                    key="info"
+                                    wrapModifier="breakWord"
+                                    width={2}
+                                  >
+                                    <Flex direction={{ default: "column" }}>
+                                      <FlexItem>
+                                        <Content component="p">
+                                          {item.importer.name}
+                                        </Content>
+                                      </FlexItem>
+                                      <FlexItem>
+                                        <Content component="dd">
+                                          <Flex
+                                            spaceItems={{
+                                              default: "spaceItemsSm",
+                                            }}
+                                          >
+                                            <FlexItem>
+                                              <CodeBranchIcon />{" "}
+                                              {item.configuration.source}
+                                            </FlexItem>
+                                          </Flex>
+                                        </Content>
+                                      </FlexItem>
+                                      <FlexItem>
+                                        <Flex
+                                          spaceItems={{
+                                            default: "spaceItemsSm",
+                                          }}
+                                        >
+                                          <FlexItem>
+                                            <BoxesIcon /> {item.category}
+                                          </FlexItem>
+                                          <FlexItem>
+                                            <CubeIcon /> {item.type}
+                                          </FlexItem>
+                                        </Flex>
+                                      </FlexItem>
+                                    </Flex>
+                                  </DataListCell>,
+                                  <DataListCell
+                                    key="description"
+                                    wrapModifier="breakWord"
+                                  >
+                                    <Flex direction={{ default: "column" }}>
+                                      <FlexItem>
+                                        <Content component="p">
+                                          {item.configuration.description}
+                                        </Content>
+                                      </FlexItem>
+                                    </Flex>
+                                  </DataListCell>,
+                                  <DataListCell key="status" alignRight>
+                                    {lastStatusComponent}
+                                  </DataListCell>,
+                                  <DataListCell key="progress" alignRight>
+                                    <Flex direction={{ default: "column" }}>
+                                      <FlexItem>
+                                        <Tooltip
+                                          content={
+                                            <div>Execution frecuency</div>
+                                          }
+                                        >
+                                          <span>
+                                            <RunningIcon />{" "}
+                                            {item.configuration.period}
+                                          </span>
+                                        </Tooltip>
+                                      </FlexItem>
+                                      <FlexItem>{currentStatus}</FlexItem>
+                                    </Flex>
+                                  </DataListCell>,
+                                ]}
+                              />
+                              <DataListAction
+                                id="row-actions"
+                                aria-labelledby="row-actions"
+                                aria-label="Row actions"
+                              >
+                                <Button
+                                  variant="secondary"
+                                  onClick={() => setViewDetails(item)}
+                                >
+                                  Executions
+                                </Button>
+                              </DataListAction>
+                              <DataListAction
+                                id="actions"
+                                aria-label="Actions"
+                                aria-labelledby="actions"
+                              >
+                                <ActionsColumn
+                                  items={[
+                                    ...(item.status === "disabled"
+                                      ? [
+                                          {
+                                            title: "Enable",
+                                            onClick: () => {
+                                              prepareActionOnRow(
+                                                "enable",
+                                                item,
+                                              );
+                                            },
+                                          },
+                                        ]
+                                      : [
+                                          {
+                                            title: "Run",
+                                            onClick: () => {
+                                              prepareActionOnRow("run", item);
+                                            },
+                                            isDisabled:
+                                              item.status === "running",
+                                          },
+                                          {
+                                            title: "Disable",
+                                            onClick: () => {
+                                              prepareActionOnRow(
+                                                "disable",
+                                                item,
+                                              );
+                                            },
+                                          },
+                                        ]),
+                                  ]}
+                                />
+                              </DataListAction>
+                            </DataListItemRow>
+                          </DataListItem>
+                        </LoadingWrapper>
+                      );
+                    }}
+                  </WatchImporterReport>
                 );
               })}
-            </ConditionalTableBody>
-          </Table>
+            </ConditionalDataListBody>
+          </DataList>
+
           <SimplePagination
             idPrefix="importer-table"
             isTop={false}
@@ -451,7 +819,7 @@ export const ImporterList: React.FC = () => {
                   execEnableDisableImporter(selectedRow, false);
                   break;
                 case "run":
-                  execRunImporter(selectedRow.name);
+                  execRunImporter(selectedRow.importer.name);
                   break;
                 default:
                   break;
@@ -463,319 +831,11 @@ export const ImporterList: React.FC = () => {
           }}
         />
       )}
-    </>
-  );
-};
 
-const messagesToLogData = (messages: {
-  [key: string]: {
-    [key: string]: Array<Message>;
-  };
-}) => {
-  return Object.entries(messages).map(([groupKey, value]) => {
-    return Object.entries(value)
-      .map(([objectKey, objectValue]) => {
-        return {
-          title: `${groupKey.charAt(0).toUpperCase() + groupKey.slice(1)}: "${objectKey}"`,
-          body: objectValue
-            .map((item) => {
-              let color: string | null = null;
-              switch (item.severity) {
-                case "none":
-                  color = ANSICOLOR.green;
-                  break;
-                case "low":
-                  color = ANSICOLOR.cyan;
-                  break;
-                case "medium":
-                  color = ANSICOLOR.yellow;
-                  break;
-                case "high":
-                  color = ANSICOLOR.lightBlue;
-                  break;
-                case "critical":
-                  color = ANSICOLOR.red;
-                  break;
-                default:
-                  break;
-              }
-              return `${color ?? ""}${item.severity.charAt(0).toUpperCase() + item.severity.slice(1)}: ${ANSICOLOR.defaultForegroundColorAtStartup} ${item.message}`;
-            })
-            .join(ANSICOLOR.endLine),
-        };
-      })
-      .map((item) => {
-        return `${ANSICOLOR.underline}${item.title}${ANSICOLOR.reset}${ANSICOLOR.endLine}${item.body}`;
-      })
-      .join(`${ANSICOLOR.endLine}${ANSICOLOR.endLine}`);
-  });
-};
-
-interface TableReportData {
-  isRunning: boolean;
-  id: string;
-  startDate?: string;
-  endDate?: string;
-  duration?: number;
-  numberOfItems?: number;
-  error?: string;
-  messages?: {
-    [key: string]: {
-      [key: string]: Array<Message>;
-    };
-  };
-}
-
-interface ImporterExpandedAreaProps {
-  importer: Importer;
-}
-
-export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
-  importer,
-}) => {
-  const [logData, setLogData] = React.useState<string[]>([]);
-  const [isLogModalOpen, setIsLogModalOpen] = React.useState(false);
-  const toggleLogModal = () => setIsLogModalOpen(!isLogModalOpen);
-
-  const {
-    result: { data: reports },
-    isFetching,
-    fetchError,
-  } = useFetchImporterReports(importer.name);
-
-  const tableData = React.useMemo(() => {
-    const currentTask: TableReportData = {
-      isRunning: true,
-      id: "root",
-      startDate: undefined,
-      endDate: undefined,
-      duration: importer.progress?.estimatedSecondsRemaining
-        ? importer.progress?.estimatedSecondsRemaining * 1000
-        : undefined,
-      numberOfItems: importer.progress?.current,
-      error: undefined,
-      messages: undefined,
-    };
-
-    const reportsMapped = reports.map((item) => {
-      let duration: number | undefined;
-      if (item.report?.startDate && item.report.endDate) {
-        const fromDate = dayjs(item.report.startDate);
-        const toDate = dayjs(item.report.endDate);
-        duration = toDate.diff(fromDate);
-      }
-
-      const result: TableReportData = {
-        isRunning: false,
-        id: item.id,
-        startDate: item.report?.startDate,
-        endDate: item.report?.endDate,
-        duration: duration,
-        numberOfItems: item.report?.numberOfItems,
-        error: item.error ?? undefined,
-        messages: item.report?.messages,
-      };
-      return result;
-    });
-    return [
-      ...(importer.state === "running" ? [currentTask] : []),
-      ...reportsMapped,
-    ];
-  }, [importer, reports]);
-
-  const tableControls = useLocalTableControls({
-    variant: "compact",
-    tableName: "report-table",
-    idProperty: "id",
-    items: tableData,
-    columnNames: {
-      startDate: "Start date",
-      endDate: "End date",
-      numberOfItems: "Number of items",
-      status: "Status",
-      duration: "Duration",
-    },
-    isPaginationEnabled: true,
-    initialItemsPerPage: 5,
-    isSortEnabled: true,
-    sortableColumns: ["startDate", "endDate"],
-    initialSort: { columnKey: "startDate", direction: "desc" },
-    getSortValues: (report) => ({
-      startDate: report.startDate ? dayjs(report.startDate).valueOf() : true,
-      endDate: report.endDate ? dayjs(report.endDate).valueOf() : true,
-    }),
-    isFilterEnabled: false,
-    isExpansionEnabled: false,
-  });
-
-  const {
-    currentPageItems,
-    numRenderedColumns,
-    propHelpers: {
-      toolbarProps,
-      tableProps,
-      paginationToolbarItemProps,
-      paginationProps,
-      getThProps,
-      getTrProps,
-      getTdProps,
-    },
-  } = tableControls;
-
-  return (
-    <>
-      <Toolbar {...toolbarProps}>
-        <ToolbarContent>
-          <ToolbarItem {...paginationToolbarItemProps}>
-            <SimplePagination
-              idPrefix="report-table"
-              isTop
-              paginationProps={paginationProps}
-            />
-          </ToolbarItem>
-        </ToolbarContent>
-      </Toolbar>
-
-      <Table {...tableProps} aria-label="Report table">
-        <Caption>Importer reports</Caption>
-        <Thead>
-          <Tr>
-            <TableHeaderContentWithControls {...tableControls}>
-              <Th {...getThProps({ columnKey: "startDate" })} />
-              <Th {...getThProps({ columnKey: "endDate" })} />
-              <Th {...getThProps({ columnKey: "numberOfItems" })} />
-              <Th {...getThProps({ columnKey: "status" })} />
-              <Th {...getThProps({ columnKey: "duration" })} />
-            </TableHeaderContentWithControls>
-          </Tr>
-        </Thead>
-        <ConditionalTableBody
-          isLoading={isFetching}
-          isError={!!fetchError}
-          isNoData={tableData?.length === 0}
-          numRenderedColumns={numRenderedColumns}
-        >
-          {currentPageItems?.map((item, rowIndex) => {
-            const LogButton = ({ children }: { children: React.ReactNode }) => {
-              if (item.messages) {
-                return (
-                  <Button
-                    isInline
-                    variant="link"
-                    onClick={() => {
-                      const newLogData = messagesToLogData(item.messages ?? {});
-                      setLogData(newLogData);
-                      toggleLogModal();
-                    }}
-                  >
-                    {children}
-                  </Button>
-                );
-              }
-              return children;
-            };
-
-            return (
-              <Tbody key={item.id}>
-                <Tr {...getTrProps({ item })}>
-                  <TableRowContentWithControls
-                    {...tableControls}
-                    item={item}
-                    rowIndex={rowIndex}
-                  >
-                    <Td
-                      width={15}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "startDate" })}
-                    >
-                      {formatDateTime(item.startDate)}
-                    </Td>
-                    <Td
-                      width={15}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "endDate" })}
-                    >
-                      {formatDateTime(item.endDate)}
-                    </Td>
-                    <Td
-                      width={15}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "numberOfItems" })}
-                    >
-                      {item.numberOfItems}
-                    </Td>
-                    <Td
-                      width={30}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "status" })}
-                    >
-                      {item.isRunning ? (
-                        <ImporterStatusIcon state="running" />
-                      ) : (
-                        <LogButton>
-                          {item.error ? (
-                            <IconedStatus preset="Failed" label={item.error} />
-                          ) : (
-                            <IconedStatus
-                              preset="Completed"
-                              label="Finished successfully"
-                            />
-                          )}
-                        </LogButton>
-                      )}
-                    </Td>
-                    <Td
-                      width={25}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "duration" })}
-                    >
-                      {item.duration
-                        ? item.isRunning
-                          ? `Time remaining: ${dayjs.duration(item.duration).humanize()}`
-                          : `Run for: ${dayjs.duration(item.duration).humanize()}`
-                        : ""}
-                    </Td>
-                  </TableRowContentWithControls>
-                </Tr>
-              </Tbody>
-            );
-          })}
-        </ConditionalTableBody>
-      </Table>
-      <SimplePagination
-        idPrefix="report-table"
-        isTop={false}
-        paginationProps={paginationProps}
+      <ImporterDetailDrawer
+        importer={viewDetails?.importer ?? null}
+        onCloseClick={() => setViewDetails(null)}
       />
-
-      <Modal variant="large" isOpen={isLogModalOpen} onClose={toggleLogModal}>
-        <ModalHeader title="Log" />
-        <ModalBody>
-          <LogViewer
-            hasLineNumbers={false}
-            height={400}
-            data={logData}
-            theme="dark"
-            toolbar={
-              <Toolbar>
-                <ToolbarContent>
-                  <ToolbarItem>
-                    <LogViewerSearch
-                      placeholder="Search value"
-                      minSearchChars={1}
-                    />
-                  </ToolbarItem>
-                </ToolbarContent>
-              </Toolbar>
-            }
-          />
-        </ModalBody>
-        <ModalFooter>
-          <Button key="cancel" variant="link" onClick={toggleLogModal}>
-            Close
-          </Button>
-        </ModalFooter>
-      </Modal>
     </>
   );
 };
