@@ -3,9 +3,9 @@ import React, { type FormEvent, useState } from "react";
 import {
   DatePicker,
   InputGroup,
-  type ToolbarChip,
-  type ToolbarChipGroup,
   ToolbarFilter,
+  type ToolbarLabel,
+  type ToolbarLabelGroup,
   Tooltip,
   isValidDate as isValidJSDate,
 } from "@patternfly/react-core";
@@ -85,8 +85,8 @@ export const DateRangeFilter = <TItem,>({
   };
 
   const clearSingleRange = (
-    _category: string | ToolbarChipGroup,
-    _option: string | ToolbarChip,
+    _category: string | ToolbarLabelGroup,
+    _option: string | ToolbarLabel,
   ) => {
     setFilterValue([]);
   };
@@ -118,9 +118,9 @@ export const DateRangeFilter = <TItem,>({
   return (
     <ToolbarFilter
       key={category.categoryKey}
-      chips={validFilters.flatMap(rangeToOption)}
-      deleteChip={clearSingleRange}
-      deleteChipGroup={() => setFilterValue([])}
+      labels={validFilters.flatMap(rangeToOption)}
+      deleteLabel={clearSingleRange}
+      deleteLabelGroup={() => setFilterValue([])}
       categoryName={category.title}
       showToolbarItem={showToolbarItem}
     >

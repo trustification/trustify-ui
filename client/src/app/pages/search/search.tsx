@@ -1,10 +1,8 @@
 import React from "react";
 
 import {
+  Content,
   PageSection,
-  PageSectionVariants,
-  Text,
-  TextContent,
   Toolbar,
   ToolbarContent,
   ToolbarGroup,
@@ -125,20 +123,20 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
 
   return (
     <>
-      <PageSection variant={PageSectionVariants.light}>
+      <PageSection hasBodyWrapper={false}>
         <Toolbar isStatic>
           <ToolbarContent>
-            <ToolbarGroup align={{ default: "alignLeft" }}>
-              <TextContent>
-                <Text component="h1">Search Results</Text>
-              </TextContent>
+            <ToolbarGroup align={{ default: "alignStart" }}>
+              <Content>
+                <Content component="h1">Search Results</Content>
+              </Content>
             </ToolbarGroup>
             <ToolbarGroup
-              variant="icon-button-group"
-              align={{ default: "alignRight" }}
+              variant="action-group-plain"
+              align={{ default: "alignEnd" }}
             >
-              <ToolbarGroup visibility={{ default: "hidden", lg: "visible" }}>
-                <ToolbarItem widths={{ default: "500px" }}>
+              <ToolbarGroup visibility={{ default: "visible" }}>
+                <ToolbarItem>
                   <SearchMenu onChangeSearch={onChangeContextSearchValue} />
                 </ToolbarItem>
               </ToolbarGroup>
@@ -146,7 +144,9 @@ export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
           </ToolbarContent>
         </Toolbar>
       </PageSection>
-      <PageSection>{searchBodyOverride || searchTabs}</PageSection>
+      <PageSection hasBodyWrapper={false}>
+        {searchBodyOverride || searchTabs}
+      </PageSection>
     </>
   );
 };

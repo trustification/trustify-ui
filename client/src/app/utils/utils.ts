@@ -4,7 +4,7 @@ import { PackageURL } from "packageurl-js";
 
 import { RENDER_DATETIME_FORMAT, RENDER_DATE_FORMAT } from "@app/Constants";
 import type { DecomposedPurl } from "@app/api/models";
-import type { ToolbarChip } from "@patternfly/react-core";
+import type { ToolbarLabel } from "@patternfly/react-core";
 
 // Axios error
 
@@ -24,7 +24,7 @@ export const getAxiosErrorMessage = (axiosError: AxiosError<any>) => {
 
 // ToolbarChip
 
-export const getToolbarChipKey = (value: string | ToolbarChip) => {
+export const getToolbarChipKey = (value: string | ToolbarLabel) => {
   return typeof value === "string" ? value : value.key;
 };
 

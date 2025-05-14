@@ -1,6 +1,7 @@
 import React from "react";
 
 import {
+  Content,
   Flex,
   FlexItem,
   PageSection,
@@ -10,8 +11,6 @@ import {
   TabContent,
   TabTitleText,
   Tabs,
-  Text,
-  TextContent,
 } from "@patternfly/react-core";
 
 import { PathParam, useRouteParams } from "@app/Routes";
@@ -46,14 +45,14 @@ export const PackageDetails: React.FC = () => {
 
   return (
     <>
-      <PageSection variant="light">
+      <PageSection hasBodyWrapper={false}>
         <Stack>
           <StackItem>
-            <TextContent>
-              <Text component="h1">
+            <Content>
+              <Content component="h1">
                 {decomposedPurl?.name ?? packageId ?? ""}
-              </Text>
-            </TextContent>
+              </Content>
+            </Content>
           </StackItem>
           <StackItem>
             <Flex>
@@ -69,7 +68,7 @@ export const PackageDetails: React.FC = () => {
           </StackItem>
         </Stack>
       </PageSection>
-      <PageSection type="nav">
+      <PageSection hasBodyWrapper={false}>
         <Tabs
           mountOnEnter
           activeKey={activeTabKey}
@@ -91,7 +90,7 @@ export const PackageDetails: React.FC = () => {
           />
         </Tabs>
       </PageSection>
-      <PageSection>
+      <PageSection hasBodyWrapper={false}>
         <TabContent
           eventKey={0}
           id="refTabVulnerabilitiesSection"
