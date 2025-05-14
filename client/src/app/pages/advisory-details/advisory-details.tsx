@@ -2,6 +2,7 @@ import React from "react";
 
 import {
   Button,
+  Content,
   Flex,
   FlexItem,
   Label,
@@ -12,8 +13,6 @@ import {
   TabContent,
   TabTitleText,
   Tabs,
-  Text,
-  TextContent,
 } from "@patternfly/react-core";
 import DownloadIcon from "@patternfly/react-icons/dist/esm/icons/download-icon";
 
@@ -48,17 +47,17 @@ export const AdvisoryDetails: React.FC = () => {
 
   return (
     <>
-      <PageSection variant="light">
+      <PageSection>
         <Split>
           <SplitItem isFilled>
             <Flex>
               <FlexItem spacer={{ default: "spacerSm" }}>
-                <TextContent>
-                  <Text component="h1">
+                <Content>
+                  <Content component="h1">
                     {advisory?.document_id ?? advisoryId ?? ""}
-                  </Text>
-                  <Text component="p">Advisory detail information</Text>
-                </TextContent>
+                  </Content>
+                  <Content component="p">Advisory detail information</Content>
+                </Content>
               </FlexItem>
               <FlexItem>
                 {advisory?.labels.type && (
@@ -89,7 +88,7 @@ export const AdvisoryDetails: React.FC = () => {
           </SplitItem>
         </Split>
       </PageSection>
-      <PageSection type="nav">
+      <PageSection type="tabs">
         <Tabs
           mountOnEnter
           activeKey={activeTabKey}

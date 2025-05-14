@@ -3,23 +3,19 @@ import type React from "react";
 import {
   EmptyState,
   EmptyStateBody,
-  EmptyStateIcon,
   EmptyStateVariant,
-  Title,
 } from "@patternfly/react-core";
 import ExclamationCircleIcon from "@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon";
-import { global_danger_color_200 as globalDangerColor200 } from "@patternfly/react-tokens";
 
 export const StateError: React.FC = () => {
   return (
-    <EmptyState variant={EmptyStateVariant.sm}>
-      <EmptyStateIcon
-        icon={ExclamationCircleIcon}
-        color={globalDangerColor200.value}
-      />
-      <Title headingLevel="h2" size="lg">
-        Unable to connect
-      </Title>
+    <EmptyState
+      status="danger"
+      headingLevel="h4"
+      titleText="Unable to connect"
+      icon={ExclamationCircleIcon}
+      variant={EmptyStateVariant.sm}
+    >
       <EmptyStateBody>
         There was an error retrieving data. Check your connection and try again.
       </EmptyStateBody>

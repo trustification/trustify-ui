@@ -46,7 +46,7 @@ import {
   ChartStack,
   ChartThemeColor,
   ChartTooltip,
-} from "@patternfly/react-charts";
+} from "@patternfly/react-charts/victory";
 import { right } from "@patternfly/react-core/dist/esm/helpers/Popper/thirdparty/popper-core";
 import {
   BoxIcon,

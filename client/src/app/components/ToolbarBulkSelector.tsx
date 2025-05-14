@@ -118,23 +118,21 @@ export const ToolbarBulkSelector = <T,>({
             <MenuToggle
               ref={toggleRef}
               onClick={() => setIsOpen(!isOpen)}
-              splitButtonOptions={{
-                items: [
-                  <MenuToggleCheckbox
-                    id="bulk-selected-items-checkbox"
-                    key="bulk-select-checkbox"
-                    aria-label="Select all"
-                    onChange={() => {
-                      if (getBulkSelectState() !== false) {
-                        onSelectAll(false);
-                      } else {
-                        onSelectAll(true);
-                      }
-                    }}
-                    isChecked={getBulkSelectState()}
-                  />,
-                ],
-              }}
+              splitButtonItems={[
+                <MenuToggleCheckbox
+                  id="bulk-selected-items-checkbox"
+                  key="bulk-select-checkbox"
+                  aria-label="Select all"
+                  onChange={() => {
+                    if (getBulkSelectState() !== false) {
+                      onSelectAll(false);
+                    } else {
+                      onSelectAll(true);
+                    }
+                  }}
+                  isChecked={getBulkSelectState()}
+                />,
+              ]}
             />
           )}
         >

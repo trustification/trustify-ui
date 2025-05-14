@@ -10,6 +10,8 @@ import {
   List,
   ListItem,
   Modal,
+  ModalBody,
+  ModalHeader,
   MultipleFileUpload,
   MultipleFileUploadMain,
   MultipleFileUploadStatus,
@@ -158,18 +160,18 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
 
         <Modal
           isOpen={rejectedFiles.length > 0}
-          title="Unsupported files"
-          titleIconVariant="warning"
-          showClose
           aria-label="unsupported file upload attempted"
           onClose={() => setRejectedFiles([])}
           variant="small"
         >
-          <List>
-            {rejectedFiles.map((e) => (
-              <ListItem key={e.file.name}>{e.file.name}</ListItem>
-            ))}
-          </List>
+          <ModalHeader title="Unsupported files" titleIconVariant="warning" />
+          <ModalBody>
+            <List>
+              {rejectedFiles.map((e) => (
+                <ListItem key={e.file.name}>{e.file.name}</ListItem>
+              ))}
+            </List>
+          </ModalBody>
         </Modal>
       </MultipleFileUpload>
     </>
