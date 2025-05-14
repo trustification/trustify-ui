@@ -31,7 +31,7 @@ import {
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
-  Tooltip
+  Tooltip,
 } from "@patternfly/react-core";
 
 import { ActionsColumn } from "@patternfly/react-table";
@@ -41,7 +41,6 @@ import CalendarAltIcon from "@patternfly/react-icons/dist/esm/icons/calendar-alt
 import CheckCircleIcon from "@patternfly/react-icons/dist/esm/icons/check-circle-icon";
 import ClockIcon from "@patternfly/react-icons/dist/esm/icons/clock-icon";
 import CodeBranchIcon from "@patternfly/react-icons/dist/esm/icons/code-branch-icon";
-import CubeIcon from "@patternfly/react-icons/dist/esm/icons/cube-icon";
 import FileAltIcon from "@patternfly/react-icons/dist/esm/icons/file-alt-icon";
 import InProgressIcon from "@patternfly/react-icons/dist/esm/icons/in-progress-icon";
 import InfoCircleIcon from "@patternfly/react-icons/dist/esm/icons/info-circle-icon";
@@ -83,13 +82,11 @@ import { ImporterProgress } from "./components/importer-progress";
 import { ReportStatusMessage } from "./components/report-status-message";
 import { WatchImporterReport } from "./components/watch-importer-report";
 
-type ImporterCategory = "Advisory" | "SBOM" | "License";
 type ImporterStatus = "disabled" | "scheduled" | "running";
 
 interface ListData {
   importer: Importer;
   type: string;
-  category: ImporterCategory;
   configuration: SbomImporter;
   status: ImporterStatus;
 }
@@ -100,12 +97,6 @@ export const getConfiguration = (importer: Importer) => {
   // biome-ignore lint/suspicious/noExplicitAny:
   const configuration = (importer.configuration as any)[type] as SbomImporter;
 
-  const category = type.includes("sbom")
-    ? "SBOM"
-    : type.includes("clearlyDefined")
-      ? "License"
-      : "Advisory";
-
   const status: ImporterStatus =
     configuration?.disabled === true
       ? "disabled"
@@ -115,7 +106,6 @@ export const getConfiguration = (importer: Importer) => {
 
   return {
     type,
-    category: category as ImporterCategory,
     configuration,
     status,
   };
@@ -148,13 +138,12 @@ export const ImporterList: React.FC = () => {
 
   const tableData = React.useMemo(() => {
     return importers.map((item) => {
-      const { configuration, type, category, status } = getConfiguration(item);
+      const { configuration, type, status } = getConfiguration(item);
 
       const result: ListData = {
         importer: item,
         configuration,
         type,
-        category,
         status,
       };
       return result;
@@ -225,11 +214,6 @@ export const ImporterList: React.FC = () => {
     items: tableDataWithUiId,
     columnNames: {
       name: "Name",
-      type: "Type",
-      description: "Description",
-      source: "Source",
-      period: "Period",
-      state: "State",
     },
     hasActionsColumn: false,
     isSortEnabled: true,
@@ -273,30 +257,6 @@ export const ImporterList: React.FC = () => {
         placeholderText: "Status",
         matcher: (filter, item) => {
           return filter === item.status;
-        },
-      },
-      {
-        categoryKey: "category",
-        title: "Category",
-        type: FilterType.multiselect,
-        logicOperator: "OR",
-        selectOptions: [
-          {
-            value: "Advisory",
-            label: "Advisory",
-          },
-          {
-            value: "SBOM",
-            label: "SBOM",
-          },
-          {
-            value: "License",
-            label: "License",
-          },
-        ],
-        placeholderText: "Category",
-        matcher: (filter, item) => {
-          return filter === item.category;
         },
       },
     ],
@@ -401,6 +361,7 @@ export const ImporterList: React.FC = () => {
                     selected={activeSort?.columnKey}
                     onSelect={(_e, value) => {
                       setActiveSort({
+                        // biome-ignore lint/suspicious/noExplicitAny:
                         columnKey: value as any,
                         direction: activeSort?.direction ?? "asc",
                       });
@@ -722,10 +683,7 @@ export const ImporterList: React.FC = () => {
                                           }}
                                         >
                                           <FlexItem>
-                                            <BoxesIcon /> {item.category}
-                                          </FlexItem>
-                                          <FlexItem>
-                                            <CubeIcon /> {item.type}
+                                            <BoxesIcon /> {item.type}
                                           </FlexItem>
                                         </Flex>
                                       </FlexItem>

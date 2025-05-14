@@ -13,8 +13,7 @@ import {
 import { LogViewer, LogViewerSearch } from "@patternfly/react-log-viewer";
 
 import { ANSICOLOR } from "@app/Constants";
-import type { Message, Report } from "@app/client";
-import { IconedStatus } from "@app/components/IconedStatus";
+import type { Message } from "@app/client";
 
 const messagesToLogData = (messages: {
   [key: string]: {
