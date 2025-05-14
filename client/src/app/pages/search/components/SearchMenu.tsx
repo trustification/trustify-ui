@@ -29,14 +29,15 @@ export interface IEntity {
   navLink: string;
   type: string;
   typeColor:
-    | "purple"
-    | "orange"
     | "blue"
-    | "cyan"
+    | "teal"
     | "green"
+    | "orange"
+    | "purple"
     | "red"
+    | "orangered"
     | "grey"
-    | "gold"
+    | "yellow"
     | undefined;
 }
 
@@ -96,7 +97,7 @@ function useAllEntities(filterText: string, disableSearch: boolean) {
     title: item.purl,
     navLink: `/packages/${item.uuid}`,
     type: "Package",
-    typeColor: "cyan",
+    typeColor: "teal",
   }));
 
   const transformedSboms: IEntity[] = sboms.map((item) => ({
@@ -287,7 +288,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
     <Menu
       ref={autocompleteRef}
       style={{
-        maxWidth: "450px",
+        width: "450px",
         maxHeight: "450px",
         overflow: "scroll",
         overflowX: "hidden",
@@ -320,6 +321,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
       }}
       ref={searchInputRef}
       id="autocomplete-search"
+      style={{ width: 500 }}
     />
   );
 
