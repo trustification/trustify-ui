@@ -10,12 +10,11 @@ import {
   DataList,
   DataListAction,
   DataListCell,
+  DataListContent,
   DataListItem,
   DataListItemCells,
   DataListItemRow,
-  Dropdown,
-  DropdownItem,
-  DropdownList,
+  DataListToggle,
   Flex,
   FlexItem,
   Icon,
@@ -71,10 +70,7 @@ import {
   forceRunImporter,
 } from "@app/client";
 import { SimplePagination } from "@app/components/SimplePagination";
-import {
-  type IActiveSort,
-  useLocalTableControls,
-} from "@app/hooks/table-controls";
+import { useLocalTableControls } from "@app/hooks/table-controls";
 
 import { ConditionalDataListBody } from "@app/components/DataListControls/ConditionalDataListBody";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
@@ -234,11 +230,10 @@ export const ImporterList: React.FC = () => {
     },
     hasActionsColumn: false,
     isSortEnabled: true,
-    sortableColumns: ["name", "type"],
+    sortableColumns: ["name"],
     initialSort: { columnKey: "name", direction: "asc" },
     getSortValues: (item) => ({
       name: item.importer.name,
-      type: item.importer.name,
     }),
     isPaginationEnabled: true,
     isExpansionEnabled: false,
@@ -305,21 +300,21 @@ export const ImporterList: React.FC = () => {
 
   const {
     currentPageItems,
-    numRenderedColumns,
     propHelpers: {
       toolbarProps,
       filterToolbarProps,
       paginationToolbarItemProps,
       paginationProps,
-      tableProps,
-      getThProps,
-      getTrProps,
-      getTdProps,
     },
-    expansionDerivedState: { isCellExpanded },
+    expansionDerivedState: { isCellExpanded, setCellExpanded },
+    expansionState: { expandedCells },
     sortableColumns,
     sortState: { activeSort, setActiveSort },
   } = tableControls;
+
+  // React.useEffect(() => {
+  //   console.log(expandedCells);
+  // }, [expandedCells]);
 
   // Dialog confirm config
   let confirmDialogProps: Pick<
@@ -417,7 +412,6 @@ export const ImporterList: React.FC = () => {
                         ref={toggleRef}
                         onClick={() => setIsSortByOpen(!isSortByOpen)}
                         isExpanded={isSortByOpen}
-                        // icon={<SortAmountDownIcon />}
                         style={
                           {
                             width: "200px",
@@ -431,13 +425,7 @@ export const ImporterList: React.FC = () => {
                   >
                     <SelectList>
                       {sortableColumns?.map((e) => (
-                        <SelectOption
-                          key={e}
-                          value={e}
-                          // onClick={() => {
-                          //   console.log(e);
-                          // }}
-                        >
+                        <SelectOption key={e} value={e}>
                           {e}
                         </SelectOption>
                       ))}
@@ -463,9 +451,8 @@ export const ImporterList: React.FC = () => {
               isLoading={isFetching}
               isError={!!fetchError}
               isNoData={importers.length === 0}
-              numRenderedColumns={numRenderedColumns}
             >
-              {currentPageItems?.map((item) => {
+              {currentPageItems?.map((item, rowIndex) => {
                 return (
                   <WatchImporterReport
                     key={item._ui_unique_id}
@@ -499,6 +486,12 @@ export const ImporterList: React.FC = () => {
                             </Icon>
                           );
                         }
+                      } else if (item.status === "scheduled") {
+                        mainIcon = (
+                          <Icon size="xl" status="info">
+                            <PendingIcon />
+                          </Icon>
+                        );
                       }
 
                       //
@@ -651,6 +644,17 @@ export const ImporterList: React.FC = () => {
                         >
                           <DataListItem id={item.importer.name}>
                             <DataListItemRow>
+                              <DataListToggle
+                                id={`toggle-${item.importer.name}`}
+                                aria-label={`toggle-${rowIndex}`}
+                                onClick={() => {
+                                  setCellExpanded({
+                                    item,
+                                    isExpanding: !isCellExpanded(item),
+                                  });
+                                }}
+                                isExpanded={isCellExpanded(item)}
+                              />
                               <DataListItemCells
                                 dataListCells={[
                                   <DataListCell key="icon" isIcon>
@@ -785,6 +789,16 @@ export const ImporterList: React.FC = () => {
                                 />
                               </DataListAction>
                             </DataListItemRow>
+                            <DataListContent
+                              aria-label={`expanded-area-${rowIndex}`}
+                              isHidden={!isCellExpanded(item)}
+                            >
+                              <p>
+                                Lorem ipsum dolor sit amet, consectetur
+                                adipisicing elit, sed do eiusmod tempor
+                                incididunt ut labore et dolore magna aliqua.
+                              </p>
+                            </DataListContent>
                           </DataListItem>
                         </LoadingWrapper>
                       );

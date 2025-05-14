@@ -1,13 +1,11 @@
 import type React from "react";
 
 import { Bullseye, Spinner } from "@patternfly/react-core";
-import { Tbody, Td, Tr } from "@patternfly/react-table";
 
 import { StateError } from "../StateError";
 import { StateNoData } from "../StateNoData";
 
 export interface IConditionalDataListBodyProps {
-  numRenderedColumns: number;
   isLoading?: boolean;
   isError?: boolean;
   isNoData?: boolean;
@@ -16,8 +14,9 @@ export interface IConditionalDataListBodyProps {
   children: React.ReactNode;
 }
 
-export const ConditionalDataListBody: React.FC<IConditionalDataListBodyProps> = ({
-  numRenderedColumns,
+export const ConditionalDataListBody: React.FC<
+  IConditionalDataListBodyProps
+> = ({
   isLoading = false,
   isError = false,
   isNoData = false,
@@ -26,6 +25,16 @@ export const ConditionalDataListBody: React.FC<IConditionalDataListBodyProps> = 
   children,
 }) => (
   <>
-    {children}
+    {isLoading ? (
+      <Bullseye>
+        <Spinner size="xl" />
+      </Bullseye>
+    ) : isError ? (
+      <Bullseye>{errorEmptyState || <StateError />}</Bullseye>
+    ) : isNoData ? (
+      <Bullseye>{noDataEmptyState || <StateNoData />}</Bullseye>
+    ) : (
+      children
+    )}
   </>
 );

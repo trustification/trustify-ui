@@ -35,9 +35,9 @@ export const ImporterDetailDrawer: React.FC<IImporterDetailDrawerProps> = ({
       onCloseClick={onCloseClick}
       focusKey={importer?.name}
       pageKey="importer-details"
+      defaultSize="700px"
       header={
         <Content>
-          <small>Name</small>
           <h2>{importer?.name}</h2>
         </Content>
       }
