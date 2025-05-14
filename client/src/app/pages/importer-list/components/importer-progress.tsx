@@ -2,10 +2,7 @@ import type React from "react";
 
 import dayjs from "dayjs";
 
-import {
-  Progress,
-  ProgressSize
-} from "@patternfly/react-core";
+import { Progress, ProgressSize } from "@patternfly/react-core";
 
 import type { Progress as ProgressModel } from "@app/client";
 
@@ -21,11 +18,7 @@ export const ImporterProgress: React.FC<ImporterProgressProps> = ({
   return (
     <Progress
       aria-label="Progress of Importer"
-      title={
-        timeRemaining
-          ? `Time remaining: ${dayjs.duration(timeRemaining).humanize()}`
-          : undefined
-      }
+      title={`Time remaining: ${timeRemaining ? dayjs.duration(timeRemaining).humanize() : "..."}`}
       value={value.current}
       min={0}
       max={value.total}

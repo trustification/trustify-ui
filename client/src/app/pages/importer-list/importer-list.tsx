@@ -4,6 +4,7 @@ import type { AxiosError } from "axios";
 import dayjs from "dayjs";
 
 import {
+  Bullseye,
   Button,
   ButtonVariant,
   Content,
@@ -30,7 +31,7 @@ import {
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
-  Tooltip,
+  Tooltip
 } from "@patternfly/react-core";
 
 import { ActionsColumn } from "@patternfly/react-table";
@@ -76,8 +77,10 @@ import { ConditionalDataListBody } from "@app/components/DataListControls/Condit
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useWithUiId } from "@app/utils/query-utils";
+import { ImporterAdditionalInfo } from "./components/importer-additional-info";
 import { ImporterDetailDrawer } from "./components/importer-detail-drawer";
 import { ImporterProgress } from "./components/importer-progress";
+import { ReportStatusMessage } from "./components/report-status-message";
 import { WatchImporterReport } from "./components/watch-importer-report";
 
 type ImporterCategory = "Advisory" | "SBOM" | "License";
@@ -236,8 +239,9 @@ export const ImporterList: React.FC = () => {
       name: item.importer.name,
     }),
     isPaginationEnabled: true,
-    isExpansionEnabled: false,
-    initialItemsPerPage: 20,
+    isExpansionEnabled: true,
+    expandableVariant: "single",
+    initialItemsPerPage: 10,
     isFilterEnabled: true,
     filterCategories: [
       {
@@ -307,14 +311,9 @@ export const ImporterList: React.FC = () => {
       paginationProps,
     },
     expansionDerivedState: { isCellExpanded, setCellExpanded },
-    expansionState: { expandedCells },
     sortableColumns,
     sortState: { activeSort, setActiveSort },
   } = tableControls;
-
-  // React.useEffect(() => {
-  //   console.log(expandedCells);
-  // }, [expandedCells]);
 
   // Dialog confirm config
   let confirmDialogProps: Pick<
@@ -468,24 +467,52 @@ export const ImporterList: React.FC = () => {
                       );
                       if (item.status === "running") {
                         mainIcon = (
-                          <Icon size="xl" status="info">
-                            <InProgressIcon />
-                          </Icon>
+                          <Flex direction={{ default: "column" }}>
+                            <FlexItem>
+                              <Icon size="xl" status="info">
+                                <InProgressIcon />
+                              </Icon>
+                            </FlexItem>
+                            <FlexItem>
+                              <Bullseye>...</Bullseye>
+                            </FlexItem>
+                          </Flex>
                         );
                       } else if (lastReport) {
-                        if (lastReport.error) {
-                          mainIcon = (
-                            <Icon size="xl" status="danger">
-                              <TimesCircleIcon />
-                            </Icon>
-                          );
-                        } else {
-                          mainIcon = (
-                            <Icon size="xl" status="success">
-                              <CheckCircleIcon />
-                            </Icon>
-                          );
-                        }
+                        mainIcon = (
+                          <ReportStatusMessage
+                            description={lastReport.error ?? ""}
+                            messages={lastReport.report?.messages ?? null}
+                          >
+                            {({ toggleLogModal }) => {
+                              return lastReport.error ? (
+                                <Button
+                                  isInline
+                                  variant="link"
+                                  onClick={toggleLogModal}
+                                >
+                                  <Flex direction={{ default: "column" }}>
+                                    <FlexItem>
+                                      <Icon size="xl" status="danger">
+                                        <TimesCircleIcon />
+                                      </Icon>
+                                    </FlexItem>
+                                    <FlexItem>Log</FlexItem>
+                                  </Flex>
+                                </Button>
+                              ) : (
+                                <Flex direction={{ default: "column" }}>
+                                  <FlexItem>
+                                    <Icon size="xl" status="success">
+                                      <CheckCircleIcon />
+                                    </Icon>
+                                  </FlexItem>
+                                  <FlexItem>OK</FlexItem>
+                                </Flex>
+                              );
+                            }}
+                          </ReportStatusMessage>
+                        );
                       } else if (item.status === "scheduled") {
                         mainIcon = (
                           <Icon size="xl" status="info">
@@ -642,7 +669,10 @@ export const ImporterList: React.FC = () => {
                             </DataListItem>
                           )}
                         >
-                          <DataListItem id={item.importer.name}>
+                          <DataListItem
+                            id={item.importer.name}
+                            isExpanded={isCellExpanded(item)}
+                          >
                             <DataListItemRow>
                               <DataListToggle
                                 id={`toggle-${item.importer.name}`}
@@ -793,11 +823,9 @@ export const ImporterList: React.FC = () => {
                               aria-label={`expanded-area-${rowIndex}`}
                               isHidden={!isCellExpanded(item)}
                             >
-                              <p>
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipisicing elit, sed do eiusmod tempor
-                                incididunt ut labore et dolore magna aliqua.
-                              </p>
+                              <ImporterAdditionalInfo
+                                importer={item.importer}
+                              />
                             </DataListContent>
                           </DataListItem>
                         </LoadingWrapper>

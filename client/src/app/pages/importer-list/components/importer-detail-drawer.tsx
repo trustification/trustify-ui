@@ -1,6 +1,6 @@
-import React from "react";
+import type React from "react";
 
-import { Content, Tab, TabTitleText, Tabs } from "@patternfly/react-core";
+import { Content } from "@patternfly/react-core";
 
 import type { Importer } from "@app/client";
 import {
@@ -8,7 +8,6 @@ import {
   PageDrawerContent,
 } from "@app/components/PageDrawerContext";
 
-import { ImporterAdditionalInfo } from "./importer-additional-info";
 import { ImporterExecutions } from "./importer-executions";
 
 export interface IImporterDetailDrawerProps
@@ -16,19 +15,10 @@ export interface IImporterDetailDrawerProps
   importer: Importer | null;
 }
 
-export enum TabKey {
-  Executions = 0,
-  AdditionalInfo = 1,
-}
-
 export const ImporterDetailDrawer: React.FC<IImporterDetailDrawerProps> = ({
   importer,
   onCloseClick,
 }) => {
-  const [activeTabKey, setActiveTabKey] = React.useState<TabKey>(
-    TabKey.Executions,
-  );
-
   return (
     <PageDrawerContent
       isExpanded={!!importer}
@@ -42,30 +32,7 @@ export const ImporterDetailDrawer: React.FC<IImporterDetailDrawerProps> = ({
         </Content>
       }
     >
-      <div>
-        <Tabs
-          activeKey={activeTabKey}
-          onSelect={(_event, tabKey) => setActiveTabKey(tabKey as TabKey)}
-        >
-          {!importer ? null : (
-            <Tab
-              eventKey={TabKey.Executions}
-              title={<TabTitleText>Executions</TabTitleText>}
-            >
-              <ImporterExecutions importer={importer} />
-            </Tab>
-          )}
-
-          {!importer ? null : (
-            <Tab
-              eventKey={TabKey.AdditionalInfo}
-              title={<TabTitleText>Additional info</TabTitleText>}
-            >
-              <ImporterAdditionalInfo importer={importer} />
-            </Tab>
-          )}
-        </Tabs>
-      </div>
+      <div>{importer && <ImporterExecutions importer={importer} />}</div>
     </PageDrawerContent>
   );
 };

@@ -11,7 +11,6 @@ import {
 
 import type { Importer } from "@app/client";
 
-import { kMaxLength } from "buffer";
 import { getConfiguration } from "../importer-list";
 
 interface IImporterAdditionalInfoProps {
