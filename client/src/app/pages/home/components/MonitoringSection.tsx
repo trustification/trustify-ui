@@ -92,7 +92,7 @@ export const MonitoringSection: React.FC = () => {
 
   return (
     <Card>
-      <CardTitle>Your dashboard</CardTitle>
+      <CardTitle>Dashboard</CardTitle>
       <CardBody>
         <Grid>
           <GridItem md={6}>
@@ -109,9 +109,9 @@ export const MonitoringSection: React.FC = () => {
               <Stack hasGutter>
                 <StackItem>
                   <Content>
-                    Below is a summary of Vulnerability status for your last 10
-                    ingested SBOMs. You can click on the SBOM name to be taken
-                    to their respective details page.
+                    Below is a summary of Vulnerability status for the last 10
+                    ingested SBOMs. To view the details, click on an SBOM name.
+                    You can also select up to 4 SBOMs to watch.
                   </Content>
                 </StackItem>
                 <StackItem>

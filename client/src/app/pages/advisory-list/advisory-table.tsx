@@ -57,7 +57,13 @@ export const AdvisoryTable: React.FC = () => {
             <TableHeaderContentWithControls {...tableControls}>
               <Th {...getThProps({ columnKey: "identifier" })} />
               <Th {...getThProps({ columnKey: "title" })} />
-              <Th {...getThProps({ columnKey: "severity" })} />
+              <Th
+                {...getThProps({ columnKey: "severity" })}
+                info={{
+                  tooltip:
+                    "The average CVSS score for all of the Vulnerabilities linked to this Advisory.",
+                }}
+              />
               <Th {...getThProps({ columnKey: "type" })} />
               <Th {...getThProps({ columnKey: "modified" })} />
               <Th {...getThProps({ columnKey: "vulnerabilities" })} />
