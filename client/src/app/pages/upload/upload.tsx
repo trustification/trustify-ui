@@ -5,6 +5,7 @@ import type { AxiosError, AxiosResponse } from "axios";
 import {
   Card,
   CardBody,
+  Content,
   PageSection,
   PageSectionVariants,
   Popover,
@@ -14,8 +15,6 @@ import {
   TabContentBody,
   TabTitleText,
   Tabs,
-  Text,
-  TextContent,
 } from "@patternfly/react-core";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
@@ -41,12 +40,12 @@ export const ImporterList: React.FC = () => {
 
   return (
     <>
-      <PageSection variant={PageSectionVariants.light}>
-        <TextContent>
-          <Text component="h1">Upload</Text>
-        </TextContent>
+      <PageSection hasBodyWrapper={false}>
+        <Content>
+          <Content component="h1">Upload</Content>
+        </Content>
       </PageSection>
-      <PageSection>
+      <PageSection hasBodyWrapper={false}>
         <Card>
           <CardBody>
             <Tabs defaultActiveKey={0}>

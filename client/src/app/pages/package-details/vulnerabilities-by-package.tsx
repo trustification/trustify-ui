@@ -200,7 +200,6 @@ export const VulnerabilitiesByPackage: React.FC<
       <SimplePagination
         idPrefix="vulnerability-table"
         isTop={false}
-        isCompact
         paginationProps={paginationProps}
       />
     </>

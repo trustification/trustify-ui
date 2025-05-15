@@ -184,6 +184,9 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                                     </Link>
                                   </ListItem>
                                 ))}
+                                {item.cpe.map((item) => (
+                                  <ListItem key={item}>{item}</ListItem>
+                                ))}
                               </List>
                             </DescriptionListDescription>
                           </DescriptionListGroup>
@@ -200,7 +203,6 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
       <SimplePagination
         idPrefix="package-table"
         isTop={false}
-        isCompact
         paginationProps={paginationProps}
       />
     </>

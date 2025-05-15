@@ -1,6 +1,7 @@
 import React from "react";
 
 import {
+  Content,
   Dropdown,
   DropdownItem,
   DropdownList,
@@ -18,8 +19,6 @@ import {
   TabContent,
   TabTitleText,
   Tabs,
-  Text,
-  TextContent,
 } from "@patternfly/react-core";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
@@ -65,14 +64,14 @@ export const SbomDetails: React.FC = () => {
 
   return (
     <>
-      <PageSection variant="light">
+      <PageSection hasBodyWrapper={false}>
         <Split>
           <SplitItem isFilled>
             <Flex>
               <FlexItem spacer={{ default: "spacerSm" }}>
-                <TextContent>
-                  <Text component="h1">{sbom?.name ?? sbomId ?? ""}</Text>
-                </TextContent>
+                <Content>
+                  <Content component="h1">{sbom?.name ?? sbomId ?? ""}</Content>
+                </Content>
               </FlexItem>
               <FlexItem>
                 {sbom?.labels.type && (
@@ -82,53 +81,55 @@ export const SbomDetails: React.FC = () => {
             </Flex>
           </SplitItem>
           <SplitItem>
-            <Dropdown
-              isOpen={isActionsDropdownOpen}
-              onSelect={() => setIsActionsDropdownOpen(false)}
-              onOpenChange={(isOpen) => setIsActionsDropdownOpen(isOpen)}
-              popperProps={{ position: "right" }}
-              toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
-                <MenuToggle
-                  ref={toggleRef}
-                  onClick={handleActionsDropdownToggle}
-                  isExpanded={isActionsDropdownOpen}
-                >
-                  Actions
-                </MenuToggle>
-              )}
-              ouiaId="BasicDropdown"
-              shouldFocusToggleOnSelect
-            >
-              <DropdownList>
-                <DropdownItem
-                  key="sbom"
-                  onClick={() => {
-                    if (sbomId) {
-                      downloadSBOM(
-                        sbomId,
-                        sbom?.name ? `${sbom?.name}.json` : `${sbomId}.json`,
-                      );
-                    }
-                  }}
-                >
-                  Download SBOM
-                </DropdownItem>
-                <DropdownItem
-                  key="license"
-                  onClick={() => {
-                    if (sbomId) {
-                      downloadSBOMLicenses(sbomId);
-                    }
-                  }}
-                >
-                  Download License Report
-                </DropdownItem>
-              </DropdownList>
-            </Dropdown>
+            {sbom && (
+              <Dropdown
+                isOpen={isActionsDropdownOpen}
+                onSelect={() => setIsActionsDropdownOpen(false)}
+                onOpenChange={(isOpen) => setIsActionsDropdownOpen(isOpen)}
+                popperProps={{ position: "right" }}
+                toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+                  <MenuToggle
+                    ref={toggleRef}
+                    onClick={handleActionsDropdownToggle}
+                    isExpanded={isActionsDropdownOpen}
+                  >
+                    Actions
+                  </MenuToggle>
+                )}
+                ouiaId="BasicDropdown"
+                shouldFocusToggleOnSelect
+              >
+                <DropdownList>
+                  <DropdownItem
+                    key="sbom"
+                    onClick={() => {
+                      if (sbomId) {
+                        downloadSBOM(
+                          sbomId,
+                          sbom?.name ? `${sbom?.name}.json` : `${sbomId}.json`,
+                        );
+                      }
+                    }}
+                  >
+                    Download SBOM
+                  </DropdownItem>
+                  <DropdownItem
+                    key="license"
+                    onClick={() => {
+                      if (sbomId) {
+                        downloadSBOMLicenses(sbomId);
+                      }
+                    }}
+                  >
+                    Download License Report
+                  </DropdownItem>
+                </DropdownList>
+              </Dropdown>
+            )}
           </SplitItem>
         </Split>
       </PageSection>
-      <PageSection type="nav">
+      <PageSection hasBodyWrapper={false}>
         <Tabs
           mountOnEnter
           activeKey={activeTabKey}
@@ -172,7 +173,7 @@ export const SbomDetails: React.FC = () => {
           />
         </Tabs>
       </PageSection>
-      <PageSection>
+      <PageSection hasBodyWrapper={false}>
         <TabContent
           eventKey={0}
           id="refTabInfoSection"

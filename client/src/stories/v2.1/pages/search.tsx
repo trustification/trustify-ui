@@ -46,7 +46,7 @@ import {
   ChartStack,
   ChartThemeColor,
   ChartTooltip,
-} from "@patternfly/react-charts";
+} from "@patternfly/react-charts/victory";
 import { right } from "@patternfly/react-core/dist/esm/helpers/Popper/thirdparty/popper-core";
 import {
   BoxIcon,
@@ -321,7 +321,7 @@ export const SearchPage: React.FC = () => {
           <Split>
             <SplitItem isFilled>{item.name}</SplitItem>
             <SplitItem>
-              <SeverityShieldAndText value="medium" hideLabel />
+              <SeverityShieldAndText value="medium" score={5} />
             </SplitItem>
           </Split>
         </CardTitle>

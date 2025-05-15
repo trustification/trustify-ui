@@ -307,7 +307,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
                 bodyContent="Whether or not the Importer is enabled to be executed continuously"
                 className="popover"
               >
-                <span className={`${spacing.mlSm} pf-v5-c-icon pf-m-info`}>
+                <span className={`${spacing.mlSm} pf-v6-c-icon pf-m-info`}>
                   <QuestionCircleIcon />
                 </span>
               </Popover>
@@ -413,7 +413,7 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
                   bodyContent="Enables v3 signatures"
                   className="popover"
                 >
-                  <span className={`${spacing.mlSm} pf-v5-c-icon pf-m-info`}>
+                  <span className={`${spacing.mlSm} pf-v6-c-icon pf-m-info`}>
                     <QuestionCircleIcon />
                   </span>
                 </Popover>
@@ -447,12 +447,13 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
                       </SplitItem>
                       <SplitItem>
                         <Button
+                          icon={<MinusIcon />}
                           variant="tertiary"
                           onClick={() => {
                             removeKeys(index);
                           }}
                         >
-                          <MinusIcon /> Remove
+                          Remove
                         </Button>
                       </SplitItem>
                     </Split>
@@ -461,10 +462,11 @@ export const ImporterForm: React.FC<IImporterFormProps> = ({
               })}
               <StackItem>
                 <Button
+                  icon={<PlusCircleIcon />}
                   variant="tertiary"
                   onClick={() => appendKeys({ value: "" })}
                 >
-                  <PlusCircleIcon /> Add Key
+                  Add Key
                 </Button>
               </StackItem>
             </Stack>

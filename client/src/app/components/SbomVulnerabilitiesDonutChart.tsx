@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ChartDonut } from "@patternfly/react-charts";
+import { ChartDonut } from "@patternfly/react-charts/victory";
 
 import { compareBySeverityFn, severityList } from "@app/api/model-utils";
 import type { ExtendedSeverity } from "@app/api/models";
@@ -26,7 +26,8 @@ export const SbomVulnerabilitiesDonutChart: React.FC<
           color: severityProps.color.value,
         };
       })
-      .sort(compareBySeverityFn((item) => item.severity));
+      .sort(compareBySeverityFn((item) => item.severity))
+      .reverse();
   }, [vulnerabilitiesSummary]);
 
   return (

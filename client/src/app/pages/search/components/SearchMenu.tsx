@@ -29,14 +29,15 @@ export interface IEntity {
   navLink: string;
   type: string;
   typeColor:
-    | "purple"
-    | "orange"
     | "blue"
-    | "cyan"
+    | "teal"
     | "green"
+    | "orange"
+    | "purple"
     | "red"
+    | "orangered"
     | "grey"
-    | "gold"
+    | "yellow"
     | undefined;
 }
 
@@ -96,13 +97,13 @@ function useAllEntities(filterText: string, disableSearch: boolean) {
     title: item.purl,
     navLink: `/packages/${item.uuid}`,
     type: "Package",
-    typeColor: "cyan",
+    typeColor: "teal",
   }));
 
   const transformedSboms: IEntity[] = sboms.map((item) => ({
     id: `sbom-${item.id}`,
     title: item.name,
-    description: item.authors.join(", "),
+    description: item.suppliers.join(", "),
     navLink: `/sboms/${item.id}`,
     type: "SBOM",
     typeColor: "purple",
@@ -163,13 +164,16 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
   // Search value initial value
   const { tableControls: sbomTableControls } =
     React.useContext(SbomSearchContext);
-  const initialSearchValue =
-    sbomTableControls.filterState.filterValues[FILTER_TEXT_CATEGORY_KEY]?.[0] ||
-    "";
 
   // Search value
-  const [searchValue, setSearchValue] = React.useState(initialSearchValue);
+  const [searchValue, setSearchValue] = React.useState("");
   const [isSearchValueDirty, setIsSearchValueDirty] = React.useState(false);
+
+  React.useEffect(() => {
+    const searchValueFromTableControls =
+      sbomTableControls.filterState.filterValues[FILTER_TEXT_CATEGORY_KEY]?.[0];
+    setSearchValue(searchValueFromTableControls ?? "");
+  }, [sbomTableControls.filterState]);
 
   // Debounce Search value
   const [debouncedSearchValue, setDebouncedSearchValue] = useDebounceValue(
@@ -284,7 +288,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
     <Menu
       ref={autocompleteRef}
       style={{
-        maxWidth: "450px",
+        width: "450px",
         maxHeight: "450px",
         overflow: "scroll",
         overflowX: "hidden",
@@ -317,6 +321,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
       }}
       ref={searchInputRef}
       id="autocomplete-search"
+      style={{ width: 500 }}
     />
   );
 

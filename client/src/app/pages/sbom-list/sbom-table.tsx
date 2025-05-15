@@ -99,7 +99,7 @@ export const SbomTable: React.FC = () => {
                       modifier="truncate"
                       {...getTdProps({ columnKey: "supplier" })}
                     >
-                      {item.authors.join(", ")}
+                      {item.suppliers.join(", ")}
                     </Td>
                     <Td
                       width={10}
@@ -145,7 +145,6 @@ export const SbomTable: React.FC = () => {
       <SimplePagination
         idPrefix="sbom-table"
         isTop={false}
-        isCompact
         paginationProps={paginationProps}
       />
     </>

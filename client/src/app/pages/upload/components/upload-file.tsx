@@ -10,6 +10,8 @@ import {
   List,
   ListItem,
   Modal,
+  ModalBody,
+  ModalHeader,
   MultipleFileUpload,
   MultipleFileUploadMain,
   MultipleFileUploadStatus,
@@ -93,7 +95,7 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
         onFileDrop={handleFileDrop}
         dropzoneProps={{
           accept: {
-            "application/xml": [".json", ".bz2", ".gz"],
+            "application/xml": [".json", ".bz2"],
           },
           onDropRejected: handleDropRejected,
           useFsAccessApi: false, // Required to make playwright work
@@ -103,7 +105,7 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
           titleIcon={<UploadIcon />}
           titleText="Drag and drop files here"
           titleTextSeparator="or"
-          infoText="Accepted file types: .json, .bz2, .gz"
+          infoText="Accepted file types: .json, .bz2"
         />
         {showStatus && (
           <MultipleFileUploadStatus
@@ -158,18 +160,18 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
 
         <Modal
           isOpen={rejectedFiles.length > 0}
-          title="Unsupported files"
-          titleIconVariant="warning"
-          showClose
           aria-label="unsupported file upload attempted"
           onClose={() => setRejectedFiles([])}
           variant="small"
         >
-          <List>
-            {rejectedFiles.map((e) => (
-              <ListItem key={e.file.name}>{e.file.name}</ListItem>
-            ))}
-          </List>
+          <ModalHeader title="Unsupported files" titleIconVariant="warning" />
+          <ModalBody>
+            <List>
+              {rejectedFiles.map((e) => (
+                <ListItem key={e.file.name}>{e.file.name}</ListItem>
+              ))}
+            </List>
+          </ModalBody>
         </Modal>
       </MultipleFileUpload>
     </>

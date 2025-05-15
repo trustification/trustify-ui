@@ -5,7 +5,7 @@ info:
   license:
     name: Apache License, Version 2.0
     identifier: Apache-2.0
-  version: 0.2.14
+  version: 0.2.18
 paths:
   /.well-known/trustify:
     get:
@@ -33,11 +33,75 @@ paths:
       parameters:
       - name: q
         in: query
+        description: |
+          EBNF grammar for the _q_ parameter:
+          ```text
+              q = ( values | filter ) { '&' q }
+              values = value { '|', values }
+              filter = field, operator, values
+              operator = "=" | "!=" | "~" | "!~" | ">=" | ">" | "<=" | "<"
+              value = (* any text but escape special characters with '\' *)
+              field = (* must match an entity attribute name *)
+          ```
+          Any values in a _q_ will result in a case-insensitive "full
+          text search", effectively producing an OR clause of LIKE
+          clauses for every string-ish field in the resource being
+          queried.
+
+          Examples:
+          - `foo` - any field containing 'foo'
+          - `foo|bar` - any field containing either 'foo' OR 'bar'
+          - `foo&bar` - some field contains 'foo' AND some field contains 'bar'
+
+          A _filter_ may also be used to constrain the results. The
+          filter's field name must correspond to one of the resource's
+          attributes. If it doesn't, an error will be returned
+          containing a list of the valid fields for that resource.
+
+          The value 'null' is treated specially for [Not]Equal filters:
+          it returns resources on which the field isn't set. Use the
+          LIKE operator, `~`, to match a literal "null" string. Omit the
+          value to match an empty string.
+
+          Examples:
+          - `name=foo` - entity's _name_ matches 'foo' exactly
+          - `name~foo` - entity's _name_ contains 'foo', case-insensitive
+          - `name~foo|bar` - entity's _name_ contains either 'foo' OR 'bar', case-insensitive
+          - `name=` - entity's _name_ is the empty string, ''
+          - `name=null` - entity's _name_ isn't set
+          - `published>3 days ago` - date values can be "human time"
+
+          Multiple full text searches and/or filters should be
+          '&'-delimited -- they are logically AND'd together.
+
+          - `red hat|fedora&labels:type=cve|osv&published>last wednesday 17:00`
+
+          Fields corresponding to JSON objects in the database may use a
+          ':' to delimit the column name and the object key,
+          e.g. `purl:qualifiers:type=pom`
+
+          Any operator or special character, e.g. '|', '&', within a
+          value should be escaped by prefixing it with a backslash.
         required: false
         schema:
           type: string
       - name: sort
         in: query
+        description: |
+          EBNF grammar for the _sort_ parameter:
+          ```text
+              sort = field [ ':', order ] { ',' sort }
+              order = ( "asc" | "desc" )
+              field = (* must match the name of entity's attributes *)
+          ```
+          The optional _order_ should be one of "asc" or "desc". If
+          omitted, the order defaults to "asc".
+
+          Each _field_ name must correspond to one of the columns of the
+          table holding the entities being queried. Those corresponding
+          to JSON objects in the database may use a ':' to delimit the
+          column name and the object key,
+          e.g. `purl:qualifiers:type:desc`
         required: false
         schema:
           type: string
@@ -101,6 +165,24 @@ paths:
         required: true
         schema:
           $ref: '#/components/schemas/Labels'
+      - name: format
+        in: query
+        description: The format of the uploaded document.
+        required: false
+        schema:
+          type: string
+          enum:
+          - oSV
+          - cSAF
+          - cVE
+          - sPDX
+          - cycloneDX
+          - clearlyDefinedCuration
+          - clearlyDefined
+          - cweCatalog
+          - advisory
+          - sBOM
+          - unknown
       requestBody:
         content:
           application/json:
@@ -153,7 +235,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Labels'
+              $ref: '#/components/schemas/Update'
         required: true
       responses:
         '204':
@@ -232,11 +314,75 @@ paths:
       parameters:
       - name: q
         in: query
+        description: |
+          EBNF grammar for the _q_ parameter:
+          ```text
+              q = ( values | filter ) { '&' q }
+              values = value { '|', values }
+              filter = field, operator, values
+              operator = "=" | "!=" | "~" | "!~" | ">=" | ">" | "<=" | "<"
+              value = (* any text but escape special characters with '\' *)
+              field = (* must match an entity attribute name *)
+          ```
+          Any values in a _q_ will result in a case-insensitive "full
+          text search", effectively producing an OR clause of LIKE
+          clauses for every string-ish field in the resource being
+          queried.
+
+          Examples:
+          - `foo` - any field containing 'foo'
+          - `foo|bar` - any field containing either 'foo' OR 'bar'
+          - `foo&bar` - some field contains 'foo' AND some field contains 'bar'
+
+          A _filter_ may also be used to constrain the results. The
+          filter's field name must correspond to one of the resource's
+          attributes. If it doesn't, an error will be returned
+          containing a list of the valid fields for that resource.
+
+          The value 'null' is treated specially for [Not]Equal filters:
+          it returns resources on which the field isn't set. Use the
+          LIKE operator, `~`, to match a literal "null" string. Omit the
+          value to match an empty string.
+
+          Examples:
+          - `name=foo` - entity's _name_ matches 'foo' exactly
+          - `name~foo` - entity's _name_ contains 'foo', case-insensitive
+          - `name~foo|bar` - entity's _name_ contains either 'foo' OR 'bar', case-insensitive
+          - `name=` - entity's _name_ is the empty string, ''
+          - `name=null` - entity's _name_ isn't set
+          - `published>3 days ago` - date values can be "human time"
+
+          Multiple full text searches and/or filters should be
+          '&'-delimited -- they are logically AND'd together.
+
+          - `red hat|fedora&labels:type=cve|osv&published>last wednesday 17:00`
+
+          Fields corresponding to JSON objects in the database may use a
+          ':' to delimit the column name and the object key,
+          e.g. `purl:qualifiers:type=pom`
+
+          Any operator or special character, e.g. '|', '&', within a
+          value should be escaped by prefixing it with a backslash.
         required: false
         schema:
           type: string
       - name: sort
         in: query
+        description: |
+          EBNF grammar for the _sort_ parameter:
+          ```text
+              sort = field [ ':', order ] { ',' sort }
+              order = ( "asc" | "desc" )
+              field = (* must match the name of entity's attributes *)
+          ```
+          The optional _order_ should be one of "asc" or "desc". If
+          omitted, the order defaults to "asc".
+
+          Each _field_ name must correspond to one of the columns of the
+          table holding the entities being queried. Those corresponding
+          to JSON objects in the database may use a ':' to delimit the
+          column name and the object key,
+          e.g. `purl:qualifiers:type:desc`
         required: false
         schema:
           type: string
@@ -320,11 +466,75 @@ paths:
           type: string
       - name: q
         in: path
+        description: |
+          EBNF grammar for the _q_ parameter:
+          ```text
+              q = ( values | filter ) { '&' q }
+              values = value { '|', values }
+              filter = field, operator, values
+              operator = "=" | "!=" | "~" | "!~" | ">=" | ">" | "<=" | "<"
+              value = (* any text but escape special characters with '\' *)
+              field = (* must match an entity attribute name *)
+          ```
+          Any values in a _q_ will result in a case-insensitive "full
+          text search", effectively producing an OR clause of LIKE
+          clauses for every string-ish field in the resource being
+          queried.
+
+          Examples:
+          - `foo` - any field containing 'foo'
+          - `foo|bar` - any field containing either 'foo' OR 'bar'
+          - `foo&bar` - some field contains 'foo' AND some field contains 'bar'
+
+          A _filter_ may also be used to constrain the results. The
+          filter's field name must correspond to one of the resource's
+          attributes. If it doesn't, an error will be returned
+          containing a list of the valid fields for that resource.
+
+          The value 'null' is treated specially for [Not]Equal filters:
+          it returns resources on which the field isn't set. Use the
+          LIKE operator, `~`, to match a literal "null" string. Omit the
+          value to match an empty string.
+
+          Examples:
+          - `name=foo` - entity's _name_ matches 'foo' exactly
+          - `name~foo` - entity's _name_ contains 'foo', case-insensitive
+          - `name~foo|bar` - entity's _name_ contains either 'foo' OR 'bar', case-insensitive
+          - `name=` - entity's _name_ is the empty string, ''
+          - `name=null` - entity's _name_ isn't set
+          - `published>3 days ago` - date values can be "human time"
+
+          Multiple full text searches and/or filters should be
+          '&'-delimited -- they are logically AND'd together.
+
+          - `red hat|fedora&labels:type=cve|osv&published>last wednesday 17:00`
+
+          Fields corresponding to JSON objects in the database may use a
+          ':' to delimit the column name and the object key,
+          e.g. `purl:qualifiers:type=pom`
+
+          Any operator or special character, e.g. '|', '&', within a
+          value should be escaped by prefixing it with a backslash.
         required: true
         schema:
           type: string
       - name: sort
         in: path
+        description: |
+          EBNF grammar for the _sort_ parameter:
+          ```text
+              sort = field [ ':', order ] { ',' sort }
+              order = ( "asc" | "desc" )
+              field = (* must match the name of entity's attributes *)
+          ```
+          The optional _order_ should be one of "asc" or "desc". If
+          omitted, the order defaults to "asc".
+
+          Each _field_ name must correspond to one of the columns of the
+          table holding the entities being queried. Those corresponding
+          to JSON objects in the database may use a ':' to delimit the
+          column name and the object key,
+          e.g. `purl:qualifiers:type:desc`
         required: true
         schema:
           type: string
@@ -385,6 +595,304 @@ paths:
       responses:
         '200':
           description: Retrieved component(s) located by name, pURL, or CPE
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResults_Node'
+        '401':
+          description: The user did not provide valid authentication credentials
+        '403':
+          description: The user lacks the required permission
+  /api/v2/analysis/latest/component:
+    get:
+      tags:
+      - analysis
+      summary: Retrieve latest SBOM components (packages) by a complex search.
+      operationId: searchLatestComponent
+      parameters:
+      - name: q
+        in: query
+        description: |
+          EBNF grammar for the _q_ parameter:
+          ```text
+              q = ( values | filter ) { '&' q }
+              values = value { '|', values }
+              filter = field, operator, values
+              operator = "=" | "!=" | "~" | "!~" | ">=" | ">" | "<=" | "<"
+              value = (* any text but escape special characters with '\' *)
+              field = (* must match an entity attribute name *)
+          ```
+          Any values in a _q_ will result in a case-insensitive "full
+          text search", effectively producing an OR clause of LIKE
+          clauses for every string-ish field in the resource being
+          queried.
+
+          Examples:
+          - `foo` - any field containing 'foo'
+          - `foo|bar` - any field containing either 'foo' OR 'bar'
+          - `foo&bar` - some field contains 'foo' AND some field contains 'bar'
+
+          A _filter_ may also be used to constrain the results. The
+          filter's field name must correspond to one of the resource's
+          attributes. If it doesn't, an error will be returned
+          containing a list of the valid fields for that resource.
+
+          The value 'null' is treated specially for [Not]Equal filters:
+          it returns resources on which the field isn't set. Use the
+          LIKE operator, `~`, to match a literal "null" string. Omit the
+          value to match an empty string.
+
+          Examples:
+          - `name=foo` - entity's _name_ matches 'foo' exactly
+          - `name~foo` - entity's _name_ contains 'foo', case-insensitive
+          - `name~foo|bar` - entity's _name_ contains either 'foo' OR 'bar', case-insensitive
+          - `name=` - entity's _name_ is the empty string, ''
+          - `name=null` - entity's _name_ isn't set
+          - `published>3 days ago` - date values can be "human time"
+
+          Multiple full text searches and/or filters should be
+          '&'-delimited -- they are logically AND'd together.
+
+          - `red hat|fedora&labels:type=cve|osv&published>last wednesday 17:00`
+
+          Fields corresponding to JSON objects in the database may use a
+          ':' to delimit the column name and the object key,
+          e.g. `purl:qualifiers:type=pom`
+
+          Any operator or special character, e.g. '|', '&', within a
+          value should be escaped by prefixing it with a backslash.
+        required: false
+        schema:
+          type: string
+      - name: sort
+        in: query
+        description: |
+          EBNF grammar for the _sort_ parameter:
+          ```text
+              sort = field [ ':', order ] { ',' sort }
+              order = ( "asc" | "desc" )
+              field = (* must match the name of entity's attributes *)
+          ```
+          The optional _order_ should be one of "asc" or "desc". If
+          omitted, the order defaults to "asc".
+
+          Each _field_ name must correspond to one of the columns of the
+          table holding the entities being queried. Those corresponding
+          to JSON objects in the database may use a ':' to delimit the
+          column name and the object key,
+          e.g. `purl:qualifiers:type:desc`
+        required: false
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: |-
+          The first item to return, skipping all that come before it.
+
+          NOTE: The order of items is defined by the API being called.
+        required: false
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+      - name: limit
+        in: query
+        description: |-
+          The maximum number of entries to return.
+
+          Zero means: no limit
+        required: false
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+      - name: ancestors
+        in: query
+        description: |-
+          The level of ancestors to return.
+
+          Zero, the default, meaning none.
+        required: false
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+      - name: descendants
+        in: query
+        description: |-
+          The level of descendants to return.
+
+          Zero, the default, meaning none.
+        required: false
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+      - name: relationships
+        in: query
+        description: |-
+          A set of relationships to filter for, deserialized from a
+          comma-delimited string
+
+          An empty set, the default, meaning all relationships.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Retrieved latest component(s) located by search
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResults_Node'
+        '401':
+          description: The user did not provide valid authentication credentials
+        '403':
+          description: The user lacks the required permission
+  /api/v2/analysis/latest/component/{key}:
+    get:
+      tags:
+      - analysis
+      summary: Retrieve SBOM components (packages) by name, Package URL, or CPE.
+      operationId: getLatestComponent
+      parameters:
+      - name: key
+        in: path
+        description: provide component name, URL-encoded pURL, or CPE itself
+        required: true
+        schema:
+          type: string
+      - name: q
+        in: path
+        description: |
+          EBNF grammar for the _q_ parameter:
+          ```text
+              q = ( values | filter ) { '&' q }
+              values = value { '|', values }
+              filter = field, operator, values
+              operator = "=" | "!=" | "~" | "!~" | ">=" | ">" | "<=" | "<"
+              value = (* any text but escape special characters with '\' *)
+              field = (* must match an entity attribute name *)
+          ```
+          Any values in a _q_ will result in a case-insensitive "full
+          text search", effectively producing an OR clause of LIKE
+          clauses for every string-ish field in the resource being
+          queried.
+
+          Examples:
+          - `foo` - any field containing 'foo'
+          - `foo|bar` - any field containing either 'foo' OR 'bar'
+          - `foo&bar` - some field contains 'foo' AND some field contains 'bar'
+
+          A _filter_ may also be used to constrain the results. The
+          filter's field name must correspond to one of the resource's
+          attributes. If it doesn't, an error will be returned
+          containing a list of the valid fields for that resource.
+
+          The value 'null' is treated specially for [Not]Equal filters:
+          it returns resources on which the field isn't set. Use the
+          LIKE operator, `~`, to match a literal "null" string. Omit the
+          value to match an empty string.
+
+          Examples:
+          - `name=foo` - entity's _name_ matches 'foo' exactly
+          - `name~foo` - entity's _name_ contains 'foo', case-insensitive
+          - `name~foo|bar` - entity's _name_ contains either 'foo' OR 'bar', case-insensitive
+          - `name=` - entity's _name_ is the empty string, ''
+          - `name=null` - entity's _name_ isn't set
+          - `published>3 days ago` - date values can be "human time"
+
+          Multiple full text searches and/or filters should be
+          '&'-delimited -- they are logically AND'd together.
+
+          - `red hat|fedora&labels:type=cve|osv&published>last wednesday 17:00`
+
+          Fields corresponding to JSON objects in the database may use a
+          ':' to delimit the column name and the object key,
+          e.g. `purl:qualifiers:type=pom`
+
+          Any operator or special character, e.g. '|', '&', within a
+          value should be escaped by prefixing it with a backslash.
+        required: true
+        schema:
+          type: string
+      - name: sort
+        in: path
+        description: |
+          EBNF grammar for the _sort_ parameter:
+          ```text
+              sort = field [ ':', order ] { ',' sort }
+              order = ( "asc" | "desc" )
+              field = (* must match the name of entity's attributes *)
+          ```
+          The optional _order_ should be one of "asc" or "desc". If
+          omitted, the order defaults to "asc".
+
+          Each _field_ name must correspond to one of the columns of the
+          table holding the entities being queried. Those corresponding
+          to JSON objects in the database may use a ':' to delimit the
+          column name and the object key,
+          e.g. `purl:qualifiers:type:desc`
+        required: true
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: |-
+          The first item to return, skipping all that come before it.
+
+          NOTE: The order of items is defined by the API being called.
+        required: false
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+      - name: limit
+        in: query
+        description: |-
+          The maximum number of entries to return.
+
+          Zero means: no limit
+        required: false
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+      - name: ancestors
+        in: query
+        description: |-
+          The level of ancestors to return.
+
+          Zero, the default, meaning none.
+        required: false
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+      - name: descendants
+        in: query
+        description: |-
+          The level of descendants to return.
+
+          Zero, the default, meaning none.
+        required: false
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+      - name: relationships
+        in: query
+        description: |-
+          A set of relationships to filter for, deserialized from a
+          comma-delimited string
+
+          An empty set, the default, meaning all relationships.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Retrieved latest component(s) located by name, pURL, or CPE
           content:
             application/json:
               schema:
@@ -723,11 +1231,75 @@ paths:
       parameters:
       - name: q
         in: query
+        description: |
+          EBNF grammar for the _q_ parameter:
+          ```text
+              q = ( values | filter ) { '&' q }
+              values = value { '|', values }
+              filter = field, operator, values
+              operator = "=" | "!=" | "~" | "!~" | ">=" | ">" | "<=" | "<"
+              value = (* any text but escape special characters with '\' *)
+              field = (* must match an entity attribute name *)
+          ```
+          Any values in a _q_ will result in a case-insensitive "full
+          text search", effectively producing an OR clause of LIKE
+          clauses for every string-ish field in the resource being
+          queried.
+
+          Examples:
+          - `foo` - any field containing 'foo'
+          - `foo|bar` - any field containing either 'foo' OR 'bar'
+          - `foo&bar` - some field contains 'foo' AND some field contains 'bar'
+
+          A _filter_ may also be used to constrain the results. The
+          filter's field name must correspond to one of the resource's
+          attributes. If it doesn't, an error will be returned
+          containing a list of the valid fields for that resource.
+
+          The value 'null' is treated specially for [Not]Equal filters:
+          it returns resources on which the field isn't set. Use the
+          LIKE operator, `~`, to match a literal "null" string. Omit the
+          value to match an empty string.
+
+          Examples:
+          - `name=foo` - entity's _name_ matches 'foo' exactly
+          - `name~foo` - entity's _name_ contains 'foo', case-insensitive
+          - `name~foo|bar` - entity's _name_ contains either 'foo' OR 'bar', case-insensitive
+          - `name=` - entity's _name_ is the empty string, ''
+          - `name=null` - entity's _name_ isn't set
+          - `published>3 days ago` - date values can be "human time"
+
+          Multiple full text searches and/or filters should be
+          '&'-delimited -- they are logically AND'd together.
+
+          - `red hat|fedora&labels:type=cve|osv&published>last wednesday 17:00`
+
+          Fields corresponding to JSON objects in the database may use a
+          ':' to delimit the column name and the object key,
+          e.g. `purl:qualifiers:type=pom`
+
+          Any operator or special character, e.g. '|', '&', within a
+          value should be escaped by prefixing it with a backslash.
         required: false
         schema:
           type: string
       - name: sort
         in: query
+        description: |
+          EBNF grammar for the _sort_ parameter:
+          ```text
+              sort = field [ ':', order ] { ',' sort }
+              order = ( "asc" | "desc" )
+              field = (* must match the name of entity's attributes *)
+          ```
+          The optional _order_ should be one of "asc" or "desc". If
+          omitted, the order defaults to "asc".
+
+          Each _field_ name must correspond to one of the columns of the
+          table holding the entities being queried. Those corresponding
+          to JSON objects in the database may use a ':' to delimit the
+          column name and the object key,
+          e.g. `purl:qualifiers:type:desc`
         required: false
         schema:
           type: string
@@ -788,11 +1360,75 @@ paths:
       parameters:
       - name: q
         in: query
+        description: |
+          EBNF grammar for the _q_ parameter:
+          ```text
+              q = ( values | filter ) { '&' q }
+              values = value { '|', values }
+              filter = field, operator, values
+              operator = "=" | "!=" | "~" | "!~" | ">=" | ">" | "<=" | "<"
+              value = (* any text but escape special characters with '\' *)
+              field = (* must match an entity attribute name *)
+          ```
+          Any values in a _q_ will result in a case-insensitive "full
+          text search", effectively producing an OR clause of LIKE
+          clauses for every string-ish field in the resource being
+          queried.
+
+          Examples:
+          - `foo` - any field containing 'foo'
+          - `foo|bar` - any field containing either 'foo' OR 'bar'
+          - `foo&bar` - some field contains 'foo' AND some field contains 'bar'
+
+          A _filter_ may also be used to constrain the results. The
+          filter's field name must correspond to one of the resource's
+          attributes. If it doesn't, an error will be returned
+          containing a list of the valid fields for that resource.
+
+          The value 'null' is treated specially for [Not]Equal filters:
+          it returns resources on which the field isn't set. Use the
+          LIKE operator, `~`, to match a literal "null" string. Omit the
+          value to match an empty string.
+
+          Examples:
+          - `name=foo` - entity's _name_ matches 'foo' exactly
+          - `name~foo` - entity's _name_ contains 'foo', case-insensitive
+          - `name~foo|bar` - entity's _name_ contains either 'foo' OR 'bar', case-insensitive
+          - `name=` - entity's _name_ is the empty string, ''
+          - `name=null` - entity's _name_ isn't set
+          - `published>3 days ago` - date values can be "human time"
+
+          Multiple full text searches and/or filters should be
+          '&'-delimited -- they are logically AND'd together.
+
+          - `red hat|fedora&labels:type=cve|osv&published>last wednesday 17:00`
+
+          Fields corresponding to JSON objects in the database may use a
+          ':' to delimit the column name and the object key,
+          e.g. `purl:qualifiers:type=pom`
+
+          Any operator or special character, e.g. '|', '&', within a
+          value should be escaped by prefixing it with a backslash.
         required: false
         schema:
           type: string
       - name: sort
         in: query
+        description: |
+          EBNF grammar for the _sort_ parameter:
+          ```text
+              sort = field [ ':', order ] { ',' sort }
+              order = ( "asc" | "desc" )
+              field = (* must match the name of entity's attributes *)
+          ```
+          The optional _order_ should be one of "asc" or "desc". If
+          omitted, the order defaults to "asc".
+
+          Each _field_ name must correspond to one of the columns of the
+          table holding the entities being queried. Those corresponding
+          to JSON objects in the database may use a ':' to delimit the
+          column name and the object key,
+          e.g. `purl:qualifiers:type:desc`
         required: false
         schema:
           type: string
@@ -856,11 +1492,75 @@ paths:
       parameters:
       - name: q
         in: query
+        description: |
+          EBNF grammar for the _q_ parameter:
+          ```text
+              q = ( values | filter ) { '&' q }
+              values = value { '|', values }
+              filter = field, operator, values
+              operator = "=" | "!=" | "~" | "!~" | ">=" | ">" | "<=" | "<"
+              value = (* any text but escape special characters with '\' *)
+              field = (* must match an entity attribute name *)
+          ```
+          Any values in a _q_ will result in a case-insensitive "full
+          text search", effectively producing an OR clause of LIKE
+          clauses for every string-ish field in the resource being
+          queried.
+
+          Examples:
+          - `foo` - any field containing 'foo'
+          - `foo|bar` - any field containing either 'foo' OR 'bar'
+          - `foo&bar` - some field contains 'foo' AND some field contains 'bar'
+
+          A _filter_ may also be used to constrain the results. The
+          filter's field name must correspond to one of the resource's
+          attributes. If it doesn't, an error will be returned
+          containing a list of the valid fields for that resource.
+
+          The value 'null' is treated specially for [Not]Equal filters:
+          it returns resources on which the field isn't set. Use the
+          LIKE operator, `~`, to match a literal "null" string. Omit the
+          value to match an empty string.
+
+          Examples:
+          - `name=foo` - entity's _name_ matches 'foo' exactly
+          - `name~foo` - entity's _name_ contains 'foo', case-insensitive
+          - `name~foo|bar` - entity's _name_ contains either 'foo' OR 'bar', case-insensitive
+          - `name=` - entity's _name_ is the empty string, ''
+          - `name=null` - entity's _name_ isn't set
+          - `published>3 days ago` - date values can be "human time"
+
+          Multiple full text searches and/or filters should be
+          '&'-delimited -- they are logically AND'd together.
+
+          - `red hat|fedora&labels:type=cve|osv&published>last wednesday 17:00`
+
+          Fields corresponding to JSON objects in the database may use a
+          ':' to delimit the column name and the object key,
+          e.g. `purl:qualifiers:type=pom`
+
+          Any operator or special character, e.g. '|', '&', within a
+          value should be escaped by prefixing it with a backslash.
         required: false
         schema:
           type: string
       - name: sort
         in: query
+        description: |
+          EBNF grammar for the _sort_ parameter:
+          ```text
+              sort = field [ ':', order ] { ',' sort }
+              order = ( "asc" | "desc" )
+              field = (* must match the name of entity's attributes *)
+          ```
+          The optional _order_ should be one of "asc" or "desc". If
+          omitted, the order defaults to "asc".
+
+          Each _field_ name must correspond to one of the columns of the
+          table holding the entities being queried. Those corresponding
+          to JSON objects in the database may use a ':' to delimit the
+          column name and the object key,
+          e.g. `purl:qualifiers:type:desc`
         required: false
         schema:
           type: string
@@ -945,11 +1645,75 @@ paths:
       parameters:
       - name: q
         in: query
+        description: |
+          EBNF grammar for the _q_ parameter:
+          ```text
+              q = ( values | filter ) { '&' q }
+              values = value { '|', values }
+              filter = field, operator, values
+              operator = "=" | "!=" | "~" | "!~" | ">=" | ">" | "<=" | "<"
+              value = (* any text but escape special characters with '\' *)
+              field = (* must match an entity attribute name *)
+          ```
+          Any values in a _q_ will result in a case-insensitive "full
+          text search", effectively producing an OR clause of LIKE
+          clauses for every string-ish field in the resource being
+          queried.
+
+          Examples:
+          - `foo` - any field containing 'foo'
+          - `foo|bar` - any field containing either 'foo' OR 'bar'
+          - `foo&bar` - some field contains 'foo' AND some field contains 'bar'
+
+          A _filter_ may also be used to constrain the results. The
+          filter's field name must correspond to one of the resource's
+          attributes. If it doesn't, an error will be returned
+          containing a list of the valid fields for that resource.
+
+          The value 'null' is treated specially for [Not]Equal filters:
+          it returns resources on which the field isn't set. Use the
+          LIKE operator, `~`, to match a literal "null" string. Omit the
+          value to match an empty string.
+
+          Examples:
+          - `name=foo` - entity's _name_ matches 'foo' exactly
+          - `name~foo` - entity's _name_ contains 'foo', case-insensitive
+          - `name~foo|bar` - entity's _name_ contains either 'foo' OR 'bar', case-insensitive
+          - `name=` - entity's _name_ is the empty string, ''
+          - `name=null` - entity's _name_ isn't set
+          - `published>3 days ago` - date values can be "human time"
+
+          Multiple full text searches and/or filters should be
+          '&'-delimited -- they are logically AND'd together.
+
+          - `red hat|fedora&labels:type=cve|osv&published>last wednesday 17:00`
+
+          Fields corresponding to JSON objects in the database may use a
+          ':' to delimit the column name and the object key,
+          e.g. `purl:qualifiers:type=pom`
+
+          Any operator or special character, e.g. '|', '&', within a
+          value should be escaped by prefixing it with a backslash.
         required: false
         schema:
           type: string
       - name: sort
         in: query
+        description: |
+          EBNF grammar for the _sort_ parameter:
+          ```text
+              sort = field [ ':', order ] { ',' sort }
+              order = ( "asc" | "desc" )
+              field = (* must match the name of entity's attributes *)
+          ```
+          The optional _order_ should be one of "asc" or "desc". If
+          omitted, the order defaults to "asc".
+
+          Each _field_ name must correspond to one of the columns of the
+          table holding the entities being queried. Those corresponding
+          to JSON objects in the database may use a ':' to delimit the
+          column name and the object key,
+          e.g. `purl:qualifiers:type:desc`
         required: false
         schema:
           type: string
@@ -991,11 +1755,75 @@ paths:
       parameters:
       - name: q
         in: query
+        description: |
+          EBNF grammar for the _q_ parameter:
+          ```text
+              q = ( values | filter ) { '&' q }
+              values = value { '|', values }
+              filter = field, operator, values
+              operator = "=" | "!=" | "~" | "!~" | ">=" | ">" | "<=" | "<"
+              value = (* any text but escape special characters with '\' *)
+              field = (* must match an entity attribute name *)
+          ```
+          Any values in a _q_ will result in a case-insensitive "full
+          text search", effectively producing an OR clause of LIKE
+          clauses for every string-ish field in the resource being
+          queried.
+
+          Examples:
+          - `foo` - any field containing 'foo'
+          - `foo|bar` - any field containing either 'foo' OR 'bar'
+          - `foo&bar` - some field contains 'foo' AND some field contains 'bar'
+
+          A _filter_ may also be used to constrain the results. The
+          filter's field name must correspond to one of the resource's
+          attributes. If it doesn't, an error will be returned
+          containing a list of the valid fields for that resource.
+
+          The value 'null' is treated specially for [Not]Equal filters:
+          it returns resources on which the field isn't set. Use the
+          LIKE operator, `~`, to match a literal "null" string. Omit the
+          value to match an empty string.
+
+          Examples:
+          - `name=foo` - entity's _name_ matches 'foo' exactly
+          - `name~foo` - entity's _name_ contains 'foo', case-insensitive
+          - `name~foo|bar` - entity's _name_ contains either 'foo' OR 'bar', case-insensitive
+          - `name=` - entity's _name_ is the empty string, ''
+          - `name=null` - entity's _name_ isn't set
+          - `published>3 days ago` - date values can be "human time"
+
+          Multiple full text searches and/or filters should be
+          '&'-delimited -- they are logically AND'd together.
+
+          - `red hat|fedora&labels:type=cve|osv&published>last wednesday 17:00`
+
+          Fields corresponding to JSON objects in the database may use a
+          ':' to delimit the column name and the object key,
+          e.g. `purl:qualifiers:type=pom`
+
+          Any operator or special character, e.g. '|', '&', within a
+          value should be escaped by prefixing it with a backslash.
         required: false
         schema:
           type: string
       - name: sort
         in: query
+        description: |
+          EBNF grammar for the _sort_ parameter:
+          ```text
+              sort = field [ ':', order ] { ',' sort }
+              order = ( "asc" | "desc" )
+              field = (* must match the name of entity's attributes *)
+          ```
+          The optional _order_ should be one of "asc" or "desc". If
+          omitted, the order defaults to "asc".
+
+          Each _field_ name must correspond to one of the columns of the
+          table holding the entities being queried. Those corresponding
+          to JSON objects in the database may use a ':' to delimit the
+          column name and the object key,
+          e.g. `purl:qualifiers:type:desc`
         required: false
         schema:
           type: string
@@ -1080,16 +1908,80 @@ paths:
     get:
       tags:
       - sbom
-      summary: Search for SBOMs
+      summary: List SBOMs
       operationId: listSboms
       parameters:
       - name: q
         in: query
+        description: |
+          EBNF grammar for the _q_ parameter:
+          ```text
+              q = ( values | filter ) { '&' q }
+              values = value { '|', values }
+              filter = field, operator, values
+              operator = "=" | "!=" | "~" | "!~" | ">=" | ">" | "<=" | "<"
+              value = (* any text but escape special characters with '\' *)
+              field = (* must match an entity attribute name *)
+          ```
+          Any values in a _q_ will result in a case-insensitive "full
+          text search", effectively producing an OR clause of LIKE
+          clauses for every string-ish field in the resource being
+          queried.
+
+          Examples:
+          - `foo` - any field containing 'foo'
+          - `foo|bar` - any field containing either 'foo' OR 'bar'
+          - `foo&bar` - some field contains 'foo' AND some field contains 'bar'
+
+          A _filter_ may also be used to constrain the results. The
+          filter's field name must correspond to one of the resource's
+          attributes. If it doesn't, an error will be returned
+          containing a list of the valid fields for that resource.
+
+          The value 'null' is treated specially for [Not]Equal filters:
+          it returns resources on which the field isn't set. Use the
+          LIKE operator, `~`, to match a literal "null" string. Omit the
+          value to match an empty string.
+
+          Examples:
+          - `name=foo` - entity's _name_ matches 'foo' exactly
+          - `name~foo` - entity's _name_ contains 'foo', case-insensitive
+          - `name~foo|bar` - entity's _name_ contains either 'foo' OR 'bar', case-insensitive
+          - `name=` - entity's _name_ is the empty string, ''
+          - `name=null` - entity's _name_ isn't set
+          - `published>3 days ago` - date values can be "human time"
+
+          Multiple full text searches and/or filters should be
+          '&'-delimited -- they are logically AND'd together.
+
+          - `red hat|fedora&labels:type=cve|osv&published>last wednesday 17:00`
+
+          Fields corresponding to JSON objects in the database may use a
+          ':' to delimit the column name and the object key,
+          e.g. `purl:qualifiers:type=pom`
+
+          Any operator or special character, e.g. '|', '&', within a
+          value should be escaped by prefixing it with a backslash.
         required: false
         schema:
           type: string
       - name: sort
         in: query
+        description: |
+          EBNF grammar for the _sort_ parameter:
+          ```text
+              sort = field [ ':', order ] { ',' sort }
+              order = ( "asc" | "desc" )
+              field = (* must match the name of entity's attributes *)
+          ```
+          The optional _order_ should be one of "asc" or "desc". If
+          omitted, the order defaults to "asc".
+
+          Each _field_ name must correspond to one of the columns of the
+          table holding the entities being queried. Those corresponding
+          to JSON objects in the database may use a ':' to delimit the
+          column name and the object key,
+          e.g. `purl:qualifiers:type:desc`
         required: false
         schema:
           type: string
@@ -1137,6 +2029,34 @@ paths:
         required: true
         schema:
           $ref: '#/components/schemas/Labels'
+      - name: format
+        in: query
+        description: The format of the uploaded document.
+        required: false
+        schema:
+          type: string
+          enum:
+          - oSV
+          - cSAF
+          - cVE
+          - sPDX
+          - cycloneDX
+          - clearlyDefinedCuration
+          - clearlyDefined
+          - cweCatalog
+          - advisory
+          - sBOM
+          - unknown
+      - name: cache
+        in: query
+        description: Await loading the document into the analysis graph cache
+        required: false
+        schema:
+          type: string
+          enum:
+          - skip
+          - queue
+          - wait
       requestBody:
         content:
           application/octet-stream:
@@ -1155,7 +2075,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/IngestResult'
         '400':
-          description: The file could not be parsed as an advisory
+          description: The file could not be parsed as an SBOM
   /api/v2/sbom/by-package:
     get:
       tags:
@@ -1168,11 +2088,75 @@ paths:
       parameters:
       - name: q
         in: query
+        description: |
+          EBNF grammar for the _q_ parameter:
+          ```text
+              q = ( values | filter ) { '&' q }
+              values = value { '|', values }
+              filter = field, operator, values
+              operator = "=" | "!=" | "~" | "!~" | ">=" | ">" | "<=" | "<"
+              value = (* any text but escape special characters with '\' *)
+              field = (* must match an entity attribute name *)
+          ```
+          Any values in a _q_ will result in a case-insensitive "full
+          text search", effectively producing an OR clause of LIKE
+          clauses for every string-ish field in the resource being
+          queried.
+
+          Examples:
+          - `foo` - any field containing 'foo'
+          - `foo|bar` - any field containing either 'foo' OR 'bar'
+          - `foo&bar` - some field contains 'foo' AND some field contains 'bar'
+
+          A _filter_ may also be used to constrain the results. The
+          filter's field name must correspond to one of the resource's
+          attributes. If it doesn't, an error will be returned
+          containing a list of the valid fields for that resource.
+
+          The value 'null' is treated specially for [Not]Equal filters:
+          it returns resources on which the field isn't set. Use the
+          LIKE operator, `~`, to match a literal "null" string. Omit the
+          value to match an empty string.
+
+          Examples:
+          - `name=foo` - entity's _name_ matches 'foo' exactly
+          - `name~foo` - entity's _name_ contains 'foo', case-insensitive
+          - `name~foo|bar` - entity's _name_ contains either 'foo' OR 'bar', case-insensitive
+          - `name=` - entity's _name_ is the empty string, ''
+          - `name=null` - entity's _name_ isn't set
+          - `published>3 days ago` - date values can be "human time"
+
+          Multiple full text searches and/or filters should be
+          '&'-delimited -- they are logically AND'd together.
+
+          - `red hat|fedora&labels:type=cve|osv&published>last wednesday 17:00`
+
+          Fields corresponding to JSON objects in the database may use a
+          ':' to delimit the column name and the object key,
+          e.g. `purl:qualifiers:type=pom`
+
+          Any operator or special character, e.g. '|', '&', within a
+          value should be escaped by prefixing it with a backslash.
         required: false
         schema:
           type: string
       - name: sort
         in: query
+        description: |
+          EBNF grammar for the _sort_ parameter:
+          ```text
+              sort = field [ ':', order ] { ',' sort }
+              order = ( "asc" | "desc" )
+              field = (* must match the name of entity's attributes *)
+          ```
+          The optional _order_ should be one of "asc" or "desc". If
+          omitted, the order defaults to "asc".
+
+          Each _field_ name must correspond to one of the columns of the
+          table holding the entities being queried. Those corresponding
+          to JSON objects in the database may use a ':' to delimit the
+          column name and the object key,
+          e.g. `purl:qualifiers:type:desc`
         required: false
         schema:
           type: string
@@ -1369,7 +2353,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Labels'
+              $ref: '#/components/schemas/Update'
         required: true
       responses:
         '204':
@@ -1416,11 +2400,75 @@ paths:
           format: uuid
       - name: q
         in: query
+        description: |
+          EBNF grammar for the _q_ parameter:
+          ```text
+              q = ( values | filter ) { '&' q }
+              values = value { '|', values }
+              filter = field, operator, values
+              operator = "=" | "!=" | "~" | "!~" | ">=" | ">" | "<=" | "<"
+              value = (* any text but escape special characters with '\' *)
+              field = (* must match an entity attribute name *)
+          ```
+          Any values in a _q_ will result in a case-insensitive "full
+          text search", effectively producing an OR clause of LIKE
+          clauses for every string-ish field in the resource being
+          queried.
+
+          Examples:
+          - `foo` - any field containing 'foo'
+          - `foo|bar` - any field containing either 'foo' OR 'bar'
+          - `foo&bar` - some field contains 'foo' AND some field contains 'bar'
+
+          A _filter_ may also be used to constrain the results. The
+          filter's field name must correspond to one of the resource's
+          attributes. If it doesn't, an error will be returned
+          containing a list of the valid fields for that resource.
+
+          The value 'null' is treated specially for [Not]Equal filters:
+          it returns resources on which the field isn't set. Use the
+          LIKE operator, `~`, to match a literal "null" string. Omit the
+          value to match an empty string.
+
+          Examples:
+          - `name=foo` - entity's _name_ matches 'foo' exactly
+          - `name~foo` - entity's _name_ contains 'foo', case-insensitive
+          - `name~foo|bar` - entity's _name_ contains either 'foo' OR 'bar', case-insensitive
+          - `name=` - entity's _name_ is the empty string, ''
+          - `name=null` - entity's _name_ isn't set
+          - `published>3 days ago` - date values can be "human time"
+
+          Multiple full text searches and/or filters should be
+          '&'-delimited -- they are logically AND'd together.
+
+          - `red hat|fedora&labels:type=cve|osv&published>last wednesday 17:00`
+
+          Fields corresponding to JSON objects in the database may use a
+          ':' to delimit the column name and the object key,
+          e.g. `purl:qualifiers:type=pom`
+
+          Any operator or special character, e.g. '|', '&', within a
+          value should be escaped by prefixing it with a backslash.
         required: false
         schema:
           type: string
       - name: sort
         in: query
+        description: |
+          EBNF grammar for the _sort_ parameter:
+          ```text
+              sort = field [ ':', order ] { ',' sort }
+              order = ( "asc" | "desc" )
+              field = (* must match the name of entity's attributes *)
+          ```
+          The optional _order_ should be one of "asc" or "desc". If
+          omitted, the order defaults to "asc".
+
+          Each _field_ name must correspond to one of the columns of the
+          table holding the entities being queried. Those corresponding
+          to JSON objects in the database may use a ':' to delimit the
+          column name and the object key,
+          e.g. `purl:qualifiers:type:desc`
         required: false
         schema:
           type: string
@@ -1494,11 +2542,75 @@ paths:
           - $ref: '#/components/schemas/Relationship'
       - name: q
         in: query
+        description: |
+          EBNF grammar for the _q_ parameter:
+          ```text
+              q = ( values | filter ) { '&' q }
+              values = value { '|', values }
+              filter = field, operator, values
+              operator = "=" | "!=" | "~" | "!~" | ">=" | ">" | "<=" | "<"
+              value = (* any text but escape special characters with '\' *)
+              field = (* must match an entity attribute name *)
+          ```
+          Any values in a _q_ will result in a case-insensitive "full
+          text search", effectively producing an OR clause of LIKE
+          clauses for every string-ish field in the resource being
+          queried.
+
+          Examples:
+          - `foo` - any field containing 'foo'
+          - `foo|bar` - any field containing either 'foo' OR 'bar'
+          - `foo&bar` - some field contains 'foo' AND some field contains 'bar'
+
+          A _filter_ may also be used to constrain the results. The
+          filter's field name must correspond to one of the resource's
+          attributes. If it doesn't, an error will be returned
+          containing a list of the valid fields for that resource.
+
+          The value 'null' is treated specially for [Not]Equal filters:
+          it returns resources on which the field isn't set. Use the
+          LIKE operator, `~`, to match a literal "null" string. Omit the
+          value to match an empty string.
+
+          Examples:
+          - `name=foo` - entity's _name_ matches 'foo' exactly
+          - `name~foo` - entity's _name_ contains 'foo', case-insensitive
+          - `name~foo|bar` - entity's _name_ contains either 'foo' OR 'bar', case-insensitive
+          - `name=` - entity's _name_ is the empty string, ''
+          - `name=null` - entity's _name_ isn't set
+          - `published>3 days ago` - date values can be "human time"
+
+          Multiple full text searches and/or filters should be
+          '&'-delimited -- they are logically AND'd together.
+
+          - `red hat|fedora&labels:type=cve|osv&published>last wednesday 17:00`
+
+          Fields corresponding to JSON objects in the database may use a
+          ':' to delimit the column name and the object key,
+          e.g. `purl:qualifiers:type=pom`
+
+          Any operator or special character, e.g. '|', '&', within a
+          value should be escaped by prefixing it with a backslash.
         required: false
         schema:
           type: string
       - name: sort
         in: query
+        description: |
+          EBNF grammar for the _sort_ parameter:
+          ```text
+              sort = field [ ':', order ] { ',' sort }
+              order = ( "asc" | "desc" )
+              field = (* must match the name of entity's attributes *)
+          ```
+          The optional _order_ should be one of "asc" or "desc". If
+          omitted, the order defaults to "asc".
+
+          Each _field_ name must correspond to one of the columns of the
+          table holding the entities being queried. Those corresponding
+          to JSON objects in the database may use a ':' to delimit the
+          column name and the object key,
+          e.g. `purl:qualifiers:type:desc`
         required: false
         schema:
           type: string
@@ -1653,11 +2765,75 @@ paths:
       parameters:
       - name: q
         in: query
+        description: |
+          EBNF grammar for the _q_ parameter:
+          ```text
+              q = ( values | filter ) { '&' q }
+              values = value { '|', values }
+              filter = field, operator, values
+              operator = "=" | "!=" | "~" | "!~" | ">=" | ">" | "<=" | "<"
+              value = (* any text but escape special characters with '\' *)
+              field = (* must match an entity attribute name *)
+          ```
+          Any values in a _q_ will result in a case-insensitive "full
+          text search", effectively producing an OR clause of LIKE
+          clauses for every string-ish field in the resource being
+          queried.
+
+          Examples:
+          - `foo` - any field containing 'foo'
+          - `foo|bar` - any field containing either 'foo' OR 'bar'
+          - `foo&bar` - some field contains 'foo' AND some field contains 'bar'
+
+          A _filter_ may also be used to constrain the results. The
+          filter's field name must correspond to one of the resource's
+          attributes. If it doesn't, an error will be returned
+          containing a list of the valid fields for that resource.
+
+          The value 'null' is treated specially for [Not]Equal filters:
+          it returns resources on which the field isn't set. Use the
+          LIKE operator, `~`, to match a literal "null" string. Omit the
+          value to match an empty string.
+
+          Examples:
+          - `name=foo` - entity's _name_ matches 'foo' exactly
+          - `name~foo` - entity's _name_ contains 'foo', case-insensitive
+          - `name~foo|bar` - entity's _name_ contains either 'foo' OR 'bar', case-insensitive
+          - `name=` - entity's _name_ is the empty string, ''
+          - `name=null` - entity's _name_ isn't set
+          - `published>3 days ago` - date values can be "human time"
+
+          Multiple full text searches and/or filters should be
+          '&'-delimited -- they are logically AND'd together.
+
+          - `red hat|fedora&labels:type=cve|osv&published>last wednesday 17:00`
+
+          Fields corresponding to JSON objects in the database may use a
+          ':' to delimit the column name and the object key,
+          e.g. `purl:qualifiers:type=pom`
+
+          Any operator or special character, e.g. '|', '&', within a
+          value should be escaped by prefixing it with a backslash.
         required: false
         schema:
           type: string
       - name: sort
         in: query
+        description: |
+          EBNF grammar for the _sort_ parameter:
+          ```text
+              sort = field [ ':', order ] { ',' sort }
+              order = ( "asc" | "desc" )
+              field = (* must match the name of entity's attributes *)
+          ```
+          The optional _order_ should be one of "asc" or "desc". If
+          omitted, the order defaults to "asc".
+
+          Each _field_ name must correspond to one of the columns of the
+          table holding the entities being queried. Those corresponding
+          to JSON objects in the database may use a ':' to delimit the
+          column name and the object key,
+          e.g. `purl:qualifiers:type:desc`
         required: false
         schema:
           type: string
@@ -1744,14 +2920,9 @@ paths:
         schema:
           type: string
       responses:
-        '200':
-          description: Specified vulnerability
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/VulnerabilityDetails'
-        '404':
-          description: Specified vulnerability not found
+        '501':
+          description: Method not yet implemented
+      deprecated: true
   /api/v2/weakness:
     get:
       tags:
@@ -1761,11 +2932,75 @@ paths:
       parameters:
       - name: q
         in: query
+        description: |
+          EBNF grammar for the _q_ parameter:
+          ```text
+              q = ( values | filter ) { '&' q }
+              values = value { '|', values }
+              filter = field, operator, values
+              operator = "=" | "!=" | "~" | "!~" | ">=" | ">" | "<=" | "<"
+              value = (* any text but escape special characters with '\' *)
+              field = (* must match an entity attribute name *)
+          ```
+          Any values in a _q_ will result in a case-insensitive "full
+          text search", effectively producing an OR clause of LIKE
+          clauses for every string-ish field in the resource being
+          queried.
+
+          Examples:
+          - `foo` - any field containing 'foo'
+          - `foo|bar` - any field containing either 'foo' OR 'bar'
+          - `foo&bar` - some field contains 'foo' AND some field contains 'bar'
+
+          A _filter_ may also be used to constrain the results. The
+          filter's field name must correspond to one of the resource's
+          attributes. If it doesn't, an error will be returned
+          containing a list of the valid fields for that resource.
+
+          The value 'null' is treated specially for [Not]Equal filters:
+          it returns resources on which the field isn't set. Use the
+          LIKE operator, `~`, to match a literal "null" string. Omit the
+          value to match an empty string.
+
+          Examples:
+          - `name=foo` - entity's _name_ matches 'foo' exactly
+          - `name~foo` - entity's _name_ contains 'foo', case-insensitive
+          - `name~foo|bar` - entity's _name_ contains either 'foo' OR 'bar', case-insensitive
+          - `name=` - entity's _name_ is the empty string, ''
+          - `name=null` - entity's _name_ isn't set
+          - `published>3 days ago` - date values can be "human time"
+
+          Multiple full text searches and/or filters should be
+          '&'-delimited -- they are logically AND'd together.
+
+          - `red hat|fedora&labels:type=cve|osv&published>last wednesday 17:00`
+
+          Fields corresponding to JSON objects in the database may use a
+          ':' to delimit the column name and the object key,
+          e.g. `purl:qualifiers:type=pom`
+
+          Any operator or special character, e.g. '|', '&', within a
+          value should be escaped by prefixing it with a backslash.
         required: false
         schema:
           type: string
       - name: sort
         in: query
+        description: |
+          EBNF grammar for the _sort_ parameter:
+          ```text
+              sort = field [ ':', order ] { ',' sort }
+              order = ( "asc" | "desc" )
+              field = (* must match the name of entity's attributes *)
+          ```
+          The optional _order_ should be one of "asc" or "desc". If
+          omitted, the order defaults to "asc".
+
+          Each _field_ name must correspond to one of the columns of the
+          table holding the entities being queried. Those corresponding
+          to JSON objects in the database may use a ':' to delimit the
+          column name and the object key,
+          e.g. `purl:qualifiers:type:desc`
         required: false
         schema:
           type: string
@@ -1934,28 +3169,29 @@ components:
       allOf:
       - $ref: '#/components/schemas/VulnerabilityHead'
       - type: object
-        required:
-        - severity
-        - score
         properties:
           score:
-            type: number
+            type:
+            - number
+            - 'null'
             format: double
             description: |-
               The average (arithmetic mean) score this advisory assigns to
               the particular vulnerability.
           severity:
-            $ref: '#/components/schemas/Severity'
-            description: |-
-              The English-language word description of the severity of the given
-              vulnerability, as asserted by the advisory, using the CVSS bucketing
-              ranges.
+            oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/Severity'
+              description: |-
+                The English-language word description of the severity of the given
+                vulnerability, as asserted by the advisory, using the CVSS bucketing
+                ranges.
 
-              Critical: 9.0–10.0
-              High: 7.0–8.9
-              Medium: 4.0–6.9
-              Low: 0.1–3.9
-              None: 0
+                Critical: 9.0–10.0
+                High: 7.0–8.9
+                Medium: 4.0–6.9
+                Low: 0.1–3.9
+                None: 0
     AdvisoryVulnerabilitySummary:
       allOf:
       - $ref: '#/components/schemas/AdvisoryVulnerabilityHead'
@@ -3416,6 +4652,16 @@ components:
         properties:
           cpe:
             type: string
+    Update:
+      type: object
+      description: |
+        An update set for labels.
+
+        This is a key/value set, where the value can be a string for setting that value, or `null` for removing the label.
+      additionalProperties:
+        oneOf:
+        - type: 'null'
+        - type: string
     VersionedPurlHead:
       type: object
       required:
