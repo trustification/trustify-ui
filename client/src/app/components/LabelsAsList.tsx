@@ -17,7 +17,7 @@ export const LabelsAsList: React.FC<LabelsAsListProps> = ({
         .sort(([keyA], [keyB]) => keyB.localeCompare(keyA))
         .map(([k, v]) => (
           <Label key={k} color="blue">
-            <Truncate content={`${k}=${v}`} />
+            <Truncate content={`${v ? `${k}=${v}` : `${k}`}`} />
           </Label>
         ))}
     </LabelGroup>
