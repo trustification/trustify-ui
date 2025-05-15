@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import { Modal } from "@patternfly/react-core";
+import { Modal, ModalBody, ModalHeader } from "@patternfly/react-core";
 import {
   ActionsColumn,
   Table,
@@ -173,15 +173,17 @@ export const SbomTable: React.FC = () => {
       <Modal
         isOpen={isEditLabelsModalOpen}
         variant="medium"
-        title="Edit labels"
         onClose={closeEditLabelsModal}
       >
-        {rowLabelsToUpdate && (
-          <SBOMEditLabelsForm
-            sbom={rowLabelsToUpdate}
-            onClose={closeEditLabelsModal}
-          />
-        )}
+        <ModalHeader title="Edit labels" />
+        <ModalBody>
+          {rowLabelsToUpdate && (
+            <SBOMEditLabelsForm
+              sbom={rowLabelsToUpdate}
+              onClose={closeEditLabelsModal}
+            />
+          )}
+        </ModalBody>
       </Modal>
     </>
   );

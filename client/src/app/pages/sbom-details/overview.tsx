@@ -17,6 +17,8 @@ import {
   List,
   ListItem,
   Modal,
+  ModalBody,
+  ModalHeader,
 } from "@patternfly/react-core";
 import PenIcon from "@patternfly/react-icons/dist/esm/icons/pen-icon";
 
@@ -174,10 +176,12 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
       <Modal
         isOpen={showEditLabels}
         variant="medium"
-        title="Edit labels"
         onClose={closeEditLabelsModal}
       >
-        <SBOMEditLabelsForm sbom={sbom} onClose={closeEditLabelsModal} />
+        <ModalHeader title="Edit labels" />
+        <ModalBody>
+          <SBOMEditLabelsForm sbom={sbom} onClose={closeEditLabelsModal} />
+        </ModalBody>
       </Modal>
     </>
   );

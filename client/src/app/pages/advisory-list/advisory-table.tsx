@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import { Modal } from "@patternfly/react-core";
+import { Modal, ModalBody, ModalHeader } from "@patternfly/react-core";
 import {
   ActionsColumn,
   Table,
@@ -203,15 +203,17 @@ export const AdvisoryTable: React.FC = () => {
       <Modal
         isOpen={isEditLabelsModalOpen}
         variant="medium"
-        title="Edit labels"
         onClose={closeEditLabelsModal}
       >
-        {rowLabelsToUpdate && (
-          <AdvisoryEditLabelsForm
-            advisory={rowLabelsToUpdate}
-            onClose={closeEditLabelsModal}
-          />
-        )}
+        <ModalHeader title="Edit labels" />
+        <ModalBody>
+          {rowLabelsToUpdate && (
+            <AdvisoryEditLabelsForm
+              advisory={rowLabelsToUpdate}
+              onClose={closeEditLabelsModal}
+            />
+          )}
+        </ModalBody>
       </Modal>
     </>
   );

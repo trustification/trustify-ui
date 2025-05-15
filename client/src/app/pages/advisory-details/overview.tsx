@@ -15,6 +15,8 @@ import {
   Grid,
   GridItem,
   Modal,
+  ModalBody,
+  ModalHeader,
 } from "@patternfly/react-core";
 import PenIcon from "@patternfly/react-icons/dist/esm/icons/pen-icon";
 
@@ -162,10 +164,13 @@ export const Overview: React.FC<InfoProps> = ({ advisory }) => {
         title="Edit labels"
         onClose={closeEditLabelsModal}
       >
-        <AdvisoryEditLabelsForm
-          advisory={advisory}
-          onClose={closeEditLabelsModal}
-        />
+        <ModalHeader title="Edit labels" />
+        <ModalBody>
+          <AdvisoryEditLabelsForm
+            advisory={advisory}
+            onClose={closeEditLabelsModal}
+          />
+        </ModalBody>
       </Modal>
     </>
   );
