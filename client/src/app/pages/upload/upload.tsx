@@ -7,7 +7,6 @@ import {
   CardBody,
   Content,
   PageSection,
-  PageSectionVariants,
   Popover,
   Tab,
   TabAction,
