@@ -120,7 +120,7 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
                     </Button>
                   </DescriptionListTerm>
                   <DescriptionListDescription>
-                    <Card isFlat isCompact>
+                    <Card isCompact>
                       <CardBody>
                         {sbom.labels && (
                           <LabelsAsList defaultIsOpen value={sbom.labels} />

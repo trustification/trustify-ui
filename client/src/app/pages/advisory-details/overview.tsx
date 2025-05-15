@@ -91,7 +91,7 @@ export const Overview: React.FC<InfoProps> = ({ advisory }) => {
                     </Button>
                   </DescriptionListTerm>
                   <DescriptionListDescription>
-                    <Card isFlat isCompact>
+                    <Card isCompact>
                       <CardBody>
                         {advisory.labels && (
                           <LabelsAsList defaultIsOpen value={advisory.labels} />
