@@ -5,20 +5,38 @@ import { useFilterState } from "./filtering";
 import { usePaginationState } from "./pagination";
 import { useSortState } from "./sorting";
 import type {
+  IFeaturePersistenceArgs,
   ITableControlState,
+  ITablePersistenceArgs,
   IUseTableControlStateArgs,
-  PersistTarget,
   TableFeature,
 } from "./types";
 
+const getPersistTo = ({
+  feature,
+  persistTo,
+}: {
+  feature: TableFeature;
+  persistTo: ITablePersistenceArgs["persistTo"];
+}): {
+  persistTo: IFeaturePersistenceArgs["persistTo"];
+} => ({
+  persistTo:
+    !persistTo || typeof persistTo === "string"
+      ? persistTo
+      : persistTo[feature],
+});
+
 /**
- * Provides the "source of truth" state for all table features.
+ * Manage a table's features.  Each feature's state, the "source of truth", is provided here.
+ *
+ * The control state is used by `useTableControlProps()` to generate property helpers for
+ * the table components.
+ *
  * - State can be persisted in one or more configurable storage targets, either the same for the entire table or different targets per feature.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
- * - If you aren't using server-side filtering/sorting/pagination, call this via the shorthand hook useLocalTableControls.
- * - If you are using server-side filtering/sorting/pagination, call this first before fetching your API data and then calling useTableControlProps.
- * @param args
- * @returns
+ * - If you are using client-side filtering/sorting/pagination, call this via the shorthand hook `useLocalTableControls()`.
+ * - If you are using server-side filtering/sorting/pagination, call this first before fetching your API data and then calling `useTableControlProps()`.
  */
 export const useTableControlState = <
   TItem,
@@ -41,45 +59,38 @@ export const useTableControlState = <
   TFilterCategoryKey,
   TPersistenceKeyPrefix
 > => {
-  const getPersistTo = (feature: TableFeature): PersistTarget | undefined =>
-    !args.persistTo || typeof args.persistTo === "string"
-      ? args.persistTo
-      : args.persistTo[feature] || args.persistTo.default;
-
   const filterState = useFilterState<
     TItem,
     TFilterCategoryKey,
     TPersistenceKeyPrefix
-  >({ ...args, persistTo: getPersistTo("filter") });
+  >({
+    ...args,
+    ...getPersistTo({ feature: "filter", persistTo: args.persistTo }),
+  });
   const sortState = useSortState<TSortableColumnKey, TPersistenceKeyPrefix>({
     ...args,
-    persistTo: getPersistTo("sort"),
+    ...getPersistTo({ feature: "sort", persistTo: args.persistTo }),
   });
   const paginationState = usePaginationState<TPersistenceKeyPrefix>({
     ...args,
-    persistTo: getPersistTo("pagination"),
+    ...getPersistTo({ persistTo: args.persistTo, feature: "pagination" }),
   });
   const expansionState = useExpansionState<TColumnKey, TPersistenceKeyPrefix>({
     ...args,
-    persistTo: getPersistTo("expansion"),
+    ...getPersistTo({ persistTo: args.persistTo, feature: "expansion" }),
   });
   const activeItemState = useActiveItemState<TPersistenceKeyPrefix>({
     ...args,
-    persistTo: getPersistTo("activeItem"),
+    ...getPersistTo({ persistTo: args.persistTo, feature: "activeItem" }),
   });
 
-  const { columnNames, tableName } = args;
-
-  const initialColumns = Object.entries(columnNames).map(([id, label]) => ({
-    id: id as TColumnKey,
-    label: label as string,
-    isVisible: true,
-  }));
-
+  const { columnNames, tableName, initialColumns } = args;
   const columnState = useColumnState<TColumnKey>({
     columnsKey: tableName,
     initialColumns,
+    supportedColumns: columnNames,
   });
+
   return {
     ...args,
     filterState,

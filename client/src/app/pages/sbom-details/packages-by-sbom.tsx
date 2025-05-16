@@ -36,7 +36,6 @@ import {
   useTableControlProps,
   useTableControlState,
 } from "@app/hooks/table-controls";
-import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchPackagesBySbomId } from "@app/queries/packages";
 
 interface PackagesProps {
@@ -86,10 +85,6 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
     currentPageItems: packages,
     totalItemCount,
     isLoading: isFetching,
-    selectionState: useSelectionState({
-      items: packages,
-      isEqual: (a, b) => a.id === b.id,
-    }),
   });
 
   const {
