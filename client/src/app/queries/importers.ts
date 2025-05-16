@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
 import { DEFAULT_REFETCH_INTERVAL } from "@app/Constants";
+import type { HubRequestParams } from "@app/api/models";
 import { client } from "@app/axios-config/apiInit";
 import {
   type ImporterConfiguration,
@@ -12,6 +13,7 @@ import {
   listImporters,
   updateImporter,
 } from "@app/client";
+import { requestParamsQuery } from "@app/hooks/table-controls";
 
 export const ImportersQueryKey = "importers";
 
@@ -129,11 +131,17 @@ export const useDeleteIporterMutation = (
 
 export const useFetchImporterReports = (
   id: string,
+  params: HubRequestParams = {},
   refetchDisabled = false,
 ) => {
   const { data, isLoading, refetch, error } = useQuery({
-    queryKey: [ImportersQueryKey, id, "reports"],
-    queryFn: () => listImporterReports({ client, path: { name: id } }),
+    queryKey: [ImportersQueryKey, id, "reports", params],
+    queryFn: () =>
+      listImporterReports({
+        client,
+        path: { name: id },
+        query: { ...requestParamsQuery(params) },
+      }),
     refetchInterval: !refetchDisabled ? DEFAULT_REFETCH_INTERVAL : false,
   });
 

@@ -113,3 +113,7 @@ export const getFilenameFromContentDisposition = (
   const match = contentDisposition.match(/filename="?([^"]+)"?/);
   return match ? match[1] : null;
 };
+
+export const toCamelCase = (value: string) => {
+  return value.charAt(0).toUpperCase() + value.slice(1).replace("_", " ");
+};

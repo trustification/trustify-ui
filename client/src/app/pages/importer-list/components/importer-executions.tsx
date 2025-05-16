@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import dayjs from "dayjs";
 
@@ -14,33 +14,22 @@ import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import { useFetchImporterReports } from "@app/queries/importers";
 import { formatDateTime } from "@app/utils/utils";
 
-import type { Importer, Message } from "@app/client";
+import type { Importer } from "@app/client";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
-import { useLocalTableControls } from "@app/hooks/table-controls";
+import {
+  getHubRequestParams,
+  useTableControlProps,
+  useTableControlState,
+} from "@app/hooks/table-controls";
 
 import { IconedStatus } from "@app/components/IconedStatus";
-import { ImporterStatusIcon } from "./importer-status-icon";
+import { useSelectionState } from "@app/hooks/useSelectionState";
 import { ReportStatusMessage } from "./report-status-message";
-
-interface TableReportData {
-  isRunning: boolean;
-  id: string;
-  startDate?: string;
-  endDate?: string;
-  duration?: number;
-  numberOfItems?: number;
-  error?: string;
-  messages?: {
-    [key: string]: {
-      [key: string]: Array<Message>;
-    };
-  };
-}
 
 interface IImporterExecutionsProps {
   importer: Importer;
@@ -49,85 +38,56 @@ interface IImporterExecutionsProps {
 export const ImporterExecutions: React.FC<IImporterExecutionsProps> = ({
   importer,
 }) => {
-  const {
-    result: { data: reports },
-    isFetching,
-    fetchError,
-  } = useFetchImporterReports(importer.name);
-
-  const tableData = React.useMemo(() => {
-    const currentTask: TableReportData = {
-      isRunning: true,
-      id: "root",
-      startDate: undefined,
-      endDate: undefined,
-      duration: importer.progress?.estimatedSecondsRemaining
-        ? importer.progress?.estimatedSecondsRemaining * 1000
-        : undefined,
-      numberOfItems: importer.progress?.current,
-      error: undefined,
-      messages: undefined,
-    };
-
-    const reportsMapped = reports.map((item) => {
-      let duration: number | undefined;
-      if (item.report?.startDate && item.report.endDate) {
-        const fromDate = dayjs(item.report.startDate);
-        const toDate = dayjs(item.report.endDate);
-        duration = toDate.diff(fromDate);
-      }
-
-      const result: TableReportData = {
-        isRunning: false,
-        id: item.id,
-        startDate: item.report?.startDate,
-        endDate: item.report?.endDate,
-        duration: duration,
-        numberOfItems: item.report?.numberOfItems,
-        error: item.error ?? undefined,
-        messages: item.report?.messages,
-      };
-      return result;
-    });
-    return [
-      ...(importer.state === "running" ? [currentTask] : []),
-      ...reportsMapped,
-    ];
-  }, [importer, reports]);
-
-  const tableControls = useLocalTableControls({
-    variant: "compact",
-    tableName: "report-table",
-    idProperty: "id",
-    items: tableData,
+  const tableControlState = useTableControlState({
+    tableName: "executions",
     columnNames: {
-      startDate: "Start date",
-      endDate: "End date",
-      numberOfItems: "Number of items",
-      status: "Status",
+      creationDate: "Created",
+      completed: "Completed",
       duration: "Duration",
+      numberOfItems: "Items",
+      status: "Status",
     },
     isPaginationEnabled: true,
-    initialItemsPerPage: 5,
     isSortEnabled: true,
-    sortableColumns: ["startDate", "endDate"],
-    initialSort: { columnKey: "startDate", direction: "desc" },
-    getSortValues: (report) => ({
-      startDate: report.startDate ? dayjs(report.startDate).valueOf() : true,
-      endDate: report.endDate ? dayjs(report.endDate).valueOf() : true,
-    }),
+    sortableColumns: ["creationDate"],
     isFilterEnabled: false,
     isExpansionEnabled: false,
   });
 
   const {
-    currentPageItems,
+    result: { data: executions, total: totalItemCount },
+    isFetching,
+    fetchError,
+  } = useFetchImporterReports(
+    importer.name,
+    getHubRequestParams({
+      ...tableControlState,
+      hubSortFieldKeys: {
+        creationDate: "creation",
+      },
+    }),
+  );
+
+  const tableControls = useTableControlProps({
+    ...tableControlState,
+    idProperty: "id",
+    currentPageItems: executions,
+    totalItemCount,
+    isLoading: isFetching,
+    selectionState: useSelectionState({
+      items: executions,
+      isEqual: (a, b) => a.id === b.id,
+    }),
+  });
+
+  const {
     numRenderedColumns,
+    currentPageItems,
     propHelpers: {
       toolbarProps,
-      tableProps,
       paginationToolbarItemProps,
       paginationProps,
+      tableProps,
       getThProps,
       getTrProps,
       getTdProps,
@@ -140,7 +100,7 @@ export const ImporterExecutions: React.FC<IImporterExecutionsProps> = ({
         <ToolbarContent>
           <ToolbarItem {...paginationToolbarItemProps}>
             <SimplePagination
-              idPrefix="report-table"
+              idPrefix="executions-table"
               isTop
               paginationProps={paginationProps}
             />
@@ -152,21 +112,28 @@ export const ImporterExecutions: React.FC<IImporterExecutionsProps> = ({
         <Thead>
           <Tr>
             <TableHeaderContentWithControls {...tableControls}>
-              <Th {...getThProps({ columnKey: "startDate" })} />
-              <Th {...getThProps({ columnKey: "endDate" })} />
+              <Th {...getThProps({ columnKey: "creationDate" })} />
+              <Th {...getThProps({ columnKey: "completed" })} />
+              <Th {...getThProps({ columnKey: "duration" })} />
               <Th {...getThProps({ columnKey: "numberOfItems" })} />
               <Th {...getThProps({ columnKey: "status" })} />
-              <Th {...getThProps({ columnKey: "duration" })} />
             </TableHeaderContentWithControls>
           </Tr>
         </Thead>
         <ConditionalTableBody
           isLoading={isFetching}
           isError={!!fetchError}
-          isNoData={tableData?.length === 0}
+          isNoData={totalItemCount === 0}
           numRenderedColumns={numRenderedColumns}
         >
           {currentPageItems?.map((item, rowIndex) => {
+            let duration: number | undefined;
+            if (item.report?.startDate && item.report.endDate) {
+              const fromDate = dayjs(item.report.startDate);
+              const toDate = dayjs(item.report.endDate);
+              duration = toDate.diff(fromDate);
+            }
+
             return (
               <Tbody key={item.id}>
                 <Tr {...getTrProps({ item })}>
@@ -178,68 +145,62 @@ export const ImporterExecutions: React.FC<IImporterExecutionsProps> = ({
                     <Td
                       width={15}
                       modifier="wrap"
-                      {...getTdProps({ columnKey: "startDate" })}
+                      {...getTdProps({ columnKey: "creationDate" })}
                     >
-                      {formatDateTime(item.startDate)}
+                      {formatDateTime(item.creation)}
                     </Td>
                     <Td
                       width={15}
                       modifier="wrap"
-                      {...getTdProps({ columnKey: "endDate" })}
+                      {...getTdProps({ columnKey: "completed" })}
                     >
-                      {formatDateTime(item.endDate)}
+                      {item?.report?.endDate
+                        ? dayjs(item.report.endDate).fromNow()
+                        : "-"}
+                    </Td>
+                    <Td
+                      width={15}
+                      modifier="wrap"
+                      {...getTdProps({ columnKey: "duration" })}
+                    >
+                      {`${duration ? dayjs.duration(duration).humanize() : ""}`}
                     </Td>
                     <Td
                       width={15}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "numberOfItems" })}
                     >
-                      {item.numberOfItems}
+                      {item.report?.numberOfItems}
                     </Td>
                     <Td
-                      width={30}
+                      width={20}
                       modifier="wrap"
                       {...getTdProps({ columnKey: "status" })}
                     >
-                      {item.isRunning ? (
-                        <ImporterStatusIcon state="running" />
-                      ) : (
-                        <ReportStatusMessage
-                          description={item.error}
-                          messages={item.messages ?? null}
-                        >
-                          {({ toggleLogModal }) => {
-                            return item.error ? (
-                              <Button
-                                isInline
-                                variant="link"
-                                onClick={toggleLogModal}
-                              >
-                                <IconedStatus
-                                  preset="Failed"
-                                  label={item.error}
-                                />
-                              </Button>
-                            ) : (
+                      <ReportStatusMessage
+                        description={item?.error || ""}
+                        messages={item.report?.messages ?? null}
+                      >
+                        {({ toggleLogModal }) => {
+                          return item.error ? (
+                            <Button
+                              isInline
+                              variant="link"
+                              onClick={toggleLogModal}
+                            >
                               <IconedStatus
-                                preset="Completed"
-                                label="Completed"
+                                preset="Failed"
+                                label={item.error}
                               />
-                            );
-                          }}
-                        </ReportStatusMessage>
-                      )}
-                    </Td>
-                    <Td
-                      width={25}
-                      modifier="wrap"
-                      {...getTdProps({ columnKey: "duration" })}
-                    >
-                      {item.duration
-                        ? item.isRunning
-                          ? `Time remaining: ${dayjs.duration(item.duration).humanize()}`
-                          : `Run for: ${dayjs.duration(item.duration).humanize()}`
-                        : ""}
+                            </Button>
+                          ) : (
+                            <IconedStatus
+                              preset="Completed"
+                              label="Completed"
+                            />
+                          );
+                        }}
+                      </ReportStatusMessage>
                     </Td>
                   </TableRowContentWithControls>
                 </Tr>
@@ -249,7 +210,7 @@ export const ImporterExecutions: React.FC<IImporterExecutionsProps> = ({
         </ConditionalTableBody>
       </Table>
       <SimplePagination
-        idPrefix="report-table"
+        idPrefix="executions-table"
         isTop={false}
         paginationProps={paginationProps}
       />

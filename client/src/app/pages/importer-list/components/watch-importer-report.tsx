@@ -24,7 +24,13 @@ export const WatchImporterReport: React.FC<WatchImporterReportProps> = ({
     result: { data: reports },
     isFetching,
     fetchError,
-  } = useFetchImporterReports(importer.name);
+  } = useFetchImporterReports(importer.name, {
+    page: { pageNumber: 1, itemsPerPage: 1 },
+    sort: {
+      field: "creation",
+      direction: "asc",
+    },
+  });
 
   return <>{children({ reports, isFetching, fetchError })}</>;
 };

@@ -60,7 +60,7 @@ import {
   useFetchImporters,
   useUpdateImporterMutation,
 } from "@app/queries/importers";
-import { getAxiosErrorMessage } from "@app/utils/utils";
+import { getAxiosErrorMessage, toCamelCase } from "@app/utils/utils";
 
 import { client } from "@app/axios-config/apiInit";
 import {
@@ -378,7 +378,7 @@ export const ImporterList: React.FC = () => {
                           } as React.CSSProperties
                         }
                       >
-                        {activeSort?.columnKey}
+                        {toCamelCase(activeSort?.columnKey ?? "")}
                       </MenuToggle>
                     )}
                     shouldFocusToggleOnSelect
@@ -386,7 +386,7 @@ export const ImporterList: React.FC = () => {
                     <SelectList>
                       {sortableColumns?.map((e) => (
                         <SelectOption key={e} value={e}>
-                          {e}
+                          {toCamelCase(activeSort?.columnKey ?? "")}
                         </SelectOption>
                       ))}
                     </SelectList>
