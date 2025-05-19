@@ -50,6 +50,7 @@ export const ImporterExecutions: React.FC<IImporterExecutionsProps> = ({
     isPaginationEnabled: true,
     isSortEnabled: true,
     sortableColumns: ["creationDate"],
+    initialSort: { columnKey: "creationDate", direction: "desc" },
     isFilterEnabled: false,
     isExpansionEnabled: false,
   });

@@ -28,7 +28,7 @@ export const WatchImporterReport: React.FC<WatchImporterReportProps> = ({
     page: { pageNumber: 1, itemsPerPage: 1 },
     sort: {
       field: "creation",
-      direction: "asc",
+      direction: "desc",
     },
   });
 
