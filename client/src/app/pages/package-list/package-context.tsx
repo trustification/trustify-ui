@@ -15,7 +15,6 @@ import {
   useTableControlProps,
   useTableControlState,
 } from "@app/hooks/table-controls";
-import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchPackages } from "@app/queries/packages";
 import { decomposePurl } from "@app/utils/utils";
 
@@ -139,10 +138,6 @@ export const PackageSearchProvider: React.FunctionComponent<
     currentPageItems: enrichedPackages,
     totalItemCount,
     isLoading: isFetching,
-    selectionState: useSelectionState({
-      items: enrichedPackages,
-      isEqual: (a, b) => a.uuid === b.uuid,
-    }),
   });
 
   return (

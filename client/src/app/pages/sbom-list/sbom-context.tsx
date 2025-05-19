@@ -14,7 +14,6 @@ import {
   useTableControlProps,
   useTableControlState,
 } from "@app/hooks/table-controls";
-import { useSelectionState } from "@app/hooks/useSelectionState";
 import { useFetchSBOMs } from "@app/queries/sboms";
 
 interface ISbomSearchContext {
@@ -100,10 +99,6 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
     currentPageItems: advisories,
     totalItemCount,
     isLoading: isFetching,
-    selectionState: useSelectionState({
-      items: advisories,
-      isEqual: (a, b) => a.id === b.id,
-    }),
   });
 
   return (

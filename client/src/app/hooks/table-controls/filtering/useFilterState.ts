@@ -6,7 +6,7 @@ import type {
 } from "@app/components/FilterToolbar";
 import { usePersistentState } from "@app/hooks/usePersistentState";
 import type { DiscriminatedArgs } from "@app/utils/type-utils";
-import type { IFeaturePersistenceArgs } from "../types";
+import { type IFeaturePersistenceArgs, isPersistenceProvider } from "../types";
 import { serializeFilterUrlParams } from "./helpers";
 import { deserializeFilterUrlParams } from "./helpers";
 
@@ -94,7 +94,6 @@ export const useFilterState = <
     "filters"
   >({
     isEnabled: !!isFilterEnabled,
-    defaultValue: initialFilterValues,
     persistenceKeyPrefix,
     // Note: For the discriminated union here to work without TypeScript getting confused
     //       (e.g. require the urlParams-specific options when persistTo === "urlParams"),
@@ -103,12 +102,23 @@ export const useFilterState = <
       ? {
           persistTo,
           keys: ["filters"],
+          defaultValue: initialFilterValues,
           serialize: serializeFilterUrlParams,
           deserialize: deserializeFilterUrlParams,
         }
       : persistTo === "localStorage" || persistTo === "sessionStorage"
-        ? { persistTo, key: "filters" }
-        : { persistTo }),
+        ? { persistTo, key: "filters", defaultValue: initialFilterValues }
+        : isPersistenceProvider(persistTo)
+          ? {
+              persistTo: "provider",
+              serialize: persistTo.write,
+              deserialize: () =>
+                persistTo.read() as IFilterValues<TFilterCategoryKey>,
+              defaultValue: isFilterEnabled
+                ? (args?.initialFilterValues ?? {})
+                : {},
+            }
+          : { persistTo: "state", defaultValue: initialFilterValues }),
   });
   return { filterValues, setFilterValues };
 };
