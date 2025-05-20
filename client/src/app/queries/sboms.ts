@@ -71,7 +71,7 @@ export const useFetchSBOMById = (id?: string) => {
 
 export const useDeleteSbomMutation = (
   onSuccess: (payload: SbomSummary, id: string) => void,
-  onError?: (err: AxiosError, id: string) => void,
+  onError: (err: AxiosError) => void,
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -79,11 +79,14 @@ export const useDeleteSbomMutation = (
       const response = await deleteSbom({ client, path: { id } });
       return response.data as SbomSummary;
     },
-    onSuccess: (response, id) => {
+    onSuccess: async (response, id) => {
       onSuccess(response, id);
-      queryClient.invalidateQueries({ queryKey: [SBOMsQueryKey] });
+      await queryClient.invalidateQueries({ queryKey: [SBOMsQueryKey] });
     },
-    onError: onError,
+    onError: async (err: AxiosError) => {
+      onError(err);
+      await queryClient.invalidateQueries({ queryKey: [SBOMsQueryKey] });
+    },
   });
 };
 

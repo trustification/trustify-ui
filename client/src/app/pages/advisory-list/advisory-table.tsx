@@ -11,26 +11,32 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import type { Severity } from "@app/client";
+import {
+  type ExtendedSeverity,
+  extendedSeverityFromSeverity,
+} from "@app/api/models";
+import type { AdvisorySummary, Severity } from "@app/client";
+import { NotificationsContext } from "@app/components/NotificationsContext";
+import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
-import { useDownload } from "@app/hooks/domain-controls/useDownload";
-
-import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { VulnerabilityGallery } from "@app/components/VulnerabilityGallery";
+import { useDownload } from "@app/hooks/domain-controls/useDownload";
+import { useDeleteAdvisoryMutation } from "@app/queries/advisories";
 import { formatDate } from "@app/utils/utils";
 
-import {
-  type ExtendedSeverity,
-  extendedSeverityFromSeverity,
-} from "@app/api/models";
+import { ConfirmDialog } from "@app/components/ConfirmDialog";
+import { ButtonVariant } from "@patternfly/react-core";
+import type { AxiosError } from "axios";
 import { AdvisorySearchContext } from "./advisory-context";
 
 export const AdvisoryTable: React.FC = () => {
+  const { pushNotification } = React.useContext(NotificationsContext);
+
   const { isFetching, fetchError, totalItemCount, tableControls } =
     React.useContext(AdvisorySearchContext);
 
@@ -48,6 +54,29 @@ export const AdvisoryTable: React.FC = () => {
   } = tableControls;
 
   const { downloadAdvisory } = useDownload();
+
+  // Delete action
+
+  const [advisoryToDelete, setAdvisoryToDelete] =
+    React.useState<AdvisorySummary | null>(null);
+
+  const onDeleteAdvisorySuccess = (advisory: AdvisorySummary) => {
+    setAdvisoryToDelete(null);
+    pushNotification({
+      title: `The Advisory ${advisory.identifier} was deleted`,
+      variant: "success",
+    });
+  };
+
+  const onDeleteAdvisoryError = (_error: AxiosError) => {
+    pushNotification({
+      title: "Error occurred while deleting the Advisory",
+      variant: "danger",
+    });
+  };
+
+  const { mutate: deleteAdvisory, isPending: isDeletingAdvisory } =
+    useDeleteAdvisoryMutation(onDeleteAdvisorySuccess, onDeleteAdvisoryError);
 
   return (
     <>
@@ -169,6 +198,13 @@ export const AdvisoryTable: React.FC = () => {
                               );
                             },
                           },
+                          { isSeparator: true },
+                          {
+                            title: "Delete",
+                            onClick: () => {
+                              setAdvisoryToDelete(item);
+                            },
+                          },
                         ]}
                       />
                     </Td>
@@ -183,6 +219,25 @@ export const AdvisoryTable: React.FC = () => {
         idPrefix="advisory-table"
         isTop={false}
         paginationProps={paginationProps}
+      />
+
+      <ConfirmDialog
+        inProgress={isDeletingAdvisory}
+        title={`Delete ${advisoryToDelete?.identifier}`}
+        titleIconVariant="warning"
+        isOpen={!!advisoryToDelete}
+        message="Are you sure you want to delete this Advisory? This action cannot be undone."
+        aria-label="Delete SBOM"
+        confirmBtnVariant={ButtonVariant.danger}
+        confirmBtnLabel="Delete"
+        cancelBtnLabel="Cancel"
+        onCancel={() => setAdvisoryToDelete(null)}
+        onClose={() => setAdvisoryToDelete(null)}
+        onConfirm={() => {
+          if (advisoryToDelete) {
+            deleteAdvisory(advisoryToDelete.uuid);
+          }
+        }}
       />
     </>
   );

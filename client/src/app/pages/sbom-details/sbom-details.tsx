@@ -1,7 +1,11 @@
 import React from "react";
 
+import type { AxiosError } from "axios";
+
 import {
+  ButtonVariant,
   Content,
+  Divider,
   Dropdown,
   DropdownItem,
   DropdownList,
@@ -24,31 +28,72 @@ import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
 import { PathParam, useRouteParams } from "@app/Routes";
 
+import {
+  sbomDeletedErrorMessage,
+  sbomDeletedSuccessMessage,
+} from "@app/Constants";
+import type { SbomSummary } from "@app/client";
+import { ConfirmDialog } from "@app/components/ConfirmDialog";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
+import { NotificationsContext } from "@app/components/NotificationsContext";
 import { useDownload } from "@app/hooks/domain-controls/useDownload";
-import { useFetchSBOMById } from "@app/queries/sboms";
+import { useDeleteSbomMutation, useFetchSBOMById } from "@app/queries/sboms";
 
+import { useNavigate } from "react-router-dom";
 import { Overview } from "./overview";
 import { PackagesBySbom } from "./packages-by-sbom";
 import { VulnerabilitiesBySbom } from "./vulnerabilities-by-sbom";
 
 export const SbomDetails: React.FC = () => {
+  const navigate = useNavigate();
+  const { pushNotification } = React.useContext(NotificationsContext);
+
   const sbomId = useRouteParams(PathParam.SBOM_ID);
   const { sbom, isFetching, fetchError } = useFetchSBOMById(sbomId);
 
-  const { downloadSBOM, downloadSBOMLicenses } = useDownload();
-
+  // Actions Dropdown
   const [isActionsDropdownOpen, setIsActionsDropdownOpen] =
     React.useState(false);
 
+  const handleActionsDropdownToggle = () => {
+    setIsActionsDropdownOpen(!isActionsDropdownOpen);
+  };
+
+  // Download action
+  const { downloadSBOM, downloadSBOMLicenses } = useDownload();
+
+  // Delete action
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+
+  const onDeleteSbomSuccess = (sbom: SbomSummary) => {
+    setIsDeleteDialogOpen(false);
+    pushNotification({
+      title: sbomDeletedSuccessMessage(sbom),
+      variant: "success",
+    });
+    navigate("/sboms");
+  };
+
+  const onDeleteAdvisoryError = (error: AxiosError) => {
+    pushNotification({
+      title: sbomDeletedErrorMessage(error),
+      variant: "danger",
+    });
+  };
+
+  const { mutate: deleteSbom, isPending: isDeleting } = useDeleteSbomMutation(
+    onDeleteSbomSuccess,
+    onDeleteAdvisoryError,
+  );
+
+  // Tabs
   const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
 
-  // Tab refs
   const infoTabRef = React.createRef<HTMLElement>();
   const packagesTabRef = React.createRef<HTMLElement>();
   const vulnerabilitiesTabRef = React.createRef<HTMLElement>();
 
-  // Tab popover refs
+  // Tabs popover refs
   const vulnerabilitiesTabPopoverRef = React.createRef<HTMLElement>();
 
   const handleTabClick = (
@@ -56,10 +101,6 @@ export const SbomDetails: React.FC = () => {
     tabIndex: string | number,
   ) => {
     setActiveTabKey(tabIndex);
-  };
-
-  const handleActionsDropdownToggle = () => {
-    setIsActionsDropdownOpen(!isActionsDropdownOpen);
   };
 
   return (
@@ -122,6 +163,13 @@ export const SbomDetails: React.FC = () => {
                     }}
                   >
                     Download License Report
+                  </DropdownItem>
+                  <Divider component="li" key="separator" />
+                  <DropdownItem
+                    key="delete"
+                    onClick={() => setIsDeleteDialogOpen(true)}
+                  >
+                    Delete
                   </DropdownItem>
                 </DropdownList>
               </Dropdown>
@@ -203,6 +251,25 @@ export const SbomDetails: React.FC = () => {
           {sbomId && <VulnerabilitiesBySbom sbomId={sbomId} />}
         </TabContent>
       </PageSection>
+
+      <ConfirmDialog
+        inProgress={isDeleting}
+        title={`Delete ${sbom?.name}`}
+        titleIconVariant="warning"
+        isOpen={isDeleteDialogOpen}
+        message="Are you sure you want to delete this SBOM? This action cannot be undone."
+        aria-label="Delete SBOM"
+        confirmBtnVariant={ButtonVariant.danger}
+        confirmBtnLabel="Delete"
+        cancelBtnLabel="Cancel"
+        onCancel={() => setIsDeleteDialogOpen(false)}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onConfirm={() => {
+          if (sbom) {
+            deleteSbom(sbom.id);
+          }
+        }}
+      />
     </>
   );
 };
