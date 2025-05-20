@@ -1,4 +1,4 @@
-import type React from "react";
+import React from "react";
 
 import dayjs from "dayjs";
 
@@ -32,10 +32,12 @@ import { useSelectionState } from "@app/hooks/useSelectionState";
 import { ReportStatusMessage } from "./report-status-message";
 
 interface IImporterExecutionsProps {
+  allImporters: Importer[];
   importer: Importer;
 }
 
 export const ImporterExecutions: React.FC<IImporterExecutionsProps> = ({
+  allImporters,
   importer,
 }) => {
   const tableControlState = useTableControlState({
@@ -59,6 +61,7 @@ export const ImporterExecutions: React.FC<IImporterExecutionsProps> = ({
     result: { data: executions, total: totalItemCount },
     isFetching,
     fetchError,
+    refetch,
   } = useFetchImporterReports(
     importer.name,
     getHubRequestParams({
@@ -67,6 +70,7 @@ export const ImporterExecutions: React.FC<IImporterExecutionsProps> = ({
         creationDate: "creation",
       },
     }),
+    true,
   );
 
   const tableControls = useTableControlProps({
@@ -94,6 +98,27 @@ export const ImporterExecutions: React.FC<IImporterExecutionsProps> = ({
       getTdProps,
     },
   } = tableControls;
+
+  // Refetch executions if there was a change in the state of the importer
+  const prevAllImporters = React.useRef<Importer[]>(allImporters);
+  React.useEffect(() => {
+    const prevImporter = prevAllImporters.current?.find(
+      (item) => item.name === importer.name,
+    );
+    const currentImporter = allImporters?.find(
+      (item) => item.name === importer.name,
+    );
+
+    if (
+      prevImporter &&
+      currentImporter &&
+      prevImporter.state !== currentImporter.state
+    ) {
+      refetch();
+    }
+
+    prevAllImporters.current = allImporters;
+  }, [allImporters, importer, refetch]);
 
   return (
     <>

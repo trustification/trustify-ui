@@ -11,7 +11,7 @@ import {
 
 import type { Importer } from "@app/client";
 
-import { getConfiguration } from "../importer-list";
+import { getConfiguration } from "../importer-list-table";
 
 interface IImporterAdditionalInfoProps {
   importer: Importer;

@@ -11,15 +11,14 @@ type ChildrenProps = {
   fetchError: AxiosError;
 };
 
-export interface WatchImporterReportProps {
+export interface IWatchLastImporterReportProps {
   importer: Importer;
   children: (props: ChildrenProps) => React.ReactNode;
 }
 
-export const WatchImporterReport: React.FC<WatchImporterReportProps> = ({
-  importer,
-  children,
-}) => {
+export const WatchLastImporterReport: React.FC<
+  IWatchLastImporterReportProps
+> = ({ importer, children }) => {
   const {
     result: { data: reports },
     isFetching,

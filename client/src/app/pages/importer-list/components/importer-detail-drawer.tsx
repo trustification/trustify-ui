@@ -12,10 +12,12 @@ import { ImporterExecutions } from "./importer-executions";
 
 export interface IImporterDetailDrawerProps
   extends Pick<IPageDrawerContentProps, "onCloseClick"> {
+  allImporters: Importer[];
   importer: Importer | null;
 }
 
 export const ImporterDetailDrawer: React.FC<IImporterDetailDrawerProps> = ({
+  allImporters,
   importer,
   onCloseClick,
 }) => {
@@ -32,7 +34,11 @@ export const ImporterDetailDrawer: React.FC<IImporterDetailDrawerProps> = ({
         </Content>
       }
     >
-      <div>{importer && <ImporterExecutions importer={importer} />}</div>
+      <div>
+        {importer && (
+          <ImporterExecutions allImporters={allImporters} importer={importer} />
+        )}
+      </div>
     </PageDrawerContent>
   );
 };

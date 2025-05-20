@@ -27,7 +27,7 @@ export const useFetchImporters = (refetchDisabled = false) => {
   return {
     importers: data?.data || [],
     isFetching: isLoading,
-    fetchError: error,
+    fetchError: error as AxiosError,
     refetch,
   };
 };
@@ -71,7 +71,7 @@ export const useFetchImporterById = (id: string) => {
   });
 
   return {
-    credentials: data,
+    importer: data?.data,
     isFetching: isLoading,
     fetchError: error as AxiosError,
   };
