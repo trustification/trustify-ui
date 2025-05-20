@@ -1,6 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import {
+  Breadcrumb,
+  BreadcrumbItem,
   Button,
   Content,
   Flex,
@@ -47,6 +50,14 @@ export const AdvisoryDetails: React.FC = () => {
 
   return (
     <>
+      <PageSection type="breadcrumb">
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <Link to="/advisories">Advisories</Link>
+          </BreadcrumbItem>
+          <BreadcrumbItem isActive>Advisory details</BreadcrumbItem>
+        </Breadcrumb>
+      </PageSection>
       <PageSection>
         <Split>
           <SplitItem isFilled>
@@ -88,7 +99,7 @@ export const AdvisoryDetails: React.FC = () => {
           </SplitItem>
         </Split>
       </PageSection>
-      <PageSection type="tabs">
+      <PageSection>
         <Tabs
           mountOnEnter
           activeKey={activeTabKey}
