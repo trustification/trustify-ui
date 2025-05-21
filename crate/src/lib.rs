@@ -28,12 +28,6 @@ pub struct UI {
 
     #[serde(rename(serialize = "OIDC_SCOPE"))]
     pub oidc_scope: String,
-
-    #[serde(rename(serialize = "ANALYTICS_ENABLED"))]
-    pub analytics_enabled: String,
-
-    #[serde(rename(serialize = "ANALYTICS_WRITE_KEY"))]
-    pub analytics_write_key: String,
 }
 
 pub fn trustify_ui_resources() -> HashMap<&'static str, Resource> {
