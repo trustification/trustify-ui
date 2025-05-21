@@ -27,7 +27,7 @@ interface ISbomSearchContext {
     | "labels"
     | "vulnerabilities",
     "name" | "published",
-    "" | "published",
+    "" | "published" | "labels",
     string
   >;
 
@@ -75,6 +75,17 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
         categoryKey: "published",
         title: "Created on",
         type: FilterType.dateRange,
+      },
+      {
+        categoryKey: "labels",
+        title: "Label",
+        type: FilterType.multiselect,
+        selectOptions: [
+          {
+            value: "uno",
+            label: "Uno",
+          },
+        ],
       },
     ],
     isExpansionEnabled: false,
