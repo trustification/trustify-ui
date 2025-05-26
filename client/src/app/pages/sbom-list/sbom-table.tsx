@@ -47,7 +47,6 @@ export const SbomTable: React.FC = () => {
       getTdProps,
     },
     expansionDerivedState: { isCellExpanded },
-    filterState: { setFilterValues },
   } = tableControls;
 
   const { downloadSBOM, downloadSBOMLicenses } = useDownload();
@@ -115,9 +114,8 @@ export const SbomTable: React.FC = () => {
                     >
                       <LabelsAsList
                         value={item.labels}
-                        onClick={({ key, value }) => {
-                          // setFilterValues({ "": ["quarkus"] });
-                          setFilterValues({ "labels": ["valor\\=sinllave"] });
+                        onClick={() => {
+                          // TODO Apply filter
                         }}
                       />
                     </Td>

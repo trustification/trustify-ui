@@ -45,7 +45,10 @@ export interface SearchTabsProps {
       PackageTableData,
       "" | "type" | "arch"
     >;
-    sbomFilterPanelProps: IFilterPanelProps<SbomSummary, "" | "published">;
+    sbomFilterPanelProps: IFilterPanelProps<
+      SbomSummary,
+      "" | "published" | "labels"
+    >;
     vulnerabilityFilterPanelProps: IFilterPanelProps<
       VulnerabilitySummary,
       "" | "base_severity" | "published"

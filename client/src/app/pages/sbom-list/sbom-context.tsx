@@ -48,6 +48,22 @@ interface ISbomProvider {
 export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
   children,
 }) => {
+  const [inputValue, setInputValue] = React.useState("");
+
+  const onDebouncedInputValue = React.useCallback((val: string) => {
+    setInputValue(val);
+  }, []);
+
+  // TODO replace this for fetching labels
+  // Labels endpoint does not exist yet
+  const {
+    result: { data: sbomOptions },
+  } = useFetchSBOMs({
+    filters: [{ field: "", operator: "~", value: inputValue }],
+    page: { pageNumber: 1, itemsPerPage: 10 },
+    sort: { field: "ingested", direction: "desc" },
+  });
+
   const tableControlState = useTableControlState({
     tableName: "sbom",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.sboms,
@@ -66,6 +82,13 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
     isFilterEnabled: true,
     filterCategories: [
       {
+        categoryKey: "labels",
+        title: "Label",
+        type: FilterType.typeahead,
+        onDebouncedInputValue,
+        selectOptions: sbomOptions.map((e) => ({ label: e.name, value: e.id })),
+      },
+      {
         categoryKey: FILTER_TEXT_CATEGORY_KEY,
         title: "Filter text",
         placeholderText: "Search",
@@ -75,17 +98,6 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
         categoryKey: "published",
         title: "Created on",
         type: FilterType.dateRange,
-      },
-      {
-        categoryKey: "labels",
-        title: "Label",
-        type: FilterType.multiselect,
-        selectOptions: [
-          {
-            value: "uno",
-            label: "Uno",
-          },
-        ],
       },
     ],
     isExpansionEnabled: false,

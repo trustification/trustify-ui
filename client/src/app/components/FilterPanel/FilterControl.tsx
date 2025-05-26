@@ -12,6 +12,7 @@ import { CheckboxFilterControl } from "./CheckboxFilterControl";
 import { DateRangeFilter } from "./DateRangeFilter";
 import { RadioFilterControl } from "./RadioFilterControl";
 import { SearchFilterControl } from "./SearchFilterControl";
+import { TypeaheadFilterControl } from "./TypeaheadFilterControl";
 
 export interface IFilterControlProps<TItem, TFilterCategoryKey extends string> {
   category: FilterCategory<TItem, TFilterCategoryKey>;
@@ -59,6 +60,17 @@ export const FilterControl = <TItem, TFilterCategoryKey extends string>({
   }
   if (category.type === FilterType.dateRange) {
     return <DateRangeFilter category={category} {...props} />;
+  }
+  if (category.type === FilterType.typeahead) {
+    return (
+      <TypeaheadFilterControl
+        isScrollable
+        category={
+          category as IMultiselectFilterCategory<TItem, TFilterCategoryKey>
+        }
+        {...props}
+      />
+    );
   }
   return null;
 };
