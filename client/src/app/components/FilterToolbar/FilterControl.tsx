@@ -12,6 +12,7 @@ import {
 import { MultiselectFilterControl } from "./MultiselectFilterControl";
 import { SearchFilterControl } from "./SearchFilterControl";
 import { SelectFilterControl } from "./SelectFilterControl";
+import { TypeaheadFilterControl } from "./TypeaheadFilterControl";
 
 export interface IFilterControlProps<TItem, TFilterCategoryKey extends string> {
   category: FilterCategory<TItem, TFilterCategoryKey>;
@@ -61,6 +62,17 @@ export const FilterControl = <TItem, TFilterCategoryKey extends string>({
   }
   if (category.type === FilterType.dateRange) {
     return <DateRangeFilter category={category} {...props} />;
+  }
+  if (category.type === FilterType.typeahead) {
+    return (
+      <TypeaheadFilterControl
+        isScrollable
+        category={
+          category as IMultiselectFilterCategory<TItem, TFilterCategoryKey>
+        }
+        {...props}
+      />
+    );
   }
   return null;
 };
