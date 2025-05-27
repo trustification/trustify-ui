@@ -1,11 +1,18 @@
 import React from "react";
 
-import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
+import {
+  Button,
+  Toolbar,
+  ToolbarContent,
+  ToolbarItem,
+} from "@patternfly/react-core";
+import UploadIcon from "@patternfly/react-icons/dist/esm/icons/upload-icon";
 
 import { FilterToolbar } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
 
 import { AdvisorySearchContext } from "./advisory-context";
+import { UploadDrawer } from "./components/UploadDrawer";
 
 interface AdvisoryToolbarProps {
   showFilters?: boolean;
@@ -14,6 +21,9 @@ interface AdvisoryToolbarProps {
 export const AdvisoryToolbar: React.FC<AdvisoryToolbarProps> = ({
   showFilters,
 }) => {
+  const [isUploadDrawerExpanded, setIsUploadDrawerExpanded] =
+    React.useState(false);
+
   const { tableControls } = React.useContext(AdvisorySearchContext);
 
   const {
@@ -30,6 +40,15 @@ export const AdvisoryToolbar: React.FC<AdvisoryToolbarProps> = ({
       <Toolbar {...toolbarProps}>
         <ToolbarContent>
           {showFilters && <FilterToolbar {...filterToolbarProps} />}
+          <ToolbarItem>
+            <Button
+              variant="control"
+              icon={<UploadIcon />}
+              onClick={() => setIsUploadDrawerExpanded(true)}
+            >
+              Upload
+            </Button>
+          </ToolbarItem>
           <ToolbarItem {...paginationToolbarItemProps}>
             <SimplePagination
               idPrefix="advisory-table"
@@ -39,6 +58,11 @@ export const AdvisoryToolbar: React.FC<AdvisoryToolbarProps> = ({
           </ToolbarItem>
         </ToolbarContent>
       </Toolbar>
+
+      <UploadDrawer
+        isExpanded={isUploadDrawerExpanded}
+        onCloseClick={() => setIsUploadDrawerExpanded(false)}
+      />
     </>
   );
 };
