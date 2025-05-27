@@ -143,7 +143,7 @@ export const useFetchImporterReports = (
       total: data?.data?.total ?? 0,
     },
     isFetching: isLoading,
-    fetchError: error as AxiosError,
+    fetchError: error,
     refetch,
   };
 };

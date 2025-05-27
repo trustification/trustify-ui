@@ -21,7 +21,6 @@ const usePageDrawerState = () => {
     Partial<DrawerPanelContentProps>
   >({});
   const [drawerPageKey, setDrawerPageKey] = React.useState<string>("");
-  const [drawerDefaultSize, setDrawerDefaultSize] = React.useState<string>("");
   const drawerFocusRef = React.useRef(document.createElement("span"));
   return {
     isDrawerExpanded,
@@ -32,8 +31,6 @@ const usePageDrawerState = () => {
     setDrawerPanelContentProps,
     drawerPageKey,
     setDrawerPageKey,
-    drawerDefaultSize,
-    setDrawerDefaultSize,
     drawerFocusRef: drawerFocusRef as typeof drawerFocusRef | null,
   };
 };
@@ -49,8 +46,6 @@ const PageDrawerContext = React.createContext<PageDrawerState>({
   setDrawerPanelContentProps: () => {},
   drawerPageKey: "",
   setDrawerPageKey: () => {},
-  drawerDefaultSize: "",
-  setDrawerDefaultSize: () => {},
   drawerFocusRef: null,
 });
 
@@ -68,7 +63,6 @@ export const PageContentWithDrawerProvider: React.FC<
     drawerPanelContent,
     drawerPanelContentProps,
     drawerPageKey,
-    drawerDefaultSize,
   } = pageDrawerState;
   return (
     <PageDrawerContext.Provider value={pageDrawerState}>
@@ -83,7 +77,7 @@ export const PageContentWithDrawerProvider: React.FC<
               <DrawerPanelContent
                 isResizable
                 id="page-drawer-content"
-                defaultSize={drawerDefaultSize}
+                defaultSize="500px"
                 minSize="150px"
                 key={drawerPageKey}
                 {...drawerPanelContentProps}
@@ -111,7 +105,6 @@ export interface IPageDrawerContentProps {
   drawerPanelContentProps?: Partial<DrawerPanelContentProps>; // Additional props for the DrawerPanelContent component.
   focusKey?: string | number; // A unique key representing the object being described in the drawer. When this changes, the drawer will regain focus.
   pageKey: string; // A unique key representing the page where the drawer is used. Causes the drawer to remount when changing pages.
-  defaultSize?: string;
 }
 
 export const PageDrawerContent: React.FC<IPageDrawerContentProps> = ({
@@ -121,7 +114,6 @@ export const PageDrawerContent: React.FC<IPageDrawerContentProps> = ({
   children,
   drawerPanelContentProps,
   pageKey: localPageKeyProp,
-  defaultSize: localDefaultSize = "500px",
 }) => {
   const {
     setIsDrawerExpanded,
@@ -129,7 +121,6 @@ export const PageDrawerContent: React.FC<IPageDrawerContentProps> = ({
     setDrawerPanelContent,
     setDrawerPanelContentProps,
     setDrawerPageKey,
-    setDrawerDefaultSize,
   } = React.useContext(PageDrawerContext);
 
   // Warn if we are trying to render more than one PageDrawerContent (they'll fight over the same state).
@@ -167,13 +158,6 @@ export const PageDrawerContent: React.FC<IPageDrawerContentProps> = ({
   React.useEffect(() => {
     setDrawerPanelContentProps(drawerPanelContentProps || {});
   }, [drawerPanelContentProps, setDrawerPanelContentProps]);
-
-  React.useEffect(() => {
-    setDrawerDefaultSize(localDefaultSize);
-    return () => {
-      setDrawerDefaultSize("");
-    };
-  }, [localDefaultSize, setDrawerDefaultSize]);
 
   // If the drawer is already expanded describing app A, then the user clicks app B, we want to send focus back to the drawer.
 

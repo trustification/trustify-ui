@@ -1,4 +1,4 @@
-import type React from "react";
+import React from "react";
 
 import type { AxiosError, AxiosResponse } from "axios";
 
@@ -7,12 +7,15 @@ import {
   CardBody,
   Content,
   PageSection,
+  Popover,
   Tab,
+  TabAction,
   TabContent,
   TabContentBody,
   TabTitleText,
   Tabs,
 } from "@patternfly/react-core";
+import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
 import { useUploadAdvisory } from "@app/queries/advisories";
 import { useUploadSBOM } from "@app/queries/sboms";
@@ -31,6 +34,9 @@ export const ImporterList: React.FC = () => {
     handleRemoveUpload: handleAdvisoryRemoveUpload,
   } = useUploadAdvisory();
 
+  const sbomPopupRef = React.createRef<HTMLElement>();
+  const advisoryPopupRef = React.createRef<HTMLElement>();
+
   return (
     <>
       <PageSection hasBodyWrapper={false}>
@@ -42,7 +48,28 @@ export const ImporterList: React.FC = () => {
         <Card>
           <CardBody>
             <Tabs defaultActiveKey={0}>
-              <Tab eventKey={0} title={<TabTitleText>SBOM</TabTitleText>}>
+              <Tab
+                eventKey={0}
+                title={<TabTitleText>SBOM</TabTitleText>}
+                actions={
+                  <>
+                    <TabAction ref={sbomPopupRef}>
+                      <HelpIcon />
+                    </TabAction>
+                    <Popover
+                      bodyContent={
+                        <div>
+                          Upload a Software Bill of Materials (SBOM) document.
+                          We accept CycloneDX versions 1.3, 1.4, 1.5 and 1.6,
+                          and System Package Data Exchange (SPDX) versions 2.2,
+                          and 2.3.
+                        </div>
+                      }
+                      triggerRef={sbomPopupRef}
+                    />
+                  </>
+                }
+              >
                 <TabContent id="upload-sbom-tab-content">
                   <TabContentBody hasPadding>
                     <UploadFiles
@@ -63,7 +90,23 @@ export const ImporterList: React.FC = () => {
                   </TabContentBody>
                 </TabContent>
               </Tab>
-              <Tab eventKey={1} title={<TabTitleText>Advisory</TabTitleText>}>
+              <Tab
+                eventKey={1}
+                title={<TabTitleText>Advisory</TabTitleText>}
+                actions={
+                  <>
+                    <TabAction ref={advisoryPopupRef}>
+                      <HelpIcon />
+                    </TabAction>
+                    <Popover
+                      bodyContent={
+                        <div>Upload a CSAF, CVE, or OSV Advisory.</div>
+                      }
+                      triggerRef={advisoryPopupRef}
+                    />
+                  </>
+                }
+              >
                 <TabContent id="upload-advisory-tab-content">
                   <TabContentBody hasPadding>
                     <UploadFiles

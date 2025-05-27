@@ -82,12 +82,12 @@ export const SidebarApp: React.FC = () => {
           </li>
           <li className="pf-v6-c-nav__item">
             <NavLink
-              to="/data-sources"
+              to="/importers"
               className={({ isActive }) => {
                 return css(LINK_CLASS, isActive ? ACTIVE_LINK_CLASS : "");
               }}
             >
-              Data sources
+              Importers
             </NavLink>
           </li>
           <li className="pf-v6-c-nav__item">

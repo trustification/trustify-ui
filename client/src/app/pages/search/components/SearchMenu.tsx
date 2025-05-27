@@ -311,7 +311,7 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
 
   const searchInput = (
     <SearchInput
-      placeholder="Search for an SBOM, Package, or Vulnerability"
+      placeholder="Search for an SBOM, Package, Advisory, or Vulnerability"
       value={searchValue}
       onChange={(_event, value) => onChangeSearchValue(value)}
       onClear={onClearSearchValue}

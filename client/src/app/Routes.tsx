@@ -54,7 +54,7 @@ export const AppRoutes = () => {
       element: <SBOMDetails />,
     },
     {
-      path: "/data-sources",
+      path: "/importers",
       element: <ImporterList />,
     },
     { path: "/upload", element: <Upload /> },
