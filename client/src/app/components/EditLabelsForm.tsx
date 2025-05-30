@@ -8,15 +8,16 @@ import {
   ActionGroup,
   Button,
   ButtonVariant,
+  Card,
   Form,
   FormGroup,
-  Grid,
-  GridItem,
   Label,
   LabelGroup,
   Stack,
-  StackItem,
+  StackItem
 } from "@patternfly/react-core";
+
+import { singleLabelString } from "@app/api/model-utils";
 
 import { HookFormPFTextInput } from "./HookFormPFFields";
 
@@ -89,10 +90,9 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
         labels.
       </StackItem>
       <StackItem>
-        <div className="pf-v5-c-form">
-          <FormGroup label={title}>
+        <FormGroup label={title}>
+          <Card>
             <LabelGroup
-              className="pf-v5-c-form-control"
               style={{ padding: 10, minHeight: 10 }}
               defaultIsOpen
               numLabels={10}
@@ -107,38 +107,23 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
                     setLabelArray(newLabels);
                   }}
                 >
-                  {`${v ? `${k}=${v}` : `${k}`}`}
+                  {singleLabelString({ key: k, value: v })}
                 </Label>
               ))}
             </LabelGroup>
-          </FormGroup>
-        </div>
+          </Card>
+        </FormGroup>
       </StackItem>
       <StackItem>
         <Form onSubmit={handleSubmit(onAddLabel)}>
-          <Grid hasGutter>
-            <GridItem md={10}>
-              <HookFormPFTextInput
-                control={control}
-                name="label"
-                label="Label"
-                fieldId="label"
-                isRequired
-                isDisabled={isDisabled}
-              />
-            </GridItem>
-            <GridItem md={2}>
-              <FormGroup label="Action">
-                <Button
-                  type="submit"
-                  variant={ButtonVariant.secondary}
-                  isDisabled={isDisabled}
-                >
-                  Add
-                </Button>
-              </FormGroup>
-            </GridItem>
-          </Grid>
+          <HookFormPFTextInput
+            control={control}
+            name="label"
+            label="Label"
+            fieldId="label"
+            isRequired
+            isDisabled={isDisabled}
+          />
 
           <ActionGroup>
             <Button

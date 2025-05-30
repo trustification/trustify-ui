@@ -6,6 +6,7 @@ import {
   FILTER_TEXT_CATEGORY_KEY,
   TablePersistenceKeyPrefixes,
 } from "@app/Constants";
+import { singleLabelString } from "@app/api/model-utils";
 import type { SbomSummary } from "@app/client";
 import { FilterType } from "@app/components/FilterToolbar";
 import {
@@ -15,7 +16,7 @@ import {
   useTableControlState,
 } from "@app/hooks/table-controls";
 import { useSelectionState } from "@app/hooks/useSelectionState";
-import { useFetchSBOMs } from "@app/queries/sboms";
+import { useFetchSBOMLabels, useFetchSBOMs } from "@app/queries/sboms";
 
 interface ISbomSearchContext {
   tableControls: ITableControls<
@@ -54,15 +55,7 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
     setInputValue(val);
   }, []);
 
-  // TODO replace this for fetching labels
-  // Labels endpoint does not exist yet
-  const {
-    result: { data: sbomOptions },
-  } = useFetchSBOMs({
-    filters: [{ field: "", operator: "~", value: inputValue }],
-    page: { pageNumber: 1, itemsPerPage: 10 },
-    sort: { field: "ingested", direction: "desc" },
-  });
+  const { labels } = useFetchSBOMLabels(inputValue);
 
   const tableControlState = useTableControlState({
     tableName: "sbom",
@@ -85,8 +78,15 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
         categoryKey: "labels",
         title: "Label",
         type: FilterType.typeahead,
+        placeholderText: "Labels",
+        selectOptions: labels.map((e) => {
+          const keyValue = singleLabelString({ key: e.key, value: e.value });
+          return {
+            value: keyValue,
+            label: keyValue,
+          };
+        }),
         onDebouncedInputValue,
-        selectOptions: sbomOptions.map((e) => ({ label: e.name, value: e.id })),
       },
       {
         categoryKey: FILTER_TEXT_CATEGORY_KEY,

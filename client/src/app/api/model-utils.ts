@@ -8,7 +8,7 @@ import {
   t_global_icon_color_severity_undefined_default as unknownColor,
 } from "@patternfly/react-tokens";
 
-import type { ExtendedSeverity } from "./models";
+import type { ExtendedSeverity, SingleLabel } from "./models";
 
 type ListType = {
   [key in ExtendedSeverity]: {
@@ -80,3 +80,7 @@ export function compareBySeverityFn<T>(
     );
   };
 }
+
+export const singleLabelString = ({ key, value }: SingleLabel): string => {
+  return `${value ? `${key}=${value}` : `${key}`}`;
+};

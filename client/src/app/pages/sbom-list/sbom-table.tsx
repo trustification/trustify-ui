@@ -21,6 +21,7 @@ import {
 import { useDownload } from "@app/hooks/domain-controls/useDownload";
 import { formatDate } from "@app/utils/utils";
 
+import { singleLabelString } from "@app/api/model-utils";
 import type { SbomSummary } from "@app/client";
 import { LabelsAsList } from "@app/components/LabelsAsList";
 import { SBOMEditLabelsForm } from "./components/SBOMEditLabelsForm";
@@ -47,6 +48,7 @@ export const SbomTable: React.FC = () => {
       getTdProps,
     },
     expansionDerivedState: { isCellExpanded },
+    filterState: { filterValues, setFilterValues },
   } = tableControls;
 
   const { downloadSBOM, downloadSBOMLicenses } = useDownload();
@@ -114,8 +116,19 @@ export const SbomTable: React.FC = () => {
                     >
                       <LabelsAsList
                         value={item.labels}
-                        onClick={() => {
-                          // TODO Apply filter
+                        onClick={({ key, value }) => {
+                          const labelString = singleLabelString({ key, value });
+
+                          const filterValue = filterValues.labels;
+                          if (!filterValue?.includes(labelString)) {
+                            const newFilterValue = filterValue
+                              ? [...filterValue, labelString]
+                              : [labelString];
+
+                            setFilterValues({
+                              labels: newFilterValue,
+                            });
+                          }
                         }}
                       />
                     </Td>

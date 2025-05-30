@@ -17,6 +17,7 @@ import {
   getSbom,
   getSbomAdvisories,
   listRelatedSboms,
+  listSbomLabels,
   listSboms,
   updateSbomLabels,
 } from "@app/client";
@@ -26,6 +27,24 @@ import { uploadSbom } from "@app/api/rest";
 import { requestParamsQuery } from "../hooks/table-controls";
 
 export const SBOMsQueryKey = "sboms";
+
+export const useFetchSBOMLabels = (filterText: string) => {
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: [SBOMsQueryKey, "labels", filterText],
+    queryFn: () =>
+      listSbomLabels({
+        client,
+        query: { limit: 10, filter_text: filterText },
+      }),
+  });
+
+  return {
+    labels: (data?.data as { key: string; value: string }[] | undefined) || [],
+    isFetching: isLoading,
+    fetchError: error as AxiosError,
+    refetch,
+  };
+};
 
 export const useFetchSBOMs = (
   params: HubRequestParams = {},
