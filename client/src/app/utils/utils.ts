@@ -113,3 +113,6 @@ export const getFilenameFromContentDisposition = (
   const match = contentDisposition.match(/filename="?([^"]+)"?/);
   return match ? match[1] : null;
 };
+
+export const getString = (input: string | (() => string)) =>
+  typeof input === "function" ? input() : input;

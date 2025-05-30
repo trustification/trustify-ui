@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { useForm } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -14,15 +14,18 @@ import {
   Label,
   LabelGroup,
   Stack,
-  StackItem
+  StackItem,
 } from "@patternfly/react-core";
 
-import { singleLabelString } from "@app/api/model-utils";
+import type { SingleLabel } from "@app/api/models";
+import { getString } from "@app/utils/utils";
 
-import { HookFormPFTextInput } from "./HookFormPFFields";
+import type { AutocompleteOptionProps } from "./Autocomplete/type-utils";
+import HookFormAutocomplete from "./HookFormPFFields/HookFormAutocomplete";
 
 type FormValues = {
-  label: string;
+  something: string;
+  labels: AutocompleteOptionProps[];
 };
 
 interface EditLabelsFormProps {
@@ -31,6 +34,16 @@ interface EditLabelsFormProps {
   isDisabled: boolean;
   onSave: (value: { [key: string]: string }) => void;
   onClose: () => void;
+
+  // Labels Dropdown
+  autocompleteLabels: SingleLabel[];
+  keyValueToOption: (value: {
+    key: string;
+    value?: string;
+  }) => AutocompleteOptionProps;
+
+  onCreateNewOption?: (value: string) => AutocompleteOptionProps;
+  onLabelInputChange?: (value: string) => void;
 }
 
 export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
@@ -39,6 +52,10 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
   isDisabled,
   onSave,
   onClose,
+  autocompleteLabels,
+  keyValueToOption,
+  onCreateNewOption,
+  onLabelInputChange,
 }) => {
   const validationSchema = object().shape({
     label: string()
@@ -47,35 +64,25 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
       .max(120),
   });
 
-  const { handleSubmit, control, reset } = useForm<FormValues>({
-    defaultValues: {
-      label: "",
-    },
-    resolver: yupResolver(validationSchema),
-    mode: "onChange",
-  });
+  const { handleSubmit, getValues, setValue, control, watch } =
+    useForm<FormValues>({
+      defaultValues: {
+        labels: Object.entries(value).map(([key, value]) => {
+          return keyValueToOption({ key, value });
+        }),
+      },
+      resolver: yupResolver(validationSchema),
+      mode: "onChange",
+    });
 
-  const [labelArray, setLabelArray] = React.useState(
-    Object.entries(value).sort(([keyA], [keyB]) => keyB.localeCompare(keyA)),
-  );
-
-  const onAddLabel = (formValues: FormValues) => {
-    if (!formValues.label) {
-      return;
-    }
-
-    const [newKey, newValue] = formValues.label.split("=");
-
-    const newLabels = labelArray.filter(([key]) => key !== newKey);
-    setLabelArray([...newLabels, [newKey, newValue ?? ""]]);
-
-    reset();
-  };
+  const labels = watch("labels");
 
   const onSaveForm = () => {
-    const labelsObject: { [key: string]: string } = labelArray.reduce(
-      (prev, [k, v]) => {
-        return Object.assign(prev, { [k]: v });
+    const labelsObject: { [key: string]: string } = getValues().labels.reduce(
+      (prev, { name }) => {
+        const optionName = typeof name === "function" ? name() : name;
+        const [k, v] = optionName.split("=");
+        return Object.assign(prev, { [k]: v ?? "" });
       },
       {},
     );
@@ -97,17 +104,16 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
               defaultIsOpen
               numLabels={10}
             >
-              {labelArray.map(([k, v], index) => (
+              {labels.map((option) => (
                 <Label
-                  key={`${k}=${v}`}
+                  key={option.id}
                   color="blue"
                   onClose={() => {
-                    const newLabels = [...labelArray];
-                    newLabels.splice(index, 1);
-                    setLabelArray(newLabels);
+                    const newLabels = labels.filter((e) => e.id !== option.id);
+                    setValue("labels", newLabels);
                   }}
                 >
-                  {singleLabelString({ key: k, value: v })}
+                  {getString(option.labelName || option.name)}
                 </Label>
               ))}
             </LabelGroup>
@@ -115,14 +121,21 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
         </FormGroup>
       </StackItem>
       <StackItem>
-        <Form onSubmit={handleSubmit(onAddLabel)}>
-          <HookFormPFTextInput
+        <Form onSubmit={handleSubmit(() => {})}>
+          <HookFormAutocomplete
+            isInputText
+            items={autocompleteLabels.map(({ key, value }) =>
+              keyValueToOption({ key, value }),
+            )}
             control={control}
-            name="label"
+            name="labels"
             label="Label"
-            fieldId="label"
-            isRequired
-            isDisabled={isDisabled}
+            fieldId="labels"
+            noResultsMessage={onCreateNewOption ? "" : "No search results"}
+            placeholderText=""
+            searchInputAriaLabel="labels-select-toggle"
+            onCreateNewOption={onCreateNewOption}
+            onSearchChange={onLabelInputChange}
           />
 
           <ActionGroup>
