@@ -27,6 +27,8 @@ export const HookFormAutocomplete = <FormValues extends FieldValues>({
   isInputText = false,
   onSearchChange,
   onCreateNewOption,
+  validateNewOption,
+  appendDropdownToDocumentBody,
 }: {
   items?: AutocompleteOptionProps[];
   groupedItems?: GroupedAutocompleteOptionProps[];
@@ -43,6 +45,8 @@ export const HookFormAutocomplete = <FormValues extends FieldValues>({
   isInputText?: boolean;
   onSearchChange?: (value: string) => void;
   onCreateNewOption?: (value: string) => AutocompleteOptionProps;
+  validateNewOption?: (value: string) => boolean;
+  appendDropdownToDocumentBody?: boolean;
 }) => (
   <HookFormPFGroupController
     isRequired={isRequired}
@@ -60,12 +64,14 @@ export const HookFormAutocomplete = <FormValues extends FieldValues>({
           options={groupedItems}
           selections={value}
           onChange={(selection) => {
-            onChange(selection.map((e) => ({ id: e.name, name: e.name })));
+            onChange(selection);
           }}
           showChips={showChips}
           isInputText={isInputText}
           onSearchChange={onSearchChange}
           onCreateNewOption={onCreateNewOption}
+          validateNewOption={validateNewOption}
+          appendDropdownToDocumentBody={appendDropdownToDocumentBody}
         />
       ) : (
         <Autocomplete
@@ -82,6 +88,8 @@ export const HookFormAutocomplete = <FormValues extends FieldValues>({
           isInputText={isInputText}
           onSearchChange={onSearchChange}
           onCreateNewOption={onCreateNewOption}
+          validateNewOption={validateNewOption}
+          appendDropdownToDocumentBody={appendDropdownToDocumentBody}
         />
       )
     }

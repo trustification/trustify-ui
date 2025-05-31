@@ -51,9 +51,11 @@ export interface IAutocompleteProps {
   noResultsMessage?: string;
 
   showChips?: boolean;
+  appendDropdownToDocumentBody?: boolean;
   isInputText?: boolean;
   onSearchChange?: (value: string) => void;
   onCreateNewOption?: (value: string) => AutocompleteOptionProps;
+  validateNewOption?: (value: string) => boolean;
 }
 
 /**
@@ -70,10 +72,12 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
   selections = [],
   menuHeader = "",
   noResultsMessage = "No results found",
+  appendDropdownToDocumentBody,
   showChips,
   isInputText,
   onSearchChange,
   onCreateNewOption,
+  validateNewOption,
 }) => {
   const menuRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -96,6 +100,7 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
     menuRef,
     searchInputRef,
     onCreateNewOption,
+    validateNewOption,
   });
 
   const inputGroup = (
@@ -178,7 +183,11 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
           triggerRef={searchInputRef}
           popper={menu}
           popperRef={menuRef}
-          appendTo={() => searchInputRef.current || document.body}
+          appendTo={() =>
+            appendDropdownToDocumentBody
+              ? document.body || searchInputRef.current
+              : searchInputRef.current || document.body
+          }
           isVisible={menuIsOpen}
           onDocumentClick={handleOnDocumentClick}
         />

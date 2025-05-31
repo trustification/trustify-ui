@@ -15,6 +15,7 @@ interface AutocompleteLogicProps {
   menuRef: React.RefObject<HTMLDivElement>;
   searchInputRef: React.RefObject<HTMLDivElement>;
   onCreateNewOption?: (value: string) => AutocompleteOptionProps;
+  validateNewOption?: (value: string) => boolean;
 }
 
 export const useAutocompleteHandlers = ({
@@ -25,6 +26,7 @@ export const useAutocompleteHandlers = ({
   menuRef,
   searchInputRef,
   onCreateNewOption,
+  validateNewOption,
 }: AutocompleteLogicProps) => {
   const [inputValue, setInputValue] = useState(searchString);
   const [menuIsOpen, setMenuIsOpen] = useState(false);
@@ -68,18 +70,20 @@ export const useAutocompleteHandlers = ({
 
   const addSelectionByCreateNewOption = () => {
     if (inputValue && onCreateNewOption) {
-      const newOption = onCreateNewOption(inputValue);
+      const isValid = validateNewOption ? validateNewOption(inputValue) : true;
+      if (isValid) {
+        const newOption = onCreateNewOption(inputValue);
+        const exists = selections.some(
+          (option) => getUniqueId(option) === getUniqueId(newOption),
+        );
+        if (!exists) {
+          const updatedSelections = [...selections, newOption].filter(Boolean);
+          onChange(updatedSelections);
+        }
 
-      const exists = selections.some(
-        (option) => getUniqueId(option) === getUniqueId(newOption),
-      );
-      if (!exists) {
-        const updatedSelections = [...selections, newOption].filter(Boolean);
-        onChange(updatedSelections);
+        setInputValue("");
+        setMenuIsOpen(false);
       }
-
-      setInputValue("");
-      setMenuIsOpen(false);
     }
   };
 

@@ -59,6 +59,8 @@ export interface IGroupedAutocompleteProps {
   isInputText?: boolean;
   onSearchChange?: (value: string) => void;
   onCreateNewOption?: (value: string) => AutocompleteOptionProps;
+  validateNewOption?: (value: string) => boolean;
+  appendDropdownToDocumentBody?: boolean;
 }
 
 /**
@@ -78,6 +80,8 @@ export const GroupedAutocomplete: React.FC<IGroupedAutocompleteProps> = ({
   isInputText,
   onSearchChange,
   onCreateNewOption,
+  validateNewOption,
+  appendDropdownToDocumentBody,
 }) => {
   const menuRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -100,6 +104,7 @@ export const GroupedAutocomplete: React.FC<IGroupedAutocompleteProps> = ({
     menuRef,
     searchInputRef,
     onCreateNewOption,
+    validateNewOption,
   });
 
   const inputGroup = (
@@ -173,7 +178,11 @@ export const GroupedAutocomplete: React.FC<IGroupedAutocompleteProps> = ({
           triggerRef={searchInputRef}
           popper={menu}
           popperRef={menuRef}
-          appendTo={() => searchInputRef.current || document.body}
+          appendTo={() =>
+            appendDropdownToDocumentBody
+              ? document.body || searchInputRef.current
+              : searchInputRef.current || document.body
+          }
           isVisible={menuIsOpen}
           onDocumentClick={handleOnDocumentClick}
         />

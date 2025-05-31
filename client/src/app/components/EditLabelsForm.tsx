@@ -2,7 +2,7 @@ import type React from "react";
 import { useForm } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-import { object, string } from "yup";
+import { array, object, string } from "yup";
 
 import {
   ActionGroup,
@@ -24,7 +24,6 @@ import type { AutocompleteOptionProps } from "./Autocomplete/type-utils";
 import HookFormAutocomplete from "./HookFormPFFields/HookFormAutocomplete";
 
 type FormValues = {
-  something: string;
   labels: AutocompleteOptionProps[];
 };
 
@@ -58,13 +57,17 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
   onLabelInputChange,
 }) => {
   const validationSchema = object().shape({
-    label: string()
-      .trim()
-      .matches(/^[^=][^=]*=?[^=]*$/)
-      .max(120),
+    labels: array()
+      .of(
+        object().shape({
+          id: string().min(10),
+          name: string().min(10),
+        }),
+      )
+      .max(1),
   });
 
-  const { handleSubmit, getValues, setValue, control, watch } =
+  const { handleSubmit, getValues, setValue, control, watch, formState } =
     useForm<FormValues>({
       defaultValues: {
         labels: Object.entries(value).map(([key, value]) => {
@@ -124,6 +127,7 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
         <Form onSubmit={handleSubmit(() => {})}>
           <HookFormAutocomplete
             isInputText
+            appendDropdownToDocumentBody
             items={autocompleteLabels.map(({ key, value }) =>
               keyValueToOption({ key, value }),
             )}
@@ -134,8 +138,11 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
             noResultsMessage={onCreateNewOption ? "" : "No search results"}
             placeholderText=""
             searchInputAriaLabel="labels-select-toggle"
-            onCreateNewOption={onCreateNewOption}
             onSearchChange={onLabelInputChange}
+            onCreateNewOption={onCreateNewOption}
+            // validateNewOption={(value) => {
+            //   return /^[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])?$/.test(value);
+            // }}
           />
 
           <ActionGroup>
