@@ -3,7 +3,7 @@ import type React from "react";
 import { getString } from "@app/utils/utils";
 import { SearchInput, TextInput } from "@patternfly/react-core";
 
-import type { AnyAutocompleteOptionProps } from "./type-utils";
+import type { GroupedAutocompleteOptionProps } from "./type-utils";
 
 export interface SearchInputProps {
   isInputText?: boolean;
@@ -15,7 +15,7 @@ export interface SearchInputProps {
   onKeyHandling: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   inputValue: string;
   inputRef: React.RefObject<HTMLDivElement>;
-  options: AnyAutocompleteOptionProps[];
+  options: GroupedAutocompleteOptionProps[];
 }
 
 export const SearchInputComponent: React.FC<SearchInputProps> = ({

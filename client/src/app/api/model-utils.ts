@@ -81,6 +81,11 @@ export function compareBySeverityFn<T>(
   };
 }
 
-export const singleLabelString = ({ key, value }: SingleLabel): string => {
+export const joinKeyValueAsString = ({ key, value }: SingleLabel): string => {
   return `${value ? `${key}=${value}` : `${key}`}`;
+};
+
+export const splitStringAsKeyValue = (v: string): SingleLabel => {
+  const [key, value] = v.split("=");
+  return { key, value };
 };

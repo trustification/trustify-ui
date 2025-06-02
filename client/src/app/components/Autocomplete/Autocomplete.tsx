@@ -18,43 +18,28 @@ import { getString } from "@app/utils/utils";
 
 import { LabelToolip } from "../LabelTooltip";
 import { SearchInputComponent } from "./SearchInput";
-import { type AnyAutocompleteOptionProps, getUniqueId } from "./type-utils";
+import type { GroupedAutocompleteOptionProps } from "./type-utils";
 import { useAutocompleteHandlers } from "./useAutocompleteHandlers";
 
-export interface AutocompleteOptionProps {
-  /** id for the option */
-  id: number | string;
-
-  /** the text to display for the option */
-  name: string | (() => string);
-
-  /** the text to display on a label when the option is selected, defaults to `name` if not supplied */
-  labelName?: string | (() => string);
-
-  /** the tooltip to display on the Label when the option has been selected */
-  tooltip?: string | (() => string);
-}
-
 export interface IAutocompleteProps {
-  onChange: (selections: AnyAutocompleteOptionProps[]) => void;
+  onChange: (selections: GroupedAutocompleteOptionProps[]) => void;
   id?: string;
 
   /** The set of options to use for selection */
-  options?: AutocompleteOptionProps[];
-  selections?: AutocompleteOptionProps[];
+  options?: GroupedAutocompleteOptionProps[];
+  selections?: GroupedAutocompleteOptionProps[];
 
   placeholderText?: string;
   searchString?: string;
   searchInputAriaLabel?: string;
   labelColor?: LabelProps["color"];
-  menuHeader?: string;
   noResultsMessage?: string;
 
   showChips?: boolean;
   appendDropdownToDocumentBody?: boolean;
   isInputText?: boolean;
   onSearchChange?: (value: string) => void;
-  onCreateNewOption?: (value: string) => AutocompleteOptionProps;
+  onCreateNewOption?: (value: string) => GroupedAutocompleteOptionProps;
   validateNewOption?: (value: string) => boolean;
 }
 
@@ -70,9 +55,7 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
   searchInputAriaLabel = "Search input",
   labelColor,
   selections = [],
-  menuHeader = "",
   noResultsMessage = "No results found",
-  appendDropdownToDocumentBody,
   showChips,
   isInputText,
   onSearchChange,
@@ -135,13 +118,13 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
       );
     }
 
-    const renderMenuList = (groupOptions: AnyAutocompleteOptionProps[]) => (
+    const renderMenuList = (groupOptions: GroupedAutocompleteOptionProps[]) => (
       <MenuList>
         {groupOptions.length > 0 ? (
           groupOptions.map((option) => (
             <MenuItem
-              key={getUniqueId(option)}
-              itemId={getUniqueId(option)}
+              key={option.uniqueId}
+              itemId={option.uniqueId}
               onClick={(e) => handleMenuItemOnSelect(e, option)}
             >
               {getString(option.labelName || option.name)}
@@ -183,11 +166,7 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
           triggerRef={searchInputRef}
           popper={menu}
           popperRef={menuRef}
-          appendTo={() =>
-            appendDropdownToDocumentBody
-              ? document.body || searchInputRef.current
-              : searchInputRef.current || document.body
-          }
+          appendTo={() => searchInputRef.current || document.body}
           isVisible={menuIsOpen}
           onDocumentClick={handleOnDocumentClick}
         />
@@ -196,11 +175,11 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
         <FlexItem key="chips">
           <Flex spaceItems={{ default: "spaceItemsXs" }}>
             {selections.map((option) => (
-              <FlexItem key={getUniqueId(option)}>
+              <FlexItem key={option.uniqueId}>
                 <LabelToolip content={option.tooltip}>
                   <Label
                     color={labelColor}
-                    onClose={() => removeSelectionById(getUniqueId(option))}
+                    onClose={() => removeSelectionById(option.uniqueId)}
                   >
                     {getString(option.labelName || option.name)}
                   </Label>

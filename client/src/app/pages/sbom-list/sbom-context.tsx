@@ -6,7 +6,7 @@ import {
   FILTER_TEXT_CATEGORY_KEY,
   TablePersistenceKeyPrefixes,
 } from "@app/Constants";
-import { singleLabelString } from "@app/api/model-utils";
+import { joinKeyValueAsString } from "@app/api/model-utils";
 import type { SbomSummary } from "@app/client";
 import { FilterType } from "@app/components/FilterToolbar";
 import {
@@ -50,12 +50,16 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
   children,
 }) => {
   const [inputValue, setInputValue] = React.useState("");
+  const [debouncedInputValue, setDebouncedInputValue] = React.useState("");
 
-  const onDebouncedInputValue = React.useCallback((val: string) => {
-    setInputValue(val);
-  }, []);
+  React.useEffect(() => {
+    const delayInputTimeoutId = setTimeout(() => {
+      setDebouncedInputValue(inputValue);
+    }, 500);
+    return () => clearTimeout(delayInputTimeoutId);
+  }, [inputValue]);
 
-  const { labels } = useFetchSBOMLabels(inputValue);
+  const { labels } = useFetchSBOMLabels(debouncedInputValue);
 
   const tableControlState = useTableControlState({
     tableName: "sbom",
@@ -80,13 +84,13 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
         type: FilterType.typeahead,
         placeholderText: "Labels",
         selectOptions: labels.map((e) => {
-          const keyValue = singleLabelString({ key: e.key, value: e.value });
+          const keyValue = joinKeyValueAsString({ key: e.key, value: e.value });
           return {
             value: keyValue,
             label: keyValue,
           };
         }),
-        onDebouncedInputValue,
+        onInputValueChange: setInputValue,
       },
       {
         categoryKey: FILTER_TEXT_CATEGORY_KEY,

@@ -1,20 +1,11 @@
 import type { Control, FieldValues, Path } from "react-hook-form";
 
-import {
-  Autocomplete,
-  type AutocompleteOptionProps,
-} from "@app/components/Autocomplete/Autocomplete";
+import { Autocomplete } from "@app/components/Autocomplete/Autocomplete";
 import { HookFormPFGroupController } from "@app/components/HookFormPFFields";
-
-import {
-  GroupedAutocomplete,
-  type GroupedAutocompleteOptionProps,
-} from "../Autocomplete/GroupedAutocomplete";
+import type { GroupedAutocompleteOptionProps } from "../Autocomplete/type-utils";
 
 export const HookFormAutocomplete = <FormValues extends FieldValues>({
-  items = [],
   groupedItems = [],
-  isGrouped = false,
   label,
   fieldId,
   name,
@@ -30,9 +21,7 @@ export const HookFormAutocomplete = <FormValues extends FieldValues>({
   validateNewOption,
   appendDropdownToDocumentBody,
 }: {
-  items?: AutocompleteOptionProps[];
   groupedItems?: GroupedAutocompleteOptionProps[];
-  isGrouped?: boolean;
   name: Path<FormValues>;
   control: Control<FormValues>;
   label: string;
@@ -44,7 +33,7 @@ export const HookFormAutocomplete = <FormValues extends FieldValues>({
   showChips?: boolean;
   isInputText?: boolean;
   onSearchChange?: (value: string) => void;
-  onCreateNewOption?: (value: string) => AutocompleteOptionProps;
+  onCreateNewOption?: (value: string) => GroupedAutocompleteOptionProps;
   validateNewOption?: (value: string) => boolean;
   appendDropdownToDocumentBody?: boolean;
 }) => (
@@ -54,45 +43,25 @@ export const HookFormAutocomplete = <FormValues extends FieldValues>({
     name={name}
     label={label}
     fieldId={fieldId}
-    renderInput={({ field: { value, onChange } }) =>
-      isGrouped ? (
-        <GroupedAutocomplete
-          id={fieldId}
-          noResultsMessage={noResultsMessage}
-          placeholderText={placeholderText}
-          searchInputAriaLabel={searchInputAriaLabel}
-          options={groupedItems}
-          selections={value}
-          onChange={(selection) => {
-            onChange(selection);
-          }}
-          showChips={showChips}
-          isInputText={isInputText}
-          onSearchChange={onSearchChange}
-          onCreateNewOption={onCreateNewOption}
-          validateNewOption={validateNewOption}
-          appendDropdownToDocumentBody={appendDropdownToDocumentBody}
-        />
-      ) : (
-        <Autocomplete
-          id={fieldId}
-          noResultsMessage={noResultsMessage}
-          placeholderText={placeholderText}
-          searchInputAriaLabel={searchInputAriaLabel}
-          options={items}
-          selections={value}
-          onChange={(selection) => {
-            onChange(selection);
-          }}
-          showChips={showChips}
-          isInputText={isInputText}
-          onSearchChange={onSearchChange}
-          onCreateNewOption={onCreateNewOption}
-          validateNewOption={validateNewOption}
-          appendDropdownToDocumentBody={appendDropdownToDocumentBody}
-        />
-      )
-    }
+    renderInput={({ field: { value, onChange } }) => (
+      <Autocomplete
+        id={fieldId}
+        noResultsMessage={noResultsMessage}
+        placeholderText={placeholderText}
+        searchInputAriaLabel={searchInputAriaLabel}
+        options={groupedItems}
+        selections={value}
+        onChange={(selection) => {
+          onChange(selection);
+        }}
+        showChips={showChips}
+        isInputText={isInputText}
+        onSearchChange={onSearchChange}
+        onCreateNewOption={onCreateNewOption}
+        validateNewOption={validateNewOption}
+        appendDropdownToDocumentBody={appendDropdownToDocumentBody}
+      />
+    )}
   />
 );
 

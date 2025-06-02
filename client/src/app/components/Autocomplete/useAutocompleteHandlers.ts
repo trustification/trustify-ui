@@ -1,20 +1,15 @@
 import { useMemo, useState } from "react";
 
-import {
-  type AnyAutocompleteOptionProps,
-  type AutocompleteOptionProps,
-  type GroupMap,
-  getUniqueId,
-} from "./type-utils";
+import type { GroupMap, GroupedAutocompleteOptionProps } from "./type-utils";
 
 interface AutocompleteLogicProps {
-  options: AnyAutocompleteOptionProps[];
+  options: GroupedAutocompleteOptionProps[];
   searchString: string;
-  selections: AnyAutocompleteOptionProps[];
-  onChange: (selections: AnyAutocompleteOptionProps[]) => void;
+  selections: GroupedAutocompleteOptionProps[];
+  onChange: (selections: GroupedAutocompleteOptionProps[]) => void;
   menuRef: React.RefObject<HTMLDivElement>;
   searchInputRef: React.RefObject<HTMLDivElement>;
-  onCreateNewOption?: (value: string) => AutocompleteOptionProps;
+  onCreateNewOption?: (value: string) => GroupedAutocompleteOptionProps;
   validateNewOption?: (value: string) => boolean;
 }
 
@@ -39,7 +34,7 @@ export const useAutocompleteHandlers = ({
 
     for (const option of options) {
       const isOptionSelected = selections.some(
-        (selection) => getUniqueId(selection) === getUniqueId(option),
+        (selection) => selection.uniqueId === option.uniqueId,
       );
 
       const optionName =
@@ -73,13 +68,14 @@ export const useAutocompleteHandlers = ({
       const isValid = validateNewOption ? validateNewOption(inputValue) : true;
       if (isValid) {
         const newOption = onCreateNewOption(inputValue);
-        const exists = selections.some(
-          (option) => getUniqueId(option) === getUniqueId(newOption),
-        );
-        if (!exists) {
-          const updatedSelections = [...selections, newOption].filter(Boolean);
-          onChange(updatedSelections);
-        }
+
+        const newSelections = [
+          ...selections.filter(
+            (option) => option.uniqueId !== newOption.uniqueId,
+          ),
+          newOption,
+        ];
+        onChange(newSelections);
 
         setInputValue("");
         setMenuIsOpen(false);
@@ -88,9 +84,7 @@ export const useAutocompleteHandlers = ({
   };
 
   const addSelectionByItemId = (itemId: string | number) => {
-    const matchingOption = options.find(
-      (option) => getUniqueId(option) === itemId,
-    );
+    const matchingOption = options.find((option) => option.uniqueId === itemId);
 
     if (matchingOption) {
       const updatedSelections = [...selections, matchingOption].filter(Boolean);
@@ -102,7 +96,7 @@ export const useAutocompleteHandlers = ({
 
   const removeSelectionById = (idToDelete: string | number) => {
     const updatedSelections = selections.filter(
-      (selection) => getUniqueId(selection) !== idToDelete,
+      (selection) => selection.uniqueId !== idToDelete,
     );
 
     onChange(updatedSelections);
@@ -170,12 +164,12 @@ export const useAutocompleteHandlers = ({
   // Selecting an item from the menu
   const handleMenuItemOnSelect = (
     event: React.MouseEvent<Element, MouseEvent> | undefined,
-    option: AnyAutocompleteOptionProps,
+    option: GroupedAutocompleteOptionProps,
   ) => {
     if (!event) return;
     event.stopPropagation();
     searchInputRef.current?.querySelector("input")?.focus();
-    addSelectionByItemId(getUniqueId(option));
+    addSelectionByItemId(option.uniqueId);
   };
 
   return {

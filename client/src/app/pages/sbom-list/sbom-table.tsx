@@ -21,9 +21,10 @@ import {
 import { useDownload } from "@app/hooks/domain-controls/useDownload";
 import { formatDate } from "@app/utils/utils";
 
-import { singleLabelString } from "@app/api/model-utils";
+import { joinKeyValueAsString } from "@app/api/model-utils";
 import type { SbomSummary } from "@app/client";
 import { LabelsAsList } from "@app/components/LabelsAsList";
+
 import { SBOMEditLabelsForm } from "./components/SBOMEditLabelsForm";
 import { SBOMVulnerabilities } from "./components/SbomVulnerabilities";
 import { SbomSearchContext } from "./sbom-context";
@@ -117,7 +118,10 @@ export const SbomTable: React.FC = () => {
                       <LabelsAsList
                         value={item.labels}
                         onClick={({ key, value }) => {
-                          const labelString = singleLabelString({ key, value });
+                          const labelString = joinKeyValueAsString({
+                            key,
+                            value,
+                          });
 
                           const filterValue = filterValues.labels;
                           if (!filterValue?.includes(labelString)) {

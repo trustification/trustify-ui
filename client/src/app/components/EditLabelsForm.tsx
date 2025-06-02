@@ -1,8 +1,4 @@
-import type React from "react";
-import { useForm } from "react-hook-form";
-
-import { yupResolver } from "@hookform/resolvers/yup";
-import { array, object, string } from "yup";
+import React from "react";
 
 import {
   ActionGroup,
@@ -20,11 +16,20 @@ import {
 import type { SingleLabel } from "@app/api/models";
 import { getString } from "@app/utils/utils";
 
-import type { AutocompleteOptionProps } from "./Autocomplete/type-utils";
-import HookFormAutocomplete from "./HookFormPFFields/HookFormAutocomplete";
+import {
+  joinKeyValueAsString,
+  splitStringAsKeyValue,
+} from "@app/api/model-utils";
+import { Autocomplete } from "./Autocomplete/Autocomplete";
+import type { GroupedAutocompleteOptionProps } from "./Autocomplete/type-utils";
 
-type FormValues = {
-  labels: AutocompleteOptionProps[];
+const keyValueToOption = (
+  value: SingleLabel,
+): GroupedAutocompleteOptionProps => {
+  return {
+    uniqueId: value.key,
+    name: joinKeyValueAsString(value),
+  };
 };
 
 interface EditLabelsFormProps {
@@ -35,14 +40,8 @@ interface EditLabelsFormProps {
   onClose: () => void;
 
   // Labels Dropdown
-  autocompleteLabels: SingleLabel[];
-  keyValueToOption: (value: {
-    key: string;
-    value?: string;
-  }) => AutocompleteOptionProps;
-
-  onCreateNewOption?: (value: string) => AutocompleteOptionProps;
-  onLabelInputChange?: (value: string) => void;
+  options: SingleLabel[];
+  onInputChange?: (value: string) => void;
 }
 
 export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
@@ -51,45 +50,24 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
   isDisabled,
   onSave,
   onClose,
-  autocompleteLabels,
-  keyValueToOption,
-  onCreateNewOption,
-  onLabelInputChange,
+  options,
+  onInputChange,
 }) => {
-  const validationSchema = object().shape({
-    labels: array()
-      .of(
-        object().shape({
-          id: string().min(10),
-          name: string().min(10),
-        }),
-      )
-      .max(1),
-  });
-
-  const { handleSubmit, getValues, setValue, control, watch, formState } =
-    useForm<FormValues>({
-      defaultValues: {
-        labels: Object.entries(value).map(([key, value]) => {
-          return keyValueToOption({ key, value });
-        }),
-      },
-      resolver: yupResolver(validationSchema),
-      mode: "onChange",
-    });
-
-  const labels = watch("labels");
+  const [selections, setSelections] = React.useState<
+    GroupedAutocompleteOptionProps[]
+  >(
+    Object.entries(value).map(([key, value]) =>
+      keyValueToOption({ key, value }),
+    ),
+  );
 
   const onSaveForm = () => {
-    const labelsObject: { [key: string]: string } = getValues().labels.reduce(
-      (prev, { name }) => {
-        const optionName = typeof name === "function" ? name() : name;
-        const [k, v] = optionName.split("=");
-        return Object.assign(prev, { [k]: v ?? "" });
-      },
-      {},
-    );
-    onSave(labelsObject);
+    const labels = selections
+      .map((e) => splitStringAsKeyValue(getString(e.name)))
+      .reduce((prev, { key, value }) => {
+        return Object.assign(prev, { [key]: value });
+      }, {});
+    onSave(labels);
   };
 
   return (
@@ -107,13 +85,14 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
               defaultIsOpen
               numLabels={10}
             >
-              {labels.map((option) => (
+              {selections.map((option, index) => (
                 <Label
-                  key={option.id}
+                  key={option.uniqueId}
                   color="blue"
                   onClose={() => {
-                    const newLabels = labels.filter((e) => e.id !== option.id);
-                    setValue("labels", newLabels);
+                    const newSelected = [...selections];
+                    newSelected.splice(index, 1);
+                    setSelections(newSelected);
                   }}
                 >
                   {getString(option.labelName || option.name)}
@@ -124,25 +103,32 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
         </FormGroup>
       </StackItem>
       <StackItem>
-        <Form onSubmit={handleSubmit(() => {})}>
-          <HookFormAutocomplete
+        <Form
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}
+        >
+          <Autocomplete
             isInputText
             appendDropdownToDocumentBody
-            items={autocompleteLabels.map(({ key, value }) =>
-              keyValueToOption({ key, value }),
-            )}
-            control={control}
-            name="labels"
-            label="Label"
-            fieldId="labels"
-            noResultsMessage={onCreateNewOption ? "" : "No search results"}
-            placeholderText=""
+            selections={selections}
+            options={options.map(({ key, value }) => {
+              return keyValueToOption({ key, value });
+            })}
+            onChange={setSelections}
+            noResultsMessage="No search results"
+            placeholderText="Labels"
             searchInputAriaLabel="labels-select-toggle"
-            onSearchChange={onLabelInputChange}
-            onCreateNewOption={onCreateNewOption}
-            // validateNewOption={(value) => {
-            //   return /^[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])?$/.test(value);
-            // }}
+            onSearchChange={onInputChange}
+            onCreateNewOption={(value) => {
+              const keyValue = splitStringAsKeyValue(value);
+              const option: GroupedAutocompleteOptionProps = {
+                uniqueId: keyValue.key,
+                name: value,
+              };
+              return option;
+            }}
+            validateNewOption={(value) => /^[^=][^=]*=?[^=]*$/.test(value)}
           />
 
           <ActionGroup>

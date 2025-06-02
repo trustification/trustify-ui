@@ -72,7 +72,7 @@ export interface IMultiselectFilterCategory<
   /** How to connect multiple selected options together. Defaults to "AND". */
   logicOperator?: "AND" | "OR";
   // Callback for the InputText. Use React.callback to avoid re-rendering
-  onDebouncedInputValue?: (value: string) => void;
+  onInputValueChange?: (value: string) => void;
 }
 
 export interface IMultiselectFilterCategory<
