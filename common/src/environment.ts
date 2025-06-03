@@ -45,12 +45,6 @@ export type TrustificationEnvType = {
 
   /** Location of branding files (relative paths computed from the project source root) */
   BRANDING?: string;
-
-  /** Enable Analytics */
-  ANALYTICS_ENABLED: "true" | "false";
-
-  /** Segment Write key */
-  ANALYTICS_WRITE_KEY?: string;
 };
 
 /**
@@ -78,9 +72,6 @@ export const buildTrustificationEnv = ({
   UI_INGRESS_PROXY_BODY_SIZE = "500m",
   TRUSTIFY_API_URL,
   BRANDING,
-
-  ANALYTICS_ENABLED = "false",
-  ANALYTICS_WRITE_KEY,
 }: Partial<TrustificationEnvType> = {}): TrustificationEnvType => ({
   NODE_ENV,
   PORT,
@@ -97,9 +88,6 @@ export const buildTrustificationEnv = ({
   UI_INGRESS_PROXY_BODY_SIZE,
   TRUSTIFY_API_URL,
   BRANDING,
-
-  ANALYTICS_ENABLED,
-  ANALYTICS_WRITE_KEY,
 });
 
 /**
