@@ -63,8 +63,6 @@ Open browser at <http://localhost:3000>
 | OIDC_CLIENT_ID      | Set Oidc Client               | frontend                                |
 | OIDC_SERVER_URL     | Set Oidc Server URL           | `http://localhost:8090/realms/trustify` |
 | OIDC_SCOPE          | Set Oidc Scope                | openid                                  |
-| ANALYTICS_ENABLED   | Enable/Disable analytics      | false                                   |
-| ANALYTICS_WRITE_KEY | Set Segment Write key         | null                                    |
 
 ## Crate
 

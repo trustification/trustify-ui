@@ -1,6 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import {
+  Breadcrumb,
+  BreadcrumbItem,
   Content,
   Flex,
   FlexItem,
@@ -50,7 +53,15 @@ export const PackageDetails: React.FC = () => {
 
   return (
     <>
-      <PageSection hasBodyWrapper={false}>
+      <PageSection type="breadcrumb">
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <Link to="/packages">Packages</Link>
+          </BreadcrumbItem>
+          <BreadcrumbItem isActive>Package details</BreadcrumbItem>
+        </Breadcrumb>
+      </PageSection>
+      <PageSection>
         <Stack>
           <StackItem>
             <Content>
@@ -73,7 +84,7 @@ export const PackageDetails: React.FC = () => {
           </StackItem>
         </Stack>
       </PageSection>
-      <PageSection hasBodyWrapper={false}>
+      <PageSection>
         <Tabs
           mountOnEnter
           activeKey={activeTabKey}
@@ -106,7 +117,7 @@ export const PackageDetails: React.FC = () => {
           />
         </Tabs>
       </PageSection>
-      <PageSection hasBodyWrapper={false}>
+      <PageSection>
         <TabContent
           eventKey={0}
           id="refTabVulnerabilitiesSection"
