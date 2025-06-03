@@ -18,13 +18,6 @@ if [[ $AUTH_REQUIRED != "false" ]]; then
   fi
 fi
 
-if [[ $ANALYTICS_ENABLED != "false" ]]; then
-  if [[ -z "$ANALYTICS_WRITE_KEY" ]]; then
-    echo "You must provide ANALYTICS_WRITE_KEY environment variable" 1>&2
-    exit 1
-  fi
-fi
-
 if [[ -z "${NODE_EXTRA_CA_CERTS}" ]]; then
     # Nothing to do
     echo "No NODE_EXTRA_CA_CERTS found"
