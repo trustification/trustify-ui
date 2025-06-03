@@ -25,6 +25,7 @@ interface ISbomSearchContext {
     | "version"
     | "packages"
     | "published"
+    | "supplier"
     | "labels"
     | "vulnerabilities",
     "name" | "published",
@@ -68,6 +69,7 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
     columnNames: {
       name: "Name",
       version: "Version",
+      supplier: "Supplier",
       labels: "Labels",
       published: "Created on",
       packages: "Dependencies",
@@ -78,6 +80,17 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
     sortableColumns: ["name", "published"],
     isFilterEnabled: true,
     filterCategories: [
+      {
+        categoryKey: FILTER_TEXT_CATEGORY_KEY,
+        title: "Filter text",
+        placeholderText: "Search",
+        type: FilterType.search,
+      },
+      {
+        categoryKey: "published",
+        title: "Created on",
+        type: FilterType.dateRange,
+      },
       {
         categoryKey: "labels",
         title: "Label",
@@ -91,17 +104,6 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
           };
         }),
         onInputValueChange: setInputValue,
-      },
-      {
-        categoryKey: FILTER_TEXT_CATEGORY_KEY,
-        title: "Filter text",
-        placeholderText: "Search",
-        type: FilterType.search,
-      },
-      {
-        categoryKey: "published",
-        title: "Created on",
-        type: FilterType.dateRange,
       },
     ],
     isExpansionEnabled: false,

@@ -6,6 +6,7 @@ import {
   FILTER_TEXT_CATEGORY_KEY,
   TablePersistenceKeyPrefixes,
 } from "@app/Constants";
+import { joinKeyValueAsString } from "@app/api/model-utils";
 import type { AdvisorySummary } from "@app/client";
 import { FilterType } from "@app/components/FilterToolbar";
 import {
@@ -15,7 +16,10 @@ import {
   useTableControlState,
 } from "@app/hooks/table-controls";
 import { useSelectionState } from "@app/hooks/useSelectionState";
-import { useFetchAdvisories } from "@app/queries/advisories";
+import {
+  useFetchAdvisories,
+  useFetchAdvisoryLabels,
+} from "@app/queries/advisories";
 
 interface IAdvisorySearchContext {
   tableControls: ITableControls<
@@ -23,11 +27,12 @@ interface IAdvisorySearchContext {
     | "identifier"
     | "title"
     | "severity"
+    | "type"
     | "labels"
     | "modified"
     | "vulnerabilities",
     "identifier" | "severity" | "modified",
-    "" | "average_severity" | "modified",
+    "" | "average_severity" | "modified" | "labels",
     string
   >;
 
@@ -48,6 +53,18 @@ interface IAdvisoryProvider {
 export const AdvisorySearchProvider: React.FunctionComponent<
   IAdvisoryProvider
 > = ({ children }) => {
+  const [inputValue, setInputValue] = React.useState("");
+  const [debouncedInputValue, setDebouncedInputValue] = React.useState("");
+
+  React.useEffect(() => {
+    const delayInputTimeoutId = setTimeout(() => {
+      setDebouncedInputValue(inputValue);
+    }, 500);
+    return () => clearTimeout(delayInputTimeoutId);
+  }, [inputValue]);
+
+  const { labels } = useFetchAdvisoryLabels(debouncedInputValue);
+
   const tableControlState = useTableControlState({
     tableName: "advisory",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.advisories,
@@ -56,6 +73,7 @@ export const AdvisorySearchProvider: React.FunctionComponent<
       identifier: "ID",
       title: "Title",
       severity: "Aggregated Severity",
+      type: "Type",
       labels: "Labels",
       modified: "Revision",
       vulnerabilities: "Vulnerabilities",
@@ -93,6 +111,20 @@ export const AdvisorySearchProvider: React.FunctionComponent<
         categoryKey: "modified",
         title: "Revision",
         type: FilterType.dateRange,
+      },
+      {
+        categoryKey: "labels",
+        title: "Label",
+        type: FilterType.typeahead,
+        placeholderText: "Labels",
+        selectOptions: labels.map((e) => {
+          const keyValue = joinKeyValueAsString({ key: e.key, value: e.value });
+          return {
+            value: keyValue,
+            label: keyValue,
+          };
+        }),
+        onInputValueChange: setInputValue,
       },
     ],
     isExpansionEnabled: false,

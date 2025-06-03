@@ -76,6 +76,7 @@ export const AdvisoryTable: React.FC = () => {
                     "The average CVSS score for all of the Vulnerabilities linked to this Advisory.",
                 }}
               />
+              <Th {...getThProps({ columnKey: "type" })} />
               <Th {...getThProps({ columnKey: "labels" })} />
               <Th {...getThProps({ columnKey: "modified" })} />
               <Th {...getThProps({ columnKey: "vulnerabilities" })} />
@@ -152,6 +153,9 @@ export const AdvisoryTable: React.FC = () => {
                           showScore
                         />
                       )}
+                    </Td>
+                    <Td width={10} {...getTdProps({ columnKey: "type" })}>
+                      {item.labels.type}
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "labels" })}>
                       <LabelsAsList value={item.labels} />

@@ -10,6 +10,7 @@ import {
   downloadAdvisory,
   getAdvisory,
   listAdvisories,
+  listAdvisoryLabels,
   updateAdvisoryLabels,
 } from "@app/client";
 
@@ -25,6 +26,25 @@ export interface IAdvisoriesQueryParams {
 }
 
 export const AdvisoriesQueryKey = "advisories";
+
+export const useFetchAdvisoryLabels = (filterText: string) => {
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: [AdvisoriesQueryKey, "labels", filterText],
+    queryFn: () => {
+      return listAdvisoryLabels({
+        client,
+        query: { limit: 10, filter_text: filterText },
+      });
+    },
+  });
+
+  return {
+    labels: (data?.data as { key: string; value: string }[] | undefined) || [],
+    isFetching: isLoading,
+    fetchError: error as AxiosError,
+    refetch,
+  };
+};
 
 export const useFetchAdvisories = (
   params: HubRequestParams = {},

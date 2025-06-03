@@ -84,19 +84,23 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
               defaultIsOpen
               numLabels={10}
             >
-              {selections.map((option, index) => (
-                <Label
-                  key={option.id}
-                  color="blue"
-                  onClose={() => {
-                    const newSelected = [...selections];
-                    newSelected.splice(index, 1);
-                    setSelections(newSelected);
-                  }}
-                >
-                  {getString(option.labelName || option.name)}
-                </Label>
-              ))}
+              {selections
+                .sort((a, b) =>
+                  getString(a.name).localeCompare(getString(b.name)),
+                )
+                .map((option, index) => (
+                  <Label
+                    key={option.id}
+                    color="blue"
+                    onClose={() => {
+                      const newSelected = [...selections];
+                      newSelected.splice(index, 1);
+                      setSelections(newSelected);
+                    }}
+                  >
+                    {getString(option.labelName || option.name)}
+                  </Label>
+                ))}
             </LabelGroup>
           </Card>
         </FormGroup>

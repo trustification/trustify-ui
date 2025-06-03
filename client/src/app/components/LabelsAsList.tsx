@@ -16,7 +16,7 @@ export const LabelsAsList: React.FC<LabelsAsListProps> = ({
   onClick,
 }) => {
   return (
-    <LabelGroup defaultIsOpen={defaultIsOpen} numLabels={2}>
+    <LabelGroup defaultIsOpen={defaultIsOpen} numLabels={5}>
       {Object.entries(value)
         .sort(([keyA], [keyB]) => keyB.localeCompare(keyA))
         .map(([k, v]) => (

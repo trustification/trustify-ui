@@ -36,12 +36,12 @@ export const TypeaheadFilterControl = <TItem,>({
     <Autocomplete
       isDisabled={isDisabled}
       options={selectOptions.map((option) => ({
-        uniqueId: option.value,
+        id: option.value,
         name: option.label ?? option.value,
       }))}
       selections={filterValue?.map((value) => {
         const option: AutocompleteOptionProps = {
-          uniqueId: value,
+          id: value,
           name: value,
         };
         return option;

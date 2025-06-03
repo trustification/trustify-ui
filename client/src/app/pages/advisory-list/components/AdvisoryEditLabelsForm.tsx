@@ -5,7 +5,10 @@ import type { AxiosError } from "axios";
 import type { AdvisorySummary } from "@app/client";
 import { EditLabelsForm } from "@app/components/EditLabelsForm";
 import { NotificationsContext } from "@app/components/NotificationsContext";
-import { useUpdateAdvisoryLabelsMutation } from "@app/queries/advisories";
+import {
+  useFetchAdvisoryLabels,
+  useUpdateAdvisoryLabelsMutation,
+} from "@app/queries/advisories";
 
 interface AdvisoryEditLabelsFormProps {
   advisory: AdvisorySummary;
@@ -17,6 +20,18 @@ export const AdvisoryEditLabelsForm: React.FC<AdvisoryEditLabelsFormProps> = ({
   onClose,
 }) => {
   const { pushNotification } = React.useContext(NotificationsContext);
+
+  const [inputValue, setInputValue] = React.useState("");
+  const [debouncedInputValue, setDebouncedInputValue] = React.useState("");
+
+  const { labels, isFetching } = useFetchAdvisoryLabels(debouncedInputValue);
+
+  React.useEffect(() => {
+    const delayInputTimeoutId = setTimeout(() => {
+      setDebouncedInputValue(inputValue);
+    }, 500);
+    return () => clearTimeout(delayInputTimeoutId);
+  }, [inputValue]);
 
   const onUpdateSuccess = () => {
     pushNotification({
@@ -49,6 +64,9 @@ export const AdvisoryEditLabelsForm: React.FC<AdvisoryEditLabelsFormProps> = ({
       isDisabled={isPending}
       onSave={onSave}
       onClose={onClose}
+      onInputChange={setInputValue}
+      options={labels}
+      isLoadingOptions={isFetching}
     />
   );
 };

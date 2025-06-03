@@ -66,6 +66,7 @@ export const SbomTable: React.FC = () => {
             <TableHeaderContentWithControls {...tableControls}>
               <Th {...getThProps({ columnKey: "name" })} />
               <Th {...getThProps({ columnKey: "version" })} />
+              <Th {...getThProps({ columnKey: "supplier" })} />
               <Th {...getThProps({ columnKey: "labels" })} />
               <Th {...getThProps({ columnKey: "published" })} />
               <Th {...getThProps({ columnKey: "packages" })} />
@@ -109,6 +110,13 @@ export const SbomTable: React.FC = () => {
                         .map((e) => e.version)
                         .filter((e) => e)
                         .join(", ")}
+                    </Td>
+                    <Td
+                      width={10}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "supplier" })}
+                    >
+                      {item.suppliers.join(", ")}
                     </Td>
                     <Td
                       width={20}
