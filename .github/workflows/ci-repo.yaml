@@ -41,7 +41,7 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: trustification/trustify-ui
+          slug: ctron/trustify-ui
       - name: Crate Format
         working-directory: ./crate
         run: cargo fmt --check
