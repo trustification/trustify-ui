@@ -66,7 +66,6 @@ export const FilterControl = <TItem, TFilterCategoryKey extends string>({
   if (category.type === FilterType.typeahead) {
     return (
       <TypeaheadFilterControl
-        isScrollable
         category={
           category as IMultiselectFilterCategory<TItem, TFilterCategoryKey>
         }

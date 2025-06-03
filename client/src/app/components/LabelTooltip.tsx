@@ -2,10 +2,10 @@ import type React from "react";
 
 import { getString } from "@app/utils/utils";
 import { Tooltip } from "@patternfly/react-core";
-import type { GroupedAutocompleteOptionProps } from "./Autocomplete/type-utils";
+import type { AutocompleteOptionProps } from "./Autocomplete/type-utils";
 
 export const LabelToolip: React.FC<{
-  content?: GroupedAutocompleteOptionProps["tooltip"];
+  content?: AutocompleteOptionProps["tooltip"];
   children: React.ReactElement;
 }> = ({ content, children }) =>
   content ? (

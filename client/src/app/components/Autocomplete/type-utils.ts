@@ -1,4 +1,6 @@
-export interface GroupedAutocompleteOptionProps {
+import type { SelectOptionProps } from "@patternfly/react-core";
+
+export interface AutocompleteOptionProps {
   uniqueId: string;
 
   name: string | (() => string);
@@ -6,9 +8,5 @@ export interface GroupedAutocompleteOptionProps {
 
   tooltip?: string | (() => string);
 
-  group?: string;
-}
-
-export interface GroupMap {
-  [key: string]: GroupedAutocompleteOptionProps[];
+  optionProps?: SelectOptionProps;
 }

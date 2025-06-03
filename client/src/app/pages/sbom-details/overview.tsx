@@ -25,6 +25,7 @@ import PenIcon from "@patternfly/react-icons/dist/esm/icons/pen-icon";
 import type { SbomSummary } from "@app/client";
 import { LabelsAsList } from "@app/components/LabelsAsList";
 import { formatDate } from "@app/utils/utils";
+
 import { SBOMEditLabelsForm } from "../sbom-list/components/SBOMEditLabelsForm";
 
 interface InfoProps {

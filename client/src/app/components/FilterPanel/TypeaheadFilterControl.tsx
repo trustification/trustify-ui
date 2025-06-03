@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { getString } from "@app/utils/utils";
 import { Autocomplete } from "../Autocomplete/Autocomplete";
-import type { GroupedAutocompleteOptionProps } from "../Autocomplete/type-utils";
+import type { AutocompleteOptionProps } from "../Autocomplete/type-utils";
 import type {
   FilterSelectOptionProps,
   IMultiselectFilterCategory,
@@ -12,7 +12,6 @@ import type { IFilterControlProps } from "./FilterControl";
 export interface ITypeaheadFilterControlProps<TItem>
   extends IFilterControlProps<TItem, string> {
   category: IMultiselectFilterCategory<TItem, string>;
-  isScrollable?: boolean;
 }
 
 export const TypeaheadFilterControl = <TItem,>({
@@ -20,7 +19,6 @@ export const TypeaheadFilterControl = <TItem,>({
   filterValue,
   setFilterValue,
   isDisabled = false,
-  isScrollable,
 }: React.PropsWithChildren<
   ITypeaheadFilterControlProps<TItem>
 >): JSX.Element | null => {
@@ -36,18 +34,18 @@ export const TypeaheadFilterControl = <TItem,>({
 
   return (
     <Autocomplete
-      isInputText
+      isDisabled={isDisabled}
+      options={selectOptions.map((option) => ({
+        uniqueId: option.value,
+        name: option.label ?? option.value,
+      }))}
       selections={filterValue?.map((value) => {
-        const option: GroupedAutocompleteOptionProps = {
+        const option: AutocompleteOptionProps = {
           uniqueId: value,
           name: value,
         };
         return option;
       })}
-      options={selectOptions.map((option) => ({
-        uniqueId: option.value,
-        name: option.label ?? option.value,
-      }))}
       onChange={(selections) => {
         const newFilterValue = selections.map((option) =>
           getString(option.name),

@@ -1,16 +1,17 @@
 import { useMemo, useState } from "react";
 
-import type { GroupMap, GroupedAutocompleteOptionProps } from "./type-utils";
+import type { AutocompleteOptionProps } from "./type-utils";
 
-interface AutocompleteLogicProps {
-  options: GroupedAutocompleteOptionProps[];
+interface IAutocompleteHandlersProps {
+  options: AutocompleteOptionProps[];
   searchString: string;
-  selections: GroupedAutocompleteOptionProps[];
-  onChange: (selections: GroupedAutocompleteOptionProps[]) => void;
+  selections: AutocompleteOptionProps[];
+  onChange: (selections: AutocompleteOptionProps[]) => void;
   menuRef: React.RefObject<HTMLDivElement>;
   searchInputRef: React.RefObject<HTMLDivElement>;
-  onCreateNewOption?: (value: string) => GroupedAutocompleteOptionProps;
+  onCreateNewOption?: (value: string) => AutocompleteOptionProps;
   validateNewOption?: (value: string) => boolean;
+  onSearchChange?: (value: string) => void;
 }
 
 export const useAutocompleteHandlers = ({
@@ -22,75 +23,40 @@ export const useAutocompleteHandlers = ({
   searchInputRef,
   onCreateNewOption,
   validateNewOption,
-}: AutocompleteLogicProps) => {
+  onSearchChange,
+}: IAutocompleteHandlersProps) => {
   const [inputValue, setInputValue] = useState(searchString);
-  const [menuIsOpen, setMenuIsOpen] = useState(false);
-  const [tabSelectedItemId, setTabSelectedItemId] = useState<
-    string | number | null
-  >(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const groupedFilteredOptions = useMemo(() => {
-    const groups: GroupMap = {};
+  const [activeItem, setActiveItem] = useState<AutocompleteOptionProps | null>(
+    null,
+  );
+  const [focusedItemIndex, setFocusedItemIndex] = useState<number | null>(null);
 
-    for (const option of options) {
+  const optionsNotSelected = useMemo(() => {
+    return options.filter((option) => {
       const isOptionSelected = selections.some(
         (selection) => selection.uniqueId === option.uniqueId,
       );
+      return !isOptionSelected;
+    });
+  }, [options, selections]);
 
-      const optionName =
-        typeof option.name === "function" ? option.name() : option.name;
-
-      if (
-        !isOptionSelected &&
-        optionName.toLowerCase().includes(inputValue.toLowerCase())
-      ) {
-        const groupName = "group" in option && option.group ? option.group : "";
-
-        if (!groups[groupName]) {
-          groups[groupName] = [];
-        }
-
-        // Add the option to the appropriate group
-        groups[groupName].push(option);
-      }
-    }
-
-    return groups;
-  }, [options, selections, inputValue]);
-  const allOptions = Object.values(groupedFilteredOptions).flat();
+  const resetActiveAndFocusedItem = () => {
+    setFocusedItemIndex(null);
+    setActiveItem(null);
+  };
 
   const handleInputChange = (value: string) => {
     setInputValue(value);
-  };
+    resetActiveAndFocusedItem();
 
-  const addSelectionByCreateNewOption = () => {
-    if (inputValue && onCreateNewOption) {
-      const isValid = validateNewOption ? validateNewOption(inputValue) : true;
-      if (isValid) {
-        const newOption = onCreateNewOption(inputValue);
-
-        const newSelections = [
-          ...selections.filter(
-            (option) => option.uniqueId !== newOption.uniqueId,
-          ),
-          newOption,
-        ];
-        onChange(newSelections);
-
-        setInputValue("");
-        setMenuIsOpen(false);
-      }
+    if (value && !isDropdownOpen) {
+      setIsDropdownOpen(true);
     }
-  };
 
-  const addSelectionByItemId = (itemId: string | number) => {
-    const matchingOption = options.find((option) => option.uniqueId === itemId);
-
-    if (matchingOption) {
-      const updatedSelections = [...selections, matchingOption].filter(Boolean);
-      onChange(updatedSelections);
-      setInputValue("");
-      setMenuIsOpen(false);
+    if (onSearchChange) {
+      onSearchChange(value);
     }
   };
 
@@ -102,89 +68,130 @@ export const useAutocompleteHandlers = ({
     onChange(updatedSelections);
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    switch (event.key) {
-      case "Enter":
-        if (tabSelectedItemId) {
-          addSelectionByItemId(tabSelectedItemId);
-          setTabSelectedItemId(null);
-        } else {
-          addSelectionByCreateNewOption();
-        }
-        break;
-      case "Escape":
-        event.stopPropagation();
-        setMenuIsOpen(false);
-        break;
-      case "Tab":
-        break;
+  // Selecting an item
+  const handleOnSelect = (value: AutocompleteOptionProps) => {
+    const isAlreadySelected = selections.find(
+      (option) => option.uniqueId === value.uniqueId,
+    );
+    if (isAlreadySelected) {
+      const updatedSelections = selections.filter(
+        (option) => option.uniqueId !== value.uniqueId,
+      );
+      onChange(updatedSelections);
+    } else {
+      const updatedSelections = [...selections, value];
+      onChange(updatedSelections);
+    }
 
+    handleInputChange("");
+    setIsDropdownOpen(false);
+  };
+
+  const handleOnCreateNewOption = (value: string) => {
+    if (value && onCreateNewOption) {
+      const isValid = validateNewOption ? validateNewOption(value) : true;
+      if (isValid) {
+        const newOption = onCreateNewOption(inputValue);
+
+        const newSelections = [
+          ...selections.filter(
+            (option) => option.uniqueId !== newOption.uniqueId,
+          ),
+          newOption,
+        ];
+        onChange(newSelections);
+
+        handleInputChange("");
+        setIsDropdownOpen(false);
+      }
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    switch (event.key) {
+      case "Enter": {
+        if (activeItem) {
+          handleOnSelect(activeItem);
+        } else {
+          handleOnCreateNewOption(inputValue);
+        }
+
+        break;
+      }
+      case "Tab":
+      case "Escape":
+        event.preventDefault();
+        setIsDropdownOpen(false);
+        setActiveItem(null);
+        break;
       case "ArrowUp":
       case "ArrowDown":
-        if (menuRef.current) {
-          const firstElement = menuRef.current.querySelector<HTMLButtonElement>(
-            "li > button:not(:disabled)",
-          );
-          firstElement?.focus();
-        }
+        event.preventDefault();
+        handleMenuArrowKeys(event.key);
         break;
       default:
-        if (!menuIsOpen) setMenuIsOpen(true);
         break;
     }
   };
 
-  // Click handling outside of component to close menu
-  const handleOnDocumentClick = (event?: MouseEvent) => {
-    if (!event) {
-      return;
+  const handleMenuArrowKeys = (key: string) => {
+    let indexToFocus = 0;
+    if (isDropdownOpen) {
+      if (key === "ArrowUp") {
+        if (focusedItemIndex === null || focusedItemIndex === 0) {
+          indexToFocus = options.length - 1;
+        } else {
+          indexToFocus = focusedItemIndex - 1;
+        }
+      }
+      if (key === "ArrowDown") {
+        if (
+          focusedItemIndex === null ||
+          focusedItemIndex === optionsNotSelected.length - 1
+        ) {
+          indexToFocus = 0;
+        } else {
+          indexToFocus = focusedItemIndex + 1;
+        }
+      }
     }
-    if (searchInputRef.current?.contains(event.target as HTMLElement)) {
-      setMenuIsOpen(true);
-    }
-    if (
-      menuRef.current &&
-      !menuRef.current.contains(event.target as HTMLElement) &&
-      searchInputRef.current &&
-      !searchInputRef.current.contains(event.target as HTMLElement)
-    ) {
-      setMenuIsOpen(false);
-    }
+    setFocusedItemIndex(indexToFocus);
+    const focusedItem = optionsNotSelected.filter(
+      ({ optionProps }) => !optionProps?.isDisabled,
+    )[indexToFocus];
+    setActiveItem(focusedItem);
   };
 
-  // Menu-specific key handling
-  const handleMenuOnKeyDown = (event: React.KeyboardEvent) => {
-    if (["Tab", "Escape"].includes(event.key)) {
-      event.preventDefault();
-      searchInputRef.current?.querySelector("input")?.focus();
-      setMenuIsOpen(false);
-    }
+  const handleClearSearchInput = () => {
+    handleInputChange("");
+    searchInputRef?.current?.focus();
   };
 
-  // Selecting an item from the menu
-  const handleMenuItemOnSelect = (
-    event: React.MouseEvent<Element, MouseEvent> | undefined,
-    option: GroupedAutocompleteOptionProps,
-  ) => {
-    if (!event) return;
-    event.stopPropagation();
-    searchInputRef.current?.querySelector("input")?.focus();
-    addSelectionByItemId(option.uniqueId);
+  const handleClickSearchInput = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleClickToggle = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+    searchInputRef.current?.focus();
   };
 
   return {
     setInputValue,
     inputValue,
-    menuIsOpen,
-    groupedFilteredOptions,
+    isDropdownOpen,
+    setIsDropdownOpen,
+    optionsNotSelected,
     handleInputChange,
     handleKeyDown,
-    handleMenuItemOnSelect,
-    handleOnDocumentClick,
-    handleMenuOnKeyDown,
+    handleOnSelect,
     menuRef,
     searchInputRef,
     removeSelectionById,
-    allOptions,
+    handleClearSearchInput,
+    handleClickSearchInput,
+    handleClickToggle,
+    activeItem,
+    focusedItemIndex,
   };
 };

@@ -31,11 +31,12 @@ export const SBOMsQueryKey = "sboms";
 export const useFetchSBOMLabels = (filterText: string) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [SBOMsQueryKey, "labels", filterText],
-    queryFn: () =>
-      listSbomLabels({
+    queryFn: () => {
+      return listSbomLabels({
         client,
         query: { limit: 10, filter_text: filterText },
-      }),
+      });
+    },
   });
 
   return {

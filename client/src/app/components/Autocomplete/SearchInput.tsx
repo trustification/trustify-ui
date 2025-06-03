@@ -1,34 +1,47 @@
 import type React from "react";
 
-import { getString } from "@app/utils/utils";
-import { SearchInput, TextInput } from "@patternfly/react-core";
+import {
+  Button,
+  TextInputGroup,
+  TextInputGroupMain,
+  TextInputGroupUtilities
+} from "@patternfly/react-core";
+import TimesIcon from "@patternfly/react-icons/dist/esm/icons/times-icon";
 
-import type { GroupedAutocompleteOptionProps } from "./type-utils";
+import { getString } from "@app/utils/utils";
+
+import type { AutocompleteOptionProps } from "./type-utils";
 
 export interface SearchInputProps {
-  isInputText?: boolean;
   id: string;
-  placeholderText: string;
-  searchInputAriaLabel: string;
+  placeholder: string;
+  ariaLabel: string;
   onSearchChange: (value: string) => void;
   onClear: () => void;
   onKeyHandling: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  onClick: () => void;
   inputValue: string;
-  inputRef: React.RefObject<HTMLDivElement>;
-  options: GroupedAutocompleteOptionProps[];
+  inputRef: React.RefObject<HTMLInputElement>;
+
+  options: AutocompleteOptionProps[];
+
+  isDropdownOpen: boolean;
+  activeItem: AutocompleteOptionProps | null;
 }
 
 export const SearchInputComponent: React.FC<SearchInputProps> = ({
-  isInputText,
   id,
-  placeholderText,
-  searchInputAriaLabel,
+  placeholder,
+  ariaLabel,
   onSearchChange,
   onClear,
   onKeyHandling,
+  onClick,
   options,
   inputValue,
   inputRef,
+  isDropdownOpen,
+  activeItem,
 }) => {
   const getHint = (): string => {
     if (options.length === 0) {
@@ -37,7 +50,6 @@ export const SearchInputComponent: React.FC<SearchInputProps> = ({
 
     if (options.length === 1 && inputValue) {
       const fullHint = getString(options[0].name);
-
       if (fullHint.toLowerCase().indexOf(inputValue.toLowerCase()) === 0) {
         return inputValue + fullHint.substring(inputValue.length);
       }
@@ -46,37 +58,37 @@ export const SearchInputComponent: React.FC<SearchInputProps> = ({
     return "";
   };
 
-  const hint = isInputText ? undefined : getHint();
+  const hint = getHint();
 
   return (
-    <div ref={inputRef}>
-      {isInputText ? (
-        <TextInput
-          type="text"
-          id={id}
-          value={inputValue}
-          onChange={(_event, value) => onSearchChange(value)}
-          // biome-ignore lint/suspicious/noExplicitAny:
-          onFocus={() => onKeyHandling(event as any)}
-          onKeyDown={onKeyHandling}
-          placeholder={placeholderText}
-          aria-label={searchInputAriaLabel}
-          autoComplete="off"
-        />
-      ) : (
-        <SearchInput
-          id={id}
-          value={inputValue}
-          hint={hint}
-          onChange={(_event, value) => onSearchChange(value)}
-          onClear={onClear}
-          // biome-ignore lint/suspicious/noExplicitAny:
-          onFocus={() => onKeyHandling(event as any)}
-          onKeyDown={onKeyHandling}
-          placeholder={placeholderText}
-          aria-label={searchInputAriaLabel}
-        />
-      )}
-    </div>
+    <TextInputGroup isPlain>
+      <TextInputGroupMain
+        id={id}
+        value={inputValue}
+        onClick={onClick}
+        onChange={(_e, value) => onSearchChange(value)} // verified
+        onKeyDown={onKeyHandling} // in progress
+        autoComplete="off"
+        innerRef={inputRef}
+        placeholder={placeholder}
+        {...(activeItem && { "aria-activedescendant": activeItem.uniqueId })}
+        role="combobox"
+        isExpanded={isDropdownOpen}
+        aria-label={ariaLabel}
+        aria-controls="select-typeahead-listbox"
+        hint={hint}
+      />
+
+      <TextInputGroupUtilities>
+        {!!inputValue && (
+          <Button
+            icon={<TimesIcon aria-hidden />}
+            variant="plain"
+            onClick={onClear}
+            aria-label="Clear input value"
+          />
+        )}
+      </TextInputGroupUtilities>
+    </TextInputGroup>
   );
 };

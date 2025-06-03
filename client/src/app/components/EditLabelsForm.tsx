@@ -21,14 +21,13 @@ import {
   splitStringAsKeyValue,
 } from "@app/api/model-utils";
 import { Autocomplete } from "./Autocomplete/Autocomplete";
-import type { GroupedAutocompleteOptionProps } from "./Autocomplete/type-utils";
+import type { AutocompleteOptionProps } from "./Autocomplete/type-utils";
 
-const keyValueToOption = (
-  value: SingleLabel,
-): GroupedAutocompleteOptionProps => {
+const keyValueToOption = (value: SingleLabel): AutocompleteOptionProps => {
+  const keyValue = joinKeyValueAsString(value);
   return {
-    uniqueId: value.key,
-    name: joinKeyValueAsString(value),
+    uniqueId: keyValue,
+    name: keyValue,
   };
 };
 
@@ -41,6 +40,7 @@ interface EditLabelsFormProps {
 
   // Labels Dropdown
   options: SingleLabel[];
+  isLoadingOptions: boolean;
   onInputChange?: (value: string) => void;
 }
 
@@ -51,11 +51,10 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
   onSave,
   onClose,
   options,
+  isLoadingOptions,
   onInputChange,
 }) => {
-  const [selections, setSelections] = React.useState<
-    GroupedAutocompleteOptionProps[]
-  >(
+  const [selections, setSelections] = React.useState<AutocompleteOptionProps[]>(
     Object.entries(value).map(([key, value]) =>
       keyValueToOption({ key, value }),
     ),
@@ -103,26 +102,20 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
         </FormGroup>
       </StackItem>
       <StackItem>
-        <Form
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
+        <Form onSubmit={(e) => e.preventDefault()}>
           <Autocomplete
-            isInputText
-            appendDropdownToDocumentBody
+            isLoading={isLoadingOptions}
             selections={selections}
             options={options.map(({ key, value }) => {
               return keyValueToOption({ key, value });
             })}
             onChange={setSelections}
-            noResultsMessage="No search results"
-            placeholderText="Labels"
+            placeholderText="Label"
             searchInputAriaLabel="labels-select-toggle"
             onSearchChange={onInputChange}
             onCreateNewOption={(value) => {
               const keyValue = splitStringAsKeyValue(value);
-              const option: GroupedAutocompleteOptionProps = {
+              const option: AutocompleteOptionProps = {
                 uniqueId: keyValue.key,
                 name: value,
               };

@@ -1,33 +1,32 @@
-import React, { useRef } from "react";
+import type React from "react";
+import { useRef } from "react";
 
 import {
-  Divider,
   Flex,
   FlexItem,
   Label,
   type LabelProps,
-  Menu,
-  MenuContent,
-  MenuGroup,
-  MenuItem,
-  MenuList,
-  Popper,
+  MenuToggle,
+  type MenuToggleElement,
+  Select,
+  SelectList,
+  SelectOption,
 } from "@patternfly/react-core";
 
 import { getString } from "@app/utils/utils";
 
 import { LabelToolip } from "../LabelTooltip";
 import { SearchInputComponent } from "./SearchInput";
-import type { GroupedAutocompleteOptionProps } from "./type-utils";
+import type { AutocompleteOptionProps } from "./type-utils";
 import { useAutocompleteHandlers } from "./useAutocompleteHandlers";
 
 export interface IAutocompleteProps {
-  onChange: (selections: GroupedAutocompleteOptionProps[]) => void;
+  onChange: (selections: AutocompleteOptionProps[]) => void;
   id?: string;
 
   /** The set of options to use for selection */
-  options?: GroupedAutocompleteOptionProps[];
-  selections?: GroupedAutocompleteOptionProps[];
+  options?: AutocompleteOptionProps[];
+  selections?: AutocompleteOptionProps[];
 
   placeholderText?: string;
   searchString?: string;
@@ -36,11 +35,13 @@ export interface IAutocompleteProps {
   noResultsMessage?: string;
 
   showChips?: boolean;
-  appendDropdownToDocumentBody?: boolean;
-  isInputText?: boolean;
+  isLoading?: boolean;
   onSearchChange?: (value: string) => void;
-  onCreateNewOption?: (value: string) => GroupedAutocompleteOptionProps;
+  onCreateNewOption?: (value: string) => AutocompleteOptionProps;
   validateNewOption?: (value: string) => boolean;
+
+  isDisabled?: boolean;
+  isScrollable?: boolean;
 }
 
 /**
@@ -55,26 +56,30 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
   searchInputAriaLabel = "Search input",
   labelColor,
   selections = [],
-  noResultsMessage = "No results found",
+  noResultsMessage,
   showChips,
-  isInputText,
+  isLoading,
   onSearchChange,
   onCreateNewOption,
   validateNewOption,
+  isDisabled,
 }) => {
   const menuRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const {
-    setInputValue,
     inputValue,
-    menuIsOpen,
-    groupedFilteredOptions,
+    isDropdownOpen,
+    setIsDropdownOpen,
+    optionsNotSelected,
     removeSelectionById,
-    handleMenuItemOnSelect,
-    handleMenuOnKeyDown,
-    handleOnDocumentClick,
+    handleOnSelect,
     handleInputChange,
     handleKeyDown,
+    handleClearSearchInput,
+    handleClickSearchInput,
+    handleClickToggle,
+    activeItem,
+    focusedItemIndex,
   } = useAutocompleteHandlers({
     options,
     searchString,
@@ -84,92 +89,77 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
     searchInputRef,
     onCreateNewOption,
     validateNewOption,
+    onSearchChange,
   });
+
+  const createItemId = (value: string) =>
+    `select-typeahead-${value.replace(" ", "-")}`;
 
   const inputGroup = (
     <SearchInputComponent
       id={id}
-      placeholderText={placeholderText}
-      searchInputAriaLabel={searchInputAriaLabel}
-      onSearchChange={(value: string) => {
-        handleInputChange(value);
-        if (onSearchChange) {
-          onSearchChange(value);
-        }
-      }}
-      onClear={() => setInputValue("")}
+      placeholder={placeholderText}
+      ariaLabel={searchInputAriaLabel}
+      onSearchChange={handleInputChange}
+      onClear={handleClearSearchInput}
       onKeyHandling={handleKeyDown}
-      options={options}
+      onClick={handleClickSearchInput}
       inputValue={inputValue}
       inputRef={searchInputRef}
-      isInputText={isInputText}
+      options={options}
+      isDropdownOpen={isDropdownOpen}
+      activeItem={activeItem}
     />
   );
 
-  const renderMenuItems = () => {
-    const allGroups = Object.entries(groupedFilteredOptions);
-    if (allGroups.length === 0) {
-      return (
-        <MenuList>
-          <MenuItem isDisabled key="no-options">
-            {noResultsMessage || "No options available"}
-          </MenuItem>
-        </MenuList>
-      );
-    }
-
-    const renderMenuList = (groupOptions: GroupedAutocompleteOptionProps[]) => (
-      <MenuList>
-        {groupOptions.length > 0 ? (
-          groupOptions.map((option) => (
-            <MenuItem
-              key={option.uniqueId}
-              itemId={option.uniqueId}
-              onClick={(e) => handleMenuItemOnSelect(e, option)}
-            >
-              {getString(option.labelName || option.name)}
-            </MenuItem>
-          ))
-        ) : (
-          <MenuItem isDisabled key="no result" itemId="-1">
-            {noResultsMessage}
-          </MenuItem>
-        )}
-      </MenuList>
-    );
-
-    return allGroups.map(([groupName, groupOptions], index) => (
-      <React.Fragment key={groupName || `ungrouped-${index}`}>
-        {allGroups.length === 1 ? (
-          renderMenuList(groupOptions)
-        ) : (
-          <MenuGroup label={groupName || undefined}>
-            {renderMenuList(groupOptions)}
-          </MenuGroup>
-        )}
-        {index < allGroups.length - 1 && <Divider />}
-      </React.Fragment>
-    ));
-  };
-
-  const menu = (
-    <Menu ref={menuRef} onKeyDown={handleMenuOnKeyDown} isScrollable>
-      <MenuContent>{renderMenuItems()}</MenuContent>
-    </Menu>
+  const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
+    <MenuToggle
+      ref={toggleRef}
+      variant="typeahead"
+      onClick={handleClickToggle}
+      isExpanded={isDropdownOpen}
+      isDisabled={isDisabled}
+      isFullWidth
+    >
+      {inputGroup}
+    </MenuToggle>
   );
 
   return (
     <Flex direction={{ default: "column" }}>
       <FlexItem key="input">
-        <Popper
-          trigger={inputGroup}
-          triggerRef={searchInputRef}
-          popper={menu}
-          popperRef={menuRef}
-          appendTo={() => searchInputRef.current || document.body}
-          isVisible={menuIsOpen}
-          onDocumentClick={handleOnDocumentClick}
-        />
+        <Select
+          isOpen={
+            isDropdownOpen &&
+            (isLoading || optionsNotSelected.length > 0 || !!noResultsMessage)
+          }
+          selected={selections}
+          onOpenChange={setIsDropdownOpen}
+          toggle={toggle}
+          variant="typeahead"
+          maxMenuHeight=""
+        >
+          <SelectList id="select-create-typeahead-listbox">
+            {isLoading ? (
+              <SelectOption isAriaDisabled>Loading..</SelectOption>
+            ) : noResultsMessage && optionsNotSelected.length === 0 ? (
+              <SelectOption isAriaDisabled>{noResultsMessage}</SelectOption>
+            ) : (
+              optionsNotSelected.map((option, index) => (
+                <SelectOption
+                  key={option.uniqueId}
+                  id={createItemId(option.uniqueId)}
+                  isFocused={focusedItemIndex === index}
+                  ref={null}
+                  onClick={() => handleOnSelect(option)}
+                  {...option.optionProps}
+                >
+                  {getString(option.name)}
+                </SelectOption>
+              ))
+            )}
+          </SelectList>
+        </Select>
       </FlexItem>
       {showChips && (
         <FlexItem key="chips">
