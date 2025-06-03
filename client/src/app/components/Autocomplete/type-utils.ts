@@ -1,7 +1,7 @@
 import type { SelectOptionProps } from "@patternfly/react-core";
 
 export interface AutocompleteOptionProps {
-  uniqueId: string;
+  id: string;
 
   name: string | (() => string);
   labelName?: string | (() => string);

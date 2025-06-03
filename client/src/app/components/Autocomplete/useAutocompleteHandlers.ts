@@ -7,6 +7,12 @@ interface IAutocompleteHandlersProps {
   searchString: string;
   selections: AutocompleteOptionProps[];
   onChange: (selections: AutocompleteOptionProps[]) => void;
+  // Triggered before onChange is called and is applied to all current selections
+  // Internally used for filtering Labels and allow only one key.
+  filterBeforeOnChange?: (
+    selections: AutocompleteOptionProps[],
+    value: AutocompleteOptionProps,
+  ) => AutocompleteOptionProps[];
   menuRef: React.RefObject<HTMLDivElement>;
   searchInputRef: React.RefObject<HTMLDivElement>;
   onCreateNewOption?: (value: string) => AutocompleteOptionProps;
@@ -24,6 +30,7 @@ export const useAutocompleteHandlers = ({
   onCreateNewOption,
   validateNewOption,
   onSearchChange,
+  filterBeforeOnChange: filterBeforeSelect,
 }: IAutocompleteHandlersProps) => {
   const [inputValue, setInputValue] = useState(searchString);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -36,7 +43,7 @@ export const useAutocompleteHandlers = ({
   const optionsNotSelected = useMemo(() => {
     return options.filter((option) => {
       const isOptionSelected = selections.some(
-        (selection) => selection.uniqueId === option.uniqueId,
+        (selection) => selection.id === option.id,
       );
       return !isOptionSelected;
     });
@@ -60,9 +67,9 @@ export const useAutocompleteHandlers = ({
     }
   };
 
-  const removeSelectionById = (idToDelete: string | number) => {
+  const removeSelectionById = (id: string | number) => {
     const updatedSelections = selections.filter(
-      (selection) => selection.uniqueId !== idToDelete,
+      (selection) => selection.id !== id,
     );
 
     onChange(updatedSelections);
@@ -70,18 +77,12 @@ export const useAutocompleteHandlers = ({
 
   // Selecting an item
   const handleOnSelect = (value: AutocompleteOptionProps) => {
-    const isAlreadySelected = selections.find(
-      (option) => option.uniqueId === value.uniqueId,
-    );
-    if (isAlreadySelected) {
-      const updatedSelections = selections.filter(
-        (option) => option.uniqueId !== value.uniqueId,
-      );
-      onChange(updatedSelections);
-    } else {
-      const updatedSelections = [...selections, value];
-      onChange(updatedSelections);
-    }
+    const filteredSelections = filterBeforeSelect
+      ? filterBeforeSelect(selections, value)
+      : selections;
+
+    const updatedSelections = [...filteredSelections, value];
+    onChange(updatedSelections);
 
     handleInputChange("");
     setIsDropdownOpen(false);
@@ -92,17 +93,7 @@ export const useAutocompleteHandlers = ({
       const isValid = validateNewOption ? validateNewOption(value) : true;
       if (isValid) {
         const newOption = onCreateNewOption(inputValue);
-
-        const newSelections = [
-          ...selections.filter(
-            (option) => option.uniqueId !== newOption.uniqueId,
-          ),
-          newOption,
-        ];
-        onChange(newSelections);
-
-        handleInputChange("");
-        setIsDropdownOpen(false);
+        handleOnSelect(newOption);
       }
     }
   };

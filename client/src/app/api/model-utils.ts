@@ -87,5 +87,5 @@ export const joinKeyValueAsString = ({ key, value }: SingleLabel): string => {
 
 export const splitStringAsKeyValue = (v: string): SingleLabel => {
   const [key, value] = v.split("=");
-  return { key, value };
+  return { key, value: value ?? "" };
 };

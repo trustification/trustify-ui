@@ -21,8 +21,12 @@ import type { AutocompleteOptionProps } from "./type-utils";
 import { useAutocompleteHandlers } from "./useAutocompleteHandlers";
 
 export interface IAutocompleteProps {
-  onChange: (selections: AutocompleteOptionProps[]) => void;
   id?: string;
+  onChange: (selections: AutocompleteOptionProps[]) => void;
+  filterBeforeOnChange?: (
+    selections: AutocompleteOptionProps[],
+    value: AutocompleteOptionProps,
+  ) => AutocompleteOptionProps[];
 
   /** The set of options to use for selection */
   options?: AutocompleteOptionProps[];
@@ -50,6 +54,7 @@ export interface IAutocompleteProps {
 export const Autocomplete: React.FC<IAutocompleteProps> = ({
   id = "",
   onChange,
+  filterBeforeOnChange,
   options = [],
   placeholderText = "Search",
   searchString = "",
@@ -85,6 +90,7 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
     searchString,
     selections,
     onChange,
+    filterBeforeOnChange,
     menuRef,
     searchInputRef,
     onCreateNewOption,
@@ -147,8 +153,8 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
             ) : (
               optionsNotSelected.map((option, index) => (
                 <SelectOption
-                  key={option.uniqueId}
-                  id={createItemId(option.uniqueId)}
+                  key={option.id}
+                  id={createItemId(option.id)}
                   isFocused={focusedItemIndex === index}
                   ref={null}
                   onClick={() => handleOnSelect(option)}
@@ -165,11 +171,11 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
         <FlexItem key="chips">
           <Flex spaceItems={{ default: "spaceItemsXs" }}>
             {selections.map((option) => (
-              <FlexItem key={option.uniqueId}>
+              <FlexItem key={option.id}>
                 <LabelToolip content={option.tooltip}>
                   <Label
                     color={labelColor}
-                    onClose={() => removeSelectionById(option.uniqueId)}
+                    onClose={() => removeSelectionById(option.id)}
                   >
                     {getString(option.labelName || option.name)}
                   </Label>

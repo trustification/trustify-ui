@@ -4,7 +4,7 @@ import {
   Button,
   TextInputGroup,
   TextInputGroupMain,
-  TextInputGroupUtilities
+  TextInputGroupUtilities,
 } from "@patternfly/react-core";
 import TimesIcon from "@patternfly/react-icons/dist/esm/icons/times-icon";
 
@@ -71,7 +71,7 @@ export const SearchInputComponent: React.FC<SearchInputProps> = ({
         autoComplete="off"
         innerRef={inputRef}
         placeholder={placeholder}
-        {...(activeItem && { "aria-activedescendant": activeItem.uniqueId })}
+        {...(activeItem && { "aria-activedescendant": activeItem.id })}
         role="combobox"
         isExpanded={isDropdownOpen}
         aria-label={ariaLabel}

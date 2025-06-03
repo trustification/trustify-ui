@@ -26,7 +26,7 @@ import type { AutocompleteOptionProps } from "./Autocomplete/type-utils";
 const keyValueToOption = (value: SingleLabel): AutocompleteOptionProps => {
   const keyValue = joinKeyValueAsString(value);
   return {
-    uniqueId: keyValue,
+    id: keyValue,
     name: keyValue,
   };
 };
@@ -86,7 +86,7 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
             >
               {selections.map((option, index) => (
                 <Label
-                  key={option.uniqueId}
+                  key={option.id}
                   color="blue"
                   onClose={() => {
                     const newSelected = [...selections];
@@ -114,14 +114,24 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
             searchInputAriaLabel="labels-select-toggle"
             onSearchChange={onInputChange}
             onCreateNewOption={(value) => {
-              const keyValue = splitStringAsKeyValue(value);
               const option: AutocompleteOptionProps = {
-                uniqueId: keyValue.key,
+                id: value,
                 name: value,
               };
               return option;
             }}
             validateNewOption={(value) => /^[^=][^=]*=?[^=]*$/.test(value)}
+            filterBeforeOnChange={(selections, newOption) => {
+              const newOptionKeyValue = splitStringAsKeyValue(
+                getString(newOption.name),
+              );
+              return selections.filter((option) => {
+                const optionKeyValue = splitStringAsKeyValue(
+                  getString(option.name),
+                );
+                return optionKeyValue.key !== newOptionKeyValue.key;
+              });
+            }}
           />
 
           <ActionGroup>
