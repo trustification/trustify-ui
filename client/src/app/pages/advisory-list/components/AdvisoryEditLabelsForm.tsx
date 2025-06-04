@@ -29,7 +29,7 @@ export const AdvisoryEditLabelsForm: React.FC<AdvisoryEditLabelsFormProps> = ({
   React.useEffect(() => {
     const delayInputTimeoutId = setTimeout(() => {
       setDebouncedInputValue(inputValue);
-    }, 500);
+    }, 400);
     return () => clearTimeout(delayInputTimeoutId);
   }, [inputValue]);
 

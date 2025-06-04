@@ -59,7 +59,7 @@ export const AdvisorySearchProvider: React.FunctionComponent<
   React.useEffect(() => {
     const delayInputTimeoutId = setTimeout(() => {
       setDebouncedInputValue(inputValue);
-    }, 500);
+    }, 400);
     return () => clearTimeout(delayInputTimeoutId);
   }, [inputValue]);
 
@@ -115,7 +115,7 @@ export const AdvisorySearchProvider: React.FunctionComponent<
       {
         categoryKey: "labels",
         title: "Label",
-        type: FilterType.typeahead,
+        type: FilterType.autocompleteserverside,
         placeholderText: "Labels",
         selectOptions: labels.map((e) => {
           const keyValue = joinKeyValueAsString({ key: e.key, value: e.value });

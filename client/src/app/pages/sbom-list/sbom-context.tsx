@@ -56,7 +56,7 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
   React.useEffect(() => {
     const delayInputTimeoutId = setTimeout(() => {
       setDebouncedInputValue(inputValue);
-    }, 500);
+    }, 400);
     return () => clearTimeout(delayInputTimeoutId);
   }, [inputValue]);
 
@@ -94,8 +94,8 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
       {
         categoryKey: "labels",
         title: "Label",
-        type: FilterType.typeahead,
-        placeholderText: "Labels",
+        type: FilterType.autocompleteserverside,
+        placeholderText: "Filter results by label",
         selectOptions: labels.map((e) => {
           const keyValue = joinKeyValueAsString({ key: e.key, value: e.value });
           return {

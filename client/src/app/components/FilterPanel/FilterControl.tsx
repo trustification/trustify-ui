@@ -61,7 +61,7 @@ export const FilterControl = <TItem, TFilterCategoryKey extends string>({
   if (category.type === FilterType.dateRange) {
     return <DateRangeFilter category={category} {...props} />;
   }
-  if (category.type === FilterType.typeahead) {
+  if (category.type === FilterType.autocompleteserverside) {
     return (
       <TypeaheadFilterControl
         category={
