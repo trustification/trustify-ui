@@ -15,12 +15,10 @@ import {
   useTableControlProps,
   useTableControlState,
 } from "@app/hooks/table-controls";
-import { useSelectionState } from "@app/hooks/useSelectionState";
 import {
   useFetchAdvisories,
   useFetchAdvisoryLabels,
 } from "@app/queries/advisories";
-
 interface IAdvisorySearchContext {
   tableControls: ITableControls<
     AdvisorySummary,
@@ -151,10 +149,6 @@ export const AdvisorySearchProvider: React.FunctionComponent<
     currentPageItems: advisories,
     totalItemCount,
     isLoading: isFetching,
-    selectionState: useSelectionState({
-      items: advisories,
-      isEqual: (a, b) => a.identifier === b.identifier,
-    }),
   });
 
   return (
