@@ -10,7 +10,15 @@ import { type IUseUrlParamsArgs, useUrlParams } from "./useUrlParams";
 
 type PersistToStateOptions = { persistTo?: "state" };
 
-type PersistToUrlParamsOptions<
+type PersistToProvider<TValue> = {
+  persistTo: "provider";
+  defaultValue: TValue;
+  isEnabled?: boolean;
+  serialize: (params: TValue) => void;
+  deserialize: () => TValue;
+};
+
+export type PersistToUrlParamsOptions<
   TValue,
   TPersistenceKeyPrefix extends string,
   TURLParamKey extends string,
@@ -34,6 +42,7 @@ export type UsePersistentStateOptions<
   | PersistToStateOptions
   | PersistToUrlParamsOptions<TValue, TPersistenceKeyPrefix, TURLParamKey>
   | PersistToStorageOptions<TValue>
+  | PersistToProvider<TValue>
 );
 
 export const usePersistentState = <
@@ -93,7 +102,37 @@ export const usePersistentState = <
         ? { ...options, key: prefixKey(options.key) }
         : { ...options, isEnabled: false, key: "" },
     ),
+    provider: usePersistenceProvider<TValue>(
+      isPersistenceProviderOptions(options)
+        ? options
+        : {
+            serialize: () => {},
+            deserialize: () => defaultValue,
+            defaultValue,
+            isEnabled: false,
+            persistTo: "provider",
+          },
+    ),
   };
   const [value, setValue] = persistence[persistTo || "state"];
   return isEnabled ? [value, setValue] : [defaultValue, () => {}];
 };
+
+const usePersistenceProvider = <TValue>({
+  serialize,
+  deserialize,
+  defaultValue,
+}: PersistToProvider<TValue>): [TValue, (val: TValue) => void] => {
+  // use default value if nullish value was deserialized
+  return [deserialize() ?? defaultValue, serialize];
+};
+
+export const isPersistenceProviderOptions = <
+  TValue,
+  TPersistenceKeyPrefix extends string,
+  TURLParamKey extends string,
+>(
+  o: Partial<
+    UsePersistentStateOptions<TValue, TPersistenceKeyPrefix, TURLParamKey>
+  >,
+): o is PersistToProvider<TValue> => o.persistTo === "provider";

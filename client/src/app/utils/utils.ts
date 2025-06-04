@@ -107,9 +107,37 @@ export const decomposePurl = (purl: string) => {
   }
 };
 
+/**
+ * Uses native string localCompare method with numeric option enabled.
+ *
+ * @param locale to be used by string compareFn
+ */
+export const localeNumericCompare = (
+  a: string,
+  b: string,
+  locale: string,
+): number => a.localeCompare(b, locale ?? "en", { numeric: true });
+
+export const getString = (input: string | (() => string)) =>
+  typeof input === "function" ? input() : input;
+
 export const getFilenameFromContentDisposition = (
   contentDisposition: string,
 ): string | null => {
   const match = contentDisposition.match(/filename="?([^"]+)"?/);
   return match ? match[1] : null;
 };
+
+/**
+ * Compares all types by converting them to string.
+ * Nullish entities are converted to empty string.
+ * @see localeNumericCompare
+ * @param locale to be used by string compareFn
+ */
+export const universalComparator = (
+  // biome-ignore lint/suspicious/noExplicitAny:
+  a: any,
+  // biome-ignore lint/suspicious/noExplicitAny:
+  b: any,
+  locale: string,
+) => localeNumericCompare(String(a ?? ""), String(b ?? ""), locale);

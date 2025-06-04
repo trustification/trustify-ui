@@ -53,17 +53,11 @@ export const useTableControlProps = <
   //       args object is passed to other other helpers which require other parts of it.
   //       For future additions, inspect `args` to see if it has anything more you need.
   const {
-    currentPageItems,
     forceNumRenderedColumns,
-    selectionState: {
-      selectAll,
-      areAllSelected,
-      selectedItems,
-      selectMultiple,
-      toggleItemSelected,
-      isItemSelected,
-    },
     columnNames,
+    idProperty,
+    dataNameProperty,
+    tableName,
     hasActionsColumn = false,
     variant,
     isFilterEnabled,
@@ -107,14 +101,10 @@ export const useTableControlProps = <
     ...(isFilterEnabled && filterPropsForToolbar),
   };
 
-  // TODO move this to a useSelectionPropHelpers when we move selection from lib-ui
-  const toolbarBulkSelectorProps: PropHelpers["toolbarBulkSelectorProps"] = {
-    onSelectAll: selectAll,
-    areAllSelected,
-    selectedRows: selectedItems,
-    paginationProps,
-    currentPageItems,
-    onSelectMultiple: selectMultiple,
+  const toolbarBulkExpanderProps: PropHelpers["toolbarBulkExpanderProps"] = {
+    // areAllExpanded,
+    // onExpandAll,
+    // isExpandable,
   };
 
   const tableProps: PropHelpers["tableProps"] = {
@@ -131,6 +121,9 @@ export const useTableControlProps = <
   const getTrProps: PropHelpers["getTrProps"] = ({ item, onRowClick }) => {
     const activeItemTrProps = getActiveItemTrProps({ item });
     return {
+      id: `${tableName}-row-item-${item[idProperty]}`,
+      "data-item-id": item[idProperty],
+      "data-item-name": dataNameProperty && item[dataNameProperty],
       ...(isActiveItemEnabled && activeItemTrProps),
       onRowClick: (event) =>
         handlePropagatedRowClick(event, () => {
@@ -155,20 +148,6 @@ export const useTableControlProps = <
     };
   };
 
-  // TODO move this into a useSelectionPropHelpers and make it part of getTdProps once we move selection from lib-ui
-  const getSelectCheckboxTdProps: PropHelpers["getSelectCheckboxTdProps"] = ({
-    item,
-    rowIndex,
-  }) => ({
-    select: {
-      rowIndex,
-      onSelect: (_event, isSelecting) => {
-        toggleItemSelected(item, isSelecting);
-      },
-      isSelected: isItemSelected(item),
-    },
-  });
-
   const getColumnVisibility = (columnKey: TColumnKey) => {
     return columns.find((column) => column.id === columnKey)?.isVisible ?? true;
   };
@@ -190,8 +169,7 @@ export const useTableControlProps = <
       filterPanelProps: propsForFilterToolbar,
       paginationProps,
       paginationToolbarItemProps,
-      toolbarBulkSelectorProps,
-      getSelectCheckboxTdProps,
+      toolbarBulkExpanderProps,
       getSingleExpandButtonTdProps,
       getExpandedContentTdProps,
       getColumnVisibility,

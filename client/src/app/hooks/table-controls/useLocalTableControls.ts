@@ -1,6 +1,5 @@
-import { useSelectionState } from "../useSelectionState";
-import { getLocalTableControlDerivedState } from "./getLocalTableControlDerivedState";
-import type { ITableControls, IUseLocalTableControlsArgs } from "./types";
+import type { IUseLocalTableControlsArgs } from "./types";
+import { useLocalTableControlDerivedState } from "./useLocalTableControlDerivedState";
 import { useTableControlProps } from "./useTableControlProps";
 import { useTableControlState } from "./useTableControlState";
 
@@ -24,26 +23,24 @@ export const useLocalTableControls = <
     TFilterCategoryKey,
     TPersistenceKeyPrefix
   >,
-): ITableControls<
-  TItem,
-  TColumnKey,
-  TSortableColumnKey,
-  TFilterCategoryKey,
-  TPersistenceKeyPrefix
+): ReturnType<
+  typeof useTableControlProps<
+    TItem,
+    TColumnKey,
+    TSortableColumnKey,
+    TFilterCategoryKey,
+    TPersistenceKeyPrefix
+  >
 > => {
   const state = useTableControlState(args);
-  const derivedState = getLocalTableControlDerivedState({ ...args, ...state });
+  const derivedState = useLocalTableControlDerivedState({ ...args, ...state });
   const { columnState } = state;
+
   return useTableControlProps({
     ...args,
     ...state,
     ...derivedState,
-    // TODO we won't need this here once selection state is part of useTableControlState
-    selectionState: useSelectionState({
-      ...args,
-      isEqual: (a, b) => a[args.idProperty] === b[args.idProperty],
-    }),
-    idProperty: args.idProperty,
     ...columnState,
+    idProperty: args.idProperty,
   });
 };
