@@ -1,6 +1,6 @@
 import { usePersistentState } from "@app/hooks/usePersistentState";
 import { parseMaybeNumericString } from "@app/utils/utils";
-import type { IFeaturePersistenceArgs } from "../types";
+import { type IFeaturePersistenceArgs, isPersistenceProvider } from "../types";
 
 /**
  * The "source of truth" state for the active item feature.
@@ -76,7 +76,13 @@ export const useActiveItemState = <
             persistTo,
             key: "activeItem",
           }
-        : { persistTo }),
+        : isPersistenceProvider(persistTo)
+          ? {
+              persistTo: "provider",
+              serialize: persistTo.write,
+              deserialize: () => persistTo.read() as string | number | null,
+            }
+          : { persistTo: "state" }),
   });
   return { activeItemId, setActiveItemId };
 };
