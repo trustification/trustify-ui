@@ -1,13 +1,10 @@
 import type { IFilterPanelProps } from "@app/components/FilterPanel";
 import type { IFilterToolbarProps } from "@app/components/FilterToolbar";
-import type { IToolbarBulkSelectorProps } from "@app/components/ToolbarBulkSelector";
-import type {
-  ISelectionStateArgs,
-  useSelectionState,
-} from "@app/hooks/useSelectionState";
+import type { ITToolbarBulkExpanderProps } from "@app/components/ToolbarBulkExpander";
 import type {
   DisallowCharacters,
   DiscriminatedArgs,
+  KeyWithValueType,
 } from "@app/utils/type-utils";
 import type {
   PaginationProps,
@@ -72,6 +69,17 @@ export type TableFeature =
   | "activeItem"
   | "columns";
 
+export interface PersistenceProvider<T> {
+  write: (value: T) => void;
+  read: () => T;
+}
+
+export const isPersistenceProvider = (
+  persistTo?: PersistTarget | PersistenceProvider<unknown>,
+): persistTo is PersistenceProvider<unknown> =>
+  !!(persistTo as PersistenceProvider<unknown>)?.write &&
+  !!(persistTo as PersistenceProvider<unknown>)?.read;
+
 /**
  * Identifier for where to persist state for a single table feature or for all table features.
  * - "state" (default) - Plain React state. Resets on component unmount or page reload.
@@ -114,8 +122,16 @@ export type IFeaturePersistenceArgs<
   /**
    * Where to persist state for this feature.
    */
-  persistTo?: PersistTarget;
+  persistTo?: PersistTarget | PersistenceProvider<unknown>;
 };
+
+export interface ColumnSetting {
+  // visibility status, can change in time
+  isVisible?: boolean;
+  // column is always visible because it's needed to uniquely identify the row
+  isIdentity?: boolean;
+}
+
 /**
  * Table-level persistence-specific args
  * - Extra args needed for persisting state at the table level.
@@ -131,7 +147,9 @@ export type ITablePersistenceArgs<
    */
   persistTo?:
     | PersistTarget
-    | Partial<Record<TableFeature | "default", PersistTarget>>;
+    | Partial<
+        Record<TableFeature, PersistTarget | PersistenceProvider<unknown>>
+      >;
 };
 
 /**
@@ -163,11 +181,15 @@ export type IUseTableControlStateArgs<
   /**
    * Initial state for the columns feature. If omitted, all columns are enabled by default.
    */
+  initialColumns?: Partial<Record<TColumnKey, ColumnSetting>>;
+  /**
+   * Is row selection enabled and therefore header and row columns should be reserved?
+   */
+  isSelectionEnabled?: boolean;
 } & IFilterStateArgs<TItem, TFilterCategoryKey> &
   ISortStateArgs<TSortableColumnKey> &
-  IPaginationStateArgs & {
-    isSelectionEnabled?: boolean; // TODO move this into useSelectionState when we move it from lib-ui
-  } & IExpansionStateArgs &
+  IPaginationStateArgs &
+  IExpansionStateArgs &
   IActiveItemStateArgs &
   ITablePersistenceArgs<TPersistenceKeyPrefix>;
 
@@ -252,6 +274,10 @@ export type ITableControlLocalDerivedStateArgs<
  */
 export type ITableControlDerivedState<TItem> = {
   /**
+   * The unsorted set of items after filtering.
+   */
+  filteredItems?: TItem[];
+  /**
    * The items to be rendered on the current page of the table. These items have already been filtered, sorted and paginated.
    */
   currentPageItems: TItem[];
@@ -287,7 +313,6 @@ export type IUseTableControlPropsArgs<
   IFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey> &
   ISortPropHelpersExternalArgs<TColumnKey, TSortableColumnKey> &
   IPaginationPropHelpersExternalArgs &
-  // ISelectionPropHelpersExternalArgs // TODO when we move selection from lib-ui
   IExpansionPropHelpersExternalArgs<TItem, TColumnKey> &
   IActiveItemPropHelpersExternalArgs<TItem> &
   ITableControlDerivedState<TItem> & {
@@ -309,14 +334,14 @@ export type IUseTableControlPropsArgs<
      */
     hasActionsColumn?: boolean;
     /**
-     * Selection state
-     * @todo this won't be included here when useSelectionState gets moved from lib-ui. It is separated from the other state temporarily and used only at render time.
-     */
-    selectionState: ReturnType<typeof useSelectionState<TItem>>;
-    /**
      * The state for the columns feature. Returned by useColumnState.
      */
     columnState: IColumnState<TColumnKey>;
+    /**
+     * Name of a field in TItem to use as the table row's `data-item-name` value.  Without
+     * this property provided, the `data-item-name` is not added to the table row.
+     */
+    dataNameProperty?: KeyWithValueType<TItem, string>;
   };
 
 /**
@@ -356,16 +381,11 @@ export type ITableControls<
   expansionDerivedState: IExpansionDerivedState<TItem, TColumnKey>;
   /**
    * Values derived at render time from the column feature state. Includes helper functions for convenience.
-   *
-   *
-   *
-   *
    */
   columnState: IColumnState<TColumnKey>;
   /**
    * Values derived at render time from the active-item feature state. Includes helper functions for convenience.
    */
-
   activeItemDerivedState: IActiveItemDerivedState<TItem>;
   /**
    * Prop helpers: where it all comes together.
@@ -425,16 +445,9 @@ export type ITableControls<
      */
     paginationToolbarItemProps: ToolbarItemProps;
     /**
-     * Props for the ToolbarBulkSelector component.
+     * Props for the ToolbarBulkExpander component.
      */
-    toolbarBulkSelectorProps: IToolbarBulkSelectorProps<TItem>;
-    /**
-     * Returns props for the Td component used as the checkbox cell for each row when using the selection feature.
-     */
-    getSelectCheckboxTdProps: (args: {
-      item: TItem;
-      rowIndex: number;
-    }) => Omit<TdProps, "ref">;
+    toolbarBulkExpanderProps: ITToolbarBulkExpanderProps;
     /**
      * Returns props for the Td component used as the expand toggle when using the single-expand variant of the expansion feature.
      */
@@ -496,6 +509,4 @@ export type IUseLocalTableControlsArgs<
         TFilterCategoryKey,
         TPersistenceKeyPrefix
       >
-    | "selectionState" // TODO this won't be included here when selection is part of useTableControlState
-  > &
-  Pick<ISelectionStateArgs<TItem>, "initialSelected" | "isItemSelectable">; // TODO this won't be included here when selection is part of useTableControlState
+  >;

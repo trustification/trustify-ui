@@ -1,82 +1,67 @@
 import type React from "react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import {
-  Button,
   Dropdown,
   DropdownItem,
   DropdownList,
   MenuToggle,
   MenuToggleCheckbox,
-  type PaginationProps,
   ToolbarItem,
 } from "@patternfly/react-core";
 
-import AngleDownIcon from "@patternfly/react-icons/dist/esm/icons/angle-down-icon";
-import AngleRightIcon from "@patternfly/react-icons/dist/esm/icons/angle-right-icon";
-
-export interface IToolbarBulkSelectorProps<T> {
+export interface IToolbarBulkSelectorProps {
   areAllSelected: boolean;
-  areAllExpanded?: boolean;
-  onSelectAll: (flag: boolean) => void;
-  onExpandAll?: (flag: boolean) => void;
-  selectedRows: T[];
-  onSelectMultiple: (items: T[], isSelecting: boolean) => void;
-  currentPageItems: T[];
-  paginationProps: PaginationProps;
-  isExpandable?: boolean;
+  itemCounts: {
+    selected: number;
+    page: number;
+    filtered?: number;
+    totalItems: number;
+  };
+  onSelectNone: () => void;
+  onSelectCurrentPage: () => void;
+  onSelectAllFiltered?: () => void;
+  onSelectAll?: () => void;
 }
 
-export const ToolbarBulkSelector = <T,>({
-  currentPageItems,
+/**
+ * Selection options:
+ *   - Default Button / Select Page
+ *   - Split / None, Count: 0
+ *   - Split / Page (every record on the current page), Count: records in current page
+ *   - (Optional) Split / All Filtered (every record matching the filter), Count: filtered records
+ *   - (Optional) Split / All (every record, every page), Count: items size
+ *
+ * If no handler for the optional action is provided, the action is not rendered.
+ */
+export const ToolbarBulkSelector = ({
   areAllSelected,
+  itemCounts: { totalItems, filtered, page, selected },
+  onSelectNone,
+  onSelectCurrentPage,
+  onSelectAllFiltered,
   onSelectAll,
-  onExpandAll,
-  areAllExpanded,
-  selectedRows,
-  onSelectMultiple,
-  paginationProps,
-  isExpandable,
-}: React.PropsWithChildren<
-  IToolbarBulkSelectorProps<T>
->): JSX.Element | null => {
+}: React.PropsWithChildren<IToolbarBulkSelectorProps>): JSX.Element | null => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const toggleCollapseAll = (collapse: boolean) => {
-    onExpandAll?.(!collapse);
+  const handleClose = (handler: () => void) => () => {
+    handler();
+    setIsOpen(false);
   };
-  const collapseAllBtn = () => (
-    <Button
-      variant="control"
-      title={`${!areAllExpanded ? "Expand" : "Collapse"} all`}
-      onClick={() => {
-        areAllExpanded !== undefined && toggleCollapseAll(areAllExpanded);
-      }}
-    >
-      {areAllExpanded ? <AngleDownIcon /> : <AngleRightIcon />}
-    </Button>
-  );
 
-  const getBulkSelectState = () => {
-    let state: boolean | null;
-    if (areAllSelected) {
-      state = true;
-    } else if (selectedRows.length === 0) {
-      state = false;
-    } else {
-      state = null;
+  const isChecked = useMemo(() => {
+    if (areAllSelected && totalItems > 0) {
+      return true;
     }
-    return state;
-  };
-  const handleSelectAll = (checked: boolean) => {
-    onSelectAll(!!checked);
-  };
+    if (selected === 0) {
+      return false;
+    }
+    return null;
+  }, [areAllSelected, totalItems, selected]);
 
   const dropdownItems = [
     <DropdownItem
-      onClick={() => {
-        handleSelectAll(false);
-      }}
+      onClick={handleClose(onSelectNone)}
       data-action="none"
       key="select-none"
       component="button"
@@ -84,61 +69,67 @@ export const ToolbarBulkSelector = <T,>({
       Select none (0 items)
     </DropdownItem>,
     <DropdownItem
-      onClick={() => {
-        onSelectMultiple(
-          currentPageItems.map((item: T) => item),
-          true,
-        );
-      }}
+      onClick={handleClose(onSelectCurrentPage)}
       data-action="page"
       key="select-page"
       component="button"
     >
-      Select page ({currentPageItems.length} items)
+      Select page ({page} items)
     </DropdownItem>,
-    <DropdownItem
-      onClick={() => {
-        handleSelectAll(true);
-      }}
-      data-action="all"
-      key="select-all"
-      component="button"
-    >
-      Select all ({paginationProps.itemCount})
-    </DropdownItem>,
-  ];
+    onSelectAllFiltered !== undefined && (
+      <DropdownItem
+        onClick={handleClose(onSelectAllFiltered)}
+        data-action="all"
+        key="select-all-filtered"
+        component="button"
+      >
+        Select all filtered ({filtered} items)
+      </DropdownItem>
+    ),
+    onSelectAll !== undefined && (
+      <DropdownItem
+        onClick={handleClose(onSelectAll)}
+        data-action="all"
+        key="select-all"
+        component="button"
+      >
+        Select all ({totalItems})
+      </DropdownItem>
+    ),
+  ].filter(Boolean);
 
   return (
-    <>
-      {isExpandable && <ToolbarItem>{collapseAllBtn()}</ToolbarItem>}
-      <ToolbarItem>
-        <Dropdown
-          isOpen={isOpen}
-          toggle={(toggleRef) => (
-            <MenuToggle
-              ref={toggleRef}
-              onClick={() => setIsOpen(!isOpen)}
-              splitButtonItems={[
-                <MenuToggleCheckbox
-                  id="bulk-selected-items-checkbox"
-                  key="bulk-select-checkbox"
-                  aria-label="Select all"
-                  onChange={() => {
-                    if (getBulkSelectState() !== false) {
-                      onSelectAll(false);
-                    } else {
-                      onSelectAll(true);
-                    }
-                  }}
-                  isChecked={getBulkSelectState()}
-                />,
-              ]}
-            />
-          )}
-        >
-          <DropdownList>{dropdownItems}</DropdownList>
-        </Dropdown>
-      </ToolbarItem>
-    </>
+    <ToolbarItem>
+      <Dropdown
+        isOpen={isOpen}
+        onOpenChange={(flag) => setIsOpen(flag)}
+        toggle={(toggleRef) => (
+          <MenuToggle
+            isDisabled={totalItems === 0}
+            ref={toggleRef}
+            onClick={() => setIsOpen(!isOpen)}
+            splitButtonItems={[
+              <MenuToggleCheckbox
+                id="bulk-selected-items-checkbox"
+                key="bulk-select-checkbox"
+                aria-label="Select page"
+                onChange={(checked) => {
+                  if (checked) {
+                    onSelectCurrentPage();
+                  } else {
+                    onSelectNone();
+                  }
+                }}
+                isChecked={isChecked}
+              >
+                {selected === 0 ? "" : `Selected ${selected}`}
+              </MenuToggleCheckbox>,
+            ]}
+          />
+        )}
+      >
+        <DropdownList>{dropdownItems}</DropdownList>
+      </Dropdown>
+    </ToolbarItem>
   );
 };
