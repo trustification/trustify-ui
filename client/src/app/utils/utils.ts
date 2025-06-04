@@ -141,6 +141,3 @@ export const universalComparator = (
   b: any,
   locale: string,
 ) => localeNumericCompare(String(a ?? ""), String(b ?? ""), locale);
-
-export const getString = (input: string | (() => string)) =>
-  typeof input === "function" ? input() : input;
