@@ -94,7 +94,7 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
       {
         categoryKey: "labels",
         title: "Label",
-        type: FilterType.autocompleteserverside,
+        type: FilterType.autocompleteServerSide,
         placeholderText: "Filter results by label",
         selectOptions: labels.map((e) => {
           const keyValue = joinKeyValueAsString({ key: e.key, value: e.value });
@@ -108,7 +108,7 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
     ],
     isExpansionEnabled: false,
   });
-
+  
   const {
     result: { data: advisories, total: totalItemCount },
     isFetching,

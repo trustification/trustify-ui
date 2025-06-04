@@ -95,7 +95,7 @@ export const getFilterHubRequestParams = <
     return {};
   }
   const filters: HubFilter[] = [];
-  if (filterState) {
+  if (filterState) {    
     const { filterValues } = filterState;
     for (const categoryKey of objectKeys(filterValues)) {
       const filterCategory = filterCategories?.find(

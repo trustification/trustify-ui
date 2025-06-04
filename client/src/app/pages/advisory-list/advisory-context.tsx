@@ -115,7 +115,7 @@ export const AdvisorySearchProvider: React.FunctionComponent<
       {
         categoryKey: "labels",
         title: "Label",
-        type: FilterType.autocompleteserverside,
+        type: FilterType.autocompleteServerSide,
         placeholderText: "Labels",
         selectOptions: labels.map((e) => {
           const keyValue = joinKeyValueAsString({ key: e.key, value: e.value });
