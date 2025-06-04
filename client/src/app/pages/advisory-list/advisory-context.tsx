@@ -6,7 +6,10 @@ import {
   FILTER_TEXT_CATEGORY_KEY,
   TablePersistenceKeyPrefixes,
 } from "@app/Constants";
-import { joinKeyValueAsString } from "@app/api/model-utils";
+import {
+  joinKeyValueAsString,
+  splitStringAsKeyValue,
+} from "@app/api/model-utils";
 import type { AdvisorySummary } from "@app/client";
 import { FilterType } from "@app/components/FilterToolbar";
 import {
@@ -113,8 +116,8 @@ export const AdvisorySearchProvider: React.FunctionComponent<
       {
         categoryKey: "labels",
         title: "Label",
-        type: FilterType.autocompleteServerSide,
-        placeholderText: "Labels",
+        type: FilterType.autocompleteLabel,
+        placeholderText: "Filter results by label",
         selectOptions: labels.map((e) => {
           const keyValue = joinKeyValueAsString({ key: e.key, value: e.value });
           return {
@@ -141,6 +144,9 @@ export const AdvisorySearchProvider: React.FunctionComponent<
         modified: "modified",
       },
     }),
+    (tableControlState.filterState.filterValues.labels ?? []).map((label) =>
+      splitStringAsKeyValue(label),
+    ),
   );
 
   const tableControls = useTableControlProps({

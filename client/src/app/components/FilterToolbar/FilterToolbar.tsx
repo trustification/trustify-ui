@@ -20,7 +20,7 @@ export enum FilterType {
   search = "search",
   numsearch = "numsearch",
   dateRange = "dateRange",
-  autocompleteServerSide = "autocompleteServerSide",
+  autocompleteLabel = "autocompleteLabel",
 }
 
 export type FilterValue = string[] | undefined | null;

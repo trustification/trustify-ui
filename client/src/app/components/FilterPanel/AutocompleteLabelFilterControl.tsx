@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { getString } from "@app/utils/utils";
+
 import { Autocomplete } from "../Autocomplete/Autocomplete";
 import type { AutocompleteOptionProps } from "../Autocomplete/type-utils";
 import type {
@@ -9,18 +10,18 @@ import type {
 } from "../FilterToolbar";
 import type { IFilterControlProps } from "./FilterControl";
 
-export interface ITypeaheadFilterControlProps<TItem>
+export interface IAutocompleteLabelFilterControlProps<TItem>
   extends IFilterControlProps<TItem, string> {
   category: IMultiselectFilterCategory<TItem, string>;
 }
 
-export const TypeaheadFilterControl = <TItem,>({
+export const AutocompleteLabelFilterControl = <TItem,>({
   category,
   filterValue,
   setFilterValue,
   isDisabled = false,
 }: React.PropsWithChildren<
-  ITypeaheadFilterControlProps<TItem>
+  IAutocompleteLabelFilterControlProps<TItem>
 >): JSX.Element | null => {
   const [selectOptions, setSelectOptions] = React.useState<
     FilterSelectOptionProps[]

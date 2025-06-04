@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
-import type { HubRequestParams } from "@app/api/models";
+import type { HubRequestParams, SingleLabel } from "@app/api/models";
 import { client } from "@app/axios-config/apiInit";
 import {
   type AdvisoryDetails,
@@ -48,14 +48,24 @@ export const useFetchAdvisoryLabels = (filterText: string) => {
 
 export const useFetchAdvisories = (
   params: HubRequestParams = {},
+  labels: SingleLabel[] = [],
   disableQuery = false,
 ) => {
+  const { q, ...rest } = requestParamsQuery(params);
+
+  const labelQuery = labels
+    .map(({ key, value }) => `label:${key}=${value}`)
+    .join("|");
+
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: [AdvisoriesQueryKey, params],
+    queryKey: [AdvisoriesQueryKey, params, labelQuery],
     queryFn: () => {
       return listAdvisories({
         client,
-        query: { ...requestParamsQuery(params) },
+        query: {
+          ...rest,
+          q: `${q ?? ""}&${labelQuery}`,
+        },
       });
     },
     enabled: !disableQuery,

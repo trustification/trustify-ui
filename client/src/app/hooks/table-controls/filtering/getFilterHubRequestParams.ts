@@ -157,6 +157,10 @@ export const getFilterHubRequestParams = <
           });
         }
       }
+      if (filterCategory.type === "autocompleteLabel") {
+        // Do nothing as labels do not follow the pattern {field}{operator}{value}
+        // It is expected for the app to add manually those fields to the REST API
+      }
     }
   }
   if (implicitFilters) {

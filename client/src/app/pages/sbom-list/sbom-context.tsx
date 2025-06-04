@@ -6,7 +6,10 @@ import {
   FILTER_TEXT_CATEGORY_KEY,
   TablePersistenceKeyPrefixes,
 } from "@app/Constants";
-import { joinKeyValueAsString } from "@app/api/model-utils";
+import {
+  joinKeyValueAsString,
+  splitStringAsKeyValue,
+} from "@app/api/model-utils";
 import type { SbomSummary } from "@app/client";
 import { FilterType } from "@app/components/FilterToolbar";
 import {
@@ -93,7 +96,7 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
       {
         categoryKey: "labels",
         title: "Label",
-        type: FilterType.autocompleteServerSide,
+        type: FilterType.autocompleteLabel,
         placeholderText: "Filter results by label",
         selectOptions: labels.map((e) => {
           const keyValue = joinKeyValueAsString({ key: e.key, value: e.value });
@@ -120,6 +123,9 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
         published: "published",
       },
     }),
+    (tableControlState.filterState.filterValues.labels ?? []).map((label) =>
+      splitStringAsKeyValue(label),
+    ),
   );
 
   const tableControls = useTableControlProps({

@@ -3,6 +3,7 @@ import * as React from "react";
 import { ToolbarFilter, type ToolbarLabel } from "@patternfly/react-core";
 
 import { getString } from "@app/utils/utils";
+
 import { Autocomplete } from "../Autocomplete/Autocomplete";
 import type { AutocompleteOptionProps } from "../Autocomplete/type-utils";
 import type { IFilterControlProps } from "./FilterControl";
@@ -11,19 +12,19 @@ import type {
   IMultiselectFilterCategory,
 } from "./FilterToolbar";
 
-export interface ITypeaheadFilterControlProps<TItem>
+export interface IAutocompleteLabelFilterControlProps<TItem>
   extends IFilterControlProps<TItem, string> {
   category: IMultiselectFilterCategory<TItem, string>;
 }
 
-export const TypeaheadFilterControl = <TItem,>({
+export const AutocompleteLabelFilterControl = <TItem,>({
   category,
   filterValue,
   setFilterValue,
   showToolbarItem,
   isDisabled = false,
 }: React.PropsWithChildren<
-  ITypeaheadFilterControlProps<TItem>
+  IAutocompleteLabelFilterControlProps<TItem>
 >): JSX.Element | null => {
   const optionMap = React.useRef(
     new Map<string, FilterSelectOptionProps | null>(),
