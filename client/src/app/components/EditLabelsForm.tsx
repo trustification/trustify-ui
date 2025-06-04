@@ -5,6 +5,7 @@ import {
   Button,
   ButtonVariant,
   Card,
+  Content,
   Form,
   FormGroup,
   Label,
@@ -77,7 +78,7 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
         labels.
       </StackItem>
       <StackItem>
-        <FormGroup label={title}>
+        <FormGroup label={<Content component="h4">{title}</Content>}>
           <Card>
             <LabelGroup
               style={{ padding: 10, minHeight: 10 }}
@@ -114,7 +115,7 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
               return keyValueToOption({ key, value });
             })}
             onChange={setSelections}
-            placeholderText="Label"
+            placeholderText="Add label"
             searchInputAriaLabel="labels-select-toggle"
             onSearchChange={onInputChange}
             onCreateNewOption={(value) => {

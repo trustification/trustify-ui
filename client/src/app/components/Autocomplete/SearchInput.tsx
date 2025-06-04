@@ -6,6 +6,7 @@ import {
   TextInputGroupMain,
   TextInputGroupUtilities,
 } from "@patternfly/react-core";
+import SearchIcon from "@patternfly/react-icons/dist/esm/icons/search-icon";
 import TimesIcon from "@patternfly/react-icons/dist/esm/icons/times-icon";
 
 import { getString } from "@app/utils/utils";
@@ -77,6 +78,7 @@ export const SearchInputComponent: React.FC<SearchInputProps> = ({
         aria-label={ariaLabel}
         aria-controls="select-typeahead-listbox"
         hint={hint}
+        icon={<SearchIcon />}
       />
 
       <TextInputGroupUtilities>
