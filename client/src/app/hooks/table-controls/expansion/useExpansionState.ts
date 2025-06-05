@@ -1,7 +1,7 @@
 import { usePersistentState } from "@app/hooks/usePersistentState";
 import type { DiscriminatedArgs } from "@app/utils/type-utils";
 import { objectKeys } from "@app/utils/utils";
-import type { IFeaturePersistenceArgs } from "../types";
+import { type IFeaturePersistenceArgs, isPersistenceProvider } from "../types";
 
 /**
  * A map of item ids (strings resolved from `item[idProperty]`) to either:
@@ -93,7 +93,9 @@ export const useExpansionState = <
       ? {
           persistTo,
           keys: ["expandedCells"],
-          serialize: (expandedCellsObj) => {
+          serialize: (
+            expandedCellsObj: Partial<TExpandedCells<TColumnKey>>,
+          ) => {
             if (!expandedCellsObj || objectKeys(expandedCellsObj).length === 0)
               return { expandedCells: null };
             return { expandedCells: JSON.stringify(expandedCellsObj) };
@@ -111,7 +113,13 @@ export const useExpansionState = <
             persistTo,
             key: "expandedCells",
           }
-        : { persistTo }),
+        : isPersistenceProvider(persistTo)
+          ? {
+              persistTo: "provider",
+              serialize: persistTo.write,
+              deserialize: () => persistTo.read() as TExpandedCells<TColumnKey>,
+            }
+          : { persistTo: "state" }),
   });
   return { expandedCells, setExpandedCells };
 };

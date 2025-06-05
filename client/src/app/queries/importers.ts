@@ -55,9 +55,9 @@ export const useCreateImporterMutation = (
         body: payload.configuration,
       });
     },
-    onSuccess: (_, _payload) => {
+    onSuccess: async (_, _payload) => {
       onSuccess();
-      queryClient.invalidateQueries({ queryKey: [ImportersQueryKey] });
+      await queryClient.invalidateQueries({ queryKey: [ImportersQueryKey] });
     },
     onError,
   });
@@ -96,9 +96,9 @@ export const useUpdateImporterMutation = (
         body: payload.configuration,
       });
     },
-    onSuccess: (_res, _payload) => {
+    onSuccess: async (_res, _payload) => {
       onSuccess();
-      queryClient.invalidateQueries({ queryKey: [ImportersQueryKey] });
+      await queryClient.invalidateQueries({ queryKey: [ImportersQueryKey] });
     },
     onError: onError,
   });
@@ -112,13 +112,13 @@ export const useDeleteIporterMutation = (
 
   const { isPending, mutate, error } = useMutation({
     mutationFn: (id: string) => deleteImporter({ client, path: { name: id } }),
-    onSuccess: (_res, id) => {
+    onSuccess: async (_res, id) => {
       onSuccess(id);
-      queryClient.invalidateQueries({ queryKey: [ImportersQueryKey] });
+      await queryClient.invalidateQueries({ queryKey: [ImportersQueryKey] });
     },
-    onError: (err: AxiosError, id) => {
+    onError: async (err: AxiosError, id) => {
       onError(err, id);
-      queryClient.invalidateQueries({ queryKey: [ImportersQueryKey] });
+      await queryClient.invalidateQueries({ queryKey: [ImportersQueryKey] });
     },
   });
 

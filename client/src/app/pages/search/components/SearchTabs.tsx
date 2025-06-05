@@ -48,7 +48,7 @@ export interface SearchTabsProps {
     sbomFilterPanelProps: IFilterPanelProps<SbomSummary, "" | "published">;
     vulnerabilityFilterPanelProps: IFilterPanelProps<
       VulnerabilitySummary,
-      "" | "average_severity" | "published"
+      "" | "base_severity" | "published"
     >;
   };
 
