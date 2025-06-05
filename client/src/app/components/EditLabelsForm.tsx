@@ -125,7 +125,11 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
               };
               return option;
             }}
-            validateNewOption={(value) => /^[^=][^=]*=?[^=]*$/.test(value)}
+            validateNewOption={(value) =>
+              !!value &&
+              value.trim().length > 0 &&
+              /^[^=][^=]*=?[^=]*$/.test(value)
+            }
             filterBeforeOnChange={(selections, newOption) => {
               const newOptionKeyValue = splitStringAsKeyValue(
                 getString(newOption.name),
