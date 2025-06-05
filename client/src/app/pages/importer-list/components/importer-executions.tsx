@@ -79,10 +79,6 @@ export const ImporterExecutions: React.FC<IImporterExecutionsProps> = ({
     currentPageItems: executions,
     totalItemCount,
     isLoading: isFetching,
-    selectionState: useSelectionState({
-      items: executions,
-      isEqual: (a, b) => a.id === b.id,
-    }),
   });
 
   const {
