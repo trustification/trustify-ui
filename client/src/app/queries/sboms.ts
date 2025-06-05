@@ -54,8 +54,23 @@ export const useFetchSBOMs = (
 ) => {
   const { q, ...rest } = requestParamsQuery(params);
 
-  const labelQuery = labels
-    .map(({ key, value }) => `label:${key}=${value}`)
+  const labelsGroupedByKey = labels.reduce(
+    (prev, current) => {
+      const prevValue: string[] | undefined = prev[current.key];
+      const currentValue = current.value;
+      const newValue = prevValue
+        ? [...prevValue, currentValue]
+        : [currentValue];
+
+      return Object.assign(prev, { [current.key]: newValue });
+    },
+    {} as Record<string, string[]>,
+  );
+
+  const labelQuery = Object.entries(labelsGroupedByKey)
+    .map(([key, values]) => {
+      return `label:${key}=${values.join("|")}`;
+    })
     .join("|");
 
   const { data, isLoading, error, refetch } = useQuery({
