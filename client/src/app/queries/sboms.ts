@@ -111,8 +111,8 @@ export const useUploadSBOM = () => {
     uploadFn: (formData, config) => {
       return uploadSbom(formData, config);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
         queryKey: [SBOMsQueryKey],
       });
     },
@@ -132,9 +132,9 @@ export const useUpdateSbomLabelsMutation = (
         body: obj.labels,
       });
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       onSuccess();
-      queryClient.invalidateQueries({ queryKey: [SBOMsQueryKey] });
+      await queryClient.invalidateQueries({ queryKey: [SBOMsQueryKey] });
     },
     onError: onError,
   });
@@ -145,7 +145,7 @@ export const useFetchSbomsByPackageId = (
   params: HubRequestParams = {},
 ) => {
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ["SBOMsQueryKeysss", "by-package", purl, params],
+    queryKey: [SBOMsQueryKey, "by-package", purl, params],
     queryFn: () => {
       return listRelatedSboms({
         client,

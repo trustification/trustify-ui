@@ -26,7 +26,6 @@ export enum TableURLParamKeyPrefix {
 }
 
 export const isAuthRequired = ENV.AUTH_REQUIRED !== "false";
-export const isAnalyticsEnabled = ENV.ANALYTICS_ENABLED !== "false";
 export const isAuthServerEmbedded = ENV.OIDC_SERVER_IS_EMBEDDED === "true";
 export const uploadLimit = "500m";
 

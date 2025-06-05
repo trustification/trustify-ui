@@ -1,8 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import type { AxiosError } from "axios";
 
 import {
+  Breadcrumb,
+  BreadcrumbItem,
   ButtonVariant,
   Content,
   Divider,
@@ -105,7 +108,15 @@ export const SbomDetails: React.FC = () => {
 
   return (
     <>
-      <PageSection hasBodyWrapper={false}>
+      <PageSection type="breadcrumb">
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <Link to="/sboms">SBOMs</Link>
+          </BreadcrumbItem>
+          <BreadcrumbItem isActive>SBOM details</BreadcrumbItem>
+        </Breadcrumb>
+      </PageSection>
+      <PageSection>
         <Split>
           <SplitItem isFilled>
             <Flex>
@@ -177,7 +188,7 @@ export const SbomDetails: React.FC = () => {
           </SplitItem>
         </Split>
       </PageSection>
-      <PageSection hasBodyWrapper={false}>
+      <PageSection>
         <Tabs
           mountOnEnter
           activeKey={activeTabKey}
@@ -221,7 +232,7 @@ export const SbomDetails: React.FC = () => {
           />
         </Tabs>
       </PageSection>
-      <PageSection hasBodyWrapper={false}>
+      <PageSection>
         <TabContent
           eventKey={0}
           id="refTabInfoSection"

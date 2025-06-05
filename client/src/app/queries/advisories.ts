@@ -108,8 +108,8 @@ export const useUploadAdvisory = () => {
     uploadFn: (formData, config) => {
       return uploadAdvisory(formData, config);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
         queryKey: [AdvisoriesQueryKey],
       });
     },
@@ -129,9 +129,9 @@ export const useUpdateAdvisoryLabelsMutation = (
         body: obj.labels ?? {},
       });
     },
-    onSuccess: (_res, _payload) => {
+    onSuccess: async (_res, _payload) => {
       onSuccess();
-      queryClient.invalidateQueries({ queryKey: [AdvisoriesQueryKey] });
+      await queryClient.invalidateQueries({ queryKey: [AdvisoriesQueryKey] });
     },
     onError: onError,
   });
