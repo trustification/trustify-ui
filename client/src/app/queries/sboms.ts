@@ -6,16 +6,18 @@ import {
 } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
-import type { HubRequestParams } from "@app/api/models";
+import type { HubRequestParams, SingleLabel } from "@app/api/models";
 import { client } from "@app/axios-config/apiInit";
 import {
   type IngestResult,
+  type Labels,
   type SbomSummary,
   deleteSbom,
   downloadSbom,
   getSbom,
   getSbomAdvisories,
   listRelatedSboms,
+  listSbomLabels,
   listSboms,
   updateSbomLabels,
 } from "@app/client";
@@ -26,16 +28,60 @@ import { requestParamsQuery } from "../hooks/table-controls";
 
 export const SBOMsQueryKey = "sboms";
 
+export const useFetchSBOMLabels = (filterText: string) => {
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: [SBOMsQueryKey, "labels", filterText],
+    queryFn: () => {
+      return listSbomLabels({
+        client,
+        query: { limit: 10, filter_text: filterText },
+      });
+    },
+  });
+
+  return {
+    labels: (data?.data as { key: string; value: string }[] | undefined) || [],
+    isFetching: isLoading,
+    fetchError: error as AxiosError,
+    refetch,
+  };
+};
+
 export const useFetchSBOMs = (
   params: HubRequestParams = {},
+  labels: SingleLabel[] = [],
   disableQuery = false,
 ) => {
+  const { q, ...rest } = requestParamsQuery(params);
+
+  const labelsGroupedByKey = labels.reduce(
+    (prev, current) => {
+      const prevValue: string[] | undefined = prev[current.key];
+      const currentValue = current.value;
+      const newValue = prevValue
+        ? [...prevValue, currentValue]
+        : [currentValue];
+
+      return Object.assign(prev, { [current.key]: newValue });
+    },
+    {} as Record<string, string[]>,
+  );
+
+  const labelQuery = Object.entries(labelsGroupedByKey)
+    .map(([key, values]) => {
+      return `label:${key}=${values.join("|")}`;
+    })
+    .join("|");
+
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: [SBOMsQueryKey, params],
+    queryKey: [SBOMsQueryKey, params, labelQuery],
     queryFn: () =>
       listSboms({
         client,
-        query: { ...requestParamsQuery(params) },
+        query: {
+          ...rest,
+          q: `${q ?? ""}&${labelQuery}`,
+        },
       }),
     enabled: !disableQuery,
   });
@@ -118,7 +164,7 @@ export const useUploadSBOM = () => {
 
 export const useUpdateSbomLabelsMutation = (
   onSuccess: () => void,
-  onError: (err: AxiosError, payload: SbomSummary) => void,
+  onError: (err: AxiosError, payload: { id: string; labels: Labels }) => void,
 ) => {
   const queryClient = useQueryClient();
   return useMutation({

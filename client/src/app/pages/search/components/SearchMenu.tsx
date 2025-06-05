@@ -66,7 +66,7 @@ function useAllEntities(filterText: string, disableSearch: boolean) {
   const {
     isFetching: isFetchingAdvisories,
     result: { data: advisories },
-  } = useFetchAdvisories({ ...params }, disableSearch);
+  } = useFetchAdvisories({ ...params }, [], disableSearch);
 
   const {
     isFetching: isFetchingPackages,
@@ -76,7 +76,7 @@ function useAllEntities(filterText: string, disableSearch: boolean) {
   const {
     isFetching: isFetchingSBOMs,
     result: { data: sboms },
-  } = useFetchSBOMs({ ...params }, disableSearch);
+  } = useFetchSBOMs({ ...params }, [], disableSearch);
 
   const {
     isFetching: isFetchingVulnerabilities,
