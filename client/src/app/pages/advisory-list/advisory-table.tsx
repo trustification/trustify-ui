@@ -29,6 +29,7 @@ import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { VulnerabilityGallery } from "@app/components/VulnerabilityGallery";
 import { formatDate } from "@app/utils/utils";
 
+import { joinKeyValueAsString } from "@app/api/model-utils";
 import { LabelsAsList } from "@app/components/LabelsAsList";
 import { AdvisorySearchContext } from "./advisory-context";
 import { AdvisoryEditLabelsForm } from "./components/AdvisoryEditLabelsForm";
@@ -53,6 +54,7 @@ export const AdvisoryTable: React.FC = () => {
       getTdProps,
     },
     expansionDerivedState: { isCellExpanded },
+    filterState: { filterValues, setFilterValues },
   } = tableControls;
 
   const { downloadAdvisory } = useDownload();
@@ -158,7 +160,27 @@ export const AdvisoryTable: React.FC = () => {
                       {item.labels.type}
                     </Td>
                     <Td width={10} {...getTdProps({ columnKey: "labels" })}>
-                      <LabelsAsList value={item.labels} />
+                      <LabelsAsList
+                        value={item.labels}
+                        onClick={({ key, value }) => {
+                          const labelString = joinKeyValueAsString({
+                            key,
+                            value,
+                          });
+
+                          const filterValue = filterValues.labels;
+                          if (!filterValue?.includes(labelString)) {
+                            const newFilterValue = filterValue
+                              ? [...filterValue, labelString]
+                              : [labelString];
+
+                            setFilterValues({
+                              ...filterValues,
+                              labels: newFilterValue,
+                            });
+                          }
+                        }}
+                      />
                     </Td>
                     <Td
                       width={10}

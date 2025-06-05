@@ -138,6 +138,7 @@ export const SbomTable: React.FC = () => {
                               : [labelString];
 
                             setFilterValues({
+                              ...filterValues,
                               labels: newFilterValue,
                             });
                           }

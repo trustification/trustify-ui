@@ -15,7 +15,10 @@ import {
 } from "@app/client";
 
 import { uploadAdvisory } from "@app/api/rest";
-import { requestParamsQuery } from "@app/hooks/table-controls";
+import {
+  labelRequestParamsQuery,
+  requestParamsQuery,
+} from "@app/hooks/table-controls";
 import { useUpload } from "@app/hooks/useUpload";
 
 export interface IAdvisoriesQueryParams {
@@ -52,28 +55,7 @@ export const useFetchAdvisories = (
   disableQuery = false,
 ) => {
   const { q, ...rest } = requestParamsQuery(params);
-
-  // TODO move this logic to getHubRequetsParams
-  // also validate no empty strings are set on labels when we create them
-
-  const labelsGroupedByKey = labels.reduce(
-    (prev, current) => {
-      const prevValue: string[] | undefined = prev[current.key];
-      const currentValue = current.value;
-      const newValue = prevValue
-        ? [...prevValue, currentValue]
-        : [currentValue];
-
-      return Object.assign(prev, { [current.key]: newValue });
-    },
-    {} as Record<string, string[]>,
-  );
-
-  const labelQuery = Object.entries(labelsGroupedByKey)
-    .map(([key, values]) => {
-      return `label:${key}=${values.join("|")}`;
-    })
-    .join("|");
+  const labelQuery = labelRequestParamsQuery(labels);
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [AdvisoriesQueryKey, params, labelQuery],
@@ -82,7 +64,7 @@ export const useFetchAdvisories = (
         client,
         query: {
           ...rest,
-          q: `${q ?? ""}&${labelQuery}`,
+          q: `${q ?? ""}${labelQuery ? `&${labelQuery}` : ""}`,
         },
       });
     },
