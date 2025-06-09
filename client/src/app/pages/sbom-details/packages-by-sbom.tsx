@@ -94,17 +94,11 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
 
   const {
     currentPageItems,
-    numRenderedColumns,
     propHelpers: {
       toolbarProps,
       filterToolbarProps,
       paginationToolbarItemProps,
       paginationProps,
-      tableProps,
-      getThProps,
-      getTrProps,
-      getTdProps,
-      getExpandedContentTdProps,
     },
     expansionDerivedState: { isCellExpanded, setCellExpanded },
   } = tableControls;
