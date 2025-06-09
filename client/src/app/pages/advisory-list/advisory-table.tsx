@@ -190,7 +190,7 @@ export const AdvisoryTable: React.FC = () => {
                       {formatDate(item.modified)}
                     </Td>
                     <Td
-                      width={20}
+                      width={10}
                       {...getTdProps({ columnKey: "vulnerabilities" })}
                     >
                       <VulnerabilityGallery severities={severities} />

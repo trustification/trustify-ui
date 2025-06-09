@@ -90,7 +90,7 @@ export const SbomTable: React.FC = () => {
                     rowIndex={rowIndex}
                   >
                     <Td
-                      width={25}
+                      width={20}
                       modifier="breakWord"
                       {...getTdProps({
                         columnKey: "name",
@@ -102,7 +102,7 @@ export const SbomTable: React.FC = () => {
                       <NavLink to={`/sboms/${item.id}`}>{item.name}</NavLink>
                     </Td>
                     <Td
-                      width={15}
+                      width={10}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "version" })}
                     >
