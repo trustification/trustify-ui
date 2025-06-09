@@ -2,41 +2,46 @@ import type React from "react";
 import { Link } from "react-router-dom";
 
 import {
+  Content,
+  DataList,
+  DataListCell,
+  DataListContent,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
+  DataListToggle,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
+  Flex,
+  FlexItem,
+  Label,
   List,
   ListItem,
+  Split,
+  SplitItem,
+  Stack,
+  StackItem,
   Toolbar,
   ToolbarContent,
   ToolbarItem,
+  Tooltip,
 } from "@patternfly/react-core";
-import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
-import {
-  ExpandableRowContent,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from "@patternfly/react-table";
+import ShieldAltIcon from "@patternfly/react-icons/dist/esm/icons/shield-alt-icon";
 
 import { FILTER_TEXT_CATEGORY_KEY } from "@app/Constants";
+import { ConditionalDataListBody } from "@app/components/DataListControls/ConditionalDataListBody";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
-import {
-  ConditionalTableBody,
-  TableHeaderContentWithControls,
-  TableRowContentWithControls,
-} from "@app/components/TableControls";
 import {
   getHubRequestParams,
   useTableControlProps,
   useTableControlState,
 } from "@app/hooks/table-controls";
 import { useFetchPackagesBySbomId } from "@app/queries/packages";
+
+import { PackageVulnerabilities } from "../package-list/components/PackageVulnerabilities";
 
 interface PackagesProps {
   sbomId: string;
@@ -101,7 +106,7 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
       getTdProps,
       getExpandedContentTdProps,
     },
-    expansionDerivedState: { isCellExpanded },
+    expansionDerivedState: { isCellExpanded, setCellExpanded },
   } = tableControls;
 
   return (
@@ -119,82 +124,131 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
         </ToolbarContent>
       </Toolbar>
 
-      <Table {...tableProps} aria-label="Package table">
-        <Thead>
-          <Tr>
-            <TableHeaderContentWithControls {...tableControls}>
-              <Th {...getThProps({ columnKey: "name" })} />
-              <Th {...getThProps({ columnKey: "version" })} />
-            </TableHeaderContentWithControls>
-          </Tr>
-        </Thead>
-        <ConditionalTableBody
+      <DataList aria-label="Packages table">
+        <ConditionalDataListBody
           isLoading={isFetching}
           isError={!!fetchError}
-          isNoData={totalItemCount === 0}
-          numRenderedColumns={numRenderedColumns}
+          isNoData={packages.length === 0}
         >
           {currentPageItems?.map((item, rowIndex) => {
             return (
-              <Tbody key={item.id}>
-                <Tr {...getTrProps({ item })}>
-                  <TableRowContentWithControls
-                    {...tableControls}
-                    item={item}
-                    rowIndex={rowIndex}
-                  >
-                    <Td width={80} {...getTdProps({ columnKey: "name" })}>
-                      {[item.name, item.group].filter(Boolean).join("/")}
-                    </Td>
-                    <Td
-                      width={20}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "version" })}
-                    >
-                      {item?.version}
-                    </Td>
-                  </TableRowContentWithControls>
-                </Tr>
-                {isCellExpanded(item) ? (
-                  <Tr isExpanded>
-                    <Td />
-                    <Td
-                      {...getExpandedContentTdProps({
+              <DataListItem
+                key={item.id}
+                id={item.id}
+                isExpanded={isCellExpanded(item)}
+              >
+                <DataListItemRow>
+                  <DataListToggle
+                    id={`toggle-${item.id}`}
+                    aria-label={`toggle-${rowIndex}`}
+                    onClick={() => {
+                      setCellExpanded({
                         item,
-                      })}
-                      className={spacing.pyLg}
-                    >
-                      <ExpandableRowContent>
-                        <DescriptionList>
-                          <DescriptionListGroup>
-                            <DescriptionListTerm>
-                              External identifier
-                            </DescriptionListTerm>
-                            <DescriptionListDescription>
-                              <List>
-                                {item.purl.map((item) => (
-                                  <ListItem key={item.uuid}>
-                                    <Link to={`/packages/${item.uuid}`}>
-                                      {item.purl}
-                                    </Link>
-                                  </ListItem>
-                                ))}
-                                {item.cpe.map((item) => (
-                                  <ListItem key={item}>{item}</ListItem>
-                                ))}
-                              </List>
-                            </DescriptionListDescription>
-                          </DescriptionListGroup>
-                        </DescriptionList>
-                      </ExpandableRowContent>
-                    </Td>
-                  </Tr>
-                ) : null}
-              </Tbody>
+                        isExpanding: !isCellExpanded(item),
+                      });
+                    }}
+                    isExpanded={isCellExpanded(item)}
+                  />
+                  <DataListItemCells
+                    dataListCells={[
+                      <DataListCell key="info" wrapModifier="breakWord">
+                        <Flex direction={{ default: "column" }}>
+                          <FlexItem>
+                            <Content component="p">
+                              {[item.name, item.group]
+                                .filter(Boolean)
+                                .join("/")}
+                            </Content>
+                          </FlexItem>
+                          <FlexItem>
+                            <Content component="small">{item?.version}</Content>
+                          </FlexItem>
+                        </Flex>
+                      </DataListCell>,
+                      <DataListCell
+                        key="purls"
+                        wrapModifier="breakWord"
+                        width={4}
+                      >
+                        <List>
+                          {item.purl.map((e) => {
+                            return (
+                              <ListItem key={e.uuid}>
+                                <Stack>
+                                  <StackItem>
+                                    <Split>
+                                      <SplitItem>
+                                        <Tooltip
+                                          content={<div>Vulnerabilities</div>}
+                                        >
+                                          <ShieldAltIcon />
+                                        </Tooltip>
+                                      </SplitItem>
+                                      <SplitItem>
+                                        <PackageVulnerabilities
+                                          packageId={e.uuid}
+                                        />
+                                      </SplitItem>
+                                    </Split>
+                                  </StackItem>
+                                  <StackItem>
+                                    <Content component="small">
+                                      Purl:{" "}
+                                      <Link to={`/packages/${e.uuid}`}>
+                                        {e.purl}
+                                      </Link>
+                                    </Content>
+                                  </StackItem>
+                                </Stack>
+                              </ListItem>
+                            );
+                          })}
+                        </List>
+                      </DataListCell>,
+                      <DataListCell
+                        key="license"
+                        wrapModifier="breakWord"
+                        width={2}
+                      >
+                        <List>
+                          {item.licenses.map((e) => (
+                            <ListItem key={e.license_name}>
+                              {e.license_name}{" "}
+                              <Label isCompact>{e.license_type}</Label>
+                            </ListItem>
+                          ))}
+                        </List>
+                      </DataListCell>,
+                    ]}
+                  />
+                </DataListItemRow>
+                <DataListContent
+                  aria-label={`expanded-area-${rowIndex}`}
+                  isHidden={!isCellExpanded(item)}
+                >
+                  <DescriptionList isCompact>
+                    <DescriptionListGroup>
+                      <DescriptionListTerm>CPEs</DescriptionListTerm>
+                      <DescriptionListDescription>
+                        {item.cpe.length > 0 ? (
+                          <List>
+                            {item.cpe.map((e) => (
+                              <ListItem key={e}>{e}</ListItem>
+                            ))}
+                          </List>
+                        ) : (
+                          <Content component="small">None</Content>
+                        )}
+                      </DescriptionListDescription>
+                    </DescriptionListGroup>
+                  </DescriptionList>
+                </DataListContent>
+              </DataListItem>
             );
           })}
-        </ConditionalTableBody>
-      </Table>
+        </ConditionalDataListBody>
+      </DataList>
+
       <SimplePagination
         idPrefix="package-table"
         isTop={false}
