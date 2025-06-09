@@ -24,7 +24,10 @@ import {
 import { useUpload } from "@app/hooks/useUpload";
 
 import { uploadSbom } from "@app/api/rest";
-import { requestParamsQuery } from "../hooks/table-controls";
+import {
+  labelRequestParamsQuery,
+  requestParamsQuery,
+} from "../hooks/table-controls";
 
 export const SBOMsQueryKey = "sboms";
 
@@ -53,25 +56,7 @@ export const useFetchSBOMs = (
   disableQuery = false,
 ) => {
   const { q, ...rest } = requestParamsQuery(params);
-
-  const labelsGroupedByKey = labels.reduce(
-    (prev, current) => {
-      const prevValue: string[] | undefined = prev[current.key];
-      const currentValue = current.value;
-      const newValue = prevValue
-        ? [...prevValue, currentValue]
-        : [currentValue];
-
-      return Object.assign(prev, { [current.key]: newValue });
-    },
-    {} as Record<string, string[]>,
-  );
-
-  const labelQuery = Object.entries(labelsGroupedByKey)
-    .map(([key, values]) => {
-      return `label:${key}=${values.join("|")}`;
-    })
-    .join("|");
+  const labelQuery = labelRequestParamsQuery(labels);
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [SBOMsQueryKey, params, labelQuery],
@@ -80,7 +65,7 @@ export const useFetchSBOMs = (
         client,
         query: {
           ...rest,
-          q: `${q ?? ""}&${labelQuery}`,
+          q: [q, labelQuery].filter((e) => e).join("&"),
         },
       }),
     enabled: !disableQuery,

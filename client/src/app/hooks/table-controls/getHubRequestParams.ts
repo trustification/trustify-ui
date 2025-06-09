@@ -112,22 +112,7 @@ export const requestParamsQuery = (
 };
 
 export const labelRequestParamsQuery = (labels: SingleLabel[] = []) => {
-  const labelsGroupedByKey = labels.reduce(
-    (prev, current) => {
-      const prevValue: string[] | undefined = prev[current.key];
-      const currentValue = current.value;
-      const newValue = prevValue
-        ? [...prevValue, currentValue]
-        : [currentValue];
-
-      return Object.assign(prev, { [current.key]: newValue });
-    },
-    {} as Record<string, string[]>,
-  );
-
-  return Object.entries(labelsGroupedByKey)
-    .map(([key, values]) => {
-      return `label:${key}=${values.join("|")}`;
-    })
-    .join("|");
+  return labels
+    .map(({ key, value }) => `label:${key}=${value ?? ""}`)
+    .join("&");
 };

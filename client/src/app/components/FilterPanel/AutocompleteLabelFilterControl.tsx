@@ -35,6 +35,7 @@ export const AutocompleteLabelFilterControl = <TItem,>({
 
   return (
     <Autocomplete
+      showChips
       isDisabled={isDisabled}
       options={selectOptions.map((option) => ({
         id: option.value,
