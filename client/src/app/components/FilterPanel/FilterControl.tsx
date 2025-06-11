@@ -8,6 +8,7 @@ import {
   type ISearchFilterCategory,
   type ISelectFilterCategory,
 } from "../FilterToolbar";
+import { AutocompleteLabelFilterControl } from "./AutocompleteLabelFilterControl";
 import { CheckboxFilterControl } from "./CheckboxFilterControl";
 import { DateRangeFilter } from "./DateRangeFilter";
 import { RadioFilterControl } from "./RadioFilterControl";
@@ -59,6 +60,16 @@ export const FilterControl = <TItem, TFilterCategoryKey extends string>({
   }
   if (category.type === FilterType.dateRange) {
     return <DateRangeFilter category={category} {...props} />;
+  }
+  if (category.type === FilterType.autocompleteLabel) {
+    return (
+      <AutocompleteLabelFilterControl
+        category={
+          category as IMultiselectFilterCategory<TItem, TFilterCategoryKey>
+        }
+        {...props}
+      />
+    );
   }
   return null;
 };

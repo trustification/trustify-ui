@@ -1,20 +1,29 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
-import type { HubRequestParams } from "@app/api/models";
+import type { HubRequestParams, Label } from "@app/api/models";
 import { client } from "@app/axios-config/apiInit";
 import {
   type AdvisoryDetails,
-  type AdvisorySummary,
+  type Labels,
   deleteAdvisory,
   downloadAdvisory,
   getAdvisory,
   listAdvisories,
+  listAdvisoryLabels,
   updateAdvisoryLabels,
 } from "@app/client";
 
 import { uploadAdvisory } from "@app/api/rest";
-import { requestParamsQuery } from "@app/hooks/table-controls";
+import {
+  labelRequestParamsQuery,
+  requestParamsQuery,
+} from "@app/hooks/table-controls";
 import { useUpload } from "@app/hooks/useUpload";
 
 export interface IAdvisoriesQueryParams {
@@ -26,16 +35,43 @@ export interface IAdvisoriesQueryParams {
 
 export const AdvisoriesQueryKey = "advisories";
 
+export const useFetchAdvisoryLabels = (filterText: string) => {
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: [AdvisoriesQueryKey, "labels", filterText],
+    queryFn: () => {
+      return listAdvisoryLabels({
+        client,
+        query: { limit: 10, filter_text: filterText },
+      });
+    },
+    placeholderData: keepPreviousData,
+  });
+
+  return {
+    labels: (data?.data as { key: string; value: string }[] | undefined) || [],
+    isFetching: isLoading,
+    fetchError: error as AxiosError,
+    refetch,
+  };
+};
+
 export const useFetchAdvisories = (
   params: HubRequestParams = {},
+  labels: Label[] = [],
   disableQuery = false,
 ) => {
+  const { q, ...rest } = requestParamsQuery(params);
+  const labelQuery = labelRequestParamsQuery(labels);
+
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: [AdvisoriesQueryKey, params],
+    queryKey: [AdvisoriesQueryKey, params, labelQuery],
     queryFn: () => {
       return listAdvisories({
         client,
-        query: { ...requestParamsQuery(params) },
+        query: {
+          ...rest,
+          q: [q, labelQuery].filter((e) => e).join("&"),
+        },
       });
     },
     enabled: !disableQuery,
@@ -112,15 +148,15 @@ export const useUploadAdvisory = () => {
 
 export const useUpdateAdvisoryLabelsMutation = (
   onSuccess: () => void,
-  onError: (err: AxiosError, payload: AdvisorySummary) => void,
+  onError: (err: AxiosError, payload: { id: string; labels: Labels }) => void,
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (obj) => {
       return updateAdvisoryLabels({
         client,
-        path: { id: obj.uuid },
-        body: obj.labels ?? {},
+        path: { id: obj.id },
+        body: obj.labels,
       });
     },
     onSuccess: async (_res, _payload) => {
