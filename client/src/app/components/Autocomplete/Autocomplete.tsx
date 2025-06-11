@@ -129,7 +129,6 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
     </MenuToggle>
   );
 
-  console.log(!noResultsMessage ? optionsNotSelected.length === 0 : true);
   return (
     <Flex direction={{ default: "column" }}>
       <FlexItem key="input">

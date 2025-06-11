@@ -24,7 +24,7 @@ export const AdvisoryEditLabelsForm: React.FC<AdvisoryEditLabelsFormProps> = ({
   const [inputValue, setInputValue] = React.useState("");
   const [debouncedInputValue, setDebouncedInputValue] = React.useState("");
 
-  const { labels, isFetching } = useFetchAdvisoryLabels(debouncedInputValue);
+  const { labels } = useFetchAdvisoryLabels(debouncedInputValue);
 
   React.useEffect(() => {
     const delayInputTimeoutId = setTimeout(() => {
@@ -66,7 +66,6 @@ export const AdvisoryEditLabelsForm: React.FC<AdvisoryEditLabelsFormProps> = ({
       onClose={onClose}
       onInputChange={setInputValue}
       options={labels}
-      isLoadingOptions={isFetching}
     />
   );
 };
