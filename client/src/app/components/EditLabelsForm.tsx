@@ -14,7 +14,7 @@ import {
   StackItem,
 } from "@patternfly/react-core";
 
-import type { SingleLabel } from "@app/api/models";
+import type { Label as LabelModel } from "@app/api/models";
 import { getString } from "@app/utils/utils";
 
 import {
@@ -24,7 +24,7 @@ import {
 import { Autocomplete } from "./Autocomplete/Autocomplete";
 import type { AutocompleteOptionProps } from "./Autocomplete/type-utils";
 
-const keyValueToOption = (value: SingleLabel): AutocompleteOptionProps => {
+const keyValueToOption = (value: LabelModel): AutocompleteOptionProps => {
   const keyValue = joinKeyValueAsString(value);
   return {
     id: keyValue,
@@ -40,7 +40,7 @@ interface EditLabelsFormProps {
   onClose: () => void;
 
   // Labels Dropdown
-  options: SingleLabel[];
+  options: LabelModel[];
   onInputChange?: (value: string) => void;
 }
 

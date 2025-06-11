@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
-import type { HubRequestParams, SingleLabel } from "@app/api/models";
+import type { HubRequestParams, Label } from "@app/api/models";
 import { client } from "@app/axios-config/apiInit";
 import {
   type IngestResult,
@@ -54,7 +54,7 @@ export const useFetchSBOMLabels = (filterText: string) => {
 
 export const useFetchSBOMs = (
   params: HubRequestParams = {},
-  labels: SingleLabel[] = [],
+  labels: Label[] = [],
   disableQuery = false,
 ) => {
   const { q, ...rest } = requestParamsQuery(params);

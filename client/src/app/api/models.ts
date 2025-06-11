@@ -69,7 +69,7 @@ export interface WatchedSboms {
 
 //
 
-export interface SingleLabel {
+export interface Label {
   key: string;
   value?: string;
 }
