@@ -40,6 +40,7 @@ import {
   useTableControlState,
 } from "@app/hooks/table-controls";
 import { useFetchPackagesBySbomId } from "@app/queries/packages";
+import { useFetchSbomsLicenseIds } from "@app/queries/sboms";
 
 import { PackageVulnerabilities } from "../package-list/components/PackageVulnerabilities";
 
@@ -48,6 +49,8 @@ interface PackagesProps {
 }
 
 export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
+  const { licenseIds } = useFetchSbomsLicenseIds(sbomId);
+
   const tableControlState = useTableControlState({
     tableName: "package-table",
     columnNames: {
@@ -64,6 +67,16 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
         title: "Filter text",
         placeholderText: "Search",
         type: FilterType.search,
+      },
+      {
+        categoryKey: "Text",
+        title: "License",
+        placeholderText: "Filter results by license",
+        type: FilterType.multiselect,
+        selectOptions: licenseIds.map((licenseId) => ({
+          value: licenseId,
+          label: licenseId,
+        })),
       },
     ],
     isExpansionEnabled: true,

@@ -15,6 +15,7 @@ import {
   downloadSbom,
   getSbom,
   getSbomAdvisories,
+  listAllLicenseIds,
   listRelatedSboms,
   listSboms,
   updateSbomLabels,
@@ -199,5 +200,23 @@ export const useFetchSbomsAdvisoryBatch = (sbomIds: string[]) => {
     advisories: userQueries.map(({ data }) => data?.data || []),
     isFetching: userQueries.some(({ isLoading }) => isLoading),
     fetchError: userQueries.map(({ error }) => error as AxiosError | null),
+  };
+};
+
+export const useFetchSbomsLicenseIds = (sbomId: string) => {
+  const { data, isLoading, error } = useQuery({
+    queryKey: [SBOMsQueryKey, sbomId, "license-ids"],
+    queryFn: () => {
+      return listAllLicenseIds({
+        client,
+        path: { id: sbomId },
+      });
+    },
+  });
+
+  return {
+    licenseIds: data?.data || [],
+    isFetching: isLoading,
+    fetchError: error as AxiosError | null,
   };
 };
