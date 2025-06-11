@@ -136,7 +136,6 @@ export const MultiselectFilterControl = <TItem,>({
   });
 
   const onInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log(event.key)
     switch (event.key) {
       case "Enter":
         if (!isFilterDropdownOpen) {
