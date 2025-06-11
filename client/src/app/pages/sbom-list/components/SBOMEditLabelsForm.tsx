@@ -31,7 +31,7 @@ export const SBOMEditLabelsForm: React.FC<SBOMEditLabelsFormProps> = ({
     return () => clearTimeout(delayInputTimeoutId);
   }, [inputValue]);
 
-  const { labels, isFetching } = useFetchSBOMLabels(debouncedInputValue);
+  const { labels } = useFetchSBOMLabels(debouncedInputValue);
 
   const onUpdateSuccess = () => {
     pushNotification({
@@ -66,7 +66,6 @@ export const SBOMEditLabelsForm: React.FC<SBOMEditLabelsFormProps> = ({
       onClose={onClose}
       onInputChange={setInputValue}
       options={labels}
-      isLoadingOptions={isFetching}
     />
   );
 };

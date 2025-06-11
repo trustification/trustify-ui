@@ -39,7 +39,6 @@ export interface IAutocompleteProps {
   noResultsMessage?: string;
 
   showChips?: boolean;
-  isLoading?: boolean;
   onSearchChange?: (value: string) => void;
   onCreateNewOption?: (value: string) => AutocompleteOptionProps;
   validateNewOption?: (value: string) => boolean;
@@ -63,7 +62,6 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
   selections = [],
   noResultsMessage,
   showChips,
-  isLoading,
   onSearchChange,
   onCreateNewOption,
   validateNewOption,
@@ -131,13 +129,16 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
     </MenuToggle>
   );
 
+  console.log(!noResultsMessage ? optionsNotSelected.length === 0 : true);
   return (
     <Flex direction={{ default: "column" }}>
       <FlexItem key="input">
         <Select
           isOpen={
             isDropdownOpen &&
-            (isLoading || optionsNotSelected.length > 0 || !!noResultsMessage)
+            (optionsNotSelected.length > 0 ||
+              !!noResultsMessage ||
+              !!onCreateNewOption)
           }
           selected={selections}
           onOpenChange={setIsDropdownOpen}
@@ -146,8 +147,15 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
           maxMenuHeight=""
         >
           <SelectList id="select-create-typeahead-listbox">
-            {isLoading ? (
-              <SelectOption isAriaDisabled>Loading..</SelectOption>
+            {onCreateNewOption && optionsNotSelected.length === 0 ? (
+              <SelectOption
+                id={createItemId("new-option")}
+                isFocused={true}
+                onClick={() => {
+                  const newOption = onCreateNewOption(inputValue);
+                  handleOnSelect(newOption);
+                }}
+              >{`Create new option "${inputValue}"`}</SelectOption>
             ) : noResultsMessage && optionsNotSelected.length === 0 ? (
               <SelectOption isAriaDisabled>{noResultsMessage}</SelectOption>
             ) : (

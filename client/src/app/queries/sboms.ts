@@ -1,4 +1,5 @@
 import {
+  keepPreviousData,
   useMutation,
   useQueries,
   useQuery,
@@ -40,6 +41,7 @@ export const useFetchSBOMLabels = (filterText: string) => {
         query: { limit: 10, filter_text: filterText },
       });
     },
+    placeholderData: keepPreviousData,
   });
 
   return {

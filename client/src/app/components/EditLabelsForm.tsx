@@ -41,7 +41,6 @@ interface EditLabelsFormProps {
 
   // Labels Dropdown
   options: SingleLabel[];
-  isLoadingOptions: boolean;
   onInputChange?: (value: string) => void;
 }
 
@@ -52,7 +51,6 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
   onSave,
   onClose,
   options,
-  isLoadingOptions,
   onInputChange,
 }) => {
   const [selections, setSelections] = React.useState<AutocompleteOptionProps[]>(
@@ -109,7 +107,6 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
       <StackItem>
         <Form onSubmit={(e) => e.preventDefault()}>
           <Autocomplete
-            isLoading={isLoadingOptions}
             selections={selections}
             options={options.map(({ key, value }) => {
               return keyValueToOption({ key, value });

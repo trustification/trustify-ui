@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
 import type { HubRequestParams, SingleLabel } from "@app/api/models";
@@ -39,6 +44,7 @@ export const useFetchAdvisoryLabels = (filterText: string) => {
         query: { limit: 10, filter_text: filterText },
       });
     },
+    placeholderData: keepPreviousData,
   });
 
   return {
