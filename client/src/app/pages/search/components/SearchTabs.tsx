@@ -39,13 +39,16 @@ export interface SearchTabsProps {
   filterPanelProps: {
     advisoryFilterPanelProps: IFilterPanelProps<
       AdvisorySummary,
-      "" | "modified" | "average_severity"
+      "" | "modified" | "average_severity" | "labels"
     >;
     packageFilterPanelProps: IFilterPanelProps<
       PackageTableData,
       "" | "type" | "arch"
     >;
-    sbomFilterPanelProps: IFilterPanelProps<SbomSummary, "" | "published">;
+    sbomFilterPanelProps: IFilterPanelProps<
+      SbomSummary,
+      "" | "published" | "labels"
+    >;
     vulnerabilityFilterPanelProps: IFilterPanelProps<
       VulnerabilitySummary,
       "" | "base_severity" | "published"
