@@ -19,8 +19,10 @@ import {
   sbomDeletedErrorMessage,
   sbomDeletedSuccessMessage,
 } from "@app/Constants";
+import { joinKeyValueAsString } from "@app/api/model-utils";
 import type { SbomSummary } from "@app/client";
 import { ConfirmDialog } from "@app/components/ConfirmDialog";
+import { LabelsAsList } from "@app/components/LabelsAsList";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
@@ -31,10 +33,6 @@ import {
 import { useDownload } from "@app/hooks/domain-controls/useDownload";
 import { useDeleteSbomMutation } from "@app/queries/sboms";
 import { formatDate } from "@app/utils/utils";
-
-import { joinKeyValueAsString } from "@app/api/model-utils";
-import type { SbomSummary } from "@app/client";
-import { LabelsAsList } from "@app/components/LabelsAsList";
 
 import { SBOMEditLabelsForm } from "./components/SBOMEditLabelsForm";
 import { SBOMVulnerabilities } from "./components/SbomVulnerabilities";

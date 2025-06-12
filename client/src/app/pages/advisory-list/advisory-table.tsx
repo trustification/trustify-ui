@@ -1,7 +1,14 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import { Modal, ModalBody, ModalHeader } from "@patternfly/react-core";
+import type { AxiosError } from "axios";
+
+import {
+  ButtonVariant,
+  Modal,
+  ModalBody,
+  ModalHeader,
+} from "@patternfly/react-core";
 import {
   ActionsColumn,
   Table,
@@ -12,12 +19,14 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import type { AdvisorySummary, Severity } from "@app/client";
+import { joinKeyValueAsString } from "@app/api/model-utils";
 import {
   type ExtendedSeverity,
   extendedSeverityFromSeverity,
 } from "@app/api/models";
 import type { AdvisorySummary, Severity } from "@app/client";
+import { ConfirmDialog } from "@app/components/ConfirmDialog";
+import { LabelsAsList } from "@app/components/LabelsAsList";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -28,23 +37,9 @@ import {
 } from "@app/components/TableControls";
 import { VulnerabilityGallery } from "@app/components/VulnerabilityGallery";
 import { useDownload } from "@app/hooks/domain-controls/useDownload";
-
-import {
-  type ExtendedSeverity,
-  extendedSeverityFromSeverity,
-} from "@app/api/models";
-import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
-import { VulnerabilityGallery } from "@app/components/VulnerabilityGallery";
-import { formatDate } from "@app/utils/utils";
-
-import { joinKeyValueAsString } from "@app/api/model-utils";
-import { LabelsAsList } from "@app/components/LabelsAsList";
 import { useDeleteAdvisoryMutation } from "@app/queries/advisories";
 import { formatDate } from "@app/utils/utils";
 
-import { ConfirmDialog } from "@app/components/ConfirmDialog";
-import { ButtonVariant } from "@patternfly/react-core";
-import type { AxiosError } from "axios";
 import { AdvisorySearchContext } from "./advisory-context";
 import { AdvisoryEditLabelsForm } from "./components/AdvisoryEditLabelsForm";
 
