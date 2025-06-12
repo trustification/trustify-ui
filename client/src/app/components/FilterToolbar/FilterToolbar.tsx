@@ -20,6 +20,7 @@ export enum FilterType {
   search = "search",
   numsearch = "numsearch",
   dateRange = "dateRange",
+  autocompleteLabel = "autocompleteLabel",
 }
 
 export type FilterValue = string[] | undefined | null;
@@ -64,6 +65,22 @@ export interface IMultiselectFilterCategory<
 > extends IBasicFilterCategory<TItem, TFilterCategoryKey> {
   /** The full set of options to select from for this filter. */
   selectOptions: FilterSelectOptionProps[];
+  /** Option search input field placeholder text. */
+  placeholderText?: string;
+  /** How to connect multiple selected options together. Defaults to "AND". */
+  logicOperator?: "AND" | "OR";
+  // Callback for the InputText. Use React.callback to avoid re-rendering
+  onInputValueChange?: (value: string) => void;
+}
+
+export interface IMultiselectFilterCategory<
+  TItem,
+  TFilterCategoryKey extends string,
+> extends IBasicFilterCategory<TItem, TFilterCategoryKey> {
+  /** The full set of options to select from for this filter. */
+  selectOptions:
+    | FilterSelectOptionProps[]
+    | Record<string, FilterSelectOptionProps[]>;
   /** Option search input field placeholder text. */
   placeholderText?: string;
   /** How to connect multiple selected options together. Defaults to "AND". */
