@@ -1,7 +1,7 @@
 // Hub filter/sort/pagination utils
 // TODO these could use some unit tests!
 
-import type { HubRequestParams } from "@app/api/models";
+import type { HubRequestParams, Label } from "@app/api/models";
 import {
   type IGetFilterHubRequestParamsArgs,
   getFilterHubRequestParams,
@@ -109,4 +109,10 @@ export const requestParamsQuery = (
   }
 
   return { limit, offset, q, sort };
+};
+
+export const labelRequestParamsQuery = (labels: Label[] = []) => {
+  return labels
+    .map(({ key, value }) => `label:${key}=${value ?? ""}`)
+    .join("&");
 };

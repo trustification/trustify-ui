@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
+import { Modal, ModalBody, ModalHeader } from "@patternfly/react-core";
 import {
   ActionsColumn,
   Table,
@@ -20,12 +21,22 @@ import {
 import { useDownload } from "@app/hooks/domain-controls/useDownload";
 import { formatDate } from "@app/utils/utils";
 
+import { joinKeyValueAsString } from "@app/api/model-utils";
+import type { SbomSummary } from "@app/client";
+import { LabelsAsList } from "@app/components/LabelsAsList";
+
+import { SBOMEditLabelsForm } from "./components/SBOMEditLabelsForm";
 import { SBOMVulnerabilities } from "./components/SbomVulnerabilities";
 import { SbomSearchContext } from "./sbom-context";
 
 export const SbomTable: React.FC = () => {
   const { isFetching, fetchError, totalItemCount, tableControls } =
     React.useContext(SbomSearchContext);
+
+  const [editLabelsModalState, setEditLabelsModalState] =
+    React.useState<SbomSummary | null>(null);
+  const isEditLabelsModalOpen = editLabelsModalState !== null;
+  const rowLabelsToUpdate = editLabelsModalState;
 
   const {
     numRenderedColumns,
@@ -38,9 +49,14 @@ export const SbomTable: React.FC = () => {
       getTdProps,
     },
     expansionDerivedState: { isCellExpanded },
+    filterState: { filterValues, setFilterValues },
   } = tableControls;
 
   const { downloadSBOM, downloadSBOMLicenses } = useDownload();
+
+  const closeEditLabelsModal = () => {
+    setEditLabelsModalState(null);
+  };
 
   return (
     <>
@@ -51,6 +67,7 @@ export const SbomTable: React.FC = () => {
               <Th {...getThProps({ columnKey: "name" })} />
               <Th {...getThProps({ columnKey: "version" })} />
               <Th {...getThProps({ columnKey: "supplier" })} />
+              <Th {...getThProps({ columnKey: "labels" })} />
               <Th {...getThProps({ columnKey: "published" })} />
               <Th {...getThProps({ columnKey: "packages" })} />
               <Th {...getThProps({ columnKey: "vulnerabilities" })} />
@@ -73,7 +90,7 @@ export const SbomTable: React.FC = () => {
                     rowIndex={rowIndex}
                   >
                     <Td
-                      width={25}
+                      width={20}
                       modifier="breakWord"
                       {...getTdProps({
                         columnKey: "name",
@@ -85,7 +102,7 @@ export const SbomTable: React.FC = () => {
                       <NavLink to={`/sboms/${item.id}`}>{item.name}</NavLink>
                     </Td>
                     <Td
-                      width={15}
+                      width={10}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "version" })}
                     >
@@ -95,11 +112,38 @@ export const SbomTable: React.FC = () => {
                         .join(", ")}
                     </Td>
                     <Td
-                      width={20}
+                      width={10}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "supplier" })}
                     >
                       {item.suppliers.join(", ")}
+                    </Td>
+                    <Td
+                      width={20}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "labels" })}
+                    >
+                      <LabelsAsList
+                        value={item.labels}
+                        onClick={({ key, value }) => {
+                          const labelString = joinKeyValueAsString({
+                            key,
+                            value,
+                          });
+
+                          const filterValue = filterValues.labels;
+                          if (!filterValue?.includes(labelString)) {
+                            const newFilterValue = filterValue
+                              ? [...filterValue, labelString]
+                              : [labelString];
+
+                            setFilterValues({
+                              ...filterValues,
+                              labels: newFilterValue,
+                            });
+                          }
+                        }}
+                      />
                     </Td>
                     <Td
                       width={10}
@@ -120,6 +164,15 @@ export const SbomTable: React.FC = () => {
                     <Td isActionCell>
                       <ActionsColumn
                         items={[
+                          {
+                            title: "Edit labels",
+                            onClick: () => {
+                              setEditLabelsModalState(item);
+                            },
+                          },
+                          {
+                            isSeparator: true,
+                          },
                           {
                             title: "Download SBOM",
                             onClick: () => {
@@ -147,6 +200,22 @@ export const SbomTable: React.FC = () => {
         isTop={false}
         paginationProps={paginationProps}
       />
+
+      <Modal
+        isOpen={isEditLabelsModalOpen}
+        variant="medium"
+        onClose={closeEditLabelsModal}
+      >
+        <ModalHeader title="Edit labels" />
+        <ModalBody>
+          {rowLabelsToUpdate && (
+            <SBOMEditLabelsForm
+              sbom={rowLabelsToUpdate}
+              onClose={closeEditLabelsModal}
+            />
+          )}
+        </ModalBody>
+      </Modal>
     </>
   );
 };

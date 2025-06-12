@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
+import { Modal, ModalBody, ModalHeader } from "@patternfly/react-core";
 import {
   ActionsColumn,
   Table,
@@ -11,7 +12,7 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import type { Severity } from "@app/client";
+import type { AdvisorySummary, Severity } from "@app/client";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -20,19 +21,27 @@ import {
 } from "@app/components/TableControls";
 import { useDownload } from "@app/hooks/domain-controls/useDownload";
 
-import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
-import { VulnerabilityGallery } from "@app/components/VulnerabilityGallery";
-import { formatDate } from "@app/utils/utils";
-
 import {
   type ExtendedSeverity,
   extendedSeverityFromSeverity,
 } from "@app/api/models";
+import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
+import { VulnerabilityGallery } from "@app/components/VulnerabilityGallery";
+import { formatDate } from "@app/utils/utils";
+
+import { joinKeyValueAsString } from "@app/api/model-utils";
+import { LabelsAsList } from "@app/components/LabelsAsList";
 import { AdvisorySearchContext } from "./advisory-context";
+import { AdvisoryEditLabelsForm } from "./components/AdvisoryEditLabelsForm";
 
 export const AdvisoryTable: React.FC = () => {
   const { isFetching, fetchError, totalItemCount, tableControls } =
     React.useContext(AdvisorySearchContext);
+
+  const [editLabelsModalState, setEditLabelsModalState] =
+    React.useState<AdvisorySummary | null>(null);
+  const isEditLabelsModalOpen = editLabelsModalState !== null;
+  const rowLabelsToUpdate = editLabelsModalState;
 
   const {
     numRenderedColumns,
@@ -45,9 +54,14 @@ export const AdvisoryTable: React.FC = () => {
       getTdProps,
     },
     expansionDerivedState: { isCellExpanded },
+    filterState: { filterValues, setFilterValues },
   } = tableControls;
 
   const { downloadAdvisory } = useDownload();
+
+  const closeEditLabelsModal = () => {
+    setEditLabelsModalState(null);
+  };
 
   return (
     <>
@@ -65,6 +79,7 @@ export const AdvisoryTable: React.FC = () => {
                 }}
               />
               <Th {...getThProps({ columnKey: "type" })} />
+              <Th {...getThProps({ columnKey: "labels" })} />
               <Th {...getThProps({ columnKey: "modified" })} />
               <Th {...getThProps({ columnKey: "vulnerabilities" })} />
             </TableHeaderContentWithControls>
@@ -144,6 +159,29 @@ export const AdvisoryTable: React.FC = () => {
                     <Td width={10} {...getTdProps({ columnKey: "type" })}>
                       {item.labels.type}
                     </Td>
+                    <Td width={10} {...getTdProps({ columnKey: "labels" })}>
+                      <LabelsAsList
+                        value={item.labels}
+                        onClick={({ key, value }) => {
+                          const labelString = joinKeyValueAsString({
+                            key,
+                            value,
+                          });
+
+                          const filterValue = filterValues.labels;
+                          if (!filterValue?.includes(labelString)) {
+                            const newFilterValue = filterValue
+                              ? [...filterValue, labelString]
+                              : [labelString];
+
+                            setFilterValues({
+                              ...filterValues,
+                              labels: newFilterValue,
+                            });
+                          }
+                        }}
+                      />
+                    </Td>
                     <Td
                       width={10}
                       modifier="truncate"
@@ -152,7 +190,7 @@ export const AdvisoryTable: React.FC = () => {
                       {formatDate(item.modified)}
                     </Td>
                     <Td
-                      width={20}
+                      width={10}
                       {...getTdProps({ columnKey: "vulnerabilities" })}
                     >
                       <VulnerabilityGallery severities={severities} />
@@ -160,6 +198,15 @@ export const AdvisoryTable: React.FC = () => {
                     <Td isActionCell>
                       <ActionsColumn
                         items={[
+                          {
+                            title: "Edit labels",
+                            onClick: () => {
+                              setEditLabelsModalState(item);
+                            },
+                          },
+                          {
+                            isSeparator: true,
+                          },
                           {
                             title: "Download",
                             onClick: () => {
@@ -184,6 +231,22 @@ export const AdvisoryTable: React.FC = () => {
         isTop={false}
         paginationProps={paginationProps}
       />
+
+      <Modal
+        isOpen={isEditLabelsModalOpen}
+        variant="medium"
+        onClose={closeEditLabelsModal}
+      >
+        <ModalHeader title="Edit labels" />
+        <ModalBody>
+          {rowLabelsToUpdate && (
+            <AdvisoryEditLabelsForm
+              advisory={rowLabelsToUpdate}
+              onClose={closeEditLabelsModal}
+            />
+          )}
+        </ModalBody>
+      </Modal>
     </>
   );
 };
