@@ -100,6 +100,7 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
           onDropRejected: handleDropRejected,
           useFsAccessApi: false, // Required to make playwright work
         }}
+        isHorizontal
       >
         <MultipleFileUploadMain
           titleIcon={<UploadIcon />}
