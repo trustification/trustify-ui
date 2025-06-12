@@ -18,7 +18,7 @@ import {
   t_global_icon_color_severity_undefined_default as undefinedColor,
 } from "@patternfly/react-tokens";
 
-import type { ExtendedSeverity } from "./models";
+import type { ExtendedSeverity, Label } from "./models";
 
 type ListType = {
   [key in ExtendedSeverity]: {
@@ -99,3 +99,12 @@ export function compareBySeverityFn<T>(
     );
   };
 }
+
+export const joinKeyValueAsString = ({ key, value }: Label): string => {
+  return `${value ? `${key}=${value}` : `${key}`}`;
+};
+
+export const splitStringAsKeyValue = (v: string): Label => {
+  const [key, value] = v.split("=");
+  return { key, value: value ?? "" };
+};
