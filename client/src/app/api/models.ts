@@ -66,3 +66,10 @@ export interface WatchedSboms {
   sbom3Id: string | null;
   sbom4Id: string | null;
 }
+
+//
+
+export interface Label {
+  key: string;
+  value?: string;
+}
