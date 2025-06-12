@@ -1,7 +1,14 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import { Modal, ModalBody, ModalHeader } from "@patternfly/react-core";
+import type { AxiosError } from "axios";
+
+import {
+  ButtonVariant,
+  Modal,
+  ModalBody,
+  ModalHeader,
+} from "@patternfly/react-core";
 import {
   ActionsColumn,
   Table,
@@ -12,29 +19,33 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
+import { joinKeyValueAsString } from "@app/api/model-utils";
+import {
+  type ExtendedSeverity,
+  extendedSeverityFromSeverity,
+} from "@app/api/models";
 import type { AdvisorySummary, Severity } from "@app/client";
+import { ConfirmDialog } from "@app/components/ConfirmDialog";
+import { LabelsAsList } from "@app/components/LabelsAsList";
+import { NotificationsContext } from "@app/components/NotificationsContext";
+import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
-import { useDownload } from "@app/hooks/domain-controls/useDownload";
-
-import {
-  type ExtendedSeverity,
-  extendedSeverityFromSeverity,
-} from "@app/api/models";
-import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { VulnerabilityGallery } from "@app/components/VulnerabilityGallery";
+import { useDownload } from "@app/hooks/domain-controls/useDownload";
+import { useDeleteAdvisoryMutation } from "@app/queries/advisories";
 import { formatDate } from "@app/utils/utils";
 
-import { joinKeyValueAsString } from "@app/api/model-utils";
-import { LabelsAsList } from "@app/components/LabelsAsList";
 import { AdvisorySearchContext } from "./advisory-context";
 import { AdvisoryEditLabelsForm } from "./components/AdvisoryEditLabelsForm";
 
 export const AdvisoryTable: React.FC = () => {
+  const { pushNotification } = React.useContext(NotificationsContext);
+
   const { isFetching, fetchError, totalItemCount, tableControls } =
     React.useContext(AdvisorySearchContext);
 
@@ -62,6 +73,29 @@ export const AdvisoryTable: React.FC = () => {
   const closeEditLabelsModal = () => {
     setEditLabelsModalState(null);
   };
+
+  // Delete action
+
+  const [advisoryToDelete, setAdvisoryToDelete] =
+    React.useState<AdvisorySummary | null>(null);
+
+  const onDeleteAdvisorySuccess = (advisory: AdvisorySummary) => {
+    setAdvisoryToDelete(null);
+    pushNotification({
+      title: `The Advisory ${advisory.identifier} was deleted`,
+      variant: "success",
+    });
+  };
+
+  const onDeleteAdvisoryError = (_error: AxiosError) => {
+    pushNotification({
+      title: "Error occurred while deleting the Advisory",
+      variant: "danger",
+    });
+  };
+
+  const { mutate: deleteAdvisory, isPending: isDeletingAdvisory } =
+    useDeleteAdvisoryMutation(onDeleteAdvisorySuccess, onDeleteAdvisoryError);
 
   return (
     <>
@@ -216,6 +250,13 @@ export const AdvisoryTable: React.FC = () => {
                               );
                             },
                           },
+                          { isSeparator: true },
+                          {
+                            title: "Delete",
+                            onClick: () => {
+                              setAdvisoryToDelete(item);
+                            },
+                          },
                         ]}
                       />
                     </Td>
@@ -247,6 +288,25 @@ export const AdvisoryTable: React.FC = () => {
           )}
         </ModalBody>
       </Modal>
+
+      <ConfirmDialog
+        inProgress={isDeletingAdvisory}
+        title={`Delete ${advisoryToDelete?.identifier}`}
+        titleIconVariant="warning"
+        isOpen={!!advisoryToDelete}
+        message="Are you sure you want to delete this Advisory? This action cannot be undone."
+        aria-label="Delete SBOM"
+        confirmBtnVariant={ButtonVariant.danger}
+        confirmBtnLabel="Delete"
+        cancelBtnLabel="Cancel"
+        onCancel={() => setAdvisoryToDelete(null)}
+        onClose={() => setAdvisoryToDelete(null)}
+        onConfirm={() => {
+          if (advisoryToDelete) {
+            deleteAdvisory(advisoryToDelete.uuid);
+          }
+        }}
+      />
     </>
   );
 };

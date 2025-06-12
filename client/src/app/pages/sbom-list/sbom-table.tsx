@@ -2,6 +2,9 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 
 import { Modal, ModalBody, ModalHeader } from "@patternfly/react-core";
+import type { AxiosError } from "axios";
+
+import { ButtonVariant } from "@patternfly/react-core";
 import {
   ActionsColumn,
   Table,
@@ -12,6 +15,15 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
+import {
+  sbomDeletedErrorMessage,
+  sbomDeletedSuccessMessage,
+} from "@app/Constants";
+import { joinKeyValueAsString } from "@app/api/model-utils";
+import type { SbomSummary } from "@app/client";
+import { ConfirmDialog } from "@app/components/ConfirmDialog";
+import { LabelsAsList } from "@app/components/LabelsAsList";
+import { NotificationsContext } from "@app/components/NotificationsContext";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -19,17 +31,16 @@ import {
   TableRowContentWithControls,
 } from "@app/components/TableControls";
 import { useDownload } from "@app/hooks/domain-controls/useDownload";
+import { useDeleteSbomMutation } from "@app/queries/sboms";
 import { formatDate } from "@app/utils/utils";
-
-import { joinKeyValueAsString } from "@app/api/model-utils";
-import type { SbomSummary } from "@app/client";
-import { LabelsAsList } from "@app/components/LabelsAsList";
 
 import { SBOMEditLabelsForm } from "./components/SBOMEditLabelsForm";
 import { SBOMVulnerabilities } from "./components/SbomVulnerabilities";
 import { SbomSearchContext } from "./sbom-context";
 
 export const SbomTable: React.FC = () => {
+  const { pushNotification } = React.useContext(NotificationsContext);
+
   const { isFetching, fetchError, totalItemCount, tableControls } =
     React.useContext(SbomSearchContext);
 
@@ -57,6 +68,30 @@ export const SbomTable: React.FC = () => {
   const closeEditLabelsModal = () => {
     setEditLabelsModalState(null);
   };
+
+  // Delete action
+
+  const [sbomToDelete, setSbomToDelete] = React.useState<SbomSummary | null>(
+    null,
+  );
+
+  const onDeleteSbomSuccess = (sbom: SbomSummary) => {
+    setSbomToDelete(null);
+    pushNotification({
+      title: sbomDeletedSuccessMessage(sbom),
+      variant: "success",
+    });
+  };
+
+  const onDeleteAdvisoryError = (error: AxiosError) => {
+    pushNotification({
+      title: sbomDeletedErrorMessage(error),
+      variant: "danger",
+    });
+  };
+
+  const { mutate: deleteSbom, isPending: isDeletingSbom } =
+    useDeleteSbomMutation(onDeleteSbomSuccess, onDeleteAdvisoryError);
 
   return (
     <>
@@ -185,6 +220,15 @@ export const SbomTable: React.FC = () => {
                               downloadSBOMLicenses(item.id);
                             },
                           },
+                          {
+                            isSeparator: true,
+                          },
+                          {
+                            title: "Delete",
+                            onClick: () => {
+                              setSbomToDelete(item);
+                            },
+                          },
                         ]}
                       />
                     </Td>
@@ -216,6 +260,25 @@ export const SbomTable: React.FC = () => {
           )}
         </ModalBody>
       </Modal>
+
+      <ConfirmDialog
+        inProgress={isDeletingSbom}
+        title={`Delete ${sbomToDelete?.name}`}
+        titleIconVariant="warning"
+        isOpen={!!sbomToDelete}
+        message="Are you sure you want to delete this SBOM? This action cannot be undone."
+        aria-label="Delete SBOM"
+        confirmBtnVariant={ButtonVariant.danger}
+        confirmBtnLabel="Delete"
+        cancelBtnLabel="Cancel"
+        onCancel={() => setSbomToDelete(null)}
+        onClose={() => setSbomToDelete(null)}
+        onConfirm={() => {
+          if (sbomToDelete) {
+            deleteSbom(sbomToDelete.id);
+          }
+        }}
+      />
     </>
   );
 };
