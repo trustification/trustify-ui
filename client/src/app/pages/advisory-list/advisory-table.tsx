@@ -12,7 +12,7 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import type { AdvisorySummary, Severity } from "@app/client";
+import type { AdvisorySummary } from "@app/client";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -25,7 +25,6 @@ import {
   type ExtendedSeverity,
   extendedSeverityFromSeverity,
 } from "@app/api/models";
-import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { VulnerabilityGallery } from "@app/components/VulnerabilityGallery";
 import { formatDate } from "@app/utils/utils";
 
@@ -71,13 +70,6 @@ export const AdvisoryTable: React.FC = () => {
             <TableHeaderContentWithControls {...tableControls}>
               <Th {...getThProps({ columnKey: "identifier" })} />
               <Th {...getThProps({ columnKey: "title" })} />
-              <Th
-                {...getThProps({ columnKey: "severity" })}
-                info={{
-                  tooltip:
-                    "The average CVSS score for all of the Vulnerabilities linked to this Advisory.",
-                }}
-              />
               <Th {...getThProps({ columnKey: "type" })} />
               <Th {...getThProps({ columnKey: "labels" })} />
               <Th {...getThProps({ columnKey: "modified" })} />
@@ -134,32 +126,16 @@ export const AdvisoryTable: React.FC = () => {
                       </NavLink>
                     </Td>
                     <Td
-                      width={30}
+                      width={35}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "title" })}
                     >
                       {item.title}
                     </Td>
-                    <Td
-                      width={15}
-                      modifier="truncate"
-                      {...getTdProps({ columnKey: "severity" })}
-                    >
-                      {item.average_severity && (
-                        <SeverityShieldAndText
-                          value={extendedSeverityFromSeverity(
-                            item.average_severity as Severity,
-                          )}
-                          score={item.average_score}
-                          showLabel
-                          showScore
-                        />
-                      )}
-                    </Td>
                     <Td width={10} {...getTdProps({ columnKey: "type" })}>
                       {item.labels.type}
                     </Td>
-                    <Td width={10} {...getTdProps({ columnKey: "labels" })}>
+                    <Td width={20} {...getTdProps({ columnKey: "labels" })}>
                       <LabelsAsList
                         value={item.labels}
                         onClick={({ key, value }) => {
