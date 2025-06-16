@@ -133,7 +133,7 @@ export const getFilterHubRequestParams = <
       if (filterCategory.type === "multiselect") {
         pushOrMergeFilter(filters, {
           field: serverFilterField,
-          operator: "=",
+          operator: "~",
           value: {
             list: serverFilterValue,
             operator: getFilterLogicOperator(filterCategory, "OR"),

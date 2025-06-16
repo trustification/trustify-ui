@@ -5,32 +5,28 @@ import {
   Content,
   DataList,
   DataListCell,
-  DataListContent,
   DataListItem,
   DataListItemCells,
   DataListItemRow,
-  DataListToggle,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
+  Divider,
   Flex,
   FlexItem,
   Label,
   List,
   ListItem,
-  Split,
-  SplitItem,
   Stack,
   StackItem,
   Toolbar,
   ToolbarContent,
   ToolbarItem,
-  Tooltip,
 } from "@patternfly/react-core";
-import ShieldAltIcon from "@patternfly/react-icons/dist/esm/icons/shield-alt-icon";
 
 import { FILTER_TEXT_CATEGORY_KEY } from "@app/Constants";
+import type { LicenseRefMapping } from "@app/client";
 import { ConditionalDataListBody } from "@app/components/DataListControls/ConditionalDataListBody";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -42,7 +38,14 @@ import {
 import { useFetchPackagesBySbomId } from "@app/queries/packages";
 import { useFetchSbomsLicenseIds } from "@app/queries/sboms";
 
-import { PackageVulnerabilities } from "../package-list/components/PackageVulnerabilities";
+const renderLicenseWithMappings = (
+  license: string,
+  mappings: LicenseRefMapping[],
+) => {
+  return mappings.reduce((prev, { license_id, license_name }) => {
+    return prev.replaceAll(license_id, license_name);
+  }, `${license}`);
+};
 
 interface PackagesProps {
   sbomId: string;
@@ -69,18 +72,17 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
         type: FilterType.search,
       },
       {
-        categoryKey: "Text",
+        categoryKey: "license",
         title: "License",
         placeholderText: "Filter results by license",
         type: FilterType.multiselect,
-        selectOptions: licenseIds.map((licenseId) => ({
-          value: licenseId,
-          label: licenseId,
+        selectOptions: licenseIds.map((license) => ({
+          value: license.license_id,
+          label: license.license_name,
         })),
       },
     ],
-    isExpansionEnabled: true,
-    expandableVariant: "single",
+    isExpansionEnabled: false,
   });
 
   const {
@@ -113,7 +115,6 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
       paginationToolbarItemProps,
       paginationProps,
     },
-    expansionDerivedState: { isCellExpanded, setCellExpanded },
   } = tableControls;
 
   return (
@@ -137,25 +138,10 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
           isError={!!fetchError}
           isNoData={packages.length === 0}
         >
-          {currentPageItems?.map((item, rowIndex) => {
+          {currentPageItems?.map((item) => {
             return (
-              <DataListItem
-                key={item.id}
-                id={item.id}
-                isExpanded={isCellExpanded(item)}
-              >
+              <DataListItem key={item.id}>
                 <DataListItemRow>
-                  <DataListToggle
-                    id={`toggle-${item.id}`}
-                    aria-label={`toggle-${rowIndex}`}
-                    onClick={() => {
-                      setCellExpanded({
-                        item,
-                        isExpanding: !isCellExpanded(item),
-                      });
-                    }}
-                    isExpanded={isCellExpanded(item)}
-                  />
                   <DataListItemCells
                     dataListCells={[
                       <DataListCell key="info" wrapModifier="breakWord">
@@ -170,86 +156,85 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                           <FlexItem>
                             <Content component="small">{item?.version}</Content>
                           </FlexItem>
+                          <FlexItem>
+                            <Divider />
+                          </FlexItem>
+                          <FlexItem>
+                            <DescriptionList>
+                              <DescriptionListGroup>
+                                <DescriptionListTerm>PURLs</DescriptionListTerm>
+                                <DescriptionListDescription>
+                                  <List isPlain>
+                                    {item.purl.map((e) => {
+                                      return (
+                                        <ListItem key={e.uuid}>
+                                          <Stack>
+                                            <StackItem>
+                                              <Link to={`/packages/${e.uuid}`}>
+                                                {e.purl}
+                                              </Link>
+                                            </StackItem>
+                                          </Stack>
+                                        </ListItem>
+                                      );
+                                    })}
+                                  </List>
+                                </DescriptionListDescription>
+                              </DescriptionListGroup>
+                            </DescriptionList>
+                          </FlexItem>
+                          <FlexItem>
+                            <Divider />
+                          </FlexItem>
+                          <FlexItem>
+                            <DescriptionList
+                              columnModifier={{
+                                default: "2Col",
+                              }}
+                            >
+                              <DescriptionListGroup>
+                                <DescriptionListTerm>
+                                  Licenses
+                                </DescriptionListTerm>
+                                <DescriptionListDescription>
+                                  <List isPlain>
+                                    {item.licenses.map((e) => (
+                                      <ListItem
+                                        key={`${e.license_name}-${e.license_type}`}
+                                      >
+                                        {renderLicenseWithMappings(
+                                          e.license_name,
+                                          item.licenses_ref_mapping,
+                                        )}{" "}
+                                        <Label isCompact>
+                                          {e.license_type}
+                                        </Label>
+                                      </ListItem>
+                                    ))}
+                                  </List>
+                                </DescriptionListDescription>
+                              </DescriptionListGroup>
+                              <DescriptionListGroup>
+                                <DescriptionListTerm>CPEs</DescriptionListTerm>
+                                <DescriptionListDescription>
+                                  {item.cpe.length > 0 ? (
+                                    <List isPlain>
+                                      {item.cpe.map((e) => (
+                                        <ListItem key={e}>{e}</ListItem>
+                                      ))}
+                                    </List>
+                                  ) : (
+                                    <Content component="small">None</Content>
+                                  )}
+                                </DescriptionListDescription>
+                              </DescriptionListGroup>
+                            </DescriptionList>
+                          </FlexItem>
                         </Flex>
-                      </DataListCell>,
-                      <DataListCell
-                        key="purls"
-                        wrapModifier="breakWord"
-                        width={4}
-                      >
-                        <List>
-                          {item.purl.map((e) => {
-                            return (
-                              <ListItem key={e.uuid}>
-                                <Stack>
-                                  <StackItem>
-                                    <Split>
-                                      <SplitItem>
-                                        <Tooltip
-                                          content={<div>Vulnerabilities</div>}
-                                        >
-                                          <ShieldAltIcon />
-                                        </Tooltip>
-                                      </SplitItem>
-                                      <SplitItem>
-                                        <PackageVulnerabilities
-                                          packageId={e.uuid}
-                                        />
-                                      </SplitItem>
-                                    </Split>
-                                  </StackItem>
-                                  <StackItem>
-                                    <Content component="small">
-                                      Purl:{" "}
-                                      <Link to={`/packages/${e.uuid}`}>
-                                        {e.purl}
-                                      </Link>
-                                    </Content>
-                                  </StackItem>
-                                </Stack>
-                              </ListItem>
-                            );
-                          })}
-                        </List>
-                      </DataListCell>,
-                      <DataListCell
-                        key="license"
-                        wrapModifier="breakWord"
-                        width={2}
-                      >
-                        <List>
-                          {item.licenses.map((e) => (
-                            <ListItem key={e.license_name}>
-                              {e.license_name}{" "}
-                              <Label isCompact>{e.license_type}</Label>
-                            </ListItem>
-                          ))}
-                        </List>
                       </DataListCell>,
                     ]}
                   />
                 </DataListItemRow>
-                <DataListContent
-                  aria-label={`expanded-area-${rowIndex}`}
-                  isHidden={!isCellExpanded(item)}
-                >
-                  <DescriptionList isCompact>
-                    <DescriptionListGroup>
-                      <DescriptionListTerm>CPEs</DescriptionListTerm>
-                      <DescriptionListDescription>
-                        {item.cpe.length > 0 ? (
-                          <List>
-                            {item.cpe.map((e) => (
-                              <ListItem key={e}>{e}</ListItem>
-                            ))}
-                          </List>
-                        ) : (
-                          <Content component="small">None</Content>
-                        )}
-                      </DescriptionListDescription>
-                    </DescriptionListGroup>
-                  </DescriptionList>
-                </DataListContent>
               </DataListItem>
             );
           })}
