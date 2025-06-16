@@ -57,6 +57,10 @@ export interface IBasicFilterCategory<
   getServerFilterValue?: (filterValue: FilterValue) => string[] | undefined;
   /** For client side filtering, provide custom algorithm for testing if the value of `TItem` matches the filter value. */
   matcher?: (filter: string, item: TItem) => boolean;
+  /**
+   * Main operator for filter value. Defaults depends on the implementation of each categorykey
+   */
+  operator?: "=" | "!=" | "~" | ">" | ">=" | "<" | "<=";
 }
 
 export interface IMultiselectFilterCategory<
@@ -71,18 +75,6 @@ export interface IMultiselectFilterCategory<
   logicOperator?: "AND" | "OR";
   // Callback for the InputText. Use React.callback to avoid re-rendering
   onInputValueChange?: (value: string) => void;
-}
-
-export interface IMultiselectFilterCategory<
-  TItem,
-  TFilterCategoryKey extends string,
-> extends IBasicFilterCategory<TItem, TFilterCategoryKey> {
-  /** The full set of options to select from for this filter. */
-  selectOptions: FilterSelectOptionProps[];
-  /** Option search input field placeholder text. */
-  placeholderText?: string;
-  /** How to connect multiple selected options together. Defaults to "AND". */
-  logicOperator?: "AND" | "OR";
 }
 
 export interface ISelectFilterCategory<TItem, TFilterCategoryKey extends string>

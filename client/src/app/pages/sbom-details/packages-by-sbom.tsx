@@ -55,6 +55,8 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
   const { licenseIds } = useFetchSbomsLicenseIds(sbomId);
 
   const tableControlState = useTableControlState({
+    persistTo: "urlParams",
+    persistenceKeyPrefix: "cf",
     tableName: "package-table",
     columnNames: {
       name: "Name",
@@ -76,6 +78,8 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
         title: "License",
         placeholderText: "Filter results by license",
         type: FilterType.multiselect,
+        operator: "~",
+        logicOperator: "OR",
         selectOptions: licenseIds.map((license) => ({
           value: license.license_id,
           label: license.license_name,
@@ -155,9 +159,6 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                           </FlexItem>
                           <FlexItem>
                             <Content component="small">{item?.version}</Content>
-                          </FlexItem>
-                          <FlexItem>
-                            <Divider />
                           </FlexItem>
                           <FlexItem>
                             <DescriptionList>
