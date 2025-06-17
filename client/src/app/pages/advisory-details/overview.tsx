@@ -20,11 +20,10 @@ import {
 } from "@patternfly/react-core";
 import PenIcon from "@patternfly/react-icons/dist/esm/icons/pen-icon";
 
-import { extendedSeverityFromSeverity } from "@app/api/models";
-import type { AdvisorySummary, Severity } from "@app/client";
+import type { AdvisorySummary } from "@app/client";
 import { LabelsAsList } from "@app/components/LabelsAsList";
-import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { formatDate } from "@app/utils/utils";
+
 import { AdvisoryEditLabelsForm } from "../advisory-list/components/AdvisoryEditLabelsForm";
 
 interface InfoProps {
@@ -56,19 +55,6 @@ export const Overview: React.FC<InfoProps> = ({ advisory }) => {
                   <DescriptionListTerm>Type</DescriptionListTerm>
                   <DescriptionListDescription>
                     {advisory.labels.type}
-                  </DescriptionListDescription>
-                </DescriptionListGroup>
-                <DescriptionListGroup>
-                  <DescriptionListTerm>Aggregate Severity</DescriptionListTerm>
-                  <DescriptionListDescription>
-                    <SeverityShieldAndText
-                      value={extendedSeverityFromSeverity(
-                        advisory.average_severity as Severity,
-                      )}
-                      score={advisory.average_score}
-                      showLabel
-                      showScore
-                    />
                   </DescriptionListDescription>
                 </DescriptionListGroup>
                 <DescriptionListGroup>
