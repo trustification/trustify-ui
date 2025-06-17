@@ -2,37 +2,33 @@ import type React from "react";
 import { Link } from "react-router-dom";
 
 import {
-  Content,
-  DataList,
-  DataListCell,
-  DataListItem,
-  DataListItemCells,
-  DataListItemRow,
-  DescriptionList,
-  DescriptionListDescription,
-  DescriptionListGroup,
-  DescriptionListTerm,
-  Flex,
-  FlexItem,
   Label,
   List,
   ListItem,
-  Split,
-  SplitItem,
-  Stack,
-  StackItem,
   Toolbar,
   ToolbarContent,
   ToolbarItem,
-  Tooltip,
 } from "@patternfly/react-core";
-import { ShieldAltIcon } from "@patternfly/react-icons";
+import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
+import {
+  ExpandableRowContent,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@patternfly/react-table";
 
 import { FILTER_TEXT_CATEGORY_KEY } from "@app/Constants";
 import type { LicenseRefMapping } from "@app/client";
-import { ConditionalDataListBody } from "@app/components/DataListControls/ConditionalDataListBody";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
+import {
+  ConditionalTableBody,
+  TableHeaderContentWithControls,
+  TableRowContentWithControls,
+} from "@app/components/TableControls";
 import {
   getHubRequestParams,
   useTableControlProps,
@@ -40,7 +36,6 @@ import {
 } from "@app/hooks/table-controls";
 import { useFetchPackagesBySbomId } from "@app/queries/packages";
 import { useFetchSbomsLicenseIds } from "@app/queries/sboms";
-import { decomposePurl } from "@app/utils/utils";
 
 import { PackageVulnerabilities } from "../package-list/components/PackageVulnerabilities";
 
@@ -61,24 +56,20 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
   const { licenseIds } = useFetchSbomsLicenseIds(sbomId);
 
   const tableControlState = useTableControlState({
-    persistTo: "urlParams",
-    persistenceKeyPrefix: "cf",
     tableName: "package-table",
     columnNames: {
       name: "Name",
       version: "Version",
+      vulnerabilities: "Vulnerabilities",
+      licenses: "Licenses",
+      purls: "PURLs",
+      cpes: "CPEs",
     },
     isSortEnabled: true,
     sortableColumns: ["name"],
     isPaginationEnabled: true,
     isFilterEnabled: true,
     filterCategories: [
-      {
-        categoryKey: FILTER_TEXT_CATEGORY_KEY,
-        title: "Filter text",
-        placeholderText: "Search",
-        type: FilterType.search,
-      },
       {
         categoryKey: "license",
         title: "License",
@@ -91,8 +82,15 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
           label: license.license_name,
         })),
       },
+      {
+        categoryKey: FILTER_TEXT_CATEGORY_KEY,
+        title: "Filter text",
+        placeholderText: "Search",
+        type: FilterType.search,
+      },
     ],
-    isExpansionEnabled: false,
+    isExpansionEnabled: true,
+    expandableVariant: "compound",
   });
 
   const {
@@ -119,12 +117,19 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
 
   const {
     currentPageItems,
+    numRenderedColumns,
     propHelpers: {
       toolbarProps,
       filterToolbarProps,
       paginationToolbarItemProps,
       paginationProps,
+      tableProps,
+      getThProps,
+      getTrProps,
+      getTdProps,
+      getExpandedContentTdProps,
     },
+    expansionDerivedState: { isCellExpanded },
   } = tableControls;
 
   return (
@@ -142,192 +147,170 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
         </ToolbarContent>
       </Toolbar>
 
-      <DataList aria-label="Packages table">
-        <ConditionalDataListBody
+      <Table {...tableProps} aria-label="Package table">
+        <Thead>
+          <Tr>
+            <TableHeaderContentWithControls {...tableControls}>
+              <Th {...getThProps({ columnKey: "name" })} />
+              <Th {...getThProps({ columnKey: "version" })} />
+              <Th {...getThProps({ columnKey: "vulnerabilities" })} />
+              <Th {...getThProps({ columnKey: "licenses" })} />
+              <Th {...getThProps({ columnKey: "purls" })} />
+              <Th {...getThProps({ columnKey: "cpes" })} />
+            </TableHeaderContentWithControls>
+          </Tr>
+        </Thead>
+        <ConditionalTableBody
           isLoading={isFetching}
           isError={!!fetchError}
-          isNoData={packages.length === 0}
+          isNoData={totalItemCount === 0}
+          numRenderedColumns={numRenderedColumns}
         >
-          {currentPageItems?.map((item) => {
+          {currentPageItems?.map((item, rowIndex) => {
+            item.licenses = [item.licenses[0]];
             return (
-              <DataListItem key={item.id}>
-                <DataListItemRow>
-                  <DataListItemCells
-                    dataListCells={[
-                      <DataListCell key="info" wrapModifier="breakWord">
-                        <Flex direction={{ default: "column" }}>
-                          <FlexItem>
-                            <Content component="p">
-                              {[item.name, item.group]
-                                .filter(Boolean)
-                                .join("/")}
-                            </Content>
-                          </FlexItem>
-                          <FlexItem>
-                            <Content component="small">{item?.version}</Content>
-                          </FlexItem>
-                          <FlexItem>
-                            <DescriptionList>
-                              <DescriptionListGroup>
-                                <DescriptionListTerm>
-                                  Package URLs
-                                </DescriptionListTerm>
-                                <DescriptionListDescription>
-                                  <List>
-                                    {item.purl.map((e) => {
-                                      const decomposed = decomposePurl(e.purl);
-                                      if (!decomposed) {
-                                        return (
-                                          <ListItem key={e.uuid}>
-                                            <Stack>
-                                              <StackItem>
-                                                <Link
-                                                  to={`/packages/${e.uuid}`}
-                                                >
-                                                  {e.purl}
-                                                </Link>
-                                              </StackItem>
-                                            </Stack>
-                                          </ListItem>
-                                        );
-                                      }
-
-                                      return (
-                                        <ListItem key={e.uuid}>
-                                          <Stack>
-                                            <StackItem>
-                                              <Tooltip content={e.purl}>
-                                                <Link
-                                                  to={`/packages/${e.uuid}`}
-                                                >
-                                                  {[
-                                                    decomposed.namespace,
-                                                    decomposed.name,
-                                                  ]
-                                                    .filter(Boolean)
-                                                    .join("/")}
-                                                </Link>
-                                              </Tooltip>{" "}
-                                              <Label isCompact>
-                                                {decomposed.type}
-                                              </Label>
-                                            </StackItem>
-                                            <StackItem>
-                                              {[
-                                                decomposed.version
-                                                  ? `version: ${decomposed.version}`
-                                                  : undefined,
-                                                decomposed.path
-                                                  ? `path: ${decomposed.path}`
-                                                  : undefined,
-                                              ]
-                                                .filter(Boolean)
-                                                .join(" | ")}
-                                            </StackItem>
-                                            <StackItem>
-                                              <Split>
-                                                <SplitItem>
-                                                  <Tooltip content="Vulnerabilities">
-                                                    <ShieldAltIcon />
-                                                  </Tooltip>
-                                                </SplitItem>
-                                                <SplitItem>
-                                                  <PackageVulnerabilities
-                                                    packageId={e.uuid}
-                                                  />
-                                                </SplitItem>
-                                              </Split>
-                                            </StackItem>
-                                            <StackItem>
-                                              <List>
-                                                {Object.entries(
-                                                  decomposed.qualifiers ?? {},
-                                                ).map(([k, v]) => (
-                                                  <ListItem
-                                                    key={`${k}=${v}`}
-                                                  >{`${k}=${v}`}</ListItem>
-                                                ))}
-                                              </List>
-                                            </StackItem>
-                                          </Stack>
-                                        </ListItem>
-                                      );
-                                    })}
-                                  </List>
-                                </DescriptionListDescription>
-                              </DescriptionListGroup>
-                              {/* <DescriptionListGroup>
-                                <DescriptionListTerm>CPEs</DescriptionListTerm>
-                                <DescriptionListDescription>
-                                  {item.cpe.length > 0 ? (
-                                    <List isPlain>
-                                      {item.cpe.map((e) => (
-                                        <ListItem key={e}>{e}</ListItem>
-                                      ))}
-                                    </List>
-                                  ) : (
-                                    <Content component="small">None</Content>
-                                  )}
-                                </DescriptionListDescription>
-                              </DescriptionListGroup> */}
-                            </DescriptionList>
-                          </FlexItem>
-                        </Flex>
-                      </DataListCell>,
-                      <DataListCell key="licenses" wrapModifier="breakWord">
-                        <Flex direction={{ default: "column" }}>
-                          <FlexItem>
-                            <DescriptionList isCompact>
-                              <DescriptionListGroup>
-                                <DescriptionListTerm>
-                                  Licenses
-                                </DescriptionListTerm>
-                                <DescriptionListDescription>
-                                  <List>
-                                    {item.licenses.map((e) => (
-                                      <ListItem
-                                        key={`${e.license_name}-${e.license_type}`}
-                                      >
-                                        {renderLicenseWithMappings(
-                                          e.license_name,
-                                          item.licenses_ref_mapping,
-                                        )}{" "}
-                                        <Label isCompact>
-                                          {e.license_type}
-                                        </Label>
-                                      </ListItem>
-                                    ))}
-                                  </List>
-                                </DescriptionListDescription>
-                              </DescriptionListGroup>
-                              <DescriptionListGroup>
-                                <DescriptionListTerm>
-                                  Common Platform Enumerations
-                                </DescriptionListTerm>
-                                <DescriptionListDescription>
-                                  {item.cpe.length > 0 ? (
-                                    <List isPlain>
-                                      {item.cpe.map((e) => (
-                                        <ListItem key={e}>{e}</ListItem>
-                                      ))}
-                                    </List>
-                                  ) : (
-                                    <Content component="small">None</Content>
-                                  )}
-                                </DescriptionListDescription>
-                              </DescriptionListGroup>
-                            </DescriptionList>
-                          </FlexItem>
-                        </Flex>
-                      </DataListCell>,
-                    ]}
-                  />
-                </DataListItemRow>
-              </DataListItem>
+              <Tbody key={item.id} isExpanded={isCellExpanded(item)}>
+                <Tr {...getTrProps({ item })}>
+                  <TableRowContentWithControls
+                    {...tableControls}
+                    item={item}
+                    rowIndex={rowIndex}
+                  >
+                    <Td width={30} {...getTdProps({ columnKey: "name" })}>
+                      {[item.name, item.group].filter(Boolean).join("/")}
+                    </Td>
+                    <Td
+                      width={20}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "version" })}
+                    >
+                      {item?.version}
+                    </Td>
+                    <Td
+                      width={20}
+                      modifier="truncate"
+                      {...getTdProps({ columnKey: "vulnerabilities" })}
+                    >
+                      {item.purl[0] && (
+                        <PackageVulnerabilities packageId={item.purl[0].uuid} />
+                      )}
+                    </Td>
+                    {item.licenses.length > 1 ? (
+                      <Td
+                        width={10}
+                        modifier="breakWord"
+                        {...getTdProps({
+                          columnKey: "licenses",
+                          isCompoundExpandToggle: true,
+                          item: item,
+                          rowIndex,
+                        })}
+                      >
+                        {item.licenses.length}
+                      </Td>
+                    ) : (
+                      <Td
+                        width={10}
+                        modifier="breakWord"
+                        {...getTdProps({
+                          columnKey: "licenses",
+                        })}
+                      >
+                        {item.licenses.length === 0
+                          ? 0
+                          : renderLicenseWithMappings(
+                              item.licenses[0].license_name,
+                              item.licenses_ref_mapping,
+                            )}
+                      </Td>
+                    )}
+                    <Td
+                      width={10}
+                      modifier="truncate"
+                      {...getTdProps({
+                        columnKey: "purls",
+                        isCompoundExpandToggle: true,
+                        item: item,
+                        rowIndex,
+                      })}
+                    >
+                      {item.purl.length}
+                    </Td>
+                    <Td
+                      width={10}
+                      modifier="truncate"
+                      {...getTdProps({
+                        columnKey: "cpes",
+                        isCompoundExpandToggle: item.cpe.length > 0,
+                        item,
+                        rowIndex,
+                      })}
+                    >
+                      {item.cpe.length}
+                    </Td>
+                  </TableRowContentWithControls>
+                </Tr>
+                {isCellExpanded(item) ? (
+                  <Tr isExpanded>
+                    <Td
+                      {...getExpandedContentTdProps({
+                        item,
+                      })}
+                      className={spacing.pLg}
+                    >
+                      <ExpandableRowContent>
+                        <div className={spacing.ptLg}>
+                          {isCellExpanded(item, "licenses") ? (
+                            <>
+                              <List isPlain>
+                                {item.licenses.map((e) => (
+                                  <ListItem
+                                    key={`${e.license_name}-${e.license_type}`}
+                                  >
+                                    {renderLicenseWithMappings(
+                                      e.license_name,
+                                      item.licenses_ref_mapping,
+                                    )}{" "}
+                                    <Label isCompact>{e.license_type}</Label>
+                                  </ListItem>
+                                ))}
+                              </List>
+                            </>
+                          ) : null}
+                          {isCellExpanded(item, "purls") ? (
+                            <>
+                              <List isPlain>
+                                {item.purl.map((e) => {
+                                  return (
+                                    <ListItem key={e.uuid}>
+                                      <Link to={`/packages/${e.uuid}`}>
+                                        {e.purl}
+                                      </Link>
+                                    </ListItem>
+                                  );
+                                })}
+                              </List>
+                            </>
+                          ) : null}
+                          {isCellExpanded(item, "cpes") ? (
+                            <>
+                              <List isPlain>
+                                {item.cpe.map((e) => (
+                                  <ListItem key={e}>{e}</ListItem>
+                                ))}
+                              </List>
+                            </>
+                          ) : null}
+                        </div>
+                      </ExpandableRowContent>
+                    </Td>
+                  </Tr>
+                ) : null}
+              </Tbody>
             );
           })}
-        </ConditionalDataListBody>
-      </DataList>
+        </ConditionalTableBody>
+      </Table>
 
       <SimplePagination
         idPrefix="package-table"
