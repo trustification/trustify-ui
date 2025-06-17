@@ -12,18 +12,21 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
-  Divider,
   Flex,
   FlexItem,
   Label,
   List,
   ListItem,
+  Split,
+  SplitItem,
   Stack,
   StackItem,
   Toolbar,
   ToolbarContent,
   ToolbarItem,
+  Tooltip,
 } from "@patternfly/react-core";
+import { ShieldAltIcon } from "@patternfly/react-icons";
 
 import { FILTER_TEXT_CATEGORY_KEY } from "@app/Constants";
 import type { LicenseRefMapping } from "@app/client";
@@ -37,6 +40,9 @@ import {
 } from "@app/hooks/table-controls";
 import { useFetchPackagesBySbomId } from "@app/queries/packages";
 import { useFetchSbomsLicenseIds } from "@app/queries/sboms";
+import { decomposePurl } from "@app/utils/utils";
+
+import { PackageVulnerabilities } from "../package-list/components/PackageVulnerabilities";
 
 const renderLicenseWithMappings = (
   license: string,
@@ -163,17 +169,85 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                           <FlexItem>
                             <DescriptionList>
                               <DescriptionListGroup>
-                                <DescriptionListTerm>PURLs</DescriptionListTerm>
+                                <DescriptionListTerm>
+                                  Package URLs
+                                </DescriptionListTerm>
                                 <DescriptionListDescription>
-                                  <List isPlain>
+                                  <List>
                                     {item.purl.map((e) => {
+                                      const decomposed = decomposePurl(e.purl);
+                                      if (!decomposed) {
+                                        return (
+                                          <ListItem key={e.uuid}>
+                                            <Stack>
+                                              <StackItem>
+                                                <Link
+                                                  to={`/packages/${e.uuid}`}
+                                                >
+                                                  {e.purl}
+                                                </Link>
+                                              </StackItem>
+                                            </Stack>
+                                          </ListItem>
+                                        );
+                                      }
+
                                       return (
                                         <ListItem key={e.uuid}>
                                           <Stack>
                                             <StackItem>
-                                              <Link to={`/packages/${e.uuid}`}>
-                                                {e.purl}
-                                              </Link>
+                                              <Tooltip content={e.purl}>
+                                                <Link
+                                                  to={`/packages/${e.uuid}`}
+                                                >
+                                                  {[
+                                                    decomposed.namespace,
+                                                    decomposed.name,
+                                                  ]
+                                                    .filter(Boolean)
+                                                    .join("/")}
+                                                </Link>
+                                              </Tooltip>{" "}
+                                              <Label isCompact>
+                                                {decomposed.type}
+                                              </Label>
+                                            </StackItem>
+                                            <StackItem>
+                                              {[
+                                                decomposed.version
+                                                  ? `version: ${decomposed.version}`
+                                                  : undefined,
+                                                decomposed.path
+                                                  ? `path: ${decomposed.path}`
+                                                  : undefined,
+                                              ]
+                                                .filter(Boolean)
+                                                .join(" | ")}
+                                            </StackItem>
+                                            <StackItem>
+                                              <Split>
+                                                <SplitItem>
+                                                  <Tooltip content="Vulnerabilities">
+                                                    <ShieldAltIcon />
+                                                  </Tooltip>
+                                                </SplitItem>
+                                                <SplitItem>
+                                                  <PackageVulnerabilities
+                                                    packageId={e.uuid}
+                                                  />
+                                                </SplitItem>
+                                              </Split>
+                                            </StackItem>
+                                            <StackItem>
+                                              <List>
+                                                {Object.entries(
+                                                  decomposed.qualifiers ?? {},
+                                                ).map(([k, v]) => (
+                                                  <ListItem
+                                                    key={`${k}=${v}`}
+                                                  >{`${k}=${v}`}</ListItem>
+                                                ))}
+                                              </List>
                                             </StackItem>
                                           </Stack>
                                         </ListItem>
@@ -182,23 +256,34 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                                   </List>
                                 </DescriptionListDescription>
                               </DescriptionListGroup>
+                              {/* <DescriptionListGroup>
+                                <DescriptionListTerm>CPEs</DescriptionListTerm>
+                                <DescriptionListDescription>
+                                  {item.cpe.length > 0 ? (
+                                    <List isPlain>
+                                      {item.cpe.map((e) => (
+                                        <ListItem key={e}>{e}</ListItem>
+                                      ))}
+                                    </List>
+                                  ) : (
+                                    <Content component="small">None</Content>
+                                  )}
+                                </DescriptionListDescription>
+                              </DescriptionListGroup> */}
                             </DescriptionList>
                           </FlexItem>
+                        </Flex>
+                      </DataListCell>,
+                      <DataListCell key="licenses" wrapModifier="breakWord">
+                        <Flex direction={{ default: "column" }}>
                           <FlexItem>
-                            <Divider />
-                          </FlexItem>
-                          <FlexItem>
-                            <DescriptionList
-                              columnModifier={{
-                                default: "2Col",
-                              }}
-                            >
+                            <DescriptionList isCompact>
                               <DescriptionListGroup>
                                 <DescriptionListTerm>
                                   Licenses
                                 </DescriptionListTerm>
                                 <DescriptionListDescription>
-                                  <List isPlain>
+                                  <List>
                                     {item.licenses.map((e) => (
                                       <ListItem
                                         key={`${e.license_name}-${e.license_type}`}
@@ -216,7 +301,9 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                                 </DescriptionListDescription>
                               </DescriptionListGroup>
                               <DescriptionListGroup>
-                                <DescriptionListTerm>CPEs</DescriptionListTerm>
+                                <DescriptionListTerm>
+                                  Common Platform Enumerations
+                                </DescriptionListTerm>
                                 <DescriptionListDescription>
                                   {item.cpe.length > 0 ? (
                                     <List isPlain>
