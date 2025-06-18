@@ -136,7 +136,7 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
     <>
       <Toolbar {...toolbarProps}>
         <ToolbarContent>
-          <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
+          <FilterToolbar {...filterToolbarProps} />
           <ToolbarItem {...paginationToolbarItemProps}>
             <SimplePagination
               idPrefix="package-table"
