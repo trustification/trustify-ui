@@ -167,7 +167,6 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
           numRenderedColumns={numRenderedColumns}
         >
           {currentPageItems?.map((item, rowIndex) => {
-            item.licenses = [item.licenses[0]];
             return (
               <Tbody key={item.id} isExpanded={isCellExpanded(item)}>
                 <Tr {...getTrProps({ item })}>
@@ -176,69 +175,63 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                     item={item}
                     rowIndex={rowIndex}
                   >
-                    <Td width={30} {...getTdProps({ columnKey: "name" })}>
+                    <Td width={15} {...getTdProps({ columnKey: "name" })}>
                       {[item.name, item.group].filter(Boolean).join("/")}
                     </Td>
                     <Td
-                      width={20}
+                      width={15}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "version" })}
                     >
                       {item?.version}
                     </Td>
                     <Td
-                      width={20}
-                      modifier="truncate"
+                      width={10}
+                      modifier="breakWord"
                       {...getTdProps({ columnKey: "vulnerabilities" })}
                     >
                       {item.purl[0] && (
                         <PackageVulnerabilities packageId={item.purl[0].uuid} />
                       )}
                     </Td>
-                    {item.licenses.length > 1 ? (
-                      <Td
-                        width={10}
-                        modifier="breakWord"
-                        {...getTdProps({
-                          columnKey: "licenses",
-                          isCompoundExpandToggle: true,
-                          item: item,
-                          rowIndex,
-                        })}
-                      >
-                        {item.licenses.length}
-                      </Td>
-                    ) : (
-                      <Td
-                        width={10}
-                        modifier="breakWord"
-                        {...getTdProps({
-                          columnKey: "licenses",
-                        })}
-                      >
-                        {item.licenses.length === 0
-                          ? 0
-                          : renderLicenseWithMappings(
-                              item.licenses[0].license_name,
-                              item.licenses_ref_mapping,
-                            )}
-                      </Td>
-                    )}
                     <Td
-                      width={10}
-                      modifier="truncate"
+                      width={20}
+                      modifier="breakWord"
                       {...getTdProps({
-                        columnKey: "purls",
-                        isCompoundExpandToggle: true,
+                        columnKey: "licenses",
+                        isCompoundExpandToggle: item.licenses.length > 1,
                         item: item,
                         rowIndex,
                       })}
                     >
-                      {item.purl.length}
+                      {item.licenses.length === 1
+                        ? renderLicenseWithMappings(
+                            item.licenses[0].license_name,
+                            item.licenses_ref_mapping,
+                          )
+                        : `${item.licenses.length} Licenses`}
                     </Td>
                     <Td
-                      width={10}
-                      modifier="truncate"
+                      width={20}
+                      modifier="breakWord"
+                      {...getTdProps({
+                        columnKey: "purls",
+                        isCompoundExpandToggle: item.purl.length > 1,
+                        item: item,
+                        rowIndex,
+                      })}
+                    >
+                      {item.purl.length === 1 ? (
+                        <Link to={`/packages/${item.purl[0].uuid}`}>
+                          {item.purl[0].purl}
+                        </Link>
+                      ) : (
+                        `${item.purl.length} PURLs`
+                      )}
+                    </Td>
+                    <Td
+                      width={20}
+                      modifier="breakWord"
                       {...getTdProps({
                         columnKey: "cpes",
                         isCompoundExpandToggle: item.cpe.length > 0,
@@ -246,7 +239,7 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                         rowIndex,
                       })}
                     >
-                      {item.cpe.length}
+                      {item.cpe.length} CPEs
                     </Td>
                   </TableRowContentWithControls>
                 </Tr>
