@@ -71,6 +71,12 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
     isFilterEnabled: true,
     filterCategories: [
       {
+        categoryKey: FILTER_TEXT_CATEGORY_KEY,
+        title: "Filter text",
+        placeholderText: "Search",
+        type: FilterType.search,
+      },
+      {
         categoryKey: "license",
         title: "License",
         placeholderText: "Filter results by license",
@@ -81,12 +87,6 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
           value: license.license_id,
           label: license.license_name,
         })),
-      },
-      {
-        categoryKey: FILTER_TEXT_CATEGORY_KEY,
-        title: "Filter text",
-        placeholderText: "Search",
-        type: FilterType.search,
       },
     ],
     isExpansionEnabled: true,
