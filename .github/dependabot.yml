@@ -45,6 +45,7 @@ updates:
         patterns:
           - "@biomejs/*"
       
-      bundler:
+      tools:
         patterns:
           - "@rsbuild/*"
+          - "@hey-api/*"
