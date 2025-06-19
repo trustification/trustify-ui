@@ -114,11 +114,8 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
           >
             {Array.from(uploads.entries()).map(([file, upload], index) => (
               <MultipleFileUploadStatusItem
-                className={
-                  upload.progress < 100 || !upload.response
-                    ? "multiple-file-upload-status-item-force-blue"
-                    : undefined
-                }
+                // customFileHandler is Required until https://github.com/patternfly/patternfly-react/issues/11276 is fixed
+                customFileHandler={() => {}}
                 fileIcon={<FileIcon />}
                 file={file}
                 key={`${file.name}-${index}`}
