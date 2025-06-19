@@ -12,11 +12,3 @@
 table.vertical-middle-aligned-table tr td {
   vertical-align: middle;
 }
-
-.multiple-file-upload-status-item-force-blue .pf-v6-c-progress__indicator {
-  background-color: #0066cc !important;
-}
-
-.multiple-file-upload-status-item-force-blue .pf-v6-c-progress__status-icon {
-  color: #0066cc !important;
-}
