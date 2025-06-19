@@ -160,11 +160,11 @@ export const Overview: React.FC<InfoProps> = ({ sbom }) => {
                         .map((e) => (
                           <ListItem key={e}>{e}</ListItem>
                         ))}
-                      <ListItem>
-                        {sbom.described_by
-                          .flatMap((e) => e.purl)
-                          .map((e) => e.purl)}
-                      </ListItem>
+                      {sbom.described_by
+                        .flatMap((e) => e.purl)
+                        .map((e) => (
+                          <ListItem key={e.uuid}>{e.purl}</ListItem>
+                        ))}
                     </List>
                   </DescriptionListDescription>
                 </DescriptionListGroup>
