@@ -32,7 +32,7 @@
   },
   "files": {
     "ignore": [
-      "**/src/app/client/**/*.ts"
+      "**/src/app/client/*.ts"
     ]
   }
 }
