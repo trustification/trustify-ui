@@ -19,7 +19,7 @@ updates:
 
     ignore:
       - dependency-name: "@patternfly/*"
-      - update-types: [ "version-update:semver-major" ]
+        update-types: [ "version-update:semver-major" ]
 
     groups:
       patternfly:
