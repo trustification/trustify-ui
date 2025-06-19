@@ -1,9 +1,8 @@
 import axios from "axios";
 import { User, UserManager } from "oidc-client-ts";
 
+import { createClient } from "@app/client/client";
 import { OIDC_CLIENT_ID, OIDC_SERVER_URL, oidcClientSettings } from "@app/oidc";
-
-import { createClient } from "@hey-api/client-axios";
 
 export const client = createClient({
   // set default base url for requests

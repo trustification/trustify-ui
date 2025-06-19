@@ -32,10 +32,7 @@
   },
   "files": {
     "ignore": [
-      "**/*.stories.tsx",
-      "**/stories/**",
-      "**/mocks/**",
-      "**/src/app/client/*.ts"
+      "**/src/app/client/**/*.ts"
     ]
   }
 }

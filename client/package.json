@@ -19,7 +19,7 @@
     "preview": "rsbuild preview"
   },
   "dependencies": {
-    "@hey-api/client-axios": "^0.6.1",
+    "@hey-api/openapi-ts": "^0.73.0",
     "@hookform/resolvers": "^2.9.11",
     "@patternfly/patternfly": "^6.2.0",
     "@patternfly/react-charts": "^8.2.0",
@@ -48,16 +48,16 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@hey-api/openapi-ts": "^0.64.5",
-    "@testing-library/jest-dom": "^6.4.6",
-    "@testing-library/react": "^16.0.0",
     "@rsbuild/core": "^1.2.8",
     "@rsbuild/plugin-react": "^1.1.0",
+    "@rsbuild/plugin-type-check": "^1.2.3",
+    "@testing-library/jest-dom": "^6.4.6",
+    "@testing-library/react": "^16.0.0",
     "@types/file-saver": "^2.0.2",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "raw-loader": "^4.0.2",
     "msw": "^2.6.4",
+    "raw-loader": "^4.0.2",
     "typescript": "^5.7.3"
   },
   "browserslist": {

@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import util from "node:util";
 
+import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import virtual from "@rollup/plugin-virtual";
@@ -60,6 +61,7 @@ const config = {
     virtual({
       "@branding/strings.json": stringModule,
     }),
+    json(),
   ],
 };
 
