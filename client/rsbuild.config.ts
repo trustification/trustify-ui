@@ -93,7 +93,7 @@ export default defineConfig({
           exclude: [
             ({ file = "" }) => /[\\/]node_modules[\\/]/.test(file),
             ({ file = "" }) =>
-              /^src\/app\/client(?:\/[^\/]+)*\/[^\/]+\.ts$/.test(file),
+              /\/src\/app\/client(?:\/[^\/]+)*\/[^\/]+\.ts$/.test(file),
           ],
         },
       },
