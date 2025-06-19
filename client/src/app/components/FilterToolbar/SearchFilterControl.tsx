@@ -47,7 +47,6 @@ export const SearchFilterControl = <TItem, TFilterCategoryKey extends string>({
 
   const inputProps = {
     name: id,
-    id: "search-input",
     onChange: (_: React.FormEvent, value: string) => setInputValue(value),
     "aria-label": `${category.title} filter`,
     value: inputValue,
@@ -68,7 +67,7 @@ export const SearchFilterControl = <TItem, TFilterCategoryKey extends string>({
     >
       {isNumeric ? (
         <InputGroup>
-          <TextInput type="number" {...inputProps} />
+          <TextInput type="number" id="search-input" {...inputProps} />
           <Button
             icon={<SearchIcon />}
             variant={ButtonVariant.control}
@@ -79,7 +78,7 @@ export const SearchFilterControl = <TItem, TFilterCategoryKey extends string>({
           />
         </InputGroup>
       ) : (
-        <SearchInput {...inputProps} />
+        <SearchInput inputProps={{ id: "search-input" }} {...inputProps} />
       )}
     </ToolbarFilter>
   );
