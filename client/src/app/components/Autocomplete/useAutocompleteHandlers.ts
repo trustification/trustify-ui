@@ -176,6 +176,7 @@ export const useAutocompleteHandlers = ({
     handleInputChange,
     handleKeyDown,
     handleOnSelect,
+    handleOnCreateNewOption,
     menuRef,
     searchInputRef,
     removeSelectionById,
