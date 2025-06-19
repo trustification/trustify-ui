@@ -1,6 +1,7 @@
 import type React from "react";
 
 import { AboutModal, Content, ContentVariants } from "@patternfly/react-core";
+import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
 
 import ENV from "@app/env";
 import useBranding from "@app/hooks/useBranding";
@@ -49,7 +50,7 @@ export const AboutApp: React.FC<IButtonAboutAppProps> = ({
           </Content>
         ) : null}
       </Content>
-      <Content className="pf-v6-u-py-xl">
+      <Content className={spacing.pyXl}>
         <Content>
           <Content component="dl">
             <Content component="dt">Version</Content>
