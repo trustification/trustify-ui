@@ -76,6 +76,7 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
     optionsNotSelected,
     removeSelectionById,
     handleOnSelect,
+    handleOnCreateNewOption,
     handleInputChange,
     handleKeyDown,
     handleClearSearchInput,
@@ -150,10 +151,7 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
               <SelectOption
                 id={createItemId("new-option")}
                 isFocused={true}
-                onClick={() => {
-                  const newOption = onCreateNewOption(inputValue);
-                  handleOnSelect(newOption);
-                }}
+                onClick={() => handleOnCreateNewOption(inputValue)}
               >{`Create new option "${inputValue}"`}</SelectOption>
             ) : noResultsMessage && optionsNotSelected.length === 0 ? (
               <SelectOption isAriaDisabled>{noResultsMessage}</SelectOption>
