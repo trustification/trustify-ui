@@ -61,7 +61,7 @@ export const SearchFilterControl = <TItem, TFilterCategoryKey extends string>({
 
   return (
     <ToolbarFilter
-      labels={filterValue || []}
+      labels={filterValue?.map((value) => ({ key: value, node: value })) || []}
       deleteLabel={() => setFilterValue([])}
       categoryName={category.title}
       showToolbarItem={showToolbarItem}
