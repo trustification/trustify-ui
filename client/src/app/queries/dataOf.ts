@@ -1,4 +1,4 @@
-import type { RequestResult } from "@hey-api/client-axios";
+import type { RequestResult } from "@app/client/client";
 import type { UseQueryResult } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
