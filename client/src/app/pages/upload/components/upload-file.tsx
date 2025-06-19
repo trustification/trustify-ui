@@ -112,49 +112,49 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
             statusToggleText={`${successFileCount} of ${uploads.size} files uploaded`}
             statusToggleIcon={statusIcon}
           >
-            {Array.from(uploads.entries()).map(([file, upload], index) => (
-              <MultipleFileUploadStatusItem
-                className={
-                  upload.progress < 100 || !upload.response
-                    ? "multiple-file-upload-status-item-force-blue"
-                    : undefined
-                }
-                fileIcon={<FileIcon />}
-                file={file}
-                key={`${file.name}-${index}`}
-                onClearClick={() => removeFiles([file])}
-                progressValue={upload.progress}
-                progressVariant={
-                  upload.error
-                    ? "danger"
-                    : upload.response
-                      ? "success"
-                      : undefined
-                }
-                progressHelperText={
-                  upload.error ? (
-                    <HelperText isLiveRegion>
-                      <HelperTextItem variant="error">
-                        {extractErrorMessage(upload.error)}
-                      </HelperTextItem>
-                    </HelperText>
-                  ) : upload.progress === 100 && !upload.response ? (
-                    <HelperText isLiveRegion>
-                      <HelperTextItem variant="warning">
-                        <Spinner isInline />
-                        File uploaded. Waiting for the server to process it.
-                      </HelperTextItem>
-                    </HelperText>
-                  ) : upload.response ? (
-                    <HelperText isLiveRegion>
-                      <HelperTextItem variant="default">
-                        {extractSuccessMessage(upload.response)}
-                      </HelperTextItem>
-                    </HelperText>
-                  ) : undefined
-                }
-              />
-            ))}
+            {Array.from(uploads.entries()).map(([file, upload], index) => {
+              console.log(upload.progress);
+              return (
+                <MultipleFileUploadStatusItem
+                  // customFileHandler is Required until https://github.com/patternfly/patternfly-react/issues/11276 is fixed
+                  customFileHandler={() => {}}
+                  fileIcon={<FileIcon />}
+                  file={file}
+                  key={`${file.name}-${index}`}
+                  onClearClick={() => removeFiles([file])}
+                  progressValue={upload.progress}
+                  progressVariant={
+                    upload.error
+                      ? "danger"
+                      : upload.response
+                        ? "success"
+                        : undefined
+                  }
+                  progressHelperText={
+                    upload.error ? (
+                      <HelperText isLiveRegion>
+                        <HelperTextItem variant="error">
+                          {extractErrorMessage(upload.error)}
+                        </HelperTextItem>
+                      </HelperText>
+                    ) : upload.progress === 100 && !upload.response ? (
+                      <HelperText isLiveRegion>
+                        <HelperTextItem variant="warning">
+                          <Spinner isInline />
+                          File uploaded. Waiting for the server to process it.
+                        </HelperTextItem>
+                      </HelperText>
+                    ) : upload.response ? (
+                      <HelperText isLiveRegion>
+                        <HelperTextItem variant="default">
+                          {extractSuccessMessage(upload.response)}
+                        </HelperTextItem>
+                      </HelperText>
+                    ) : undefined
+                  }
+                />
+              );
+            })}
           </MultipleFileUploadStatus>
         )}
 
