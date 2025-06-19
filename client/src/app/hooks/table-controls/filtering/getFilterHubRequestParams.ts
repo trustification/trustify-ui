@@ -112,28 +112,28 @@ export const getFilterHubRequestParams = <
       if (filterCategory.type === "numsearch" && serverFilterValue[0]) {
         pushOrMergeFilter(filters, {
           field: serverFilterField,
-          operator: "=",
+          operator: filterCategory.operator ?? "=",
           value: Number(serverFilterValue[0]),
         });
       }
       if (filterCategory.type === "search" && serverFilterValue[0]) {
         pushOrMergeFilter(filters, {
           field: serverFilterField,
-          operator: "~",
+          operator: filterCategory.operator ?? "~",
           value: serverFilterValue[0],
         });
       }
       if (filterCategory.type === "select") {
         pushOrMergeFilter(filters, {
           field: serverFilterField,
-          operator: "=",
+          operator: filterCategory.operator ?? "=",
           value: serverFilterValue[0],
         });
       }
       if (filterCategory.type === "multiselect") {
         pushOrMergeFilter(filters, {
           field: serverFilterField,
-          operator: "=",
+          operator: filterCategory.operator ?? "=",
           value: {
             list: serverFilterValue,
             operator: getFilterLogicOperator(filterCategory, "OR"),
