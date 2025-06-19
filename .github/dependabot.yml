@@ -6,7 +6,7 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: ":ghost: "
-      
+
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
@@ -19,8 +19,7 @@ updates:
 
     ignore:
       - dependency-name: "@patternfly/*"
-      - update-types:
-          - version-update:semver-major
+      - update-types: [ "version-update:semver-major" ]
 
     groups:
       patternfly:
@@ -44,7 +43,7 @@ updates:
       linting:
         patterns:
           - "@biomejs/*"
-      
+
       tools:
         patterns:
           - "@rsbuild/*"
