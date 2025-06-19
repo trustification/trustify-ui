@@ -18,6 +18,7 @@ import {
   ToolbarItem,
 } from "@patternfly/react-core";
 import { LogViewer, LogViewerSearch } from "@patternfly/react-log-viewer";
+import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
 import {
   ActionsColumn,
   Caption,
@@ -414,7 +415,7 @@ export const ImporterList: React.FC = () => {
                     {isCellExpanded(item) ? (
                       <Tr isExpanded>
                         <Td colSpan={7}>
-                          <div className="pf-v6-u-m-md">
+                          <div className={spacing.mMd}>
                             <ExpandableRowContent>
                               <ImporterExpandedArea importer={item} />
                             </ExpandableRowContent>
