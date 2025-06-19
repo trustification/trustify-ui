@@ -19,7 +19,6 @@
     "preview": "rsbuild preview"
   },
   "dependencies": {
-    "@hey-api/client-axios": "^0.6.1",
     "@hookform/resolvers": "^2.9.11",
     "@patternfly/patternfly": "^6.2.0",
     "@patternfly/react-charts": "^8.2.0",
@@ -48,7 +47,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@hey-api/openapi-ts": "^0.64.5",
+    "@hey-api/openapi-ts": "^0.73.0",
     "@rsbuild/core": "^1.2.8",
     "@rsbuild/plugin-react": "^1.1.0",
     "@rsbuild/plugin-type-check": "^1.2.3",
