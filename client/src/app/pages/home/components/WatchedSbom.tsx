@@ -22,6 +22,7 @@ import {
   TextInputGroupUtilities,
 } from "@patternfly/react-core";
 import TimesIcon from "@patternfly/react-icons/dist/esm/icons/times-icon";
+import text from "@patternfly/react-styles/css/utilities/Text/text";
 
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useFetchSBOMById, useFetchSBOMs } from "@app/queries/sboms";
@@ -114,7 +115,11 @@ export const WatchedSbom: React.FC<WatchedSbomProps> = ({
         isFetching={isFetchingCurrentSbom}
         fetchError={fetchErrorCurrentSbom}
       >
-        {currentSbom && <CardTitle>{currentSbom?.name}</CardTitle>}
+        {currentSbom && (
+          <CardTitle className={text.textBreakWord}>
+            {currentSbom?.name}
+          </CardTitle>
+        )}
         <CardBody>
           {sbomId ? (
             <Stack>
