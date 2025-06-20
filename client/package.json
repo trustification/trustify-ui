@@ -48,8 +48,8 @@
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "^0.73.0",
-    "@rsbuild/core": "^1.2.8",
-    "@rsbuild/plugin-react": "^1.1.0",
+    "@rsbuild/core": "^1.3.22",
+    "@rsbuild/plugin-react": "^1.3.2",
     "@rsbuild/plugin-type-check": "^1.2.3",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
