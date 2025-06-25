@@ -27,7 +27,7 @@ export const ConditionalTableBody: React.FC<IConditionalTableBodyProps> = ({
 }) => (
   <>
     {isLoading ? (
-      <Tbody>
+      <Tbody aria-label="Table loading">
         <Tr>
           <Td colSpan={numRenderedColumns}>
             <Bullseye>
@@ -45,7 +45,7 @@ export const ConditionalTableBody: React.FC<IConditionalTableBodyProps> = ({
         </Tr>
       </Tbody>
     ) : isNoData ? (
-      <Tbody aria-label="Table error">
+      <Tbody aria-label="Table empty">
         <Tr>
           <Td colSpan={numRenderedColumns}>
             <Bullseye>{noDataEmptyState || <StateNoData />}</Bullseye>
