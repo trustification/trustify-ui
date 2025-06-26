@@ -134,7 +134,7 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
 
   return (
     <>
-      <Toolbar {...toolbarProps}>
+      <Toolbar {...toolbarProps} aria-label="Package toolbar">
         <ToolbarContent>
           <FilterToolbar {...filterToolbarProps} />
           <ToolbarItem {...paginationToolbarItemProps}>
