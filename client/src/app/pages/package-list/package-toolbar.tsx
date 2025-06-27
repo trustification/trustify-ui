@@ -26,7 +26,7 @@ export const PackageToolbar: React.FC<PackageToolbarProps> = ({
   } = tableControls;
 
   return (
-    <Toolbar {...toolbarProps}>
+    <Toolbar {...toolbarProps} aria-label="package-toolbar">
       <ToolbarContent>
         {showFilters && <FilterToolbar {...filterToolbarProps} />}
         <ToolbarItem {...paginationToolbarItemProps}>

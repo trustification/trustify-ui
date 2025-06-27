@@ -27,7 +27,7 @@ export const AdvisoryToolbar: React.FC<AdvisoryToolbarProps> = ({
 
   return (
     <>
-      <Toolbar {...toolbarProps}>
+      <Toolbar {...toolbarProps} aria-label="advisory-toolbar">
         <ToolbarContent>
           {showFilters && <FilterToolbar {...filterToolbarProps} />}
           <ToolbarItem {...paginationToolbarItemProps}>
