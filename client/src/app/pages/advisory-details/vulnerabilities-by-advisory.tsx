@@ -52,8 +52,10 @@ export const VulnerabilitiesByAdvisory: React.FC<
     },
     hasActionsColumn: false,
     isSortEnabled: true,
-    sortableColumns: [],
-    getSortValues: (_item) => ({}),
+    sortableColumns: ["identifier"],
+    getSortValues: (item) => ({
+      identifier: item.identifier,
+    }),
     isPaginationEnabled: true,
     isFilterEnabled: false,
     filterCategories: [],
@@ -76,7 +78,7 @@ export const VulnerabilitiesByAdvisory: React.FC<
   } = tableControls;
   return (
     <>
-      <Toolbar {...toolbarProps}>
+      <Toolbar {...toolbarProps} aria-label="vulnerability toolbar">
         <ToolbarContent>
           <ToolbarItem {...paginationToolbarItemProps}>
             <SimplePagination
