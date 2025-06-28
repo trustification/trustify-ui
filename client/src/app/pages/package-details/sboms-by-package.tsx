@@ -83,7 +83,7 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
 
   return (
     <>
-      <Toolbar {...toolbarProps}>
+      <Toolbar {...toolbarProps} aria-label="SBOM toolbar">
         <ToolbarContent>
           <ToolbarItem {...paginationToolbarItemProps}>
             <SimplePagination
