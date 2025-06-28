@@ -101,7 +101,7 @@ export const VulnerabilitiesByPackage: React.FC<
 
   return (
     <>
-      <Toolbar {...toolbarProps}>
+      <Toolbar {...toolbarProps} aria-label="vulnerability toolbar">
         <ToolbarContent>
           <ToolbarItem {...paginationToolbarItemProps}>
             <SimplePagination

@@ -226,7 +226,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
           </Card>
         </StackItem>
         <StackItem>
-          <Toolbar {...toolbarProps}>
+          <Toolbar {...toolbarProps} aria-label="Vulnerability toolbar">
             <ToolbarContent>
               <ToolbarItem {...paginationToolbarItemProps}>
                 <SimplePagination
