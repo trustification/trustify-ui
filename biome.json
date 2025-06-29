@@ -37,6 +37,8 @@
   "files": {
     "includes": [
       "**",
+      "!**/dist",
+      "!**/node_modules",
       "!client/src/app/client"
     ]
   }
