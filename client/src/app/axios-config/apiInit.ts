@@ -66,7 +66,7 @@ export const initInterceptors = () => {
               retryCounter: retryCounter + 1,
             });
           }
-        } catch (refreshError) {
+        } catch (_refreshError) {
           await userManager.signoutRedirect();
         }
       }

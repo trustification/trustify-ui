@@ -254,45 +254,39 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                       <ExpandableRowContent>
                         <div className={spacing.ptLg}>
                           {isCellExpanded(item, "licenses") ? (
-                            <>
-                              <List isPlain>
-                                {item.licenses.map((e) => (
-                                  <ListItem
-                                    key={`${e.license_name}-${e.license_type}`}
-                                  >
-                                    {renderLicenseWithMappings(
-                                      e.license_name,
-                                      item.licenses_ref_mapping,
-                                    )}{" "}
-                                    <Label isCompact>{e.license_type}</Label>
-                                  </ListItem>
-                                ))}
-                              </List>
-                            </>
+                            <List isPlain>
+                              {item.licenses.map((e) => (
+                                <ListItem
+                                  key={`${e.license_name}-${e.license_type}`}
+                                >
+                                  {renderLicenseWithMappings(
+                                    e.license_name,
+                                    item.licenses_ref_mapping,
+                                  )}{" "}
+                                  <Label isCompact>{e.license_type}</Label>
+                                </ListItem>
+                              ))}
+                            </List>
                           ) : null}
                           {isCellExpanded(item, "purls") ? (
-                            <>
-                              <List isPlain>
-                                {item.purl.map((e) => {
-                                  return (
-                                    <ListItem key={e.uuid}>
-                                      <Link to={`/packages/${e.uuid}`}>
-                                        {e.purl}
-                                      </Link>
-                                    </ListItem>
-                                  );
-                                })}
-                              </List>
-                            </>
+                            <List isPlain>
+                              {item.purl.map((e) => {
+                                return (
+                                  <ListItem key={e.uuid}>
+                                    <Link to={`/packages/${e.uuid}`}>
+                                      {e.purl}
+                                    </Link>
+                                  </ListItem>
+                                );
+                              })}
+                            </List>
                           ) : null}
                           {isCellExpanded(item, "cpes") ? (
-                            <>
-                              <List isPlain>
-                                {item.cpe.map((e) => (
-                                  <ListItem key={e}>{e}</ListItem>
-                                ))}
-                              </List>
-                            </>
+                            <List isPlain>
+                              {item.cpe.map((e) => (
+                                <ListItem key={e}>{e}</ListItem>
+                              ))}
+                            </List>
                           ) : null}
                         </div>
                       </ExpandableRowContent>

@@ -130,6 +130,7 @@ const advisoryToModels = (advisories: PurlAdvisory[]) => {
 
       const prevVulnStatusValue = prev.vulnerabilityStatus[vulnStatus];
 
+      // biome-ignore lint/performance/noAccumulatingSpread: allowed
       const result: VulnerabilityOfPackageSummary = Object.assign(prev, {
         vulnerabilityStatus: {
           ...prev.vulnerabilityStatus,

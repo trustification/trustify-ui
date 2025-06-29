@@ -18,7 +18,7 @@ export interface ConfirmDialogProps {
     | "danger"
     | "warning"
     | "info"
-    // biome-ignore lint/suspicious/noExplicitAny:
+    // biome-ignore lint/suspicious/noExplicitAny: allowed
     | React.ComponentType<any>;
   message: string | React.ReactNode;
 
@@ -89,7 +89,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
             {cancelBtn}
           </>
         ) : (
-          <>{confirmBtn}</>
+          confirmBtn
         )}
       </ModalFooter>
     </Modal>

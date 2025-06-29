@@ -98,7 +98,7 @@ export const IconedStatus: React.FC<IIconedStatusProps> = ({
     presetProps?.tooltipMessage ? (
       <Tooltip content={presetProps?.tooltipMessage}>{children}</Tooltip>
     ) : (
-      <>{children}</>
+      children
     );
 
   return (

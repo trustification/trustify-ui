@@ -45,6 +45,7 @@ export const HeaderApp: React.FC = () => {
     masthead: { leftBrand, leftTitle, rightBrand, supportUrl },
   } = useBranding();
 
+  // biome-ignore lint/correctness/useHookAtTopLevel: allowed
   const auth = (isAuthRequired && useAuth()) || undefined;
 
   const navigate = useNavigate();

@@ -52,7 +52,7 @@ export const getLocalFilterDerivedState = <
       const defaultMatcher = (filterValue: string, item: TItem) =>
         legacyMatcher(
           filterValue,
-          // biome-ignore lint/suspicious/noExplicitAny:
+          // biome-ignore lint/suspicious/noExplicitAny: allowed
           filterCategory?.getItemValue?.(item) ?? (item as any)[filterKey],
         );
       const matcher = filterCategory?.matcher ?? defaultMatcher;
@@ -69,7 +69,7 @@ export const getLocalFilterDerivedState = <
  *
  * @returns false for any falsy value (regardless of the filter value), true if (coerced to string) lowercased value contains lowercased filter value.
  */
-// biome-ignore lint/suspicious/noExplicitAny:
+// biome-ignore lint/suspicious/noExplicitAny: allowed
 const legacyMatcher = (filterValue: string, value: any) => {
   if (!value) return false;
   const lowerCaseItemValue = String(value).toLowerCase();

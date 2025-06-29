@@ -15,6 +15,7 @@
 /** See https://stackoverflow.com/a/51390763/1470607  */
 type Falsy = false | 0 | "" | null | undefined;
 
+// biome-ignore lint/correctness/noUnusedVariables: allowed
 interface Array<T> {
   /**
    * Returns the elements of an array that meet the condition specified in a callback function.
@@ -23,7 +24,7 @@ interface Array<T> {
    */
   filter<S extends T>(
     predicate: BooleanConstructor,
-    // biome-ignore lint/suspicious/noExplicitAny:
+    // biome-ignore lint/suspicious/noExplicitAny: allowed
     thisArg?: any,
   ): Exclude<S, Falsy>[];
 }

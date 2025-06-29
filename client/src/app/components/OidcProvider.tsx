@@ -21,7 +21,7 @@ interface IOidcProviderProps {
 
 export const OidcProvider: React.FC<IOidcProviderProps> = ({ children }) => {
   return ENV.AUTH_REQUIRED !== "true" ? (
-    <>{children}</>
+    children
   ) : (
     <AuthProvider
       {...oidcClientSettings}

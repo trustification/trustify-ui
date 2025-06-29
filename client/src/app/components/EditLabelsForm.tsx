@@ -62,9 +62,13 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
   const onSaveForm = () => {
     const labels = selections
       .map((e) => splitStringAsKeyValue(getString(e.name)))
-      .reduce((prev, { key, value }) => {
-        return Object.assign(prev, { [key]: value });
-      }, {});
+      .reduce(
+        (prev, { key, value }) => {
+          prev[key] = value ?? "";
+          return prev;
+        },
+        {} as Record<string, string>,
+      );
     onSave(labels);
   };
 
