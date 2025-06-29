@@ -24,7 +24,7 @@ export const SbomToolbar: React.FC<SbomToolbarProps> = ({ showFilters }) => {
   } = tableControls;
 
   return (
-    <Toolbar {...toolbarProps}>
+    <Toolbar {...toolbarProps} aria-label="sbom-toolbar">
       <ToolbarContent>
         {showFilters && <FilterToolbar {...filterToolbarProps} />}
         <ToolbarItem {...paginationToolbarItemProps}>

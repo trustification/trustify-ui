@@ -26,7 +26,7 @@ export const AdvisoryToolbar: React.FC<AdvisoryToolbarProps> = ({
   } = tableControls;
 
   return (
-    <Toolbar {...toolbarProps}>
+    <Toolbar {...toolbarProps} aria-label="advisory-toolbar">
       <ToolbarContent>
         {showFilters && <FilterToolbar {...filterToolbarProps} />}
         <ToolbarItem {...paginationToolbarItemProps}>
