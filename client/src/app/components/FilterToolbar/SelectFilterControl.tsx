@@ -51,12 +51,15 @@ export const SelectFilterControl = <TItem, TFilterCategoryKey extends string>({
         node: chipLabel ?? label ?? value,
       };
     })
-    .reduce((prev, current) => {
-      if (current) {
-        prev.push(current);
-      }
-      return prev;
-    }, new Array<string | ToolbarLabel>());
+    .reduce(
+      (prev, current) => {
+        if (current) {
+          prev.push(current);
+        }
+        return prev;
+      },
+      [] as (string | ToolbarLabel)[],
+    );
 
   const onFilterSelect = (value: string) => {
     const option = getOptionFromOptionValue(value);
