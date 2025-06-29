@@ -28,8 +28,8 @@ export default {
     commonjs(),
     json(),
     buildAndRun &&
-    run({
-      execArgv: ["-r", "source-map-support/register"],
-    }),
+      run({
+        execArgv: ["-r", "source-map-support/register"],
+      }),
   ],
 };
