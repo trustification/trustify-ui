@@ -39,6 +39,7 @@
       "**",
       "!**/dist",
       "!**/node_modules",
+      "!client/coverage",
       "!client/src/app/client"
     ]
   }
