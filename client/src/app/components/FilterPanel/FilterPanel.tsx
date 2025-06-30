@@ -40,51 +40,53 @@ export const FilterPanel = <TItem, TFilterCategoryKey extends string>({
           ) === undefined
         );
       })
-      .reduce((prev, current) => {
-        return Object.assign(prev, { [current.categoryKey]: undefined });
-      }, {});
+      .reduce(
+        (prev, current) => {
+          prev[current.categoryKey] = undefined;
+          return prev;
+        },
+        {} as Record<TFilterCategoryKey, FilterValue>,
+      );
     setFilterValues({ ...filterValues, ...filtersToBeCleared });
   };
 
   return (
-    <>
-      <Stack hasGutter>
-        <StackItem>
-          <Button variant="link" isInline onClick={clearAllFilters}>
-            Clear all filters
-          </Button>
-        </StackItem>
-        {filterCategories
-          .filter((filterCategory) => {
-            return (
-              omitFilterCategoryKeys.find(
-                (categoryKey) => categoryKey === filterCategory.categoryKey,
-              ) === undefined
-            );
-          })
-          .map((category) => {
-            return (
-              <StackItem key={category.categoryKey}>
-                <Stack hasGutter>
-                  <StackItem>
-                    <Content component="h4">{category.title}</Content>
-                  </StackItem>
-                  <StackItem>
-                    <FilterControl<TItem, TFilterCategoryKey>
-                      category={category}
-                      filterValue={filterValues[category.categoryKey]}
-                      setFilterValue={(newValue) =>
-                        setFilterValue(category, newValue)
-                      }
-                      isDisabled={isDisabled}
-                      isSidebar
-                    />
-                  </StackItem>
-                </Stack>
-              </StackItem>
-            );
-          })}
-      </Stack>
-    </>
+    <Stack hasGutter>
+      <StackItem>
+        <Button variant="link" isInline onClick={clearAllFilters}>
+          Clear all filters
+        </Button>
+      </StackItem>
+      {filterCategories
+        .filter((filterCategory) => {
+          return (
+            omitFilterCategoryKeys.find(
+              (categoryKey) => categoryKey === filterCategory.categoryKey,
+            ) === undefined
+          );
+        })
+        .map((category) => {
+          return (
+            <StackItem key={category.categoryKey}>
+              <Stack hasGutter>
+                <StackItem>
+                  <Content component="h4">{category.title}</Content>
+                </StackItem>
+                <StackItem>
+                  <FilterControl<TItem, TFilterCategoryKey>
+                    category={category}
+                    filterValue={filterValues[category.categoryKey]}
+                    setFilterValue={(newValue) =>
+                      setFilterValue(category, newValue)
+                    }
+                    isDisabled={isDisabled}
+                    isSidebar
+                  />
+                </StackItem>
+              </Stack>
+            </StackItem>
+          );
+        })}
+    </Stack>
   );
 };

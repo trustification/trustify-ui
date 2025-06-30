@@ -179,282 +179,276 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
   } = tableControls;
 
   return (
-    <>
-      <Stack hasGutter>
-        <StackItem>
-          <Card>
-            <CardBody>
-              <LoadingWrapper
-                isFetching={isFetchingSbom || isFetchingVulnerabilities}
-                fetchError={fetchErrorSbom}
-              >
-                <Grid hasGutter>
-                  <GridItem md={6}>
-                    <SbomVulnerabilitiesDonutChart
-                      vulnerabilitiesSummary={
-                        vulnerabilitiesSummary.vulnerabilityStatus.affected
-                      }
-                    />
-                  </GridItem>
-                  <GridItem md={6}>
-                    <DescriptionList>
-                      <DescriptionListGroup>
-                        <DescriptionListTerm>Name</DescriptionListTerm>
-                        <DescriptionListDescription>
-                          {sbom?.name}
-                        </DescriptionListDescription>
-                      </DescriptionListGroup>
-                      <DescriptionListGroup>
-                        <DescriptionListTerm>Version</DescriptionListTerm>
-                        <DescriptionListDescription>
-                          {sbom?.described_by
-                            .map((item) => item.version)
-                            .join(", ")}
-                        </DescriptionListDescription>
-                      </DescriptionListGroup>
-                      <DescriptionListGroup>
-                        <DescriptionListTerm>Creation date</DescriptionListTerm>
-                        <DescriptionListDescription>
-                          {formatDate(sbom?.published)}
-                        </DescriptionListDescription>
-                      </DescriptionListGroup>
-                    </DescriptionList>
-                  </GridItem>
-                </Grid>
-              </LoadingWrapper>
-            </CardBody>
-          </Card>
-        </StackItem>
-        <StackItem>
-          <Toolbar {...toolbarProps} aria-label="Vulnerability toolbar">
-            <ToolbarContent>
-              <ToolbarItem {...paginationToolbarItemProps}>
-                <SimplePagination
-                  idPrefix="vulnerability-table"
-                  isTop
-                  paginationProps={paginationProps}
-                />
-              </ToolbarItem>
-            </ToolbarContent>
-          </Toolbar>
-
-          <Table {...tableProps} aria-label="Vulnerability table">
-            <Thead>
-              <Tr>
-                <TableHeaderContentWithControls {...tableControls}>
-                  <Th {...getThProps({ columnKey: "id" })} />
-                  <Th {...getThProps({ columnKey: "description" })} />
-                  <Th {...getThProps({ columnKey: "cvss" })} />
-                  <Th {...getThProps({ columnKey: "affectedDependencies" })} />
-                  <Th {...getThProps({ columnKey: "published" })} />
-                  <Th {...getThProps({ columnKey: "updated" })} />
-                </TableHeaderContentWithControls>
-              </Tr>
-            </Thead>
-            <ConditionalTableBody
-              isLoading={isFetchingVulnerabilities}
-              isError={!!fetchErrorVulnerabilities}
-              isNoData={tableDataWithUiId.length === 0}
-              numRenderedColumns={numRenderedColumns}
+    <Stack hasGutter>
+      <StackItem>
+        <Card>
+          <CardBody>
+            <LoadingWrapper
+              isFetching={isFetchingSbom || isFetchingVulnerabilities}
+              fetchError={fetchErrorSbom}
             >
-              {currentPageItems?.map((item, rowIndex) => {
-                return (
-                  <Tbody
-                    key={item._ui_unique_id}
-                    isExpanded={isCellExpanded(item)}
-                  >
-                    <Tr {...getTrProps({ item })}>
-                      <TableRowContentWithControls
-                        {...tableControls}
-                        item={item}
-                        rowIndex={rowIndex}
+              <Grid hasGutter>
+                <GridItem md={6}>
+                  <SbomVulnerabilitiesDonutChart
+                    vulnerabilitiesSummary={
+                      vulnerabilitiesSummary.vulnerabilityStatus.affected
+                    }
+                  />
+                </GridItem>
+                <GridItem md={6}>
+                  <DescriptionList>
+                    <DescriptionListGroup>
+                      <DescriptionListTerm>Name</DescriptionListTerm>
+                      <DescriptionListDescription>
+                        {sbom?.name}
+                      </DescriptionListDescription>
+                    </DescriptionListGroup>
+                    <DescriptionListGroup>
+                      <DescriptionListTerm>Version</DescriptionListTerm>
+                      <DescriptionListDescription>
+                        {sbom?.described_by
+                          .map((item) => item.version)
+                          .join(", ")}
+                      </DescriptionListDescription>
+                    </DescriptionListGroup>
+                    <DescriptionListGroup>
+                      <DescriptionListTerm>Creation date</DescriptionListTerm>
+                      <DescriptionListDescription>
+                        {formatDate(sbom?.published)}
+                      </DescriptionListDescription>
+                    </DescriptionListGroup>
+                  </DescriptionList>
+                </GridItem>
+              </Grid>
+            </LoadingWrapper>
+          </CardBody>
+        </Card>
+      </StackItem>
+      <StackItem>
+        <Toolbar {...toolbarProps}>
+          <ToolbarContent>
+            <ToolbarItem {...paginationToolbarItemProps}>
+              <SimplePagination
+                idPrefix="vulnerability-table"
+                isTop
+                paginationProps={paginationProps}
+              />
+            </ToolbarItem>
+          </ToolbarContent>
+        </Toolbar>
+
+        <Table {...tableProps} aria-label="Vulnerability table">
+          <Thead>
+            <Tr>
+              <TableHeaderContentWithControls {...tableControls}>
+                <Th {...getThProps({ columnKey: "id" })} />
+                <Th {...getThProps({ columnKey: "description" })} />
+                <Th {...getThProps({ columnKey: "cvss" })} />
+                <Th {...getThProps({ columnKey: "affectedDependencies" })} />
+                <Th {...getThProps({ columnKey: "published" })} />
+                <Th {...getThProps({ columnKey: "updated" })} />
+              </TableHeaderContentWithControls>
+            </Tr>
+          </Thead>
+          <ConditionalTableBody
+            isLoading={isFetchingVulnerabilities}
+            isError={!!fetchErrorVulnerabilities}
+            isNoData={tableDataWithUiId.length === 0}
+            numRenderedColumns={numRenderedColumns}
+          >
+            {currentPageItems?.map((item, rowIndex) => {
+              return (
+                <Tbody
+                  key={item._ui_unique_id}
+                  isExpanded={isCellExpanded(item)}
+                >
+                  <Tr {...getTrProps({ item })}>
+                    <TableRowContentWithControls
+                      {...tableControls}
+                      item={item}
+                      rowIndex={rowIndex}
+                    >
+                      <Td
+                        width={15}
+                        modifier="breakWord"
+                        {...getTdProps({ columnKey: "id" })}
                       >
-                        <Td
-                          width={15}
-                          modifier="breakWord"
-                          {...getTdProps({ columnKey: "id" })}
+                        <Link
+                          to={`/vulnerabilities/${item.vulnerability.identifier}`}
                         >
-                          <Link
-                            to={`/vulnerabilities/${item.vulnerability.identifier}`}
+                          {item.vulnerability.identifier}
+                        </Link>
+                      </Td>
+                      <TdWithFocusStatus>
+                        {(isFocused, setIsFocused) => (
+                          <Td
+                            width={35}
+                            modifier="truncate"
+                            onFocus={() => setIsFocused(true)}
+                            onBlur={() => setIsFocused(false)}
+                            tabIndex={0}
+                            {...getTdProps({ columnKey: "description" })}
                           >
-                            {item.vulnerability.identifier}
-                          </Link>
-                        </Td>
-                        <TdWithFocusStatus>
-                          {(isFocused, setIsFocused) => (
-                            <Td
-                              width={35}
-                              modifier="truncate"
-                              onFocus={() => setIsFocused(true)}
-                              onBlur={() => setIsFocused(false)}
-                              tabIndex={0}
-                              {...getTdProps({ columnKey: "description" })}
+                            <TableText
+                              focused={isFocused}
+                              wrapModifier="truncate"
                             >
-                              <TableText
-                                focused={isFocused}
-                                wrapModifier="truncate"
-                              >
-                                {item.vulnerability && (
-                                  <VulnerabilityDescription
-                                    vulnerability={item.vulnerability}
-                                  />
-                                )}
-                              </TableText>
-                            </Td>
+                              {item.vulnerability && (
+                                <VulnerabilityDescription
+                                  vulnerability={item.vulnerability}
+                                />
+                              )}
+                            </TableText>
+                          </Td>
+                        )}
+                      </TdWithFocusStatus>
+                      <Td width={10} {...getTdProps({ columnKey: "cvss" })}>
+                        <SeverityShieldAndText
+                          value={extendedSeverityFromSeverity(
+                            item.vulnerability.average_severity,
                           )}
-                        </TdWithFocusStatus>
-                        <Td width={10} {...getTdProps({ columnKey: "cvss" })}>
-                          <SeverityShieldAndText
-                            value={extendedSeverityFromSeverity(
-                              item.vulnerability.average_severity,
-                            )}
-                            score={item.vulnerability.average_score}
-                            showLabel
-                            showScore
-                          />
-                        </Td>
-                        <Td
-                          width={15}
-                          modifier="truncate"
-                          {...getTdProps({
-                            columnKey: "affectedDependencies",
-                            isCompoundExpandToggle: true,
-                            item: item,
-                            rowIndex,
-                          })}
-                        >
-                          {item.summary.totalPackages}
-                        </Td>
-                        <Td
-                          width={10}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "published" })}
-                        >
-                          {formatDate(item.vulnerability?.published)}
-                        </Td>
-                        <Td
-                          width={10}
-                          modifier="truncate"
-                          {...getTdProps({ columnKey: "updated" })}
-                        >
-                          {formatDate(item.vulnerability?.modified)}
-                        </Td>
-                      </TableRowContentWithControls>
+                          score={item.vulnerability.average_score}
+                          showLabel
+                          showScore
+                        />
+                      </Td>
+                      <Td
+                        width={15}
+                        modifier="truncate"
+                        {...getTdProps({
+                          columnKey: "affectedDependencies",
+                          isCompoundExpandToggle: true,
+                          item: item,
+                          rowIndex,
+                        })}
+                      >
+                        {item.summary.totalPackages}
+                      </Td>
+                      <Td
+                        width={10}
+                        modifier="truncate"
+                        {...getTdProps({ columnKey: "published" })}
+                      >
+                        {formatDate(item.vulnerability?.published)}
+                      </Td>
+                      <Td
+                        width={10}
+                        modifier="truncate"
+                        {...getTdProps({ columnKey: "updated" })}
+                      >
+                        {formatDate(item.vulnerability?.modified)}
+                      </Td>
+                    </TableRowContentWithControls>
+                  </Tr>
+                  {isCellExpanded(item) ? (
+                    <Tr isExpanded>
+                      <Td
+                        {...getExpandedContentTdProps({
+                          item,
+                        })}
+                      >
+                        <ExpandableRowContent>
+                          {isCellExpanded(item, "affectedDependencies") ? (
+                            <Table variant="compact">
+                              <Thead>
+                                <Tr>
+                                  <Th>Type</Th>
+                                  <Th>Namespace</Th>
+                                  <Th>Name</Th>
+                                  <Th>Version</Th>
+                                  <Th>Path</Th>
+                                  <Th>Qualifiers</Th>
+                                </Tr>
+                              </Thead>
+                              <Tbody>
+                                {item.summary.allPackages
+                                  .flatMap((item) => {
+                                    // Some packages do not have purl neither ID. So we render only the parent name meanwhile
+                                    type EnrichedPurlSummary = {
+                                      parentName: string;
+                                      purlSummary?: PurlSummary;
+                                    };
+
+                                    const hasNoPurlsButOnlyName =
+                                      item.name && item.purl.length === 0;
+
+                                    if (hasNoPurlsButOnlyName) {
+                                      const result: EnrichedPurlSummary = {
+                                        parentName: item.name,
+                                      };
+                                      return [result];
+                                    }
+
+                                    return item.purl.map((i) => {
+                                      const result: EnrichedPurlSummary = {
+                                        parentName: item.name,
+                                        purlSummary: i,
+                                      };
+                                      return result;
+                                    });
+                                  })
+                                  .map((purl, index) => {
+                                    if (purl.purlSummary) {
+                                      const decomposedPurl = decomposePurl(
+                                        purl.purlSummary.purl,
+                                      );
+                                      return (
+                                        <Tr key={purl.purlSummary.uuid}>
+                                          <Td>{decomposedPurl?.type}</Td>
+                                          <Td>{decomposedPurl?.namespace}</Td>
+                                          <Td>
+                                            <Link
+                                              to={`/packages/${purl.purlSummary.uuid}`}
+                                            >
+                                              {decomposedPurl?.name}
+                                            </Link>
+                                          </Td>
+                                          <Td>{decomposedPurl?.version}</Td>
+                                          <Td>{decomposedPurl?.path}</Td>
+                                          <Td>
+                                            {decomposedPurl?.qualifiers && (
+                                              <PackageQualifiers
+                                                value={
+                                                  decomposedPurl?.qualifiers
+                                                }
+                                              />
+                                            )}
+                                          </Td>
+                                        </Tr>
+                                      );
+                                    }
+
+                                    return (
+                                      <Tr
+                                        key={`${purl.parentName}-${index}-name`}
+                                      >
+                                        <Td />
+                                        <Td />
+                                        <Td>{purl.parentName}</Td>
+                                        <Td />
+                                        <Td />
+                                        <Td />
+                                      </Tr>
+                                    );
+                                  })}
+                              </Tbody>
+                            </Table>
+                          ) : null}
+                        </ExpandableRowContent>
+                      </Td>
                     </Tr>
-                    {isCellExpanded(item) ? (
-                      <Tr isExpanded>
-                        <Td
-                          {...getExpandedContentTdProps({
-                            item,
-                          })}
-                        >
-                          <ExpandableRowContent>
-                            {isCellExpanded(item, "affectedDependencies") ? (
-                              <>
-                                <Table variant="compact">
-                                  <Thead>
-                                    <Tr>
-                                      <Th>Type</Th>
-                                      <Th>Namespace</Th>
-                                      <Th>Name</Th>
-                                      <Th>Version</Th>
-                                      <Th>Path</Th>
-                                      <Th>Qualifiers</Th>
-                                    </Tr>
-                                  </Thead>
-                                  <Tbody>
-                                    {item.summary.allPackages
-                                      .flatMap((item) => {
-                                        // Some packages do not have purl neither ID. So we render only the parent name meanwhile
-                                        type EnrichedPurlSummary = {
-                                          parentName: string;
-                                          purlSummary?: PurlSummary;
-                                        };
-
-                                        const hasNoPurlsButOnlyName =
-                                          item.name && item.purl.length === 0;
-
-                                        if (hasNoPurlsButOnlyName) {
-                                          const result: EnrichedPurlSummary = {
-                                            parentName: item.name,
-                                          };
-                                          return [result];
-                                        }
-
-                                        return item.purl.map((i) => {
-                                          const result: EnrichedPurlSummary = {
-                                            parentName: item.name,
-                                            purlSummary: i,
-                                          };
-                                          return result;
-                                        });
-                                      })
-                                      .map((purl, index) => {
-                                        if (purl.purlSummary) {
-                                          const decomposedPurl = decomposePurl(
-                                            purl.purlSummary.purl,
-                                          );
-                                          return (
-                                            <Tr key={purl.purlSummary.uuid}>
-                                              <Td>{decomposedPurl?.type}</Td>
-                                              <Td>
-                                                {decomposedPurl?.namespace}
-                                              </Td>
-                                              <Td>
-                                                <Link
-                                                  to={`/packages/${purl.purlSummary.uuid}`}
-                                                >
-                                                  {decomposedPurl?.name}
-                                                </Link>
-                                              </Td>
-                                              <Td>{decomposedPurl?.version}</Td>
-                                              <Td>{decomposedPurl?.path}</Td>
-                                              <Td>
-                                                {decomposedPurl?.qualifiers && (
-                                                  <PackageQualifiers
-                                                    value={
-                                                      decomposedPurl?.qualifiers
-                                                    }
-                                                  />
-                                                )}
-                                              </Td>
-                                            </Tr>
-                                          );
-                                        }
-
-                                        return (
-                                          <Tr
-                                            key={`${purl.parentName}-${index}-name`}
-                                          >
-                                            <Td />
-                                            <Td />
-                                            <Td>{purl.parentName}</Td>
-                                            <Td />
-                                            <Td />
-                                            <Td />
-                                          </Tr>
-                                        );
-                                      })}
-                                  </Tbody>
-                                </Table>
-                              </>
-                            ) : null}
-                          </ExpandableRowContent>
-                        </Td>
-                      </Tr>
-                    ) : null}
-                  </Tbody>
-                );
-              })}
-            </ConditionalTableBody>
-          </Table>
-          <SimplePagination
-            idPrefix="vulnerability-table"
-            isTop={false}
-            paginationProps={paginationProps}
-          />
-        </StackItem>
-      </Stack>
-    </>
+                  ) : null}
+                </Tbody>
+              );
+            })}
+          </ConditionalTableBody>
+        </Table>
+        <SimplePagination
+          idPrefix="vulnerability-table"
+          isTop={false}
+          paginationProps={paginationProps}
+        />
+      </StackItem>
+    </Stack>
   );
 };
