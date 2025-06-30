@@ -9,7 +9,7 @@ interface Provider<TProps> {
   props?: Omit<TProps, "children">;
 }
 
-// biome-ignore lint/suspicious/noExplicitAny:
+// biome-ignore lint/suspicious/noExplicitAny: allowed
 function composeProviders<TProviders extends Array<Provider<any>>>(
   providers: TProviders,
 ): React.ComponentType<React.PropsWithChildren> {
