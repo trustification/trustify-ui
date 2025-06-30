@@ -103,7 +103,7 @@ export const useExpansionState = <
           deserialize: ({ expandedCells: expandedCellsStr }) => {
             try {
               return JSON.parse(expandedCellsStr || "{}");
-            } catch (e) {
+            } catch (_e) {
               return {};
             }
           },
