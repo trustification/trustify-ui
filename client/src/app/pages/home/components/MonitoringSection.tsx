@@ -157,7 +157,7 @@ export const MonitoringSection: React.FC = () => {
                               style={[{ fill: "#0066cc" }]}
                               events={{
                                 onClick: (event) => {
-                                  // biome-ignore lint/suspicious/noExplicitAny:
+                                  // biome-ignore lint/suspicious/noExplicitAny: allowed
                                   const sbomName = (event.target as any)
                                     .innerHTML as string | null;
                                   const sbom = barchartSboms.find(

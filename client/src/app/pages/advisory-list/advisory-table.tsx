@@ -98,9 +98,8 @@ export const AdvisoryTable: React.FC = () => {
               const extendedSeverity = extendedSeverityFromSeverity(
                 current.severity,
               );
-              return Object.assign(prev, {
-                [extendedSeverity]: prev[extendedSeverity] + 1,
-              });
+              prev[extendedSeverity] = prev[extendedSeverity] + 1;
+              return prev;
             }, defaultSeverityGroup);
 
             return (
