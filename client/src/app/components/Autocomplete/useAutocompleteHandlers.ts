@@ -83,19 +83,18 @@ export const useAutocompleteHandlers = ({
 
     const updatedSelections = [...filteredSelections, value];
     onChange(updatedSelections);
-
-    handleInputChange("");
-    setIsDropdownOpen(false);
   };
 
   const handleOnCreateNewOption = (value: string) => {
-    if (value && onCreateNewOption) {
+    if (value !== "" && onCreateNewOption) {
       const isValid = validateNewOption ? validateNewOption(value) : true;
       if (isValid) {
-        const newOption = onCreateNewOption(inputValue);
+        const newOption = onCreateNewOption(value);
         handleOnSelect(newOption);
       }
     }
+    handleInputChange("");
+    setIsDropdownOpen(false);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
