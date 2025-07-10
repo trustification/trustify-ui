@@ -17,7 +17,7 @@ static NPM_CMD: &str = "npm";
 fn main() {
     println!("Build Trustify - build.rs!");
 
-    println!("cargo:rerun-if-changed={UI_DIR_SRC}");
+    println!("cargo:rerun-if-changed={}", UI_DIR_SRC);
 
     build_ui().expect("Error while building UI");
 
