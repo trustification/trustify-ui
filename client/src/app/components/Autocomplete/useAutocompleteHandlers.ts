@@ -83,6 +83,9 @@ export const useAutocompleteHandlers = ({
 
     const updatedSelections = [...filteredSelections, value];
     onChange(updatedSelections);
+
+    handleInputChange("");
+    setIsDropdownOpen(false);
   };
 
   const handleOnCreateNewOption = (value: string) => {
@@ -93,8 +96,6 @@ export const useAutocompleteHandlers = ({
         handleOnSelect(newOption);
       }
     }
-    handleInputChange("");
-    setIsDropdownOpen(false);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
