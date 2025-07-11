@@ -145,7 +145,7 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
             isDropdownOpen &&
             (optionsNotSelected.length > 0 ||
               !!noResultsMessage ||
-              !!onCreateNewOption)
+              (!!onCreateNewOption && inputValue.length > 0))
           }
           selected={selections}
           onOpenChange={setIsDropdownOpen}
