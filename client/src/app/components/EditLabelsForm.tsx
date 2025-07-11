@@ -126,10 +126,20 @@ export const EditLabelsForm: React.FC<EditLabelsFormProps> = ({
               };
               return option;
             }}
+            // The following regex ensures:
+            // - No backslashes anywhere in the string
+            // - The string does not start with whitespace or '='
+            // - The string does not start with a backslash
+            // - The string contains an optional '=' with optional whitespace around it
+            // - Both key and value parts do not contain backslashes or are empty
+            // - The key does not start with whitespace or '='
+            // This is used to validate new label options in the form.
             validateNewOption={(value) =>
               !!value &&
               value.trim().length > 0 &&
-              /^[^=][^=]*=?[^=]*$/.test(value)
+              /^(?!.*\\)(?!\s*\\)(?!\s*=)[^=\\\s][^=\\]*\s*=?\s*[^=\\]+$/.test(
+                value,
+              )
             }
             filterBeforeOnChange={(selections, newOption) => {
               const newOptionKeyValue = splitStringAsKeyValue(
