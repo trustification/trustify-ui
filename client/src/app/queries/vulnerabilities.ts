@@ -4,12 +4,12 @@ import type { AxiosError } from "axios";
 import type { HubRequestParams } from "@app/api/models";
 import { client } from "@app/axios-config/apiInit";
 import {
-  type VulnerabilityDetails,
+  analyze,
   deleteVulnerability,
   getVulnerability,
   listVulnerabilities,
-  analyze,
   type AnalysisResponse,
+  type VulnerabilityDetails,
 } from "@app/client";
 import { requestParamsQuery } from "@app/hooks/table-controls";
 
@@ -69,30 +69,17 @@ export const useFetchVulnerabilitiesByPackageIds = (ids: string[]) => {
   const fetchError = userQueries.map(({ error }) => error as AxiosError | null);
 
   const packages: AnalysisResponse = {};
-  const vulnerabilitiesByIdentifier = new Map<string, VulnerabilityDetails>();
-  const purlsByVulnerability = new Map<string, string[]>();
+
   if (!isFetching) {
     for (const data of userQueries.map(({ data }) => data?.data ?? {})) {
-      for (const [purl, vulnerabilities] of Object.entries(data)) {
-        packages[purl] = vulnerabilities;
-
-        for (const vulnerability of vulnerabilities) {
-          vulnerabilitiesByIdentifier.set(
-            vulnerability.identifier,
-            vulnerability,
-          );
-
-          const prev = purlsByVulnerability.get(vulnerability.identifier) ?? [];
-          purlsByVulnerability.set(vulnerability.identifier, [...prev, purl]);
-        }
+      for (const [id, analysisDetails] of Object.entries(data)) {
+        packages[id] = analysisDetails;
       }
     }
   }
 
   return {
     packages,
-    vulnerabilitiesByIdentifier,
-    purlsByVulnerability,
     isFetching,
     fetchError,
   };

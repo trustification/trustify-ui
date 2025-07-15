@@ -7,6 +7,7 @@ import {
 } from "@app/api/models";
 import type { PurlAdvisory, VulnerabilityHead } from "@app/client";
 import { useFetchPackageById } from "@app/queries/packages";
+import { useFetchVulnerabilitiesByPackageIds } from "@app/queries/vulnerabilities";
 
 const areVulnerabilityOfPackageEqual = (
   a: VulnerabilityOfPackage,
@@ -169,5 +170,30 @@ export const useVulnerabilitiesOfPackage = (packageId: string) => {
     data: result,
     isFetching: isFetchingPackage,
     fetchError: fetchErrorPackage,
+  };
+};
+
+export const useVulnerabilitiesOfPackages = (packageIds: string[]) => {
+  const { packages, isFetching, fetchError } =
+    useFetchVulnerabilitiesByPackageIds(packageIds);
+
+  const result = React.useMemo(() => {
+    if (isFetching || fetchError) {
+      return {};
+    }
+
+    const result = {};
+    for (const [_packageId, analysisDetails] of Object.entries(packages)) {
+      analysisDetails.map((_analysisDetail) => {
+        
+      });
+    }
+    return result;
+  }, [packages, isFetching, fetchError]);
+
+  return {
+    data: result,
+    isFetching,
+    fetchError,
   };
 };

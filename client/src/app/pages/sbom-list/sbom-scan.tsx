@@ -1,8 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import type { AxiosError } from "axios";
 
 import {
+  Breadcrumb,
+  BreadcrumbItem,
   Button,
   Content,
   EmptyState,
@@ -35,13 +38,26 @@ export const SbomScan: React.FC = () => {
     (extractedData, _file) => setExtractedData(extractedData),
   );
 
-  const { isFetching, fetchError } = useFetchVulnerabilitiesByPackageIds(purls);
+  const { packages, isFetching, fetchError } =
+    useFetchVulnerabilitiesByPackageIds(purls);
 
   return (
     <>
+      <PageSection type="breadcrumb">
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <Link to="/sboms">SBOMs</Link>
+          </BreadcrumbItem>
+          <BreadcrumbItem isActive>Scan SBOM</BreadcrumbItem>
+        </Breadcrumb>
+      </PageSection>
       <PageSection>
         <Content>
           <Content component="h1">Scan SBOM</Content>
+          <Content component="p">
+            This is a temporary scan to help you assess an SBOM. Your file will
+            not be uploaded or stored.
+          </Content>
         </Content>
       </PageSection>
       <PageSection>
@@ -88,3 +104,5 @@ export const SbomScan: React.FC = () => {
     </>
   );
 };
+
+export { SbomScan as default };

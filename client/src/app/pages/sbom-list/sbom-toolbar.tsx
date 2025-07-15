@@ -1,6 +1,7 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
+import { Button, Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 
 import { FilterToolbar } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -12,6 +13,8 @@ interface SbomToolbarProps {
 }
 
 export const SbomToolbar: React.FC<SbomToolbarProps> = ({ showFilters }) => {
+  const navigate = useNavigate();
+
   const { tableControls } = React.useContext(SbomSearchContext);
 
   const {
@@ -26,7 +29,15 @@ export const SbomToolbar: React.FC<SbomToolbarProps> = ({ showFilters }) => {
   return (
     <Toolbar {...toolbarProps} aria-label="sbom-toolbar">
       <ToolbarContent>
-        {showFilters && <FilterToolbar {...filterToolbarProps} />}
+        {showFilters && (
+          <>
+            <FilterToolbar {...filterToolbarProps} />
+            <ToolbarItem>
+              
+              <Button variant="secondary" onClick={() => navigate("/sbom-scan")}>Scan SBOM</Button>
+            </ToolbarItem>
+          </>
+        )}
         <ToolbarItem {...paginationToolbarItemProps}>
           <SimplePagination
             idPrefix="sbom-table"
