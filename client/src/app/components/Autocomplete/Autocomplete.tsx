@@ -125,6 +125,13 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
       isExpanded={isDropdownOpen}
       isDisabled={isDisabled}
       isFullWidth
+      status={
+        inputValue && validateNewOption
+          ? !validateNewOption(inputValue)
+            ? "danger"
+            : undefined
+          : undefined
+      }
     >
       {inputGroup}
     </MenuToggle>
@@ -138,13 +145,12 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
             isDropdownOpen &&
             (optionsNotSelected.length > 0 ||
               !!noResultsMessage ||
-              !!onCreateNewOption)
+              (!!onCreateNewOption && inputValue.length > 0))
           }
           selected={selections}
           onOpenChange={setIsDropdownOpen}
           toggle={toggle}
           variant="typeahead"
-          maxMenuHeight=""
         >
           <SelectList id="select-create-typeahead-listbox">
             {onCreateNewOption && optionsNotSelected.length === 0 ? (
