@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
 import type { HubRequestParams } from "@app/api/models";
@@ -8,6 +8,8 @@ import {
   deleteVulnerability,
   getVulnerability,
   listVulnerabilities,
+  analyze,
+  type AnalysisResponse,
 } from "@app/client";
 import { requestParamsQuery } from "@app/hooks/table-controls";
 
@@ -36,6 +38,63 @@ export const useFetchVulnerabilities = (
     isFetching: isLoading,
     fetchError: error as AxiosError,
     refetch,
+  };
+};
+
+export const useFetchVulnerabilitiesByPackageIds = (ids: string[]) => {
+  const idChunks = ids.reduce<string[][]>((chunks, item, index) => {
+    if (index % 100 === 0) {
+      chunks.push([item]);
+    } else {
+      chunks[chunks.length - 1].push(item);
+    }
+    return chunks;
+  }, []);
+
+  const userQueries = useQueries({
+    queries: idChunks.map((ids) => {
+      return {
+        queryKey: [VulnerabilitiesQueryKey, ids],
+        queryFn: () => {
+          return analyze({
+            client,
+            body: { purls: ids },
+          });
+        },
+      };
+    }),
+  });
+
+  const isFetching = userQueries.some(({ isLoading }) => isLoading);
+  const fetchError = userQueries.map(({ error }) => error as AxiosError | null);
+
+  const packages: AnalysisResponse = {};
+  const vulnerabilitiesByIdentifier = new Map<string, VulnerabilityDetails>();
+  const purlsByVulnerability = new Map<string, string[]>();
+  if (!isFetching) {
+    for (const data of userQueries.map(({ data }) => data?.data ?? {})) {
+      for (const [purl, vulnerabilities] of Object.entries(data)) {
+        packages[purl] = vulnerabilities;
+
+        for (const vulnerability of vulnerabilities) {
+          vulnerabilitiesByIdentifier.set(
+            vulnerability.identifier,
+            vulnerability,
+          );
+
+          const prev = purlsByVulnerability.get(vulnerability.identifier) ?? [];
+          purlsByVulnerability.set(vulnerability.identifier, [...prev, purl]);
+        }
+      }
+    }
+  }
+
+  return {
+    packages,
+    vulnerabilitiesByIdentifier,
+    purlsByVulnerability,
+    isFetching,
+    fetchError,
   };
 };
 

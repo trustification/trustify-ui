@@ -53,6 +53,16 @@ export const SidebarApp: React.FC = () => {
           </li>
           <li className={nav.navItem}>
             <NavLink
+              to="/sbom-scan"
+              className={({ isActive }) => {
+                return css(LINK_CLASS, isActive ? ACTIVE_LINK_CLASS : "");
+              }}
+            >
+              Scan SBOM
+            </NavLink>
+          </li>
+          <li className={nav.navItem}>
+            <NavLink
               to="/vulnerabilities"
               className={({ isActive }) => {
                 return css(LINK_CLASS, isActive ? ACTIVE_LINK_CLASS : "");

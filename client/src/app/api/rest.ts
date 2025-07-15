@@ -1,7 +1,7 @@
 import axios, { type AxiosRequestConfig } from "axios";
 
 import { FORM_DATA_FILE_KEY } from "@app/Constants";
-import type { AdvisoryDetails, IngestResult } from "@app/client";
+import type { AdvisoryDetails, ExtractResult, IngestResult } from "@app/client";
 import { serializeRequestParamsForHub } from "@app/hooks/table-controls/getHubRequestParams";
 
 import type { HubPaginatedResult, HubRequestParams } from "./models";
@@ -60,6 +60,17 @@ export const uploadAdvisory = (
 export const uploadSbom = (formData: FormData, config?: AxiosRequestConfig) => {
   const file = formData.get(FORM_DATA_FILE_KEY) as File;
   return axios.post<IngestResult>(`${SBOMS}`, file, {
+    ...config,
+    headers: { "Content-Type": getContentTypeFromFile(file) },
+  });
+};
+
+export const uploadSbomForAnalysis = (
+  formData: FormData,
+  config?: AxiosRequestConfig,
+) => {
+  const file = formData.get(FORM_DATA_FILE_KEY) as File;
+  return axios.post<ExtractResult>("/api/v2/ui/extract-sbom-purls", file, {
     ...config,
     headers: { "Content-Type": getContentTypeFromFile(file) },
   });

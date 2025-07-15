@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import type { AxiosError, AxiosResponse, CancelTokenSource } from "axios";
-import type { FileRejection } from "react-dropzone";
+import type { DropzoneOptions, FileRejection } from "react-dropzone";
 
 import {
   type DropEvent,
@@ -32,6 +32,7 @@ interface Upload {
 }
 
 export interface IUploadFilesProps {
+  dropzoneProps?: DropzoneOptions;
   uploads: Map<File, Upload>;
   handleUpload: (files: File[]) => void;
   handleRemoveUpload: (file: File) => void;
@@ -41,6 +42,7 @@ export interface IUploadFilesProps {
 
 export const UploadFiles: React.FC<IUploadFilesProps> = ({
   uploads,
+  dropzoneProps,
   handleUpload,
   handleRemoveUpload,
   extractSuccessMessage,
@@ -98,6 +100,7 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
         },
         onDropRejected: handleDropRejected,
         useFsAccessApi: false, // Required to make playwright work
+        ...dropzoneProps,
       }}
     >
       <MultipleFileUploadMain
