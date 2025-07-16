@@ -19,8 +19,8 @@ import { InProgressIcon } from "@patternfly/react-icons";
 import type { ExtractResult } from "@app/client";
 import { StateError } from "@app/components/StateError";
 import { UploadFiles } from "@app/components/UploadFile";
+import { useVulnerabilitiesOfPackages } from "@app/hooks/domain-controls/useVulnerabilitiesOfPackage";
 import { useUploadAndAnalyzeSBOM } from "@app/queries/sboms-analysis";
-import { useFetchVulnerabilitiesByPackageIds } from "@app/queries/vulnerabilities";
 
 export const SbomScan: React.FC = () => {
   const [extractedData, setExtractedData] =
@@ -38,9 +38,9 @@ export const SbomScan: React.FC = () => {
     (extractedData, _file) => setExtractedData(extractedData),
   );
 
-  const { packages, isFetching, fetchError } =
-    useFetchVulnerabilitiesByPackageIds(purls);
+  const { data, isFetching, fetchError } = useVulnerabilitiesOfPackages(purls);
 
+  
   return (
     <>
       <PageSection type="breadcrumb">
@@ -77,7 +77,7 @@ export const SbomScan: React.FC = () => {
               </EmptyStateActions>
             </EmptyStateFooter>
           </EmptyState>
-        ) : fetchError.some((e) => e) ? (
+        ) : fetchError ? (
           <StateError />
         ) : !extractedData ? (
           <UploadFiles

@@ -66,7 +66,7 @@ export const useFetchVulnerabilitiesByPackageIds = (ids: string[]) => {
   });
 
   const isFetching = userQueries.some(({ isLoading }) => isLoading);
-  const fetchError = userQueries.map(({ error }) => error as AxiosError | null);
+  const fetchError = userQueries.find(({ error }) => !!(error as AxiosError | null));
 
   const packages: AnalysisResponse = {};
 
