@@ -17,7 +17,7 @@ import {
 } from "@patternfly/react-core";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
-import { UploadFiles } from "@app/components/UploadFile";
+import { UploadFiles } from "@app/pages/upload/components/upload-file";
 import { useUploadAdvisory } from "@app/queries/advisories";
 import { useUploadSBOM } from "@app/queries/sboms";
 

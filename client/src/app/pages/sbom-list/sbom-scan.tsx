@@ -40,7 +40,7 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
-import { UploadFiles } from "@app/components/UploadFile";
+import { UploadFiles } from "@app/pages/upload/components/upload-file";
 import { useVulnerabilitiesOfSbomByPurls } from "@app/hooks/domain-controls/useVulnerabilitiesOfSbom";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useUploadAndAnalyzeSBOM } from "@app/queries/sboms-analysis";

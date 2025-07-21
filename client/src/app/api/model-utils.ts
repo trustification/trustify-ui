@@ -111,9 +111,9 @@ export const splitStringAsKeyValue = (v: string): Label => {
 };
 
 /**
- * Determines the favorite ScoreType to be choosen to get the severity
+ * Determines the favorite ScoreType to be chosen to get the severity
  * @param val
- * @returns
+ * @returns a numeric value of the priority associated to the ScoreType
  */
 const getScoreTypePriority = (val: ScoreType) => {
   switch (val) {
