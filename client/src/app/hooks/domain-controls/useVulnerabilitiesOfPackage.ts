@@ -5,14 +5,8 @@ import {
   type VulnerabilityStatus,
   extendedSeverityFromSeverity,
 } from "@app/api/models";
-import type {
-  AdvisoryHead,
-  PurlAdvisory,
-  VulnerabilityHead,
-} from "@app/client";
+import type { PurlAdvisory, VulnerabilityHead } from "@app/client";
 import { useFetchPackageById } from "@app/queries/packages";
-import { useFetchVulnerabilitiesByPackageIds } from "@app/queries/vulnerabilities";
-import { extractPriorityScoreFromScores } from "@app/api/model-utils";
 
 const areVulnerabilityOfPackageEqual = (
   a: VulnerabilityOfPackage,
@@ -175,114 +169,5 @@ export const useVulnerabilitiesOfPackage = (packageId: string) => {
     data: result,
     isFetching: isFetchingPackage,
     fetchError: fetchErrorPackage,
-  };
-};
-
-// Batch analysis
-
-interface Pac {
-  vulnerability: VulnerabilityHead;
-  status: string;
-  advisories: {
-    severity: ExtendedSeverity;
-    severity_score: number | null;
-    advisory: AdvisoryHead;
-  }[];
-}
-
-export const useVulnerabilitiesOfPackages = (packageIds: string[]) => {
-  const { packages, isFetching, fetchError } =
-    useFetchVulnerabilitiesByPackageIds(packageIds);
-
-  const result = React.useMemo(() => {
-    if (isFetching || fetchError) {
-      return new Map();
-    }
-
-    const result = new Map<string, Pac[]>();
-
-    for (const [packageId, analysisDetails] of Object.entries(packages)) {
-      const packageVulnerabilities = analysisDetails
-        .flatMap((vulnerability) => {
-          return Object.entries(vulnerability.status).flatMap(
-            ([status, advisories]) => {
-              return advisories.map((advisory) => {
-                const score = extractPriorityScoreFromScores(advisory.scores);
-                return { vulnerability, status, advisory, score };
-              });
-            },
-          );
-        })
-        //group
-        .reduce((prev, current) => {
-          const areVulnerabilityOfPackageEqual = (
-            a: Pick<Pac, "vulnerability" | "status">,
-            b: Pick<Pac, "vulnerability" | "status">,
-          ) => {
-            return (
-              a.vulnerability.identifier === b.vulnerability.identifier &&
-              a.status === b.status
-            );
-          };
-
-          const existingElement = prev.find((item) => {
-            return areVulnerabilityOfPackageEqual(item, current);
-          });
-
-          let result: Pac[];
-
-          if (existingElement) {
-            const arrayWithoutExistingItem = prev.filter(
-              (item) => !areVulnerabilityOfPackageEqual(item, existingElement),
-            );
-
-            const extendedSeverity = extendedSeverityFromSeverity(
-              current.score?.severity,
-            );
-
-            const updatedItemInArray: Pac = {
-              ...existingElement,
-              advisories: [
-                ...existingElement.advisories,
-                {
-                  severity: extendedSeverity,
-                  severity_score: current.score?.value ?? null,
-                  advisory: current.advisory,
-                },
-              ],
-            };
-
-            result = [...arrayWithoutExistingItem, updatedItemInArray];
-          } else {
-            const extendedSeverity = extendedSeverityFromSeverity(
-              current.score?.severity,
-            );
-            const newItemInArray: Pac = {
-              vulnerability: current.vulnerability,
-              status: current.status as VulnerabilityStatus,
-              advisories: [
-                {
-                  severity: extendedSeverity,
-                  severity_score: current.score?.value ?? null,
-                  advisory: current.advisory,
-                },
-              ],
-            };
-            result = [...prev.slice(), newItemInArray];
-          }
-
-          return result;
-        }, [] as Pac[]);
-
-      result.set(packageId, packageVulnerabilities);
-    }
-
-    return result;
-  }, [packages, isFetching, fetchError]);
-
-  return {
-    data: result,
-    isFetching,
-    fetchError,
   };
 };
