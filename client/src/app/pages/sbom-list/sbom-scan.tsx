@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import type { AxiosError } from "axios";
 import dayjs from "dayjs";
 
 import {
@@ -13,6 +12,7 @@ import {
   EmptyStateActions,
   EmptyStateBody,
   EmptyStateFooter,
+  EmptyStateVariant,
   List,
   ListItem,
   PageSection,
@@ -20,7 +20,6 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core";
-import { InProgressIcon } from "@patternfly/react-icons";
 import {
   ExpandableRowContent,
   Table,
@@ -32,22 +31,25 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
+import ExclamationCircleIcon from "@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon";
+import InProgressIcon from "@patternfly/react-icons/dist/esm/icons/in-progress-icon";
+
 import type { ExtractResult } from "@app/client";
 import { SimplePagination } from "@app/components/SimplePagination";
-import { StateError } from "@app/components/StateError";
 import {
   ConditionalTableBody,
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
-import { UploadFiles } from "@app/pages/upload/components/upload-file";
+import { TdWithFocusStatus } from "@app/components/TdWithFocusStatus";
+import { VulnerabilityDescription } from "@app/components/VulnerabilityDescription";
 import { useVulnerabilitiesOfSbomByPurls } from "@app/hooks/domain-controls/useVulnerabilitiesOfSbom";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useUploadAndAnalyzeSBOM } from "@app/queries/sboms-analysis";
 import { useWithUiId } from "@app/utils/query-utils";
-import { TdWithFocusStatus } from "@app/components/TdWithFocusStatus";
-import { VulnerabilityDescription } from "@app/components/VulnerabilityDescription";
 import { formatDate } from "@app/utils/utils";
+
+import { UploadFiles } from "./components/UploadFile";
 
 export const SbomScan: React.FC = () => {
   const [extractedData, setExtractedData] =
@@ -61,9 +63,18 @@ export const SbomScan: React.FC = () => {
     );
   }, [extractedData]);
 
-  const { uploads, handleUpload, handleRemoveUpload } = useUploadAndAnalyzeSBOM(
-    (extractedData, _file) => setExtractedData(extractedData),
-  );
+  const { uploads, handleUpload, handleCancelUpload, handleRemoveUpload } =
+    useUploadAndAnalyzeSBOM((extractedData, _file) =>
+      setExtractedData(extractedData),
+    );
+
+  const handleCancelScan = () => {
+    for (const file of uploads.keys()) {
+      handleRemoveUpload(file);
+    }
+
+    setExtractedData(null);
+  };
 
   const {
     data: { vulnerabilities, summary },
@@ -155,9 +166,16 @@ export const SbomScan: React.FC = () => {
         </Content>
       </PageSection>
       <PageSection>
-        {isFetching ? (
+        {extractedData === null ? (
+          <UploadFiles
+            uploads={uploads}
+            handleUpload={handleUpload}
+            handleRemoveUpload={handleRemoveUpload}
+            handleCancelUpload={handleCancelUpload}
+          />
+        ) : isFetching ? (
           <EmptyState
-            titleText="Scanning SBOM"
+            titleText="Generating SBOM report"
             headingLevel="h4"
             icon={InProgressIcon}
           >
@@ -167,31 +185,32 @@ export const SbomScan: React.FC = () => {
             </EmptyStateBody>
             <EmptyStateFooter>
               <EmptyStateActions>
-                <Button variant="link">Cancel</Button>
+                <Button variant="link" onClick={handleCancelScan}>
+                  Cancel scan
+                </Button>
               </EmptyStateActions>
             </EmptyStateFooter>
           </EmptyState>
         ) : fetchError ? (
-          <StateError />
-        ) : !extractedData ? (
-          <UploadFiles
-            uploads={uploads}
-            handleUpload={handleUpload}
-            handleRemoveUpload={handleRemoveUpload}
-            extractSuccessMessage={() => {
-              return "Ready for analysis";
-            }}
-            // biome-ignore lint/suspicious/noExplicitAny: allowed
-            extractErrorMessage={(error: AxiosError<any>) => {
-              console.log(error);
-              return error.response?.data?.message
-                ? error.response?.data?.message
-                : (error.message ?? "Error while uploading file");
-            }}
-            dropzoneProps={{
-              multiple: false,
-            }}
-          />
+          <EmptyState
+            status="danger"
+            headingLevel="h4"
+            titleText="Scan failed"
+            icon={ExclamationCircleIcon}
+            variant={EmptyStateVariant.sm}
+          >
+            <EmptyStateBody>
+              The file could not be analyzed. The file might be corrupted or an
+              unsupported format.
+            </EmptyStateBody>
+            <EmptyStateFooter>
+              <EmptyStateActions>
+                <Button variant="primary" onClick={handleCancelScan}>
+                  Try another file
+                </Button>
+              </EmptyStateActions>
+            </EmptyStateFooter>
+          </EmptyState>
         ) : (
           <>
             <Toolbar {...toolbarProps}>
@@ -333,11 +352,15 @@ export const SbomScan: React.FC = () => {
                             <ExpandableRowContent>
                               {isCellExpanded(item, "cvss") ? (
                                 <List isPlain>
-                                  {Array.from(item.advisories.values()).map((e) => (
-                                    <ListItem key={`${e.advisory.identifier}`}>
-                                      {e.advisory.identifier}
-                                    </ListItem>
-                                  ))}
+                                  {Array.from(item.advisories.values()).map(
+                                    (e) => (
+                                      <ListItem
+                                        key={`${e.advisory.identifier}`}
+                                      >
+                                        {e.advisory.identifier}
+                                      </ListItem>
+                                    ),
+                                  )}
                                 </List>
                               ) : null}
                               {isCellExpanded(item, "affectedDependencies") ? (

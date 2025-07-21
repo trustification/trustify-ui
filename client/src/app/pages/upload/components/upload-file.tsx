@@ -1,10 +1,8 @@
-import * as React from "react";
+import type * as React from "react";
 
-import type { AxiosError, AxiosResponse, CancelTokenSource } from "axios";
-import type { DropzoneOptions, FileRejection } from "react-dropzone";
+import type { AxiosError, AxiosResponse } from "axios";
 
 import {
-  type DropEvent,
   HelperText,
   HelperTextItem,
   List,
@@ -19,21 +17,13 @@ import {
   Spinner,
 } from "@patternfly/react-core";
 
+import { useMultiFileUpload } from "@app/hooks/useMultiFileUpload";
+import type { Upload } from "@app/hooks/useUpload";
 import FileIcon from "@patternfly/react-icons/dist/esm/icons/file-code-icon";
 import UploadIcon from "@patternfly/react-icons/dist/esm/icons/upload-icon";
 
-interface Upload {
-  progress: number;
-  status: "queued" | "inProgress" | "complete";
-  response?: AxiosResponse;
-  error?: AxiosError;
-  wasCancelled: boolean;
-  cancelFn?: CancelTokenSource;
-}
-
 export interface IUploadFilesProps {
-  dropzoneProps?: DropzoneOptions;
-  uploads: Map<File, Upload>;
+  uploads: Map<File, Upload<any, any>>;
   handleUpload: (files: File[]) => void;
   handleRemoveUpload: (file: File) => void;
   extractSuccessMessage: (response: AxiosResponse) => string;
@@ -42,54 +32,21 @@ export interface IUploadFilesProps {
 
 export const UploadFiles: React.FC<IUploadFilesProps> = ({
   uploads,
-  dropzoneProps,
   handleUpload,
   handleRemoveUpload,
   extractSuccessMessage,
   extractErrorMessage,
 }) => {
-  const [showStatus, setShowStatus] = React.useState(false);
-  const [statusIcon, setStatusIcon] = React.useState<
-    "danger" | "success" | "inProgress"
-  >("inProgress");
-  const [rejectedFiles, setRejectedFiles] = React.useState<FileRejection[]>([]);
-
-  // only show the status component once a file has been uploaded, but keep the status list component itself even if all files are removed
-  if (!showStatus && uploads.size > 0) {
-    setShowStatus(true);
-  }
-
-  // determine the icon that should be shown for the overall status list
-  React.useEffect(() => {
-    const currentUploads = Array.from(uploads.values());
-    if (currentUploads.some((e) => e.status === "inProgress")) {
-      setStatusIcon("inProgress");
-    } else if (currentUploads.every((e) => e.status === "complete")) {
-      setStatusIcon("success");
-    } else {
-      setStatusIcon("danger");
-    }
-  }, [uploads]);
-
-  const removeFiles = (filesToRemove: File[]) => {
-    for (const e of filesToRemove) {
-      handleRemoveUpload(e);
-    }
-  };
-
-  // callback that will be called by the react dropzone with the newly dropped file objects
-  const handleFileDrop = (_event: DropEvent, droppedFiles: File[]) => {
-    handleUpload(droppedFiles);
-  };
-
-  // dropzone prop that communicates to the user that files they've attempted to upload are not an appropriate type
-  const handleDropRejected = (fileRejections: FileRejection[]) => {
-    setRejectedFiles(fileRejections);
-  };
-
-  const successFileCount = Array.from(uploads.values()).filter(
-    (upload) => upload.response,
-  ).length;
+  const {
+    showStatus,
+    status,
+    rejectedFiles,
+    setRejectedFiles,
+    handleFileDrop,
+    handleDropRejected,
+    successFileCount,
+    removeFiles,
+  } = useMultiFileUpload({ uploads, handleUpload, handleRemoveUpload });
 
   return (
     <MultipleFileUpload
@@ -100,7 +57,6 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
         },
         onDropRejected: handleDropRejected,
         useFsAccessApi: false, // Required to make playwright work
-        ...dropzoneProps,
       }}
     >
       <MultipleFileUploadMain
@@ -112,7 +68,7 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
       {showStatus && (
         <MultipleFileUploadStatus
           statusToggleText={`${successFileCount} of ${uploads.size} files uploaded`}
-          statusToggleIcon={statusIcon}
+          statusToggleIcon={status}
         >
           {Array.from(uploads.entries()).map(([file, upload], index) => (
             <MultipleFileUploadStatusItem

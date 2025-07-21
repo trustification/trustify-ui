@@ -1,7 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Button, Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
+import {
+  Button,
+  Toolbar,
+  ToolbarContent,
+  ToolbarItem,
+} from "@patternfly/react-core";
 
 import { FilterToolbar } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
@@ -33,8 +38,12 @@ export const SbomToolbar: React.FC<SbomToolbarProps> = ({ showFilters }) => {
           <>
             <FilterToolbar {...filterToolbarProps} />
             <ToolbarItem>
-              
-              <Button variant="secondary" onClick={() => navigate("/sbom-scan")}>Scan SBOM</Button>
+              <Button
+                variant="secondary"
+                onClick={() => navigate("/sbom-scan")}
+              >
+                Scan SBOM
+              </Button>
             </ToolbarItem>
           </>
         )}

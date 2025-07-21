@@ -61,12 +61,15 @@ export const useFetchVulnerabilitiesByPackageIds = (ids: string[]) => {
             body: { purls: ids },
           });
         },
+        retry: false,
       };
     }),
   });
 
   const isFetching = userQueries.some(({ isLoading }) => isLoading);
-  const fetchError = userQueries.find(({ error }) => !!(error as AxiosError | null));
+  const fetchError = userQueries.find(
+    ({ error }) => !!(error as AxiosError | null),
+  );
 
   const packages: AnalysisResponse = {};
 

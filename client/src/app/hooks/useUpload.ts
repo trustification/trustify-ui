@@ -19,7 +19,7 @@ interface PromiseConfig<T, E> {
   catchFn: (error: AxiosError<E>) => void;
 }
 
-interface Upload<T, E> {
+export interface Upload<T, E> {
   progress: number;
   status: "queued" | "inProgress" | "complete";
   response?: AxiosResponse<T>;
