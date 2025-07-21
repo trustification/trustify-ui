@@ -398,5 +398,3 @@ export const SbomScan: React.FC = () => {
     </>
   );
 };
-
-export { SbomScan as default };
