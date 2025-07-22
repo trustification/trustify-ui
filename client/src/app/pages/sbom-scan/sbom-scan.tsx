@@ -8,6 +8,9 @@ import {
   BreadcrumbItem,
   Button,
   Content,
+  Dropdown,
+  DropdownItem,
+  DropdownList,
   EmptyState,
   EmptyStateActions,
   EmptyStateBody,
@@ -15,7 +18,11 @@ import {
   EmptyStateVariant,
   List,
   ListItem,
+  MenuToggle,
+  type MenuToggleElement,
   PageSection,
+  Split,
+  SplitItem,
   Toolbar,
   ToolbarContent,
   ToolbarItem,
@@ -52,6 +59,16 @@ import { formatDate } from "@app/utils/utils";
 import { UploadFiles } from "./components/UploadFile";
 
 export const SbomScan: React.FC = () => {
+  // Actions dropdown
+  const [isActionsDropdownOpen, setIsActionsDropdownOpen] =
+    React.useState(false);
+
+  const handleActionsDropdownToggle = () => {
+    setIsActionsDropdownOpen(!isActionsDropdownOpen);
+  };
+
+  //
+
   const [extractedData, setExtractedData] =
     React.useState<ExtractResult | null>(null);
 
@@ -68,7 +85,7 @@ export const SbomScan: React.FC = () => {
       setExtractedData(extractedData),
     );
 
-  const handleCancelScan = () => {
+  const scanAnotherFile = () => {
     for (const file of uploads.keys()) {
       handleRemoveUpload(file);
     }
@@ -157,13 +174,44 @@ export const SbomScan: React.FC = () => {
         </Breadcrumb>
       </PageSection>
       <PageSection>
-        <Content>
-          <Content component="h1">Scan SBOM</Content>
-          <Content component="p">
-            This is a temporary scan to help you assess an SBOM. Your file will
-            not be uploaded or stored.
-          </Content>
-        </Content>
+        <Split>
+          <SplitItem isFilled>
+            <Content>
+              <Content component="h1">Scan SBOM</Content>
+              <Content component="p">
+                This is a temporary scan to help you assess an SBOM. Your file
+                will not be uploaded or stored.
+              </Content>
+            </Content>
+          </SplitItem>
+          <SplitItem>
+            {extractedData !== null && !isFetching && !fetchError && (
+              <Dropdown
+                isOpen={isActionsDropdownOpen}
+                onSelect={() => setIsActionsDropdownOpen(false)}
+                onOpenChange={(isOpen) => setIsActionsDropdownOpen(isOpen)}
+                popperProps={{ position: "right" }}
+                toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+                  <MenuToggle
+                    ref={toggleRef}
+                    onClick={handleActionsDropdownToggle}
+                    isExpanded={isActionsDropdownOpen}
+                  >
+                    Actions
+                  </MenuToggle>
+                )}
+                ouiaId="BasicDropdown"
+                shouldFocusToggleOnSelect
+              >
+                <DropdownList>
+                  <DropdownItem key="scan-another" onClick={scanAnotherFile}>
+                    Scan another
+                  </DropdownItem>
+                </DropdownList>
+              </Dropdown>
+            )}
+          </SplitItem>
+        </Split>
       </PageSection>
       <PageSection>
         {extractedData === null ? (
@@ -185,7 +233,7 @@ export const SbomScan: React.FC = () => {
             </EmptyStateBody>
             <EmptyStateFooter>
               <EmptyStateActions>
-                <Button variant="link" onClick={handleCancelScan}>
+                <Button variant="link" onClick={scanAnotherFile}>
                   Cancel scan
                 </Button>
               </EmptyStateActions>
@@ -205,7 +253,7 @@ export const SbomScan: React.FC = () => {
             </EmptyStateBody>
             <EmptyStateFooter>
               <EmptyStateActions>
-                <Button variant="primary" onClick={handleCancelScan}>
+                <Button variant="primary" onClick={scanAnotherFile}>
                   Try another file
                 </Button>
               </EmptyStateActions>
