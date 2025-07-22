@@ -15,6 +15,7 @@ const VulnerabilityDetails = lazy(
 const PackageList = lazy(() => import("./pages/package-list"));
 const PackageDetails = lazy(() => import("./pages/package-details"));
 const SBOMList = lazy(() => import("./pages/sbom-list"));
+const SBOMcan = lazy(() => import("./pages/sbom-scan"));
 const SBOMDetails = lazy(() => import("./pages/sbom-details"));
 const Search = lazy(() => import("./pages/search"));
 const ImporterList = lazy(() => import("./pages/importer-list"));
@@ -49,6 +50,7 @@ export const AppRoutes = () => {
     },
     { path: "/search", element: <Search /> },
     { path: "/sboms", element: <SBOMList /> },
+    { path: "/sbom-scan", element: <SBOMcan /> },
     {
       path: `/sboms/:${PathParam.SBOM_ID}`,
       element: <SBOMDetails />,

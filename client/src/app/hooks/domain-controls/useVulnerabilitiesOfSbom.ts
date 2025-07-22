@@ -1,15 +1,26 @@
 import React from "react";
 
 import {
+  compareBySeverityFn,
+  extractPriorityScoreFromScores,
+} from "@app/api/model-utils";
+import {
   type ExtendedSeverity,
   type VulnerabilityStatus,
   extendedSeverityFromSeverity,
 } from "@app/api/models";
-import type { SbomAdvisory, SbomPackage, SbomStatus } from "@app/client";
+import type {
+  AdvisoryHead,
+  SbomAdvisory,
+  SbomPackage,
+  SbomStatus,
+  VulnerabilityHead,
+} from "@app/client";
 import {
   useFetchSbomsAdvisory,
   useFetchSbomsAdvisoryBatch,
 } from "@app/queries/sboms";
+import { useFetchVulnerabilitiesByPackageIds } from "@app/queries/vulnerabilities";
 
 const areVulnerabilityOfSbomEqual = (
   a: VulnerabilityOfSbom,
@@ -182,5 +193,167 @@ export const useVulnerabilitiesOfSboms = (sbomIds: string[]) => {
     data: result,
     isFetching: isFetching,
     fetchError: fetchError,
+  };
+};
+
+//
+
+type AdvisoryWr = {
+  severity: ExtendedSeverity;
+  severity_score: number | null;
+  advisory: AdvisoryHead;
+};
+
+interface Pac {
+  vulnerability: VulnerabilityHead;
+  status: VulnerabilityStatus;
+  advisories: Map<string, AdvisoryWr>;
+  purls: Set<string>;
+}
+
+export const useVulnerabilitiesOfSbomByPurls = (purls: string[]) => {
+  const { packages, isFetching, fetchError } =
+    useFetchVulnerabilitiesByPackageIds(purls);
+
+  const result = React.useMemo(() => {
+    if (isFetching || fetchError || Object.keys(packages).length === 0) {
+      return {
+        summary: { ...DEFAULT_SUMMARY },
+        vulnerabilities: [],
+      };
+    }
+
+    const vulnerabilities = Object.entries(packages)
+      .flatMap(([purl, analysisDetails]) => {
+        return analysisDetails.flatMap((vulnerability) => {
+          return Object.entries(vulnerability.status).flatMap(
+            ([status, advisories]) => {
+              return advisories.map((advisory) => {
+                const score = extractPriorityScoreFromScores(advisory.scores);
+                return {
+                  purl,
+                  vulnerability,
+                  status: status as VulnerabilityStatus,
+                  advisory,
+                  score,
+                };
+              });
+            },
+          );
+        });
+      })
+      //group
+      .reduce((prev, current) => {
+        const areVulnerabilityOfPackageEqual = (
+          a: Pick<Pac, "vulnerability" | "status">,
+          b: Pick<Pac, "vulnerability" | "status">,
+        ) => {
+          return (
+            a.vulnerability.identifier === b.vulnerability.identifier &&
+            a.status === b.status
+          );
+        };
+
+        let result: Pac[];
+
+        const existingElement = prev.find((item) => {
+          return areVulnerabilityOfPackageEqual(item, current);
+        });
+
+        if (existingElement) {
+          const arrayWithoutExistingItem = prev.filter(
+            (item) => !areVulnerabilityOfPackageEqual(item, existingElement),
+          );
+
+          const extendedSeverity = extendedSeverityFromSeverity(
+            current.score?.severity,
+          );
+
+          const advisories = new Map<string, AdvisoryWr>(
+            existingElement.advisories,
+          );
+          advisories.set(current.advisory.identifier, {
+            severity: extendedSeverity,
+            severity_score: current.score?.value ?? null,
+            advisory: current.advisory,
+          });
+
+          const purls = new Set(existingElement.purls);
+          purls.add(current.purl);
+
+          const updatedItemInArray: Pac = {
+            ...existingElement,
+            advisories,
+            purls,
+          };
+
+          result = [...arrayWithoutExistingItem, updatedItemInArray];
+        } else {
+          const extendedSeverity = extendedSeverityFromSeverity(
+            current.score?.severity,
+          );
+
+          const advisories = new Map<string, AdvisoryWr>();
+          advisories.set(current.advisory.identifier, {
+            severity: extendedSeverity,
+            severity_score: current.score?.value ?? null,
+            advisory: current.advisory,
+          });
+
+          const purls = new Set<string>();
+          purls.add(current.purl);
+
+          const newItemInArray: Pac = {
+            vulnerability: current.vulnerability,
+            status: current.status,
+            advisories,
+            purls,
+          };
+          result = [...prev.slice(), newItemInArray];
+        }
+
+        return result;
+      }, [] as Pac[]);
+
+    const summary = vulnerabilities.reduce(
+      (prev, current) => {
+        // Select the advisory with the highest severity
+        const advisory = Array.from(current.advisories.values()).sort(
+          compareBySeverityFn((e) => e.severity),
+        )[0];
+
+        const vulnStatus = current.status as VulnerabilityStatus;
+        const severity = advisory.severity;
+
+        const prevVulnStatusValue = prev.vulnerabilityStatus[vulnStatus];
+
+        // biome-ignore lint/performance/noAccumulatingSpread: allowed
+        const result: VulnerabilityOfSbomSummary = Object.assign(prev, {
+          vulnerabilityStatus: {
+            ...prev.vulnerabilityStatus,
+            [vulnStatus]: {
+              total: prevVulnStatusValue.total + 1,
+              severities: {
+                ...prevVulnStatusValue.severities,
+                [severity]: prevVulnStatusValue.severities[severity] + 1,
+              },
+            },
+          },
+        });
+        return result;
+      },
+      { ...DEFAULT_SUMMARY } as VulnerabilityOfSbomSummary,
+    );
+
+    return {
+      vulnerabilities,
+      summary,
+    };
+  }, [packages, isFetching, fetchError]);
+
+  return {
+    data: result,
+    isFetching,
+    fetchError,
   };
 };
