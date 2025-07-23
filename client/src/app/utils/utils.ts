@@ -140,4 +140,9 @@ export const universalComparator = (
   // biome-ignore lint/suspicious/noExplicitAny: allowed
   b: any,
   locale: string,
-) => localeNumericCompare(String(a ?? ""), String(b ?? ""), locale);
+) => {
+  if (typeof a === "number" && typeof b === "number") {
+    return a - b;
+  }
+  return localeNumericCompare(String(a ?? ""), String(b ?? ""), locale);
+};
