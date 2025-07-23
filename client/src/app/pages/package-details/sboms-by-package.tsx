@@ -120,7 +120,7 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
                     modifier="breakWord"
                     {...getTdProps({ columnKey: "name" })}
                   >
-                    <Link to={`/sboms/${item.id}`}>{item.name}</Link>
+                    <Link to={`/sboms/details/${item.id}`}>{item.name}</Link>
                   </Td>
                   <Td
                     width={15}

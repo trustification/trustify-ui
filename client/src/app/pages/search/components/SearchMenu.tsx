@@ -104,7 +104,7 @@ function useAllEntities(filterText: string, disableSearch: boolean) {
     id: `sbom-${item.id}`,
     title: item.name,
     description: item.suppliers.join(", "),
-    navLink: `/sboms/${item.id}`,
+    navLink: `/sboms/details/${item.id}`,
     type: "SBOM",
     typeColor: "purple",
   }));

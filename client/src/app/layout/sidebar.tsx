@@ -1,5 +1,5 @@
 import type React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 import {
   Icon,
@@ -17,6 +17,8 @@ const LINK_CLASS = nav.navLink;
 const ACTIVE_LINK_CLASS = nav.modifiers.current;
 
 export const SidebarApp: React.FC = () => {
+  const location = useLocation();
+
   const renderPageNav = () => {
     return (
       <Nav id="nav-sidebar" aria-label="Nav">
@@ -43,10 +45,11 @@ export const SidebarApp: React.FC = () => {
           </li>
           <li className={nav.navItem}>
             <NavLink
-              to="/sboms"
-              className={({ isActive }) => {
-                return css(LINK_CLASS, isActive ? ACTIVE_LINK_CLASS : "");
-              }}
+              to="/sboms/list"
+               className={css(
+                LINK_CLASS,
+                location.pathname.startsWith("/sboms") ? ACTIVE_LINK_CLASS : "",
+              )}
             >
               SBOMs
             </NavLink>

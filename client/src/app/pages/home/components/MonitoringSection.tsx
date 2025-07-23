@@ -169,7 +169,7 @@ export const MonitoringSection: React.FC = () => {
                                     },
                                   );
                                   if (sbom) {
-                                    navigate(`/sboms/${sbom.id}`);
+                                    navigate(`/sboms/details/${sbom.id}`);
                                   }
                                 },
                               }}
@@ -263,7 +263,7 @@ export const MonitoringSection: React.FC = () => {
                             {formatDateTime(barchartSboms?.[0]?.ingested)}
                           </StackItem>
                           <StackItem>
-                            <Link to={`/sboms/${barchartSboms?.[0]?.id}`}>
+                            <Link to={`/sboms/details/${barchartSboms?.[0]?.id}`}>
                               {barchartSboms?.[0]?.name}
                             </Link>
                           </StackItem>

@@ -40,7 +40,7 @@ export const SbomToolbar: React.FC<SbomToolbarProps> = ({ showFilters }) => {
             <ToolbarItem>
               <Button
                 variant="secondary"
-                onClick={() => navigate("/sbom-scan")}
+                onClick={() => navigate("/sboms/scan")}
               >
                 Scan SBOM
               </Button>

@@ -1,6 +1,6 @@
 import { Suspense, lazy } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { useParams, useRoutes } from "react-router-dom";
+import { Navigate, useParams, useRoutes } from "react-router-dom";
 
 import { Bullseye, Spinner } from "@patternfly/react-core";
 import { ErrorFallback } from "./components/ErrorFallback";
@@ -49,10 +49,11 @@ export const AppRoutes = () => {
       element: <PackageDetails />,
     },
     { path: "/search", element: <Search /> },
-    { path: "/sboms", element: <SBOMList /> },
-    { path: "/sbom-scan", element: <SBOMcan /> },
+    { path: "/sboms", element: <Navigate to="/sboms/list" /> },
+    { path: "/sboms/list", element: <SBOMList /> },
+    { path: "/sboms/scan", element: <SBOMcan /> },
     {
-      path: `/sboms/:${PathParam.SBOM_ID}`,
+      path: `/sboms/details/:${PathParam.SBOM_ID}`,
       element: <SBOMDetails />,
     },
     {

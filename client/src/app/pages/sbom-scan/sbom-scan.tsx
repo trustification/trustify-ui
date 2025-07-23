@@ -168,7 +168,7 @@ export const SbomScan: React.FC = () => {
       <PageSection type="breadcrumb">
         <Breadcrumb>
           <BreadcrumbItem>
-            <Link to="/sboms">SBOMs</Link>
+            <Link to="/sboms/list">SBOMs</Link>
           </BreadcrumbItem>
           <BreadcrumbItem isActive>Scan SBOM</BreadcrumbItem>
         </Breadcrumb>

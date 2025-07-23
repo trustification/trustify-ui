@@ -99,7 +99,7 @@ export const SbomTable: React.FC = () => {
                         rowIndex,
                       })}
                     >
-                      <NavLink to={`/sboms/${item.id}`}>{item.name}</NavLink>
+                      <NavLink to={`/sboms/details/${item.id}`}>{item.name}</NavLink>
                     </Td>
                     <Td
                       width={10}
