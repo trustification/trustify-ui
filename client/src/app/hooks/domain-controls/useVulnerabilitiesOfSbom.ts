@@ -225,7 +225,7 @@ export const useVulnerabilitiesOfSbomByPurls = (purls: string[]) => {
 
     const vulnerabilities = Object.entries(packages)
       .flatMap(([purl, analysisDetails]) => {
-        return analysisDetails.flatMap((vulnerability) => {
+        return analysisDetails.details.flatMap((vulnerability) => {
           return Object.entries(vulnerability.status).flatMap(
             ([status, advisories]) => {
               return advisories.map((advisory) => {

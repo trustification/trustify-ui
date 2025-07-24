@@ -81,9 +81,9 @@ export const SbomScan: React.FC = () => {
   }, [extractedData]);
 
   const { uploads, handleUpload, handleCancelUpload, handleRemoveUpload } =
-    useUploadAndAnalyzeSBOM((extractedData, _file) =>
-      setExtractedData(extractedData),
-    );
+    useUploadAndAnalyzeSBOM((extractedData, _file) => {
+      setExtractedData(extractedData);
+    });
 
   const scanAnotherFile = () => {
     for (const file of uploads.keys()) {
