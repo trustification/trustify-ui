@@ -29,7 +29,6 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { getSeverityPriority } from "@app/api/model-utils";
 import {
   type VulnerabilityStatus,
   extendedSeverityFromSeverity,
@@ -147,7 +146,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
     ],
     getSortValues: (item) => ({
       id: item.vulnerability.identifier,
-      cvss: getSeverityPriority(item.vulnerability.average_severity),
+      cvss: item.vulnerability.average_score,
       affectedDependencies: item.summary.totalPackages,
       published: item.vulnerability?.published
         ? dayjs(item.vulnerability.published).valueOf()
