@@ -32,6 +32,17 @@ jobs:
         working-directory: trustify-ui
         run: npm ci
 
+      - name: Extract pull request number from inputs or PR description
+        env:
+          body: ${{ github.event.pull_request.body }}
+        run: |
+          PULL_REQUEST_NUMBER=$(echo ${body} | grep -oP '[T|t]ests [P|p][R|r]: \K\d+' || true)
+          [ -z "$PULL_REQUEST_NUMBER" ] \
+            && TESTS_REF=${{ inputs.tests_ref }} \
+            || TESTS_REF=refs/pull/$PULL_REQUEST_NUMBER/merge
+
+          echo "TESTS_REF=${TESTS_REF}" >>"$GITHUB_ENV"
+          echo "Using TESTS_REF \`${TESTS_REF}\`" >>"$GITHUB_STEP_SUMMARY"
       - name: trustify-tests - clone
         uses: actions/checkout@v4
         with:
