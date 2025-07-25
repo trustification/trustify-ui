@@ -44,7 +44,7 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: trustify-tests/package-lock.json
-      - name: trustify-tests: install dependencies
+      - name: trustify-tests - install dependencies
         working-directory: trustify-tests
         run: npm ci
 
