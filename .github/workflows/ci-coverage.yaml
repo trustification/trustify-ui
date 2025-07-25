@@ -94,4 +94,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: /trustify-ui/coverage
+          path: trustify-ui/coverage
