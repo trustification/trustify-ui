@@ -88,8 +88,7 @@ services:
     image: ${PLAYWRIGHT_IMAGE:?PLAYWRIGHT_IMAGE is required}:${PLAYWRIGHT_VERSION:?PLAYWRIGHT_VERSION is required}${UBUNTU_VERSION_ALIAS}
     ports:
       - "5000:5000"
-    networks:
-      - trustify
+    network_mode: host
     working_dir: ${PLAYWRIGHT_HOME:-/home/pwuser}
     command:
       - /bin/sh

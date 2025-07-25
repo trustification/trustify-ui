@@ -57,7 +57,8 @@ jobs:
       
       - name: trustify-ui - start in dev mode
         working-directory: trustify-ui
-        run: npm run start:dev & echo "dev ui started"      
+        run: |
+          npm run start:dev & echo "dev ui started"      
       - name: trustify-ui - wait
         run: |
           until curl -s http://localhost:3000 | grep -qi "<html"; do
