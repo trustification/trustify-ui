@@ -60,6 +60,7 @@ jobs:
         run: npm ci
 
       - name: install trustify
+        id: install-trustify
         uses: ./trustify-ui/.github/actions/start-trustify
         with:
           ui_image: ${{ inputs.ui_image }}
@@ -80,7 +81,7 @@ jobs:
       - name: Tests with coverage
         working-directory: trustify-tests
         run: |
-          PW_TEST_CONNECT_WS_ENDPOINT=ws://localhost:5000/ TRUSTIFY_URL=http://localhost:3000 TRUSTIFY_AUTH_ENABLED=false npm run test:ui
+          PW_TEST_CONNECT_WS_ENDPOINT=ws://localhost:${{ steps.install-trustify.outputs.playwright_port }}/ TRUSTIFY_URL=http://localhost:3000 TRUSTIFY_AUTH_ENABLED=false npm run test:ui
           ls -l .nyc_output
       - name: Generate coverage report
         run: |

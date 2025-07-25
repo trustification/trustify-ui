@@ -16,6 +16,16 @@ inputs:
     type: string
     required: false
     default: ""
+outputs:
+  server_port:
+    description: Port where the server is running
+    value: ${{ steps.set-output.outputs.server_port }}
+  ui_port:
+    description: Port where the UI is running
+    value: ${{ steps.set-output.outputs.ui_port }}
+  playwright_port:
+    description: Port where the UI is running
+    value: ${{ steps.set-output.outputs.playwright_port }}
 runs:
   using: "composite"
   steps:
@@ -45,3 +55,10 @@ runs:
             sleep 2
           done
         done
+    
+    - id: set-output
+      shell: bash
+      run: |
+        echo "server_port=8080" >> $GITHUB_OUTPUT
+        echo "ui_port=8080" >> $GITHUB_OUTPUT
+        echo "playwright_port=5000" >> $GITHUB_OUTPUT
