@@ -18,32 +18,32 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
     steps:
-      - name: trustify-ui:clone
+      - name: trustify-ui - clone
         uses: actions/checkout@v4
         with:
           path: trustify-ui
-      - name: trustify-ui: use Node.js
+      - name: trustify-ui - use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: "trustify-ui/package-lock.json"
-      - name: trustify-ui: install dependencies
+          cache-dependency-path: trustify-ui/package-lock.json
+      - name: trustify-ui - install dependencies
         working-directory: trustify-tests
         run: npm ci
 
-      - name: trustify-tests:clone
+      - name: trustify-tests - clone
         uses: actions/checkout@v4
         with:
           repository: trustification/trustify-tests
           path: trustify-tests
           ref: "${{ env.TESTS_REF }}"
-      - name: trustify-tests: use Node.js
+      - name: trustify-tests - use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: "trustify-tests/package-lock.json"
+          cache-dependency-path: trustify-tests/package-lock.json
       - name: trustify-tests: install dependencies
         working-directory: trustify-tests
         run: npm ci
@@ -55,10 +55,10 @@ jobs:
           server_image: ${{ inputs.server_image }}
           server_db_image: ${{ inputs.server_db_image }}
       
-      - name: trustify-ui: start in dev mode
+      - name: trustify-ui - start in dev mode
         working-directory: trustify-ui
         run: npm run start:dev & echo "dev ui started"      
-      - name: trustify-ui: wait
+      - name: trustify-ui - wait
         run: |
           until curl -s http://localhost:3000 | grep -qi "<html"; do
             echo "Waiting for HTML page"
