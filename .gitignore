@@ -34,3 +34,5 @@ npm-debug.log*
 
 crate/target
 crate/Cargo.lock
+
+.nyc_output/
