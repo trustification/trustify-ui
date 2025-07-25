@@ -70,3 +70,17 @@ jobs:
         working-directory: trustify-tests
         run: |
           PW_TEST_CONNECT_WS_ENDPOINT=ws://localhost:5000/ TRUSTIFY_URL=http://localhost:3000 TRUSTIFY_AUTH_ENABLED=false npm run test:ui
+          ls -l .nyc_output
+      - name: Generate coverage report
+        run: |
+          # Report can only be generate in the trustify-ui directory
+          cp -r trustify-tests/.nyc_output trustify-ui/.nyc_output
+          
+          # Generate report from trustify-ui
+          cd trustify-ui
+          npx nyc report --reporter=html --reporter=text --reporter=lcov
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: /trustify-ui/coverage
