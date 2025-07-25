@@ -49,7 +49,7 @@ jobs:
         run: npm ci
 
       - name: install trustify
-        uses: ./trustify-ui/.github/actions/start-trustify
+        uses: carlosthe19916/trustify-ui/.github/actions/start-trustify
         with:
           ui_image: ${{ inputs.ui_image }}
           server_image: ${{ inputs.server_image }}
