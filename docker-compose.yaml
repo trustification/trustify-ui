@@ -1,0 +1,96 @@
+networks:
+  trustify:
+
+volumes:
+  trustify-importer-data:
+  trustify-storage-data:
+  trustify-postgres-data:
+
+services:
+  trustify-db:
+    image: ${POSTGRESQL_IMAGE}
+    volumes:
+      - trustify-postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: trustify
+      POSTGRES_DB: trustify
+      POSTGRES_HOSTNAME: localhost
+      POSTGRES_PORT: 5432
+    networks:
+      - trustify
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d trustify" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  trustify-migrate:
+    image: ${TRUSTIFY_IMAGE}
+    environment:
+      TRUSTD_DB_HOST: trustify-db
+    entrypoint: /usr/local/bin/trustd
+    command: db migrate
+    networks:
+      - trustify
+    depends_on:
+      trustify-db:
+        condition: service_healthy
+
+  trustify-importer:
+    image: ${TRUSTIFY_IMAGE}
+    environment:
+      TRUSTD_DB_HOST: trustify-db
+      RUST_LOG: "error"
+    entrypoint: /usr/local/bin/trustd
+    command: importer --working-dir /data/workdir
+    volumes:
+      - trustify-importer-data:/data/workdir
+    networks:
+      - trustify
+    depends_on:
+      trustify-migrate:
+        condition: service_completed_successfully
+
+  trustify:
+    image: ${TRUSTIFY_IMAGE}
+    environment:
+      TRUSTD_DB_HOST: trustify-db
+      HTTP_SERVER_BIND_ADDR: "::"
+      AUTH_DISABLED: true
+      RUST_LOG: "error"    
+    entrypoint: /usr/local/bin/trustd
+    command: api --sample-data
+    ports:
+      - "8080:8080"
+    volumes:
+      - trustify-storage-data:/opt/trustify/storage
+    networks:
+      - trustify
+    depends_on:
+      trustify-migrate:
+        condition: service_completed_successfully
+  
+  trustify-ui:
+    image: ${TRUSTIFY_UI_IMAGE}
+    environment:
+      TRUSTIFY_API_URL: http://trustify:8080
+      AUTH_REQUIRED: false
+    ports:
+      - "8081:8080"
+    networks:
+      - trustify
+    depends_on:
+      trustify:
+        condition: service_started
+  
+  playwright:
+    image: ${PLAYWRIGHT_IMAGE:?PLAYWRIGHT_IMAGE is required}:${PLAYWRIGHT_VERSION:?PLAYWRIGHT_VERSION is required}${UBUNTU_VERSION_ALIAS}
+    ports:
+      - "5000:5000"
+    network_mode: host
+    working_dir: ${PLAYWRIGHT_HOME:-/home/pwuser}
+    command:
+      - /bin/sh
+      - -c
+      - npx -y playwright@${PLAYWRIGHT_VERSION:?PLAYWRIGHT_VERSION is required} run-server --port ${PLAYWRIGHT_PORT:-5000}
