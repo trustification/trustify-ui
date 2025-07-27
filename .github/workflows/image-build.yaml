@@ -25,3 +25,25 @@ jobs:
     secrets:
       registry_username: ${{ github.actor }}
       registry_password: ${{ secrets.GITHUB_TOKEN }}
+
+  attestations:
+    needs: ui-image-build
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      attestations: write
+      packages: write
+    steps:
+      - name: Log in to registry
+        uses: redhat-actions/podman-login@main
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ghcr.io/${{ github.repository_owner }}/trustify-ui
+          subject-digest: ${{ needs.ui-image-build.outputs.digest }}
+          push-to-registry: true
