@@ -2,10 +2,7 @@ import type React from "react";
 import { Link } from "react-router-dom";
 
 import {
-  DescriptionList,
-  DescriptionListDescription,
-  DescriptionListGroup,
-  DescriptionListTerm,
+  Label,
   List,
   ListItem,
   Toolbar,
@@ -24,6 +21,7 @@ import {
 } from "@patternfly/react-table";
 
 import { FILTER_TEXT_CATEGORY_KEY } from "@app/Constants";
+import type { LicenseRefMapping } from "@app/client";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
@@ -37,17 +35,35 @@ import {
   useTableControlState,
 } from "@app/hooks/table-controls";
 import { useFetchPackagesBySbomId } from "@app/queries/packages";
+import { useFetchSbomsLicenseIds } from "@app/queries/sboms";
+
+import { PackageVulnerabilities } from "../package-list/components/PackageVulnerabilities";
+
+const renderLicenseWithMappings = (
+  license: string,
+  mappings: LicenseRefMapping[],
+) => {
+  return mappings.reduce((prev, { license_id, license_name }) => {
+    return prev.replaceAll(license_id, license_name);
+  }, `${license}`);
+};
 
 interface PackagesProps {
   sbomId: string;
 }
 
 export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
+  const { licenseIds } = useFetchSbomsLicenseIds(sbomId);
+
   const tableControlState = useTableControlState({
     tableName: "package-table",
     columnNames: {
       name: "Name",
       version: "Version",
+      vulnerabilities: "Vulnerabilities",
+      licenses: "Licenses",
+      purls: "PURLs",
+      cpes: "CPEs",
     },
     isSortEnabled: true,
     sortableColumns: ["name"],
@@ -60,9 +76,21 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
         placeholderText: "Search",
         type: FilterType.search,
       },
+      {
+        categoryKey: "license",
+        title: "License",
+        placeholderText: "Filter results by license",
+        type: FilterType.multiselect,
+        operator: "~",
+        logicOperator: "OR",
+        selectOptions: licenseIds.map((license) => ({
+          value: license.license_id,
+          label: license.license_name,
+        })),
+      },
     ],
     isExpansionEnabled: true,
-    expandableVariant: "single",
+    expandableVariant: "compound",
   });
 
   const {
@@ -106,9 +134,9 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
 
   return (
     <>
-      <Toolbar {...toolbarProps}>
+      <Toolbar {...toolbarProps} aria-label="Package toolbar">
         <ToolbarContent>
-          <FilterToolbar showFiltersSideBySide {...filterToolbarProps} />
+          <FilterToolbar {...filterToolbarProps} />
           <ToolbarItem {...paginationToolbarItemProps}>
             <SimplePagination
               idPrefix="package-table"
@@ -125,6 +153,10 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
             <TableHeaderContentWithControls {...tableControls}>
               <Th {...getThProps({ columnKey: "name" })} />
               <Th {...getThProps({ columnKey: "version" })} />
+              <Th {...getThProps({ columnKey: "vulnerabilities" })} />
+              <Th {...getThProps({ columnKey: "licenses" })} />
+              <Th {...getThProps({ columnKey: "purls" })} />
+              <Th {...getThProps({ columnKey: "cpes" })} />
             </TableHeaderContentWithControls>
           </Tr>
         </Thead>
@@ -136,56 +168,127 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
         >
           {currentPageItems?.map((item, rowIndex) => {
             return (
-              <Tbody key={item.id}>
+              <Tbody key={item.id} isExpanded={isCellExpanded(item)}>
                 <Tr {...getTrProps({ item })}>
                   <TableRowContentWithControls
                     {...tableControls}
                     item={item}
                     rowIndex={rowIndex}
                   >
-                    <Td width={80} {...getTdProps({ columnKey: "name" })}>
+                    <Td width={15} {...getTdProps({ columnKey: "name" })}>
                       {[item.name, item.group].filter(Boolean).join("/")}
                     </Td>
                     <Td
-                      width={20}
+                      width={15}
                       modifier="truncate"
                       {...getTdProps({ columnKey: "version" })}
                     >
                       {item?.version}
                     </Td>
+                    <Td
+                      width={10}
+                      modifier="breakWord"
+                      {...getTdProps({ columnKey: "vulnerabilities" })}
+                    >
+                      {item.purl[0] && (
+                        <PackageVulnerabilities packageId={item.purl[0].uuid} />
+                      )}
+                    </Td>
+                    <Td
+                      width={20}
+                      modifier="breakWord"
+                      {...getTdProps({
+                        columnKey: "licenses",
+                        isCompoundExpandToggle: item.licenses.length > 1,
+                        item: item,
+                        rowIndex,
+                      })}
+                    >
+                      {item.licenses.length === 1
+                        ? renderLicenseWithMappings(
+                            item.licenses[0].license_name,
+                            item.licenses_ref_mapping,
+                          )
+                        : `${item.licenses.length} Licenses`}
+                    </Td>
+                    <Td
+                      width={20}
+                      modifier="breakWord"
+                      {...getTdProps({
+                        columnKey: "purls",
+                        isCompoundExpandToggle: item.purl.length > 1,
+                        item: item,
+                        rowIndex,
+                      })}
+                    >
+                      {item.purl.length === 1 ? (
+                        <Link to={`/packages/${item.purl[0].uuid}`}>
+                          {item.purl[0].purl}
+                        </Link>
+                      ) : (
+                        `${item.purl.length} PURLs`
+                      )}
+                    </Td>
+                    <Td
+                      width={20}
+                      modifier="breakWord"
+                      {...getTdProps({
+                        columnKey: "cpes",
+                        isCompoundExpandToggle: item.cpe.length > 0,
+                        item,
+                        rowIndex,
+                      })}
+                    >
+                      {item.cpe.length} CPEs
+                    </Td>
                   </TableRowContentWithControls>
                 </Tr>
                 {isCellExpanded(item) ? (
                   <Tr isExpanded>
-                    <Td />
                     <Td
                       {...getExpandedContentTdProps({
                         item,
                       })}
-                      className={spacing.pyLg}
+                      className={spacing.pLg}
                     >
                       <ExpandableRowContent>
-                        <DescriptionList>
-                          <DescriptionListGroup>
-                            <DescriptionListTerm>
-                              External identifier
-                            </DescriptionListTerm>
-                            <DescriptionListDescription>
-                              <List>
-                                {item.purl.map((item) => (
-                                  <ListItem key={item.uuid}>
-                                    <Link to={`/packages/${item.uuid}`}>
-                                      {item.purl}
+                        <div className={spacing.ptLg}>
+                          {isCellExpanded(item, "licenses") ? (
+                            <List isPlain>
+                              {item.licenses.map((e) => (
+                                <ListItem
+                                  key={`${e.license_name}-${e.license_type}`}
+                                >
+                                  {renderLicenseWithMappings(
+                                    e.license_name,
+                                    item.licenses_ref_mapping,
+                                  )}{" "}
+                                  <Label isCompact>{e.license_type}</Label>
+                                </ListItem>
+                              ))}
+                            </List>
+                          ) : null}
+                          {isCellExpanded(item, "purls") ? (
+                            <List isPlain>
+                              {item.purl.map((e) => {
+                                return (
+                                  <ListItem key={e.uuid}>
+                                    <Link to={`/packages/${e.uuid}`}>
+                                      {e.purl}
                                     </Link>
                                   </ListItem>
-                                ))}
-                                {item.cpe.map((item) => (
-                                  <ListItem key={item}>{item}</ListItem>
-                                ))}
-                              </List>
-                            </DescriptionListDescription>
-                          </DescriptionListGroup>
-                        </DescriptionList>
+                                );
+                              })}
+                            </List>
+                          ) : null}
+                          {isCellExpanded(item, "cpes") ? (
+                            <List isPlain>
+                              {item.cpe.map((e) => (
+                                <ListItem key={e}>{e}</ListItem>
+                              ))}
+                            </List>
+                          ) : null}
+                        </div>
                       </ExpandableRowContent>
                     </Td>
                   </Tr>
@@ -195,6 +298,7 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
           })}
         </ConditionalTableBody>
       </Table>
+
       <SimplePagination
         idPrefix="package-table"
         isTop={false}

@@ -1,7 +1,11 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "organizeImports": {
-    "enabled": true
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "off"
+      }
+    }
   },
   "vcs": {
     "enabled": true,
@@ -31,11 +35,12 @@
     }
   },
   "files": {
-    "ignore": [
-      "**/*.stories.tsx",
-      "**/stories/**",
-      "**/mocks/**",
-      "**/src/app/client/*.ts"
+    "includes": [
+      "**",
+      "!**/dist",
+      "!**/node_modules",
+      "!client/coverage",
+      "!client/src/app/client"
     ]
   }
 }

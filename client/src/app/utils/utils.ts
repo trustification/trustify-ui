@@ -8,7 +8,7 @@ import type { ToolbarLabel } from "@patternfly/react-core";
 
 // Axios error
 
-// biome-ignore lint/suspicious/noExplicitAny:
+// biome-ignore lint/suspicious/noExplicitAny: allowed
 export const getAxiosErrorMessage = (axiosError: AxiosError<any>) => {
   if (axiosError.response?.data?.errorMessage) {
     return axiosError.response.data.errorMessage;
@@ -53,7 +53,7 @@ export const duplicateNameCheck = <T extends { name?: string }>(
   nameValue: T["name"],
 ) => duplicateFieldCheck("name", itemList, currentItem, nameValue);
 
-// biome-ignore lint/suspicious/noExplicitAny:
+// biome-ignore lint/suspicious/noExplicitAny: allowed
 export const dedupeFunction = (arr: any[]) =>
   arr?.filter(
     (value, index, self) =>
@@ -135,9 +135,14 @@ export const getFilenameFromContentDisposition = (
  * @param locale to be used by string compareFn
  */
 export const universalComparator = (
-  // biome-ignore lint/suspicious/noExplicitAny:
+  // biome-ignore lint/suspicious/noExplicitAny: allowed
   a: any,
-  // biome-ignore lint/suspicious/noExplicitAny:
+  // biome-ignore lint/suspicious/noExplicitAny: allowed
   b: any,
   locale: string,
-) => localeNumericCompare(String(a ?? ""), String(b ?? ""), locale);
+) => {
+  if (typeof a === "number" && typeof b === "number") {
+    return a - b;
+  }
+  return localeNumericCompare(String(a ?? ""), String(b ?? ""), locale);
+};

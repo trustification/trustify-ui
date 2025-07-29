@@ -76,6 +76,7 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
     optionsNotSelected,
     removeSelectionById,
     handleOnSelect,
+    handleOnCreateNewOption,
     handleInputChange,
     handleKeyDown,
     handleClearSearchInput,
@@ -124,6 +125,13 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
       isExpanded={isDropdownOpen}
       isDisabled={isDisabled}
       isFullWidth
+      status={
+        inputValue && validateNewOption
+          ? !validateNewOption(inputValue)
+            ? "danger"
+            : undefined
+          : undefined
+      }
     >
       {inputGroup}
     </MenuToggle>
@@ -137,23 +145,19 @@ export const Autocomplete: React.FC<IAutocompleteProps> = ({
             isDropdownOpen &&
             (optionsNotSelected.length > 0 ||
               !!noResultsMessage ||
-              !!onCreateNewOption)
+              (!!onCreateNewOption && inputValue.length > 0))
           }
           selected={selections}
           onOpenChange={setIsDropdownOpen}
           toggle={toggle}
           variant="typeahead"
-          maxMenuHeight=""
         >
           <SelectList id="select-create-typeahead-listbox">
             {onCreateNewOption && optionsNotSelected.length === 0 ? (
               <SelectOption
                 id={createItemId("new-option")}
                 isFocused={true}
-                onClick={() => {
-                  const newOption = onCreateNewOption(inputValue);
-                  handleOnSelect(newOption);
-                }}
+                onClick={() => handleOnCreateNewOption(inputValue)}
               >{`Create new option "${inputValue}"`}</SelectOption>
             ) : noResultsMessage && optionsNotSelected.length === 0 ? (
               <SelectOption isAriaDisabled>{noResultsMessage}</SelectOption>

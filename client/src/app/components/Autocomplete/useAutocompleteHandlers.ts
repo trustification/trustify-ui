@@ -89,10 +89,10 @@ export const useAutocompleteHandlers = ({
   };
 
   const handleOnCreateNewOption = (value: string) => {
-    if (value && onCreateNewOption) {
+    if (value !== "" && onCreateNewOption) {
       const isValid = validateNewOption ? validateNewOption(value) : true;
       if (isValid) {
-        const newOption = onCreateNewOption(inputValue);
+        const newOption = onCreateNewOption(value);
         handleOnSelect(newOption);
       }
     }
@@ -176,6 +176,7 @@ export const useAutocompleteHandlers = ({
     handleInputChange,
     handleKeyDown,
     handleOnSelect,
+    handleOnCreateNewOption,
     menuRef,
     searchInputRef,
     removeSelectionById,

@@ -26,19 +26,17 @@ export const AdvisoryToolbar: React.FC<AdvisoryToolbarProps> = ({
   } = tableControls;
 
   return (
-    <>
-      <Toolbar {...toolbarProps}>
-        <ToolbarContent>
-          {showFilters && <FilterToolbar {...filterToolbarProps} />}
-          <ToolbarItem {...paginationToolbarItemProps}>
-            <SimplePagination
-              idPrefix="advisory-table"
-              isTop
-              paginationProps={paginationProps}
-            />
-          </ToolbarItem>
-        </ToolbarContent>
-      </Toolbar>
-    </>
+    <Toolbar {...toolbarProps} aria-label="advisory-toolbar">
+      <ToolbarContent>
+        {showFilters && <FilterToolbar {...filterToolbarProps} />}
+        <ToolbarItem {...paginationToolbarItemProps}>
+          <SimplePagination
+            idPrefix="advisory-table"
+            isTop
+            paginationProps={paginationProps}
+          />
+        </ToolbarItem>
+      </ToolbarContent>
+    </Toolbar>
   );
 };

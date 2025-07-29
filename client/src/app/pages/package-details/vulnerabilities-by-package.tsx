@@ -14,7 +14,6 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import { getSeverityPriority } from "@app/api/model-utils";
 import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
@@ -70,9 +69,7 @@ export const VulnerabilitiesByPackage: React.FC<
     getSortValues: (item) => {
       return {
         identifier: item.vulnerability.identifier,
-        severity: item.vulnerability?.average_severity
-          ? getSeverityPriority(item.vulnerability?.average_severity)
-          : 0,
+        severity: item.vulnerability?.average_score || 0,
         published: item.vulnerability?.published
           ? dayjs(item.vulnerability?.published).valueOf()
           : 0,
@@ -101,7 +98,7 @@ export const VulnerabilitiesByPackage: React.FC<
 
   return (
     <>
-      <Toolbar {...toolbarProps}>
+      <Toolbar {...toolbarProps} aria-label="vulnerability toolbar">
         <ToolbarContent>
           <ToolbarItem {...paginationToolbarItemProps}>
             <SimplePagination

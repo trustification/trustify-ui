@@ -25,14 +25,8 @@ import {
 interface IAdvisorySearchContext {
   tableControls: ITableControls<
     AdvisorySummary,
-    | "identifier"
-    | "title"
-    | "severity"
-    | "type"
-    | "labels"
-    | "modified"
-    | "vulnerabilities",
-    "identifier" | "severity" | "modified",
+    "identifier" | "title" | "type" | "labels" | "modified" | "vulnerabilities",
+    "identifier" | "modified",
     "" | "average_severity" | "modified" | "labels",
     string
   >;
@@ -73,7 +67,6 @@ export const AdvisorySearchProvider: React.FunctionComponent<
     columnNames: {
       identifier: "ID",
       title: "Title",
-      severity: "Aggregated Severity",
       type: "Type",
       labels: "Labels",
       modified: "Revision",
@@ -81,7 +74,7 @@ export const AdvisorySearchProvider: React.FunctionComponent<
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
-    sortableColumns: ["identifier", "severity", "modified"],
+    sortableColumns: ["identifier", "modified"],
     initialSort: {
       columnKey: "modified",
       direction: "desc",
@@ -93,20 +86,6 @@ export const AdvisorySearchProvider: React.FunctionComponent<
         title: "Filter text",
         placeholderText: "Search",
         type: FilterType.search,
-      },
-      {
-        categoryKey: "average_severity",
-        title: "Severity",
-        placeholderText: "Severity",
-        type: FilterType.multiselect,
-        selectOptions: [
-          { value: "null", label: "Unknown" },
-          { value: "none", label: "None" },
-          { value: "low", label: "Low" },
-          { value: "medium", label: "Medium" },
-          { value: "high", label: "High" },
-          { value: "critical", label: "Critical" },
-        ],
       },
       {
         categoryKey: "modified",
@@ -140,7 +119,6 @@ export const AdvisorySearchProvider: React.FunctionComponent<
       ...tableControlState,
       hubSortFieldKeys: {
         identifier: "identifier",
-        severity: "average_score",
         modified: "modified",
       },
     }),

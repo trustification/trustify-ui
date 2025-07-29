@@ -90,90 +90,85 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
   ).length;
 
   return (
-    <>
-      <MultipleFileUpload
-        onFileDrop={handleFileDrop}
-        dropzoneProps={{
-          accept: {
-            "application/xml": [".json", ".bz2"],
-          },
-          onDropRejected: handleDropRejected,
-          useFsAccessApi: false, // Required to make playwright work
-        }}
-      >
-        <MultipleFileUploadMain
-          titleIcon={<UploadIcon />}
-          titleText="Drag and drop files here"
-          titleTextSeparator="or"
-          infoText="Accepted file types: .json, .bz2"
-        />
-        {showStatus && (
-          <MultipleFileUploadStatus
-            statusToggleText={`${successFileCount} of ${uploads.size} files uploaded`}
-            statusToggleIcon={statusIcon}
-          >
-            {Array.from(uploads.entries()).map(([file, upload], index) => (
-              <MultipleFileUploadStatusItem
-                className={
-                  upload.progress < 100 || !upload.response
-                    ? "multiple-file-upload-status-item-force-blue"
-                    : undefined
-                }
-                fileIcon={<FileIcon />}
-                file={file}
-                key={`${file.name}-${index}`}
-                onClearClick={() => removeFiles([file])}
-                progressValue={upload.progress}
-                progressVariant={
-                  upload.error
-                    ? "danger"
-                    : upload.response
-                      ? "success"
-                      : undefined
-                }
-                progressHelperText={
-                  upload.error ? (
-                    <HelperText isLiveRegion>
-                      <HelperTextItem variant="error">
-                        {extractErrorMessage(upload.error)}
-                      </HelperTextItem>
-                    </HelperText>
-                  ) : upload.progress === 100 && !upload.response ? (
-                    <HelperText isLiveRegion>
-                      <HelperTextItem variant="warning">
-                        <Spinner isInline />
-                        File uploaded. Waiting for the server to process it.
-                      </HelperTextItem>
-                    </HelperText>
-                  ) : upload.response ? (
-                    <HelperText isLiveRegion>
-                      <HelperTextItem variant="default">
-                        {extractSuccessMessage(upload.response)}
-                      </HelperTextItem>
-                    </HelperText>
-                  ) : undefined
-                }
-              />
-            ))}
-          </MultipleFileUploadStatus>
-        )}
-
-        <Modal
-          isOpen={rejectedFiles.length > 0}
-          aria-label="unsupported file upload attempted"
-          onClose={() => setRejectedFiles([])}
-          variant="small"
+    <MultipleFileUpload
+      onFileDrop={handleFileDrop}
+      dropzoneProps={{
+        accept: {
+          "application/xml": [".json", ".bz2"],
+        },
+        onDropRejected: handleDropRejected,
+        useFsAccessApi: false, // Required to make playwright work
+      }}
+    >
+      <MultipleFileUploadMain
+        titleIcon={<UploadIcon />}
+        titleText="Drag and drop files here"
+        titleTextSeparator="or"
+        infoText="Accepted file types: .json, .bz2"
+      />
+      {showStatus && (
+        <MultipleFileUploadStatus
+          statusToggleText={`${successFileCount} of ${uploads.size} files uploaded`}
+          statusToggleIcon={statusIcon}
         >
-          <ModalHeader title="Unsupported files" titleIconVariant="warning" />
-          <ModalBody>
-            <List>
-              {rejectedFiles.map((e) => (
-                <ListItem key={e.file.name}>{e.file.name}</ListItem>
-              ))}
-            </List>
-          </ModalBody>
-        </Modal>
-      </MultipleFileUpload>
-    </>
+          {Array.from(uploads.entries()).map(([file, upload], index) => (
+            <MultipleFileUploadStatusItem
+              // customFileHandler is Required until https://github.com/patternfly/patternfly-react/issues/11276 is fixed
+              customFileHandler={() => {}}
+              fileIcon={<FileIcon />}
+              file={file}
+              key={`${file.name}-${index}`}
+              onClearClick={() => removeFiles([file])}
+              progressValue={upload.progress}
+              progressVariant={
+                upload.error
+                  ? "danger"
+                  : upload.response
+                    ? "success"
+                    : undefined
+              }
+              progressHelperText={
+                upload.error ? (
+                  <HelperText isLiveRegion>
+                    <HelperTextItem variant="error">
+                      {extractErrorMessage(upload.error)}
+                    </HelperTextItem>
+                  </HelperText>
+                ) : upload.progress === 100 && !upload.response ? (
+                  <HelperText isLiveRegion>
+                    <HelperTextItem variant="warning">
+                      <Spinner isInline />
+                      File uploaded. Waiting for the server to process it.
+                    </HelperTextItem>
+                  </HelperText>
+                ) : upload.response ? (
+                  <HelperText isLiveRegion>
+                    <HelperTextItem variant="default">
+                      {extractSuccessMessage(upload.response)}
+                    </HelperTextItem>
+                  </HelperText>
+                ) : undefined
+              }
+            />
+          ))}
+        </MultipleFileUploadStatus>
+      )}
+
+      <Modal
+        isOpen={rejectedFiles.length > 0}
+        aria-label="unsupported file upload attempted"
+        onClose={() => setRejectedFiles([])}
+        variant="small"
+      >
+        <ModalHeader title="Unsupported files" titleIconVariant="warning" />
+        <ModalBody>
+          <List>
+            {rejectedFiles.map((e) => (
+              <ListItem key={e.file.name}>{e.file.name}</ListItem>
+            ))}
+          </List>
+        </ModalBody>
+      </Modal>
+    </MultipleFileUpload>
   );
 };
