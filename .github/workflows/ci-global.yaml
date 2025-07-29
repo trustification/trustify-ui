@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-  
+
       - name: save trustify-ui image
         run: |
           docker build . -t ghcr.io/trustification/trustify-ui:pr-test -f Dockerfile
@@ -34,7 +34,7 @@ jobs:
 
   run-global-ci:
     needs: build-and-upload-for-global-ci
-    uses: trustification/trustify-ci/.github/workflows/global-ci.yml@main
+    uses: ./.github/workflows/ci-global-template.yaml
     with:
       artifact: trustify-ui
       ui_image: ghcr.io/trustification/trustify-ui:pr-test
