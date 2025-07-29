@@ -28,13 +28,16 @@ import {
 } from "@app/components/TableControls";
 import { VulnerabilityGallery } from "@app/components/VulnerabilityGallery";
 import { useDownload } from "@app/hooks/domain-controls/useDownload";
-
 import {
   type ExtendedSeverity,
   extendedSeverityFromSeverity,
 } from "@app/api/models";
-import { VulnerabilityGallery } from "@app/components/VulnerabilityGallery";
 import { formatDate } from "@app/utils/utils";
+import { NotificationsContext } from "@app/components/NotificationsContext.tsx";
+import { useDeleteAdvisoryMutation } from "@app/queries/advisories.ts";
+import { LabelsAsList } from "@app/components/LabelsAsList.tsx";
+import { joinKeyValueAsString } from "@app/api/model-utils.ts";
+import { ConfirmDialog } from "@app/components/ConfirmDialog.tsx";
 
 import { AdvisorySearchContext } from "./advisory-context";
 import { AdvisoryEditLabelsForm } from "./components/AdvisoryEditLabelsForm";
@@ -209,9 +212,6 @@ export const AdvisoryTable: React.FC = () => {
                             onClick: () => {
                               setEditLabelsModalState(item);
                             },
-                          },
-                          {
-                            isSeparator: true,
                           },
                           {
                             title: "Download",
