@@ -1,0 +1,64 @@
+name: Start trustify
+description: Start trustify using docker compose.
+inputs:
+  ui_image:
+    description: image uri for the ui (ie. ghcr.io/<namespace>/<image-name>:<tag>)
+    type: string
+    required: false
+    default: ""
+  server_image:
+    description: image uri for the server (ie. ghcr.io/<namespace>/<image-name>:<tag>)
+    type: string
+    required: false
+    default: ""
+  server_db_image:
+    description: image uri for server-postgres (ie. ghcr.io/<namespace>/<image-name>:<tag>)
+    type: string
+    required: false
+    default: ""
+outputs:
+  server_port:
+    description: Port where the server is running
+    value: ${{ steps.set-output.outputs.server_port }}
+  ui_port:
+    description: Port where the UI is running
+    value: ${{ steps.set-output.outputs.ui_port }}
+  playwright_port:
+    description: Port where the UI is running
+    value: ${{ steps.set-output.outputs.playwright_port }}
+runs:
+  using: "composite"
+  steps:
+    - name: Start trustify
+      working-directory: ${{ github.action_path }}/../../..
+      shell: bash
+      run: |
+        images=""
+        if [ -n "${{ inputs.server_image }}" ]; then
+          images="${images} TRUSTIFY_IMAGE=${{ inputs.server_image }}"
+        elif [ -n "${{ inputs.ui_image }}" ]; then
+          images="${images} TRUSTIFY_UI_IMAGE=${{ inputs.ui_image }}"
+        elif [ -n "${{ inputs.server_db_image }}" ]; then
+          images="${images} POSTGRESQL_IMAGE=${{ inputs.server_db_image }}"
+        fi
+
+        echo "images to overwrite: $images"
+
+        eval "${images} docker compose up -d"
+
+    - name: Wait for services to be ready
+      shell: bash
+      run: |
+        for port in "8080" "8081"; do
+          until curl -s http://localhost:$port | grep -qi "<html"; do
+            echo "Waiting for HTML page on port $port..."
+            sleep 2
+          done
+        done
+    
+    - id: set-output
+      shell: bash
+      run: |
+        echo "server_port=8080" >> $GITHUB_OUTPUT
+        echo "ui_port=8080" >> $GITHUB_OUTPUT
+        echo "playwright_port=5000" >> $GITHUB_OUTPUT
