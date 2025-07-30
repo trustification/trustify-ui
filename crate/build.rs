@@ -36,16 +36,14 @@ fn main() {
 }
 
 fn install_ui_deps(build: &Path) -> anyhow::Result<()> {
-    if !build.join("node_modules").exists() {
-        println!("Installing node dependencies...");
-        let status = Command::new(NPM_CMD)
-            .args(["clean-install", "--ignore-scripts"])
-            .current_dir(build)
-            .status()?;
+    println!("Installing node dependencies...");
+    let status = Command::new(NPM_CMD)
+        .args(["clean-install", "--ignore-scripts"])
+        .current_dir(build)
+        .status()?;
 
-        if !status.success() {
-            bail!("Failed to install dependencies: {status}");
-        }
+    if !status.success() {
+        bail!("Failed to install dependencies: {status}");
     }
 
     Ok(())
