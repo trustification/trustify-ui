@@ -36,6 +36,11 @@ fn main() {
 }
 
 fn install_ui_deps(build: &Path) -> anyhow::Result<()> {
+    if build.join("node_modules").exists() {
+        println!("Skipping dependency installation");
+        return Ok(());
+    }
+
     println!("Installing node dependencies...");
     let status = Command::new(NPM_CMD)
         .args(["clean-install", "--ignore-scripts"])
@@ -55,10 +60,16 @@ fn build_ui(build: &Path, dist: &Path) -> anyhow::Result<()> {
         Err(err) => return Err(anyhow::Error::from(err).context("failed to remove build dir")),
         Ok(_) => {}
     }
+
     let n = copy_dir_all(UI_DIR_SRC, UI_DIR_SRC, build, &["crate", ".git"])
         .context("failed to copy src dir")?;
 
     println!("Copied {n} entries to {}", build.display());
+
+    if dist.exists() {
+        println!("Skipping build...");
+        return Ok(());
+    }
 
     install_ui_deps(build).context("failed to install dependencies")?;
 
