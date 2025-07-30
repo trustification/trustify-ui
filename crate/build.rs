@@ -55,8 +55,10 @@ fn build_ui(build: &Path, dist: &Path) -> anyhow::Result<()> {
         Err(err) => return Err(anyhow::Error::from(err).context("failed to remove build dir")),
         Ok(_) => {}
     }
-    copy_dir_all(UI_DIR_SRC, UI_DIR_SRC, build, &["crate", ".git"])
+    let n = copy_dir_all(UI_DIR_SRC, UI_DIR_SRC, build, &["crate", ".git"])
         .context("failed to copy src dir")?;
+
+    println!("Copied {n} entries to {}", build.display());
 
     install_ui_deps(build).context("failed to install dependencies")?;
 
@@ -83,10 +85,12 @@ fn copy_dir_all(
     src: impl AsRef<Path>,
     dst: impl AsRef<Path>,
     ignore: &[&str],
-) -> anyhow::Result<()> {
+) -> anyhow::Result<usize> {
     let root = root.as_ref();
     let src = src.as_ref();
     let dst = dst.as_ref();
+
+    let mut n = 0;
 
     fs::create_dir_all(dst)?;
     for entry in fs::read_dir(src)? {
@@ -106,14 +110,16 @@ fn copy_dir_all(
         if ty.is_symlink() {
             let target = fs::read_link(entry.path())?;
             create_symlink(&target, &dst_path, &entry.path())?;
+            n += 1;
         } else if ty.is_dir() {
-            copy_dir_all(root, entry.path(), dst_path, ignore)?;
+            n += copy_dir_all(root, entry.path(), dst_path, ignore)?;
         } else {
             fs::copy(entry.path(), dst_path)?;
+            n += 1;
         }
     }
 
-    Ok(())
+    Ok(n)
 }
 
 fn create_symlink(
