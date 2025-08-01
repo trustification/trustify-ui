@@ -11,16 +11,17 @@ import {
 } from "@patternfly/react-core";
 import ExternalLinkAltIcon from "@patternfly/react-icons/dist/esm/icons/external-link-alt-icon";
 import { css } from "@patternfly/react-styles";
+import nav from "@patternfly/react-styles/css/components/Nav/nav";
 
-const LINK_CLASS = "pf-v6-c-nav__link";
-const ACTIVE_LINK_CLASS = "pf-m-current";
+const LINK_CLASS = nav.navLink;
+const ACTIVE_LINK_CLASS = nav.modifiers.current;
 
 export const SidebarApp: React.FC = () => {
   const renderPageNav = () => {
     return (
       <Nav id="nav-sidebar" aria-label="Nav">
         <NavList>
-          <li className="pf-v6-c-nav__item">
+          <li className={nav.navItem}>
             <NavLink
               to="/"
               className={({ isActive }) => {
@@ -30,7 +31,7 @@ export const SidebarApp: React.FC = () => {
               Dashboard
             </NavLink>
           </li>
-          <li className="pf-v6-c-nav__item">
+          <li className={nav.navItem}>
             <NavLink
               to="/search"
               className={({ isActive }) => {
@@ -40,7 +41,7 @@ export const SidebarApp: React.FC = () => {
               Search
             </NavLink>
           </li>
-          <li className="pf-v6-c-nav__item">
+          <li className={nav.navItem}>
             <NavLink
               to="/sboms"
               className={({ isActive }) => {
@@ -50,7 +51,7 @@ export const SidebarApp: React.FC = () => {
               SBOMs
             </NavLink>
           </li>
-          <li className="pf-v6-c-nav__item">
+          <li className={nav.navItem}>
             <NavLink
               to="/vulnerabilities"
               className={({ isActive }) => {
@@ -60,7 +61,7 @@ export const SidebarApp: React.FC = () => {
               Vulnerabilities
             </NavLink>
           </li>
-          <li className="pf-v6-c-nav__item">
+          <li className={nav.navItem}>
             <NavLink
               to="/packages"
               className={({ isActive }) => {
@@ -70,7 +71,7 @@ export const SidebarApp: React.FC = () => {
               Packages
             </NavLink>
           </li>
-          <li className="pf-v6-c-nav__item">
+          <li className={nav.navItem}>
             <NavLink
               to="/advisories"
               className={({ isActive }) => {
@@ -80,7 +81,7 @@ export const SidebarApp: React.FC = () => {
               Advisories
             </NavLink>
           </li>
-          <li className="pf-v6-c-nav__item">
+          <li className={nav.navItem}>
             <NavLink
               to="/data-sources"
               className={({ isActive }) => {
@@ -90,7 +91,7 @@ export const SidebarApp: React.FC = () => {
               Data sources
             </NavLink>
           </li>
-          <li className="pf-v6-c-nav__item">
+          <li className={nav.navItem}>
             <NavLink
               to="/upload"
               className={({ isActive }) => {

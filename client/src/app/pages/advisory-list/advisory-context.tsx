@@ -6,6 +6,10 @@ import {
   FILTER_TEXT_CATEGORY_KEY,
   TablePersistenceKeyPrefixes,
 } from "@app/Constants";
+import {
+  joinKeyValueAsString,
+  splitStringAsKeyValue,
+} from "@app/api/model-utils";
 import type { AdvisorySummary } from "@app/client";
 import { FilterType } from "@app/components/FilterToolbar";
 import {
@@ -14,19 +18,16 @@ import {
   useTableControlProps,
   useTableControlState,
 } from "@app/hooks/table-controls";
-import { useFetchAdvisories } from "@app/queries/advisories";
-
+import {
+  useFetchAdvisories,
+  useFetchAdvisoryLabels,
+} from "@app/queries/advisories";
 interface IAdvisorySearchContext {
   tableControls: ITableControls<
     AdvisorySummary,
-    | "identifier"
-    | "title"
-    | "severity"
-    | "type"
-    | "modified"
-    | "vulnerabilities",
-    "identifier" | "severity" | "modified",
-    "" | "average_severity" | "modified",
+    "identifier" | "title" | "type" | "labels" | "modified" | "vulnerabilities",
+    "identifier" | "modified",
+    "" | "average_severity" | "modified" | "labels",
     string
   >;
 
@@ -47,6 +48,18 @@ interface IAdvisoryProvider {
 export const AdvisorySearchProvider: React.FunctionComponent<
   IAdvisoryProvider
 > = ({ children }) => {
+  const [inputValue, setInputValue] = React.useState("");
+  const [debouncedInputValue, setDebouncedInputValue] = React.useState("");
+
+  React.useEffect(() => {
+    const delayInputTimeoutId = setTimeout(() => {
+      setDebouncedInputValue(inputValue);
+    }, 400);
+    return () => clearTimeout(delayInputTimeoutId);
+  }, [inputValue]);
+
+  const { labels } = useFetchAdvisoryLabels(debouncedInputValue);
+
   const tableControlState = useTableControlState({
     tableName: "advisory",
     persistenceKeyPrefix: TablePersistenceKeyPrefixes.advisories,
@@ -54,14 +67,14 @@ export const AdvisorySearchProvider: React.FunctionComponent<
     columnNames: {
       identifier: "ID",
       title: "Title",
-      severity: "Aggregated Severity",
       type: "Type",
+      labels: "Labels",
       modified: "Revision",
       vulnerabilities: "Vulnerabilities",
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
-    sortableColumns: ["identifier", "severity", "modified"],
+    sortableColumns: ["identifier", "modified"],
     initialSort: {
       columnKey: "modified",
       direction: "desc",
@@ -75,23 +88,23 @@ export const AdvisorySearchProvider: React.FunctionComponent<
         type: FilterType.search,
       },
       {
-        categoryKey: "average_severity",
-        title: "Severity",
-        placeholderText: "Severity",
-        type: FilterType.multiselect,
-        selectOptions: [
-          { value: "null", label: "Unknown" },
-          { value: "none", label: "None" },
-          { value: "low", label: "Low" },
-          { value: "medium", label: "Medium" },
-          { value: "high", label: "High" },
-          { value: "critical", label: "Critical" },
-        ],
-      },
-      {
         categoryKey: "modified",
         title: "Revision",
         type: FilterType.dateRange,
+      },
+      {
+        categoryKey: "labels",
+        title: "Label",
+        type: FilterType.autocompleteLabel,
+        placeholderText: "Filter results by label",
+        selectOptions: labels.map((e) => {
+          const keyValue = joinKeyValueAsString({ key: e.key, value: e.value });
+          return {
+            value: keyValue,
+            label: keyValue,
+          };
+        }),
+        onInputValueChange: setInputValue,
       },
     ],
     isExpansionEnabled: false,
@@ -106,10 +119,12 @@ export const AdvisorySearchProvider: React.FunctionComponent<
       ...tableControlState,
       hubSortFieldKeys: {
         identifier: "identifier",
-        severity: "average_score",
         modified: "modified",
       },
     }),
+    (tableControlState.filterState.filterValues.labels ?? []).map((label) =>
+      splitStringAsKeyValue(label),
+    ),
   );
 
   const tableControls = useTableControlProps({

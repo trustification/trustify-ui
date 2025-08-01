@@ -4,3 +4,47 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    commit-message:
+      prefix: ":ghost: "
+
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: ":ghost: "
+
+    allow:
+      - dependency-type: direct
+
+    ignore:
+      - dependency-name: "@patternfly/*"
+        update-types: [ "version-update:semver-major" ]
+
+    groups:
+      patternfly:
+        patterns:
+          - "@patternfly/*"
+
+      "server dependencies":
+        patterns:
+          - cookie
+          - ejs
+          - express
+          - http-proxy-middleware
+          - http-terminator
+
+      rollup:
+        patterns:
+          - "@rollup/*"
+          - "rollup"
+          - "rollup-*"
+
+      linting:
+        patterns:
+          - "@biomejs/*"
+
+      tools:
+        patterns:
+          - "@rsbuild/*"
+          - "@hey-api/*"

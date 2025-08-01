@@ -30,7 +30,7 @@ export const HookFormPFSelect = <
     HookFormPFSelectProps<TFieldValues, TName>
   >(props);
   const { fieldId, helperText, isRequired, errorsSuppressed } = extractedProps;
-  const { children, ref, ...rest } = remainingProps;
+  const { children: _children, ref: _ref, ...rest } = remainingProps;
 
   return (
     <HookFormPFGroupController<TFieldValues, TName>

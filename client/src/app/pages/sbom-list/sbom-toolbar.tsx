@@ -24,19 +24,17 @@ export const SbomToolbar: React.FC<SbomToolbarProps> = ({ showFilters }) => {
   } = tableControls;
 
   return (
-    <>
-      <Toolbar {...toolbarProps}>
-        <ToolbarContent>
-          {showFilters && <FilterToolbar {...filterToolbarProps} />}
-          <ToolbarItem {...paginationToolbarItemProps}>
-            <SimplePagination
-              idPrefix="sbom-table"
-              isTop
-              paginationProps={paginationProps}
-            />
-          </ToolbarItem>
-        </ToolbarContent>
-      </Toolbar>
-    </>
+    <Toolbar {...toolbarProps} aria-label="sbom-toolbar">
+      <ToolbarContent>
+        {showFilters && <FilterToolbar {...filterToolbarProps} />}
+        <ToolbarItem {...paginationToolbarItemProps}>
+          <SimplePagination
+            idPrefix="sbom-table"
+            isTop
+            paginationProps={paginationProps}
+          />
+        </ToolbarItem>
+      </ToolbarContent>
+    </Toolbar>
   );
 };

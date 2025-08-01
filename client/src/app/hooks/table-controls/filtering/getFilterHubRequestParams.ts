@@ -112,28 +112,28 @@ export const getFilterHubRequestParams = <
       if (filterCategory.type === "numsearch" && serverFilterValue[0]) {
         pushOrMergeFilter(filters, {
           field: serverFilterField,
-          operator: "=",
+          operator: filterCategory.operator ?? "=",
           value: Number(serverFilterValue[0]),
         });
       }
       if (filterCategory.type === "search" && serverFilterValue[0]) {
         pushOrMergeFilter(filters, {
           field: serverFilterField,
-          operator: "~",
+          operator: filterCategory.operator ?? "~",
           value: serverFilterValue[0],
         });
       }
       if (filterCategory.type === "select") {
         pushOrMergeFilter(filters, {
           field: serverFilterField,
-          operator: "=",
+          operator: filterCategory.operator ?? "=",
           value: serverFilterValue[0],
         });
       }
       if (filterCategory.type === "multiselect") {
         pushOrMergeFilter(filters, {
           field: serverFilterField,
-          operator: "=",
+          operator: filterCategory.operator ?? "=",
           value: {
             list: serverFilterValue,
             operator: getFilterLogicOperator(filterCategory, "OR"),
@@ -157,6 +157,10 @@ export const getFilterHubRequestParams = <
           });
         }
       }
+      if (filterCategory.type === "autocompleteLabel") {
+        // Do nothing as labels do not follow the pattern {field}{operator}{value}
+        // It is expected for the app to add manually those fields to the REST API
+      }
     }
   }
   if (implicitFilters) {
@@ -172,8 +176,12 @@ export const getFilterHubRequestParams = <
  * - Given a string or number, returns it as a string with quotes (`"`) around it.
  * - Adds an escape character before any existing quote (`"`) characters in the string.
  */
-export const wrapInQuotesAndEscape = (value: string | number): string =>
-  `"${String(value).replace('"', '\\"')}"`;
+export const wrapAndEscape = (value: string | number): string =>
+  `${String(value)
+    .replace("=", "\\=")
+    .replace("~", "\\~")
+    .replace("<", "\\<")
+    .replace(">", "\\>")}`;
 
 /**
  * Converts a single filter object (HubFilter, the higher-level inspectable type) to the query string filter format used by the hub API
@@ -182,10 +190,10 @@ export const serializeFilterForHub = (filter: HubFilter): string => {
   const { field, operator, value } = filter;
   const joinedValue =
     typeof value === "string"
-      ? value
+      ? wrapAndEscape(value)
       : typeof value === "number"
         ? `"${value}"`
-        : `${value.list.join(value.operator === "OR" ? "|" : ",")}`;
+        : `${value.list.map(wrapAndEscape).join(value.operator === "OR" ? "|" : ",")}`;
 
   return !field ? joinedValue : `${field}${operator}${joinedValue}`;
 };
