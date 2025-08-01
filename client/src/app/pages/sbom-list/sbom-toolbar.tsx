@@ -1,10 +1,17 @@
 import React from "react";
 
-import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
+import {
+  Button,
+  Toolbar,
+  ToolbarContent,
+  ToolbarItem,
+} from "@patternfly/react-core";
+import UploadIcon from "@patternfly/react-icons/dist/esm/icons/upload-icon";
 
 import { FilterToolbar } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
 
+import { UploadDrawer } from "./components/UploadDrawer";
 import { SbomSearchContext } from "./sbom-context";
 
 interface SbomToolbarProps {
@@ -12,6 +19,9 @@ interface SbomToolbarProps {
 }
 
 export const SbomToolbar: React.FC<SbomToolbarProps> = ({ showFilters }) => {
+  const [isUploadDrawerExpanded, setIsUploadDrawerExpanded] =
+    React.useState(false);
+
   const { tableControls } = React.useContext(SbomSearchContext);
 
   const {
@@ -24,17 +34,33 @@ export const SbomToolbar: React.FC<SbomToolbarProps> = ({ showFilters }) => {
   } = tableControls;
 
   return (
-    <Toolbar {...toolbarProps} aria-label="sbom-toolbar">
-      <ToolbarContent>
-        {showFilters && <FilterToolbar {...filterToolbarProps} />}
-        <ToolbarItem {...paginationToolbarItemProps}>
-          <SimplePagination
-            idPrefix="sbom-table"
-            isTop
-            paginationProps={paginationProps}
-          />
-        </ToolbarItem>
-      </ToolbarContent>
-    </Toolbar>
+    <>
+      <Toolbar {...toolbarProps} aria-label="sbom-toolbar">
+        <ToolbarContent>
+          {showFilters && <FilterToolbar {...filterToolbarProps} />}
+          <ToolbarItem>
+            <Button
+              variant="control"
+              icon={<UploadIcon />}
+              onClick={() => setIsUploadDrawerExpanded(true)}
+            >
+              Upload
+            </Button>
+          </ToolbarItem>
+          <ToolbarItem {...paginationToolbarItemProps}>
+            <SimplePagination
+              idPrefix="sbom-table"
+              isTop
+              paginationProps={paginationProps}
+            />
+          </ToolbarItem>
+        </ToolbarContent>
+      </Toolbar>
+
+      <UploadDrawer
+        isExpanded={isUploadDrawerExpanded}
+        onCloseClick={() => setIsUploadDrawerExpanded(false)}
+      />
+    </>
   );
 };
