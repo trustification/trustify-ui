@@ -81,7 +81,7 @@ fn build_ui(build: &Path, dist: &Path) -> anyhow::Result<()> {
         .context("failed to build UI")?;
 
     if !status.success() {
-        bail!("Failed to install dependencies: {status}");
+        bail!("Failed to perform UI build: {status}");
     }
 
     if !dist.exists() {
