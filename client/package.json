@@ -14,7 +14,7 @@
     "format:fix": "biome format --write .",
     "start:dev": "npm run generate && rsbuild dev",
     "start": "rsbuild preview",
-    "test": "NODE_ENV=test jest --rootDir=. --config=./config/jest.config.ts",
+    "test": "cross-env NODE_ENV=test jest --rootDir=. --config=./config/jest.config.ts",
     "generate": "openapi-ts -f ./config/openapi-ts.config.ts",
     "preview": "rsbuild preview"
   },

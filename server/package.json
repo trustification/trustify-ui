@@ -12,8 +12,8 @@
     "format": "biome format .",
     "format:fix": "biome format --write .",
     "prebuild": "npm run clean",
-    "build": "NODE_ENV=production rollup -c",
-    "start:dev": "NODE_ENV=development ROLLUP_RUN=true rollup -c -w",
+    "build": "cross-env NODE_ENV=production rollup -c",
+    "start:dev": "cross-env NODE_ENV=development ROLLUP_RUN=true rollup -c -w",
     "start": "npm run build && node --enable-source-maps dist/index.js"
   },
   "dependencies": {

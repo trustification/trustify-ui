@@ -56,7 +56,12 @@ const config = {
 
   plugins: [
     copy({
-      targets: [{ src: `${brandingPath}/**/*`, dest: "dist/branding" }],
+      targets: [
+        {
+          src: `${brandingPath.replace(/\\/g, "/")}/**/*`,
+          dest: "dist/branding",
+        },
+      ],
     }),
     nodeResolve(),
     typescript(),
