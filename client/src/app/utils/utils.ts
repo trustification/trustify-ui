@@ -146,3 +146,7 @@ export const universalComparator = (
   }
   return localeNumericCompare(String(a ?? ""), String(b ?? ""), locale);
 };
+
+export const toCamelCase = (value: string) => {
+  return value.charAt(0).toUpperCase() + value.slice(1).replace("_", " ");
+};
