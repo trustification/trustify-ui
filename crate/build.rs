@@ -146,9 +146,11 @@ fn create_symlink(
     #[cfg(windows)]
     {
         if path_is_dir(original, path)? {
-            std::os::windows::fs::symlink_dir(original, link).context("Failed to create symlink")
+            std::os::windows::fs::symlink_dir(original, link)
+                .context("Failed to create symlink (dir)")
         } else {
-            std::os::windows::fs::symlink_file(original, link).context("Failed to create symlink")
+            std::os::windows::fs::symlink_file(original, link)
+                .context("Failed to create symlink (file)")
         }
     }
 }
