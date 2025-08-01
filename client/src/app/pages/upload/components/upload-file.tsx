@@ -90,71 +90,70 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
   ).length;
 
   return (
-    <>
-      <MultipleFileUpload
-        onFileDrop={handleFileDrop}
-        dropzoneProps={{
-          accept: {
-            "application/xml": [".json", ".bz2"],
-          },
-          onDropRejected: handleDropRejected,
-          useFsAccessApi: false, // Required to make playwright work
-        }}
-        isHorizontal
-      >
-        <MultipleFileUploadMain
-          titleIcon={<UploadIcon />}
-          titleText="Drag and drop files here"
-          titleTextSeparator="or"
-          infoText="Accepted file types: .json, .bz2"
-        />
-        {showStatus && (
-          <MultipleFileUploadStatus
-            statusToggleText={`${successFileCount} of ${uploads.size} files uploaded`}
-            statusToggleIcon={statusIcon}
-          >
-            {Array.from(uploads.entries()).map(([file, upload], index) => (
-              <MultipleFileUploadStatusItem
-                // customFileHandler is Required until https://github.com/patternfly/patternfly-react/issues/11276 is fixed
-                customFileHandler={() => {}}
-                fileIcon={<FileIcon />}
-                file={file}
-                key={`${file.name}-${index}`}
-                onClearClick={() => removeFiles([file])}
-                progressValue={upload.progress}
-                progressVariant={
-                  upload.error
-                    ? "danger"
-                    : upload.response
-                      ? "success"
-                      : undefined
-                }
-                progressHelperText={
-                  upload.error ? (
-                    <HelperText isLiveRegion>
-                      <HelperTextItem variant="error">
-                        {extractErrorMessage(upload.error)}
-                      </HelperTextItem>
-                    </HelperText>
-                  ) : upload.progress === 100 && !upload.response ? (
-                    <HelperText isLiveRegion>
-                      <HelperTextItem variant="warning">
-                        <Spinner isInline />
-                        File uploaded. Waiting for the server to process it.
-                      </HelperTextItem>
-                    </HelperText>
-                  ) : upload.response ? (
-                    <HelperText isLiveRegion>
-                      <HelperTextItem variant="default">
-                        {extractSuccessMessage(upload.response)}
-                      </HelperTextItem>
-                    </HelperText>
-                  ) : undefined
-                }
-              />
-            ))}
-          </MultipleFileUploadStatus>
-        )}
+    <MultipleFileUpload
+      onFileDrop={handleFileDrop}
+      dropzoneProps={{
+        accept: {
+          "application/xml": [".json", ".bz2"],
+        },
+        onDropRejected: handleDropRejected,
+        useFsAccessApi: false, // Required to make playwright work
+      }}
+      isHorizontal
+    >
+      <MultipleFileUploadMain
+        titleIcon={<UploadIcon />}
+        titleText="Drag and drop files here"
+        titleTextSeparator="or"
+        infoText="Accepted file types: .json, .bz2"
+      />
+      {showStatus && (
+        <MultipleFileUploadStatus
+          statusToggleText={`${successFileCount} of ${uploads.size} files uploaded`}
+          statusToggleIcon={statusIcon}
+        >
+          {Array.from(uploads.entries()).map(([file, upload], index) => (
+            <MultipleFileUploadStatusItem
+              // customFileHandler is Required until https://github.com/patternfly/patternfly-react/issues/11276 is fixed
+              customFileHandler={() => {}}
+              fileIcon={<FileIcon />}
+              file={file}
+              key={`${file.name}-${index}`}
+              onClearClick={() => removeFiles([file])}
+              progressValue={upload.progress}
+              progressVariant={
+                upload.error
+                  ? "danger"
+                  : upload.response
+                    ? "success"
+                    : undefined
+              }
+              progressHelperText={
+                upload.error ? (
+                  <HelperText isLiveRegion>
+                    <HelperTextItem variant="error">
+                      {extractErrorMessage(upload.error)}
+                    </HelperTextItem>
+                  </HelperText>
+                ) : upload.progress === 100 && !upload.response ? (
+                  <HelperText isLiveRegion>
+                    <HelperTextItem variant="warning">
+                      <Spinner isInline />
+                      File uploaded. Waiting for the server to process it.
+                    </HelperTextItem>
+                  </HelperText>
+                ) : upload.response ? (
+                  <HelperText isLiveRegion>
+                    <HelperTextItem variant="default">
+                      {extractSuccessMessage(upload.response)}
+                    </HelperTextItem>
+                  </HelperText>
+                ) : undefined
+              }
+            />
+          ))}
+        </MultipleFileUploadStatus>
+      )}
 
       <Modal
         isOpen={rejectedFiles.length > 0}
@@ -172,6 +171,5 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
         </ModalBody>
       </Modal>
     </MultipleFileUpload>
-  </>
   );
 };
