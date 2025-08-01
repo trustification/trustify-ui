@@ -24,7 +24,7 @@ fn main() {
     }
 
     let build = PathBuf::from(env::var_os("OUT_DIR").unwrap()).join("build");
-    let dist = build.join("client/dist");
+    let dist = build.join("client").join("dist");
 
     println!("build: {}", build.display());
     println!("dist: {}", dist.display());
