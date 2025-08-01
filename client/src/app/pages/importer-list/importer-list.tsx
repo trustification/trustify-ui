@@ -18,6 +18,7 @@ import {
   ToolbarItem,
 } from "@patternfly/react-core";
 import { LogViewer, LogViewerSearch } from "@patternfly/react-log-viewer";
+import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
 import {
   ActionsColumn,
   Caption,
@@ -68,7 +69,7 @@ type ImporterStatus = "disabled" | "scheduled" | "running";
 
 const getImporterStatus = (importer: Importer): ImporterStatus => {
   const importerType = Object.keys(importer.configuration ?? {})[0];
-  // biome-ignore lint/suspicious/noExplicitAny:
+  // biome-ignore lint/suspicious/noExplicitAny: allowed
   const configValues = (importer.configuration as any)[
     importerType
   ] as SbomImporter;
@@ -111,7 +112,7 @@ export const ImporterList: React.FC = () => {
 
   const execEnableDisableImporter = (row: Importer, enable: boolean) => {
     const importerType = Object.keys(row.configuration ?? {})[0];
-    // biome-ignore lint/suspicious/noExplicitAny:
+    // biome-ignore lint/suspicious/noExplicitAny: allowed
     const currentConfigValues = (row.configuration as any)[
       importerType
     ] as SbomImporter;
@@ -316,7 +317,7 @@ export const ImporterList: React.FC = () => {
             >
               {currentPageItems?.map((item, rowIndex) => {
                 const importerType = Object.keys(item.configuration ?? {})[0];
-                // biome-ignore lint/suspicious/noExplicitAny:
+                // biome-ignore lint/suspicious/noExplicitAny: allowed
                 const configValues = (item.configuration as any)[
                   importerType
                 ] as SbomImporter;
@@ -414,7 +415,7 @@ export const ImporterList: React.FC = () => {
                     {isCellExpanded(item) ? (
                       <Tr isExpanded>
                         <Td colSpan={7}>
-                          <div className="pf-v6-u-m-md">
+                          <div className={spacing.mMd}>
                             <ExpandableRowContent>
                               <ImporterExpandedArea importer={item} />
                             </ExpandableRowContent>

@@ -115,11 +115,8 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
           >
             {Array.from(uploads.entries()).map(([file, upload], index) => (
               <MultipleFileUploadStatusItem
-                className={
-                  upload.progress < 100 || !upload.response
-                    ? "multiple-file-upload-status-item-force-blue"
-                    : undefined
-                }
+                // customFileHandler is Required until https://github.com/patternfly/patternfly-react/issues/11276 is fixed
+                customFileHandler={() => {}}
                 fileIcon={<FileIcon />}
                 file={file}
                 key={`${file.name}-${index}`}
@@ -159,22 +156,22 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
           </MultipleFileUploadStatus>
         )}
 
-        <Modal
-          isOpen={rejectedFiles.length > 0}
-          aria-label="unsupported file upload attempted"
-          onClose={() => setRejectedFiles([])}
-          variant="small"
-        >
-          <ModalHeader title="Unsupported files" titleIconVariant="warning" />
-          <ModalBody>
-            <List>
-              {rejectedFiles.map((e) => (
-                <ListItem key={e.file.name}>{e.file.name}</ListItem>
-              ))}
-            </List>
-          </ModalBody>
-        </Modal>
-      </MultipleFileUpload>
-    </>
+      <Modal
+        isOpen={rejectedFiles.length > 0}
+        aria-label="unsupported file upload attempted"
+        onClose={() => setRejectedFiles([])}
+        variant="small"
+      >
+        <ModalHeader title="Unsupported files" titleIconVariant="warning" />
+        <ModalBody>
+          <List>
+            {rejectedFiles.map((e) => (
+              <ListItem key={e.file.name}>{e.file.name}</ListItem>
+            ))}
+          </List>
+        </ModalBody>
+      </Modal>
+    </MultipleFileUpload>
+  </>
   );
 };

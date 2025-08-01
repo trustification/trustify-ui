@@ -92,10 +92,9 @@ export default defineConfig({
         issue: {
           exclude: [
             ({ file = "" }) => /[\\/]node_modules[\\/]/.test(file),
-            ({ file = "" }) => /^.*\/[^/]+\.stories\.tsx$/.test(file),
-            ({ file = "" }) => /\/stories\//.test(file),
-            ({ file = "" }) => /\/mocks\//.test(file),
-            ({ file = "" }) => /\/src\/app\/client\/[^/]+\.ts$/.test(file),
+            ({ file = "" }) => {
+              return /\/src\/app\/client(?:\/[^/]+)*\/[^/]+\.ts$/.test(file);
+            },
           ],
         },
       },
