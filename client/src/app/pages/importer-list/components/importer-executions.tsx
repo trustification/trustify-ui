@@ -11,10 +11,8 @@ import {
 
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
-import { useFetchImporterReports } from "@app/queries/importers";
-import { formatDateTime } from "@app/utils/utils";
-
 import type { Importer } from "@app/client";
+import { IconedStatus } from "@app/components/IconedStatus";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -26,9 +24,9 @@ import {
   useTableControlProps,
   useTableControlState,
 } from "@app/hooks/table-controls";
+import { useFetchImporterReports } from "@app/queries/importers";
+import { formatDateTime } from "@app/utils/utils";
 
-import { IconedStatus } from "@app/components/IconedStatus";
-import { useSelectionState } from "@app/hooks/useSelectionState";
 import { ReportStatusMessage } from "./report-status-message";
 
 interface IImporterExecutionsProps {

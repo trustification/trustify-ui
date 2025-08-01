@@ -25,39 +25,37 @@ export const ImporterAdditionalInfo: React.FC<IImporterAdditionalInfoProps> = ({
   }, [importer]);
 
   return (
-    <>
-      <DescriptionList>
-        <DescriptionListGroup>
-          <DescriptionListTerm>Labels</DescriptionListTerm>
-          <DescriptionListDescription>
-            <List>
-              {Object.entries(configuration.configuration.labels ?? {}).map(
-                ([k, v]) => (
-                  <ListItem key={`${k}: ${v}`}>{`${k}: ${v}`}</ListItem>
-                ),
-              )}
-            </List>
-          </DescriptionListDescription>
-        </DescriptionListGroup>
-        <DescriptionListGroup>
-          <DescriptionListTerm>V3 signatures</DescriptionListTerm>
-          <DescriptionListDescription>
-            {configuration.configuration.v3Signatures ? "true" : "false"}
-          </DescriptionListDescription>
-        </DescriptionListGroup>
-        <DescriptionListGroup>
-          <DescriptionListTerm>Size limits</DescriptionListTerm>
-          <DescriptionListDescription>
-            {configuration.configuration.sizeLimit ?? "-"}
-          </DescriptionListDescription>
-        </DescriptionListGroup>
-        <DescriptionListGroup>
-          <DescriptionListTerm>Only patterns</DescriptionListTerm>
-          <DescriptionListDescription>
-            {configuration.configuration.onlyPatterns ?? "-"}
-          </DescriptionListDescription>
-        </DescriptionListGroup>
-      </DescriptionList>
-    </>
+    <DescriptionList>
+      <DescriptionListGroup>
+        <DescriptionListTerm>Labels</DescriptionListTerm>
+        <DescriptionListDescription>
+          <List>
+            {Object.entries(configuration.configuration.labels ?? {}).map(
+              ([k, v]) => (
+                <ListItem key={`${k}: ${v}`}>{`${k}: ${v}`}</ListItem>
+              ),
+            )}
+          </List>
+        </DescriptionListDescription>
+      </DescriptionListGroup>
+      <DescriptionListGroup>
+        <DescriptionListTerm>V3 signatures</DescriptionListTerm>
+        <DescriptionListDescription>
+          {configuration.configuration.v3Signatures ? "true" : "false"}
+        </DescriptionListDescription>
+      </DescriptionListGroup>
+      <DescriptionListGroup>
+        <DescriptionListTerm>Size limits</DescriptionListTerm>
+        <DescriptionListDescription>
+          {configuration.configuration.sizeLimit ?? "-"}
+        </DescriptionListDescription>
+      </DescriptionListGroup>
+      <DescriptionListGroup>
+        <DescriptionListTerm>Only patterns</DescriptionListTerm>
+        <DescriptionListDescription>
+          {configuration.configuration.onlyPatterns ?? "-"}
+        </DescriptionListDescription>
+      </DescriptionListGroup>
+    </DescriptionList>
   );
 };

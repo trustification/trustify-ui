@@ -94,7 +94,7 @@ interface ListData {
 export const getConfiguration = (importer: Importer) => {
   const type = Object.keys(importer.configuration ?? {})[0];
 
-  // biome-ignore lint/suspicious/noExplicitAny:
+  // biome-ignore lint/suspicious/noExplicitAny: allowed
   const configuration = (importer.configuration as any)[type] as SbomImporter;
 
   const status: ImporterStatus =
@@ -355,7 +355,7 @@ export const ImporterListTable: React.FC = () => {
                 selected={activeSort?.columnKey}
                 onSelect={(_e, value) => {
                   setActiveSort({
-                    // biome-ignore lint/suspicious/noExplicitAny:
+                    // biome-ignore lint/suspicious/noExplicitAny: allowed
                     columnKey: value as any,
                     direction: activeSort?.direction ?? "asc",
                   });
