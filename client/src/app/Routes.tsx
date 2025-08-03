@@ -1,6 +1,6 @@
 import { Suspense, lazy } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { generatePath, useParams, useRoutes } from "react-router-dom";
+import { useParams, useRoutes } from "react-router-dom";
 
 import { Bullseye, Spinner } from "@patternfly/react-core";
 import { ErrorFallback } from "./components/ErrorFallback";
@@ -104,36 +104,3 @@ export const useRouteParams = (pathParam: PathParam) => {
   }
   return value;
 };
-
-/**
- * Given a route string it generates a Type out of it.
- * E.g. "/advisories/:advisoryId" generates the type { advisoryId: string }
- */
-type ExtractRouteParams<Path extends string> =
-  Path extends `${string}:${infer Param}/${infer Rest}`
-    ? { [K in Param | keyof ExtractRouteParams<`/${Rest}`>]: string }
-    : Path extends `${string}:${infer Param}`
-      ? { [K in Param]: string }
-      : // biome-ignore lint/complexity/noBannedTypes: allowed
-        {};
-
-export const buildPath = {
-  advisoryDetails: (
-    params: ExtractRouteParams<typeof Paths.advisoriesDetails>,
-  ) => {
-    return generatePath(Paths.advisoriesDetails, params);
-  },
-  vulnerabilityDetails: (
-    params: ExtractRouteParams<typeof Paths.vulnerabilitiesDetails>,
-  ) => {
-    return generatePath(Paths.vulnerabilitiesDetails, params);
-  },
-  sbomDetails: (params: ExtractRouteParams<typeof Paths.sbomsDetails>) => {
-    return generatePath(Paths.sbomsDetails, params);
-  },
-  packageDetails: (
-    params: ExtractRouteParams<typeof Paths.packagesDetails>,
-  ) => {
-    return generatePath(Paths.packagesDetails, params);
-  },
-} as const;

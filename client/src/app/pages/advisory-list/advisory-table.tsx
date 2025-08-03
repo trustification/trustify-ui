@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { generatePath, NavLink } from "react-router-dom";
 
 import { Modal, ModalBody, ModalHeader } from "@patternfly/react-core";
 import {
@@ -30,7 +30,7 @@ import { formatDate } from "@app/utils/utils";
 
 import { joinKeyValueAsString } from "@app/api/model-utils";
 import { LabelsAsList } from "@app/components/LabelsAsList";
-import { buildPath } from "@app/Routes";
+import { Paths } from "@app/Routes";
 
 import { AdvisorySearchContext } from "./advisory-context";
 import { AdvisoryEditLabelsForm } from "./components/AdvisoryEditLabelsForm";
@@ -123,7 +123,7 @@ export const AdvisoryTable: React.FC = () => {
                       })}
                     >
                       <NavLink
-                        to={buildPath.advisoryDetails({
+                        to={generatePath(Paths.advisoriesDetails, {
                           advisoryId: item.uuid,
                         })}
                       >

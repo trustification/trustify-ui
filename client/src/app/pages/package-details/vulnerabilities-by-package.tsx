@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { generatePath, Link } from "react-router-dom";
 
 import dayjs from "dayjs";
 
@@ -25,9 +25,9 @@ import { TdWithFocusStatus } from "@app/components/TdWithFocusStatus";
 import { VulnerabilityDescription } from "@app/components/VulnerabilityDescription";
 import { useVulnerabilitiesOfPackage } from "@app/hooks/domain-controls/useVulnerabilitiesOfPackage";
 import { useLocalTableControls } from "@app/hooks/table-controls";
+import { Paths } from "@app/Routes";
 import { useWithUiId } from "@app/utils/query-utils";
 import { formatDate } from "@app/utils/utils";
-import { buildPath } from "@app/Routes";
 
 interface VulnerabilitiesByPackageProps {
   packageId: string;
@@ -143,7 +143,7 @@ export const VulnerabilitiesByPackage: React.FC<
                       {...getTdProps({ columnKey: "identifier" })}
                     >
                       <Link
-                        to={buildPath.vulnerabilityDetails({
+                        to={generatePath(Paths.vulnerabilitiesDetails, {
                           vulnerabilityId: item.vulnerability.identifier,
                         })}
                       >

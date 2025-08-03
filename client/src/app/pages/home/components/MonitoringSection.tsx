@@ -1,5 +1,5 @@
 import type React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { generatePath, Link, useNavigate } from "react-router-dom";
 
 import {
   Chart,
@@ -36,8 +36,8 @@ import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useVulnerabilitiesOfSboms } from "@app/hooks/domain-controls/useVulnerabilitiesOfSbom";
 import { useFetchAdvisories } from "@app/queries/advisories";
 import { useFetchSBOMs } from "@app/queries/sboms";
+import { Paths } from "@app/Routes";
 import { formatDateTime } from "@app/utils/utils";
-import { buildPath } from "@app/Routes";
 
 interface Legend {
   severity: ExtendedSeverity;
@@ -171,7 +171,7 @@ export const MonitoringSection: React.FC = () => {
                                   );
                                   if (sbom) {
                                     navigate(
-                                      buildPath.sbomDetails({
+                                      generatePath(Paths.sbomsDetails, {
                                         sbomId: sbom.id,
                                       }),
                                     );
@@ -269,7 +269,7 @@ export const MonitoringSection: React.FC = () => {
                           </StackItem>
                           <StackItem>
                             <Link
-                              to={buildPath.sbomDetails({
+                              to={generatePath(Paths.sbomsDetails, {
                                 sbomId: barchartSboms?.[0]?.id,
                               })}
                             >
@@ -304,7 +304,7 @@ export const MonitoringSection: React.FC = () => {
                           </StackItem>
                           <StackItem>
                             <Link
-                              to={buildPath.advisoryDetails({
+                              to={generatePath(Paths.advisoriesDetails, {
                                 advisoryId: advisories?.[0]?.uuid,
                               })}
                             >

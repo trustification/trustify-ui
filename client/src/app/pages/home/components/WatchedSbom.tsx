@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { generatePath, Link } from "react-router-dom";
 
 import {
   Button,
@@ -26,7 +26,7 @@ import text from "@patternfly/react-styles/css/utilities/Text/text";
 
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useFetchSBOMById, useFetchSBOMs } from "@app/queries/sboms";
-import { buildPath } from "@app/Routes";
+import { Paths } from "@app/Routes";
 
 import { WatchedSbomsContext } from "../watched-sboms-context";
 import { WatchedSbomDonutChart } from "./WatchedSbomDonutChart";
@@ -128,7 +128,9 @@ export const WatchedSbom: React.FC<WatchedSbomProps> = ({
                 <WatchedSbomDonutChart sbomId={sbomId} />
               </StackItem>
               <StackItem>
-                <Link to={buildPath.sbomDetails({ sbomId })}>View Details</Link>
+                <Link to={generatePath(Paths.sbomsDetails, { sbomId })}>
+                  View Details
+                </Link>
               </StackItem>
             </Stack>
           ) : (

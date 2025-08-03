@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { generatePath, Link } from "react-router-dom";
 
 import dayjs from "dayjs";
 
@@ -54,7 +54,7 @@ import { VulnerabilityDescription } from "@app/components/VulnerabilityDescripti
 import { useVulnerabilitiesOfSbom } from "@app/hooks/domain-controls/useVulnerabilitiesOfSbom";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchSBOMById } from "@app/queries/sboms";
-import { buildPath } from "@app/Routes";
+import { Paths } from "@app/Routes";
 import { useWithUiId } from "@app/utils/query-utils";
 import { decomposePurl, formatDate } from "@app/utils/utils";
 
@@ -274,7 +274,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                         {...getTdProps({ columnKey: "id" })}
                       >
                         <Link
-                          to={buildPath.vulnerabilityDetails({
+                          to={generatePath(Paths.vulnerabilitiesDetails, {
                             vulnerabilityId: item.vulnerability.identifier,
                           })}
                         >
@@ -400,10 +400,13 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                                           <Td>{decomposedPurl?.namespace}</Td>
                                           <Td>
                                             <Link
-                                              to={buildPath.packageDetails({
-                                                packageId:
-                                                  purl.purlSummary.uuid,
-                                              })}
+                                              to={generatePath(
+                                                Paths.packagesDetails,
+                                                {
+                                                  packageId:
+                                                    purl.purlSummary.uuid,
+                                                },
+                                              )}
                                             >
                                               {decomposedPurl?.name}
                                             </Link>
