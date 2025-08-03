@@ -28,6 +28,7 @@ const SBOMDetails = lazy(() => import("./pages/sbom-details"));
 // Others
 const Search = lazy(() => import("./pages/search"));
 const ImporterList = lazy(() => import("./pages/importer-list"));
+const Upload = lazy(() => import("./pages/upload"));
 
 export enum PathParam {
   ADVISORY_ID = "advisoryId",
@@ -45,8 +46,9 @@ export const Paths = {
   sbomsDetails: `/sboms/:${PathParam.SBOM_ID}`,
   packagesList: "/packages",
   packagesDetails: `/packages/:${PathParam.PACKAGE_ID}`,
-  importersList: "/importers",
   search: "/search",
+  importersList: "/importers",
+  upload: "/upload",
 } as const;
 
 export const AppRoutes = () => {
@@ -77,6 +79,7 @@ export const AppRoutes = () => {
       element: <ImporterList />,
     },
     { path: Paths.search, element: <Search /> },
+    { path: Paths.upload, element: <Upload /> },
   ]);
 
   return (
