@@ -106,13 +106,13 @@ export const useRouteParams = (pathParam: PathParam) => {
 };
 
 export const buildPath = {
-  advisoriesDetails: ({ advisoryId }: { advisoryId: string }) => {
+  advisoryDetails: ({ advisoryId }: { advisoryId: string }) => {
     return formatPath(Paths.advisoriesDetails, { advisoryId });
   },
   vulnerabilityDetails: ({ vulnerabilityId }: { vulnerabilityId: string }) => {
     return formatPath(Paths.vulnerabilitiesDetails, { vulnerabilityId });
   },
-  sbomsDetails: ({ sbomId }: { sbomId: string }) => {
+  sbomDetails: ({ sbomId }: { sbomId: string }) => {
     return formatPath(Paths.sbomsDetails, { sbomId });
   },
   packageDetails: ({ packageId }: { packageId: string }) => {

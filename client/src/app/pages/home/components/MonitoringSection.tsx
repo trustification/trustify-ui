@@ -171,7 +171,7 @@ export const MonitoringSection: React.FC = () => {
                                   );
                                   if (sbom) {
                                     navigate(
-                                      buildPath.sbomsDetails({
+                                      buildPath.sbomDetails({
                                         sbomId: sbom.id,
                                       }),
                                     );
@@ -269,7 +269,7 @@ export const MonitoringSection: React.FC = () => {
                           </StackItem>
                           <StackItem>
                             <Link
-                              to={buildPath.sbomsDetails({
+                              to={buildPath.sbomDetails({
                                 sbomId: barchartSboms?.[0]?.id,
                               })}
                             >
@@ -304,7 +304,7 @@ export const MonitoringSection: React.FC = () => {
                           </StackItem>
                           <StackItem>
                             <Link
-                              to={buildPath.advisoriesDetails({
+                              to={buildPath.advisoryDetails({
                                 advisoryId: advisories?.[0]?.uuid,
                               })}
                             >

@@ -121,7 +121,7 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
                     modifier="breakWord"
                     {...getTdProps({ columnKey: "name" })}
                   >
-                    <Link to={buildPath.sbomsDetails({ sbomId: item.id })}>
+                    <Link to={buildPath.sbomDetails({ sbomId: item.id })}>
                       {item.name}
                     </Link>
                   </Td>
