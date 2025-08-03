@@ -47,7 +47,7 @@ export const Paths = {
   packagesDetails: `/packages/:${PathParam.PACKAGE_ID}`,
   importersList: "/importers",
   search: "/search",
-};
+} as const;
 
 export const AppRoutes = () => {
   const allRoutes = useRoutes([
@@ -105,18 +105,35 @@ export const useRouteParams = (pathParam: PathParam) => {
   return value;
 };
 
-export const buildPath = {
-  advisoryDetails: ({ advisoryId }: { advisoryId: string }) => {
-    return generatePath(Paths.advisoriesDetails, { advisoryId });
-  },
-  vulnerabilityDetails: ({ vulnerabilityId }: { vulnerabilityId: string }) => {
-    return generatePath(Paths.vulnerabilitiesDetails, { vulnerabilityId });
-  },
-  sbomDetails: ({ sbomId }: { sbomId: string }) => {
-    return generatePath(Paths.sbomsDetails, { sbomId });
-  },
-  packageDetails: ({ packageId }: { packageId: string }) => {
-    return generatePath(Paths.packagesDetails, { packageId });
-  },
-};
+/**
+ * Given a route string it generates a Type out of it.
+ * E.g. "/advisories/:advisoryId" generates the type { advisoryId: string }
+ */
+type ExtractRouteParams<Path extends string> =
+  Path extends `${string}:${infer Param}/${infer Rest}`
+    ? { [K in Param | keyof ExtractRouteParams<`/${Rest}`>]: string }
+    : Path extends `${string}:${infer Param}`
+      ? { [K in Param]: string }
+      : // biome-ignore lint/complexity/noBannedTypes: allowed
+        {};
 
+export const buildPath = {
+  advisoryDetails: (
+    params: ExtractRouteParams<typeof Paths.advisoriesDetails>,
+  ) => {
+    return generatePath(Paths.advisoriesDetails, params);
+  },
+  vulnerabilityDetails: (
+    params: ExtractRouteParams<typeof Paths.vulnerabilitiesDetails>,
+  ) => {
+    return generatePath(Paths.vulnerabilitiesDetails, params);
+  },
+  sbomDetails: (params: ExtractRouteParams<typeof Paths.sbomsDetails>) => {
+    return generatePath(Paths.sbomsDetails, params);
+  },
+  packageDetails: (
+    params: ExtractRouteParams<typeof Paths.packagesDetails>,
+  ) => {
+    return generatePath(Paths.packagesDetails, params);
+  },
+} as const;
