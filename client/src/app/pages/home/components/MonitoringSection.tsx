@@ -37,6 +37,7 @@ import { useVulnerabilitiesOfSboms } from "@app/hooks/domain-controls/useVulnera
 import { useFetchAdvisories } from "@app/queries/advisories";
 import { useFetchSBOMs } from "@app/queries/sboms";
 import { formatDateTime } from "@app/utils/utils";
+import { buildPath } from "@app/Routes";
 
 interface Legend {
   severity: ExtendedSeverity;
@@ -169,7 +170,11 @@ export const MonitoringSection: React.FC = () => {
                                     },
                                   );
                                   if (sbom) {
-                                    navigate(`/sboms/${sbom.id}`);
+                                    navigate(
+                                      buildPath.sbomsDetails({
+                                        sbomId: sbom.id,
+                                      }),
+                                    );
                                   }
                                 },
                               }}
@@ -263,7 +268,11 @@ export const MonitoringSection: React.FC = () => {
                             {formatDateTime(barchartSboms?.[0]?.ingested)}
                           </StackItem>
                           <StackItem>
-                            <Link to={`/sboms/${barchartSboms?.[0]?.id}`}>
+                            <Link
+                              to={buildPath.sbomsDetails({
+                                sbomId: barchartSboms?.[0]?.id,
+                              })}
+                            >
                               {barchartSboms?.[0]?.name}
                             </Link>
                           </StackItem>
@@ -294,7 +303,11 @@ export const MonitoringSection: React.FC = () => {
                             {formatDateTime(advisories?.[0]?.ingested)}
                           </StackItem>
                           <StackItem>
-                            <Link to={`/advisories/${advisories?.[0]?.uuid}`}>
+                            <Link
+                              to={buildPath.advisoriesDetails({
+                                advisoryId: advisories?.[0]?.uuid,
+                              })}
+                            >
                               {advisories?.[0]?.document_id}
                             </Link>
                           </StackItem>

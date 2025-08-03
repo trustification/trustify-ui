@@ -6,58 +6,77 @@ import { Bullseye, Spinner } from "@patternfly/react-core";
 import { ErrorFallback } from "./components/ErrorFallback";
 
 const Home = lazy(() => import("./pages/home"));
+
+// Advisory
 const AdvisoryList = lazy(() => import("./pages/advisory-list"));
 const AdvisoryDetails = lazy(() => import("./pages/advisory-details"));
+
+// Vulnerability
 const VulnerabilityList = lazy(() => import("./pages/vulnerability-list"));
 const VulnerabilityDetails = lazy(
   () => import("./pages/vulnerability-details"),
 );
+
+// Package
 const PackageList = lazy(() => import("./pages/package-list"));
 const PackageDetails = lazy(() => import("./pages/package-details"));
+
+// SBOM
 const SBOMList = lazy(() => import("./pages/sbom-list"));
 const SBOMDetails = lazy(() => import("./pages/sbom-details"));
+
+// Others
 const Search = lazy(() => import("./pages/search"));
 const ImporterList = lazy(() => import("./pages/importer-list"));
-const Upload = lazy(() => import("./pages/upload"));
 
 export enum PathParam {
-  PRODUCT_ID = "productId",
   ADVISORY_ID = "advisoryId",
   VULNERABILITY_ID = "vulnerabilityId",
   SBOM_ID = "sbomId",
   PACKAGE_ID = "packageId",
-  IMPORTER_ID = "importerId",
 }
+
+export const Paths = {
+  advisoriesList: "/advisories",
+  advisoriesDetails: `/advisories/details/:${PathParam.ADVISORY_ID}`,
+  vulnerabilitiesList: "/vulnerabilities",
+  vulnerabilitiesDetails: `/vulnerabilities/:${PathParam.VULNERABILITY_ID}`,
+  sbomsList: "/sboms",
+  sbomsDetails: `/sboms/:${PathParam.SBOM_ID}`,
+  packagesList: "/packages",
+  packagesDetails: `/packages/:${PathParam.PACKAGE_ID}`,
+  importersList: "/importers",
+  search: "/search",
+};
 
 export const AppRoutes = () => {
   const allRoutes = useRoutes([
     { path: "/", element: <Home /> },
-    { path: "/advisories", element: <AdvisoryList /> },
+    { path: Paths.advisoriesList, element: <AdvisoryList /> },
     {
-      path: `/advisories/:${PathParam.ADVISORY_ID}`,
+      path: Paths.advisoriesDetails,
       element: <AdvisoryDetails />,
     },
-    { path: "/vulnerabilities", element: <VulnerabilityList /> },
+    { path: Paths.vulnerabilitiesList, element: <VulnerabilityList /> },
     {
-      path: `/vulnerabilities/:${PathParam.VULNERABILITY_ID}`,
+      path: Paths.vulnerabilitiesDetails,
       element: <VulnerabilityDetails />,
     },
-    { path: "/packages", element: <PackageList /> },
+    { path: Paths.packagesList, element: <PackageList /> },
     {
-      path: `/packages/:${PathParam.PACKAGE_ID}`,
+      path: Paths.packagesDetails,
       element: <PackageDetails />,
     },
-    { path: "/search", element: <Search /> },
-    { path: "/sboms", element: <SBOMList /> },
+    { path: Paths.sbomsList, element: <SBOMList /> },
     {
-      path: `/sboms/:${PathParam.SBOM_ID}`,
+      path: Paths.sbomsDetails,
       element: <SBOMDetails />,
     },
     {
-      path: "/importers",
+      path: Paths.importersList,
       element: <ImporterList />,
     },
-    { path: "/upload", element: <Upload /> },
+    { path: Paths.search, element: <Search /> },
   ]);
 
   return (
@@ -84,4 +103,30 @@ export const useRouteParams = (pathParam: PathParam) => {
     );
   }
   return value;
+};
+
+export const buildPath = {
+  advisoriesDetails: ({ advisoryId }: { advisoryId: string }) => {
+    return formatPath(Paths.advisoriesDetails, { advisoryId });
+  },
+  vulnerabilityDetails: ({ vulnerabilityId }: { vulnerabilityId: string }) => {
+    return formatPath(Paths.vulnerabilitiesDetails, { vulnerabilityId });
+  },
+  sbomsDetails: ({ sbomId }: { sbomId: string }) => {
+    return formatPath(Paths.sbomsDetails, { sbomId });
+  },
+  packageDetails: ({ packageId }: { packageId: string }) => {
+    return formatPath(Paths.packagesDetails, { packageId });
+  },
+};
+
+const formatPath = (path: string, data: Record<string, string | number>) => {
+  let url = path as string;
+
+  for (const k of Object.keys(data)) {
+    const regex = new RegExp(`:${k}(/|$)`, "g");
+    url = url.replace(regex, `${data[k]}$1`);
+  }
+
+  return url;
 };

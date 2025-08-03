@@ -10,6 +10,7 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
+import { buildPath } from "@app/Routes";
 
 import { PackageVulnerabilities } from "./components/PackageVulnerabilities";
 import { PackageSearchContext } from "./package-context";
@@ -66,7 +67,9 @@ export const PackageTable: React.FC = () => {
                       modifier="breakWord"
                       {...getTdProps({ columnKey: "name" })}
                     >
-                      <NavLink to={`/packages/${item.uuid}`}>
+                      <NavLink
+                        to={buildPath.packageDetails({ packageId: item.uuid })}
+                      >
                         {item.decomposedPurl
                           ? item.decomposedPurl?.name
                           : item.purl}

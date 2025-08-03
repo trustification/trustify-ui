@@ -17,6 +17,7 @@ import {
   useTableControlState,
 } from "@app/hooks/table-controls";
 import { useFetchSbomsByPackageId } from "@app/queries/sboms";
+import { buildPath } from "@app/Routes";
 
 interface SbomsByPackageProps {
   purl: string;
@@ -120,7 +121,9 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
                     modifier="breakWord"
                     {...getTdProps({ columnKey: "name" })}
                   >
-                    <Link to={`/sboms/${item.id}`}>{item.name}</Link>
+                    <Link to={buildPath.sbomsDetails({ sbomId: item.id })}>
+                      {item.name}
+                    </Link>
                   </Td>
                   <Td
                     width={15}

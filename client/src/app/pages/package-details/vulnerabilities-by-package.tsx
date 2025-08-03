@@ -27,6 +27,7 @@ import { useVulnerabilitiesOfPackage } from "@app/hooks/domain-controls/useVulne
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useWithUiId } from "@app/utils/query-utils";
 import { formatDate } from "@app/utils/utils";
+import { buildPath } from "@app/Routes";
 
 interface VulnerabilitiesByPackageProps {
   packageId: string;
@@ -142,7 +143,9 @@ export const VulnerabilitiesByPackage: React.FC<
                       {...getTdProps({ columnKey: "identifier" })}
                     >
                       <Link
-                        to={`/vulnerabilities/${item.vulnerability.identifier}`}
+                        to={buildPath.vulnerabilityDetails({
+                          vulnerabilityId: item.vulnerability.identifier,
+                        })}
                       >
                         {item.vulnerability.identifier}
                       </Link>

@@ -30,6 +30,8 @@ import { formatDate } from "@app/utils/utils";
 
 import { joinKeyValueAsString } from "@app/api/model-utils";
 import { LabelsAsList } from "@app/components/LabelsAsList";
+import { buildPath } from "@app/Routes";
+
 import { AdvisorySearchContext } from "./advisory-context";
 import { AdvisoryEditLabelsForm } from "./components/AdvisoryEditLabelsForm";
 
@@ -120,7 +122,11 @@ export const AdvisoryTable: React.FC = () => {
                         rowIndex,
                       })}
                     >
-                      <NavLink to={`/advisories/${item.uuid}`}>
+                      <NavLink
+                        to={buildPath.advisoriesDetails({
+                          advisoryId: item.uuid,
+                        })}
+                      >
                         {item.document_id}
                       </NavLink>
                     </Td>

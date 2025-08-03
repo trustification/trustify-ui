@@ -13,6 +13,8 @@ import ExternalLinkAltIcon from "@patternfly/react-icons/dist/esm/icons/external
 import { css } from "@patternfly/react-styles";
 import nav from "@patternfly/react-styles/css/components/Nav/nav";
 
+import { Paths } from "@app/Routes";
+
 const LINK_CLASS = nav.navLink;
 const ACTIVE_LINK_CLASS = nav.modifiers.current;
 
@@ -33,7 +35,7 @@ export const SidebarApp: React.FC = () => {
           </li>
           <li className={nav.navItem}>
             <NavLink
-              to="/search"
+              to={Paths.search}
               className={({ isActive }) => {
                 return css(LINK_CLASS, isActive ? ACTIVE_LINK_CLASS : "");
               }}
@@ -43,7 +45,7 @@ export const SidebarApp: React.FC = () => {
           </li>
           <li className={nav.navItem}>
             <NavLink
-              to="/sboms"
+              to={Paths.sbomsList}
               className={({ isActive }) => {
                 return css(LINK_CLASS, isActive ? ACTIVE_LINK_CLASS : "");
               }}
@@ -53,7 +55,7 @@ export const SidebarApp: React.FC = () => {
           </li>
           <li className={nav.navItem}>
             <NavLink
-              to="/vulnerabilities"
+              to={Paths.vulnerabilitiesList}
               className={({ isActive }) => {
                 return css(LINK_CLASS, isActive ? ACTIVE_LINK_CLASS : "");
               }}
@@ -63,7 +65,7 @@ export const SidebarApp: React.FC = () => {
           </li>
           <li className={nav.navItem}>
             <NavLink
-              to="/packages"
+              to={Paths.packagesList}
               className={({ isActive }) => {
                 return css(LINK_CLASS, isActive ? ACTIVE_LINK_CLASS : "");
               }}
@@ -73,7 +75,7 @@ export const SidebarApp: React.FC = () => {
           </li>
           <li className={nav.navItem}>
             <NavLink
-              to="/advisories"
+              to={Paths.advisoriesList}
               className={({ isActive }) => {
                 return css(LINK_CLASS, isActive ? ACTIVE_LINK_CLASS : "");
               }}
@@ -83,7 +85,7 @@ export const SidebarApp: React.FC = () => {
           </li>
           <li className={nav.navItem}>
             <NavLink
-              to="/importers"
+              to={Paths.importersList}
               className={({ isActive }) => {
                 return css(LINK_CLASS, isActive ? ACTIVE_LINK_CLASS : "");
               }}

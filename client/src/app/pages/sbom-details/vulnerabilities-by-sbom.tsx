@@ -54,6 +54,7 @@ import { VulnerabilityDescription } from "@app/components/VulnerabilityDescripti
 import { useVulnerabilitiesOfSbom } from "@app/hooks/domain-controls/useVulnerabilitiesOfSbom";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useFetchSBOMById } from "@app/queries/sboms";
+import { buildPath } from "@app/Routes";
 import { useWithUiId } from "@app/utils/query-utils";
 import { decomposePurl, formatDate } from "@app/utils/utils";
 
@@ -273,7 +274,9 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                         {...getTdProps({ columnKey: "id" })}
                       >
                         <Link
-                          to={`/vulnerabilities/${item.vulnerability.identifier}`}
+                          to={buildPath.vulnerabilityDetails({
+                            vulnerabilityId: item.vulnerability.identifier,
+                          })}
                         >
                           {item.vulnerability.identifier}
                         </Link>
@@ -397,7 +400,10 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                                           <Td>{decomposedPurl?.namespace}</Td>
                                           <Td>
                                             <Link
-                                              to={`/packages/${purl.purlSummary.uuid}`}
+                                              to={buildPath.packageDetails({
+                                                packageId:
+                                                  purl.purlSummary.uuid,
+                                              })}
                                             >
                                               {decomposedPurl?.name}
                                             </Link>
