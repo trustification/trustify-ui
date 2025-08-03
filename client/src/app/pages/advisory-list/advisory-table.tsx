@@ -123,7 +123,7 @@ export const AdvisoryTable: React.FC = () => {
                       })}
                     >
                       <NavLink
-                        to={generatePath(Paths.advisoriesDetails, {
+                        to={generatePath(Paths.advisoryDetails, {
                           advisoryId: item.uuid,
                         })}
                       >

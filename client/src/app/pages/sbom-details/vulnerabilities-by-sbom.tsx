@@ -274,7 +274,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                         {...getTdProps({ columnKey: "id" })}
                       >
                         <Link
-                          to={generatePath(Paths.vulnerabilitiesDetails, {
+                          to={generatePath(Paths.vulnerabilityDetails, {
                             vulnerabilityId: item.vulnerability.identifier,
                           })}
                         >
@@ -401,7 +401,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                                           <Td>
                                             <Link
                                               to={generatePath(
-                                                Paths.packagesDetails,
+                                                Paths.packageDetails,
                                                 {
                                                   packageId:
                                                     purl.purlSummary.uuid,

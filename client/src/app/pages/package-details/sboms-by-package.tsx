@@ -122,7 +122,7 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
                     {...getTdProps({ columnKey: "name" })}
                   >
                     <Link
-                      to={generatePath(Paths.sbomsDetails, { sbomId: item.id })}
+                      to={generatePath(Paths.sbomDetails, { sbomId: item.id })}
                     >
                       {item.name}
                     </Link>

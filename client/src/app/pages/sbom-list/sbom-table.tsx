@@ -101,7 +101,7 @@ export const SbomTable: React.FC = () => {
                       })}
                     >
                       <NavLink
-                        to={generatePath(Paths.sbomsDetails, {
+                        to={generatePath(Paths.sbomDetails, {
                           sbomId: item.id,
                         })}
                       >

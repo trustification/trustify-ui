@@ -68,7 +68,7 @@ export const PackageTable: React.FC = () => {
                       {...getTdProps({ columnKey: "name" })}
                     >
                       <NavLink
-                        to={generatePath(Paths.packagesDetails, {
+                        to={generatePath(Paths.packageDetails, {
                           packageId: item.uuid,
                         })}
                       >

@@ -38,44 +38,44 @@ export enum PathParam {
 }
 
 export const Paths = {
-  advisoriesList: "/advisories",
-  advisoriesDetails: `/advisories/:${PathParam.ADVISORY_ID}`,
-  vulnerabilitiesList: "/vulnerabilities",
-  vulnerabilitiesDetails: `/vulnerabilities/:${PathParam.VULNERABILITY_ID}`,
-  sbomsList: "/sboms",
-  sbomsDetails: `/sboms/:${PathParam.SBOM_ID}`,
-  packagesList: "/packages",
-  packagesDetails: `/packages/:${PathParam.PACKAGE_ID}`,
+  advisories: "/advisories",
+  advisoryDetails: `/advisories/:${PathParam.ADVISORY_ID}`,
+  vulnerabilities: "/vulnerabilities",
+  vulnerabilityDetails: `/vulnerabilities/:${PathParam.VULNERABILITY_ID}`,
+  sboms: "/sboms",
+  sbomDetails: `/sboms/:${PathParam.SBOM_ID}`,
+  packages: "/packages",
+  packageDetails: `/packages/:${PathParam.PACKAGE_ID}`,
   search: "/search",
-  importersList: "/importers",
+  importers: "/importers",
   upload: "/upload",
 } as const;
 
 export const AppRoutes = () => {
   const allRoutes = useRoutes([
     { path: "/", element: <Home /> },
-    { path: Paths.advisoriesList, element: <AdvisoryList /> },
+    { path: Paths.advisories, element: <AdvisoryList /> },
     {
-      path: Paths.advisoriesDetails,
+      path: Paths.advisoryDetails,
       element: <AdvisoryDetails />,
     },
-    { path: Paths.vulnerabilitiesList, element: <VulnerabilityList /> },
+    { path: Paths.vulnerabilities, element: <VulnerabilityList /> },
     {
-      path: Paths.vulnerabilitiesDetails,
+      path: Paths.vulnerabilityDetails,
       element: <VulnerabilityDetails />,
     },
-    { path: Paths.packagesList, element: <PackageList /> },
+    { path: Paths.packages, element: <PackageList /> },
     {
-      path: Paths.packagesDetails,
+      path: Paths.packageDetails,
       element: <PackageDetails />,
     },
-    { path: Paths.sbomsList, element: <SBOMList /> },
+    { path: Paths.sboms, element: <SBOMList /> },
     {
-      path: Paths.sbomsDetails,
+      path: Paths.sbomDetails,
       element: <SBOMDetails />,
     },
     {
-      path: Paths.importersList,
+      path: Paths.importers,
       element: <ImporterList />,
     },
     { path: Paths.search, element: <Search /> },

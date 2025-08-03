@@ -128,7 +128,7 @@ export const WatchedSbom: React.FC<WatchedSbomProps> = ({
                 <WatchedSbomDonutChart sbomId={sbomId} />
               </StackItem>
               <StackItem>
-                <Link to={generatePath(Paths.sbomsDetails, { sbomId })}>
+                <Link to={generatePath(Paths.sbomDetails, { sbomId })}>
                   View Details
                 </Link>
               </StackItem>

@@ -56,7 +56,7 @@ export const PackageDetails: React.FC = () => {
       <PageSection type="breadcrumb">
         <Breadcrumb>
           <BreadcrumbItem>
-            <Link to={Paths.packagesList}>Packages</Link>
+            <Link to={Paths.packages}>Packages</Link>
           </BreadcrumbItem>
           <BreadcrumbItem isActive>Package details</BreadcrumbItem>
         </Breadcrumb>

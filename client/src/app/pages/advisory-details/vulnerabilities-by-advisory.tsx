@@ -125,7 +125,7 @@ export const VulnerabilitiesByAdvisory: React.FC<
                       {...getTdProps({ columnKey: "identifier" })}
                     >
                       <Link
-                        to={generatePath(Paths.vulnerabilitiesDetails, {
+                        to={generatePath(Paths.vulnerabilityDetails, {
                           vulnerabilityId: item.identifier,
                         })}
                       >

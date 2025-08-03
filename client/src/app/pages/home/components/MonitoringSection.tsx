@@ -171,7 +171,7 @@ export const MonitoringSection: React.FC = () => {
                                   );
                                   if (sbom) {
                                     navigate(
-                                      generatePath(Paths.sbomsDetails, {
+                                      generatePath(Paths.sbomDetails, {
                                         sbomId: sbom.id,
                                       }),
                                     );
@@ -268,13 +268,15 @@ export const MonitoringSection: React.FC = () => {
                             {formatDateTime(barchartSboms?.[0]?.ingested)}
                           </StackItem>
                           <StackItem>
-                            <Link
-                              to={generatePath(Paths.sbomsDetails, {
-                                sbomId: barchartSboms?.[0]?.id,
-                              })}
-                            >
-                              {barchartSboms?.[0]?.name}
-                            </Link>
+                            {barchartSboms?.[0] && (
+                              <Link
+                                to={generatePath(Paths.sbomDetails, {
+                                  sbomId: barchartSboms?.[0]?.id,
+                                })}
+                              >
+                                {barchartSboms?.[0]?.name}
+                              </Link>
+                            )}
                           </StackItem>
                         </Stack>
                       </DescriptionListDescription>
@@ -303,13 +305,15 @@ export const MonitoringSection: React.FC = () => {
                             {formatDateTime(advisories?.[0]?.ingested)}
                           </StackItem>
                           <StackItem>
-                            <Link
-                              to={generatePath(Paths.advisoriesDetails, {
-                                advisoryId: advisories?.[0]?.uuid,
-                              })}
-                            >
-                              {advisories?.[0]?.document_id}
-                            </Link>
+                            {advisories?.[0] && (
+                              <Link
+                                to={generatePath(Paths.advisoryDetails, {
+                                  advisoryId: advisories?.[0]?.uuid,
+                                })}
+                              >
+                                {advisories?.[0]?.document_id}
+                              </Link>
+                            )}
                           </StackItem>
                         </Stack>
                       </DescriptionListDescription>

@@ -224,7 +224,7 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                     >
                       {item.purl.length === 1 ? (
                         <Link
-                          to={generatePath(Paths.packagesDetails, {
+                          to={generatePath(Paths.packageDetails, {
                             packageId: item.purl[0].uuid,
                           })}
                         >
@@ -279,7 +279,7 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                                 return (
                                   <ListItem key={e.uuid}>
                                     <Link
-                                      to={generatePath(Paths.packagesDetails, {
+                                      to={generatePath(Paths.packageDetails, {
                                         packageId: e.uuid,
                                       })}
                                     >
