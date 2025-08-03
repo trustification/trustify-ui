@@ -1,6 +1,6 @@
 import { Suspense, lazy } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { useParams, useRoutes } from "react-router-dom";
+import { generatePath, useParams, useRoutes } from "react-router-dom";
 
 import { Bullseye, Spinner } from "@patternfly/react-core";
 import { ErrorFallback } from "./components/ErrorFallback";
@@ -38,7 +38,7 @@ export enum PathParam {
 
 export const Paths = {
   advisoriesList: "/advisories",
-  advisoriesDetails: `/advisories/details/:${PathParam.ADVISORY_ID}`,
+  advisoriesDetails: `/advisories/:${PathParam.ADVISORY_ID}`,
   vulnerabilitiesList: "/vulnerabilities",
   vulnerabilitiesDetails: `/vulnerabilities/:${PathParam.VULNERABILITY_ID}`,
   sbomsList: "/sboms",
@@ -107,26 +107,16 @@ export const useRouteParams = (pathParam: PathParam) => {
 
 export const buildPath = {
   advisoryDetails: ({ advisoryId }: { advisoryId: string }) => {
-    return formatPath(Paths.advisoriesDetails, { advisoryId });
+    return generatePath(Paths.advisoriesDetails, { advisoryId });
   },
   vulnerabilityDetails: ({ vulnerabilityId }: { vulnerabilityId: string }) => {
-    return formatPath(Paths.vulnerabilitiesDetails, { vulnerabilityId });
+    return generatePath(Paths.vulnerabilitiesDetails, { vulnerabilityId });
   },
   sbomDetails: ({ sbomId }: { sbomId: string }) => {
-    return formatPath(Paths.sbomsDetails, { sbomId });
+    return generatePath(Paths.sbomsDetails, { sbomId });
   },
   packageDetails: ({ packageId }: { packageId: string }) => {
-    return formatPath(Paths.packagesDetails, { packageId });
+    return generatePath(Paths.packagesDetails, { packageId });
   },
 };
 
-const formatPath = (path: string, data: Record<string, string | number>) => {
-  let url = path as string;
-
-  for (const k of Object.keys(data)) {
-    const regex = new RegExp(`:${k}(/|$)`, "g");
-    url = url.replace(regex, `${data[k]}$1`);
-  }
-
-  return url;
-};
