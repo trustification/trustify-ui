@@ -1,6 +1,6 @@
 import { Suspense, lazy } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { Navigate, useParams, useRoutes } from "react-router-dom";
+import { useParams, useRoutes } from "react-router-dom";
 
 import { Bullseye, Spinner } from "@patternfly/react-core";
 import { ErrorFallback } from "./components/ErrorFallback";

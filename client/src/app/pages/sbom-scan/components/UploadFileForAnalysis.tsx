@@ -20,17 +20,26 @@ import ExclamationCircleIcon from "@patternfly/react-icons/dist/esm/icons/exclam
 import InProgressIcon from "@patternfly/react-icons/dist/esm/icons/in-progress-icon";
 import UploadIcon from "@patternfly/react-icons/dist/esm/icons/upload-icon";
 
+import type { ExtractResult } from "@app/client";
 import { useMultiFileUpload } from "@app/hooks/useMultiFileUpload";
 import type { Upload } from "@app/hooks/useUpload";
 
-export interface IUploadFilesProps {
-  uploads: Map<File, Upload<any, any>>;
+export interface IUploadFileForAnalysisProps {
+  uploads: Map<
+    File,
+    Upload<
+      ExtractResult,
+      {
+        message: string;
+      }
+    >
+  >;
   handleUpload: (files: File[]) => void;
   handleRemoveUpload: (file: File) => void;
   handleCancelUpload: (file: File) => void;
 }
 
-export const UploadFiles: React.FC<IUploadFilesProps> = ({
+export const UploadFileForAnalysis: React.FC<IUploadFileForAnalysisProps> = ({
   uploads,
   handleUpload,
   handleRemoveUpload,

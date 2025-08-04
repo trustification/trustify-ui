@@ -1,4 +1,5 @@
-import React from "react";
+import type React from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import dayjs from "dayjs";
@@ -53,58 +54,59 @@ import { VulnerabilityDescription } from "@app/components/VulnerabilityDescripti
 import { useVulnerabilitiesOfSbomByPurls } from "@app/hooks/domain-controls/useVulnerabilitiesOfSbom";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { useUploadAndAnalyzeSBOM } from "@app/queries/sboms-analysis";
+import { Paths } from "@app/Routes";
 import { useWithUiId } from "@app/utils/query-utils";
-import { formatDate } from "@app/utils/utils";
+import { decomposePurl, formatDate } from "@app/utils/utils";
 
-import { UploadFiles } from "./components/UploadFile";
+import { PackageQualifiers } from "@app/components/PackageQualifiers";
+import { SeverityShieldAndText } from "@app/components/SeverityShieldAndText";
+import { UploadFileForAnalysis } from "./components/UploadFileForAnalysis";
 
 export const SbomScan: React.FC = () => {
   // Actions dropdown
-  const [isActionsDropdownOpen, setIsActionsDropdownOpen] =
-    React.useState(false);
+  const [isActionsDropdownOpen, setIsActionsDropdownOpen] = useState(false);
 
   const handleActionsDropdownToggle = () => {
     setIsActionsDropdownOpen(!isActionsDropdownOpen);
   };
 
-  //
+  // Upload handlers
+  const [uploadResponseData, setUploadResponseData] =
+    useState<ExtractResult | null>(null);
 
-  const [extractedData, setExtractedData] =
-    React.useState<ExtractResult | null>(null);
+  const { uploads, handleUpload, handleCancelUpload, handleRemoveUpload } =
+    useUploadAndAnalyzeSBOM((extractedData, _file) => {
+      setUploadResponseData(extractedData);
+    });
 
-  const purls = React.useMemo(() => {
-    return Object.entries(extractedData?.packages ?? {}).flatMap(
+  // Post Upload handlers
+  const allPurls = useMemo(() => {
+    return Object.entries(uploadResponseData?.packages ?? {}).flatMap(
       ([_packageName, { purls }]) => {
         return purls;
       },
     );
-  }, [extractedData]);
+  }, [uploadResponseData]);
 
-  const { uploads, handleUpload, handleCancelUpload, handleRemoveUpload } =
-    useUploadAndAnalyzeSBOM((extractedData, _file) => {
-      setExtractedData(extractedData);
-    });
+  const {
+    data: { vulnerabilities },
+    isFetching,
+    fetchError,
+  } = useVulnerabilitiesOfSbomByPurls(allPurls);
+
+  // Other actions
 
   const scanAnotherFile = () => {
     for (const file of uploads.keys()) {
       handleRemoveUpload(file);
     }
 
-    setExtractedData(null);
+    setUploadResponseData(null);
   };
 
-  const {
-    data: { vulnerabilities, summary },
-    isFetching,
-    fetchError,
-  } = useVulnerabilitiesOfSbomByPurls(purls);
-
-  const affectedVulnerabilities = React.useMemo(() => {
-    return vulnerabilities.filter((item) => item.status === "affected");
-  }, [vulnerabilities]);
-
+  // Table handlers
   const tableDataWithUiId = useWithUiId(
-    affectedVulnerabilities,
+    vulnerabilities,
     (d) => `${d.vulnerability.identifier}-${d.status}`,
   );
 
@@ -114,25 +116,27 @@ export const SbomScan: React.FC = () => {
     items: tableDataWithUiId,
     isLoading: isFetching,
     columnNames: {
-      id: "Id",
+      vulnerabilityId: "Vulnerability ID",
       description: "Description",
-      cvss: "CVSS",
+      status: "Status",
+      severity: "Severity",
       affectedDependencies: "Affected dependencies",
+      advisories: "Advisories",
       published: "Published",
       updated: "Updated",
     },
     hasActionsColumn: false,
     isSortEnabled: true,
     sortableColumns: [
-      "id",
-      "cvss",
+      "vulnerabilityId",
+      "severity",
       "affectedDependencies",
       "published",
       "updated",
     ],
     getSortValues: (item) => ({
-      id: item.vulnerability.identifier,
-      cvss: "",
+      vulnerabilityId: item.vulnerability.identifier,
+      severity: "",
       affectedDependencies: item.purls.size,
       published: item.vulnerability?.published
         ? dayjs(item.vulnerability.published).valueOf()
@@ -168,9 +172,9 @@ export const SbomScan: React.FC = () => {
       <PageSection type="breadcrumb">
         <Breadcrumb>
           <BreadcrumbItem>
-            <Link to="/sboms/list">SBOMs</Link>
+            <Link to={Paths.sboms}>SBOMs</Link>
           </BreadcrumbItem>
-          <BreadcrumbItem isActive>Scan SBOM</BreadcrumbItem>
+          <BreadcrumbItem isActive>Generate SBOM report</BreadcrumbItem>
         </Breadcrumb>
       </PageSection>
       <PageSection>
@@ -179,13 +183,13 @@ export const SbomScan: React.FC = () => {
             <Content>
               <Content component="h1">Scan SBOM</Content>
               <Content component="p">
-                This is a temporary scan to help you assess an SBOM. Your file
-                will not be uploaded or stored.
+                Upload an SBOM file to generate a temporary vulnerability and
+                license report. The file and report will not be saved.
               </Content>
             </Content>
           </SplitItem>
           <SplitItem>
-            {extractedData !== null && !isFetching && !fetchError && (
+            {uploadResponseData !== null && !isFetching && !fetchError && (
               <Dropdown
                 isOpen={isActionsDropdownOpen}
                 onSelect={() => setIsActionsDropdownOpen(false)}
@@ -214,8 +218,8 @@ export const SbomScan: React.FC = () => {
         </Split>
       </PageSection>
       <PageSection>
-        {extractedData === null ? (
-          <UploadFiles
+        {uploadResponseData === null ? (
+          <UploadFileForAnalysis
             uploads={uploads}
             handleUpload={handleUpload}
             handleRemoveUpload={handleRemoveUpload}
@@ -276,12 +280,14 @@ export const SbomScan: React.FC = () => {
               <Thead>
                 <Tr>
                   <TableHeaderContentWithControls {...tableControls}>
-                    <Th {...getThProps({ columnKey: "id" })} />
+                    <Th {...getThProps({ columnKey: "vulnerabilityId" })} />
                     <Th {...getThProps({ columnKey: "description" })} />
-                    <Th {...getThProps({ columnKey: "cvss" })} />
+                    <Th {...getThProps({ columnKey: "status" })} />
+                    <Th {...getThProps({ columnKey: "severity" })} />
                     <Th
                       {...getThProps({ columnKey: "affectedDependencies" })}
                     />
+                    <Th {...getThProps({ columnKey: "advisories" })} />
                     <Th {...getThProps({ columnKey: "published" })} />
                     <Th {...getThProps({ columnKey: "updated" })} />
                   </TableHeaderContentWithControls>
@@ -308,18 +314,19 @@ export const SbomScan: React.FC = () => {
                           <Td
                             width={15}
                             modifier="breakWord"
-                            {...getTdProps({ columnKey: "id" })}
+                            {...getTdProps({
+                              columnKey: "vulnerabilityId",
+                              isCompoundExpandToggle: true,
+                              item: item,
+                              rowIndex,
+                            })}
                           >
-                            <Link
-                              to={`/vulnerabilities/${item.vulnerability.identifier}`}
-                            >
-                              {item.vulnerability.identifier}
-                            </Link>
+                            {item.vulnerability.identifier}
                           </Td>
                           <TdWithFocusStatus>
                             {(isFocused, setIsFocused) => (
                               <Td
-                                width={35}
+                                width={15}
                                 modifier="truncate"
                                 onFocus={() => setIsFocused(true)}
                                 onBlur={() => setIsFocused(false)}
@@ -341,9 +348,16 @@ export const SbomScan: React.FC = () => {
                           </TdWithFocusStatus>
                           <Td
                             width={10}
+                            modifier="truncate"
+                            {...getTdProps({ columnKey: "status" })}
+                          >
+                            {item.status}
+                          </Td>
+                          <Td
+                            width={10}
                             modifier="breakWord"
                             {...getTdProps({
-                              columnKey: "cvss",
+                              columnKey: "severity",
                               // isCompoundExpandToggle: item.advisories.size > 1,
                               isCompoundExpandToggle: true,
                               item: item,
@@ -363,7 +377,7 @@ export const SbomScan: React.FC = () => {
                             {item.advisories.size} Advisories
                           </Td>
                           <Td
-                            width={15}
+                            width={10}
                             modifier="truncate"
                             {...getTdProps({
                               columnKey: "affectedDependencies",
@@ -373,6 +387,13 @@ export const SbomScan: React.FC = () => {
                             })}
                           >
                             {item.purls.size}
+                          </Td>
+                          <Td
+                            width={10}
+                            modifier="truncate"
+                            {...getTdProps({ columnKey: "advisories" })}
+                          >
+                            s
                           </Td>
                           <Td
                             width={10}
@@ -398,7 +419,40 @@ export const SbomScan: React.FC = () => {
                             })}
                           >
                             <ExpandableRowContent>
-                              {isCellExpanded(item, "cvss") ? (
+                              {isCellExpanded(item, "vulnerabilityId") ? (
+                                <Table variant="compact">
+                                  <Thead>
+                                    <Tr>
+                                      <Th>Advisory</Th>
+                                      <Th>Issuer</Th>
+                                      <Th>Severity</Th>
+                                    </Tr>
+                                  </Thead>
+                                  <Tbody>
+                                    {Array.from(item.advisories.values()).map(
+                                      (advisory) => (
+                                        <Tr key={advisory.advisory.document_id}>
+                                          <Td>
+                                            {advisory.advisory.document_id}
+                                          </Td>
+                                          <Td>
+                                            {advisory.advisory.issuer?.name}
+                                          </Td>
+                                          <Td>
+                                            <SeverityShieldAndText
+                                              value={advisory.severity}
+                                              score={advisory.severity_score}
+                                              showLabel
+                                              showScore
+                                            />
+                                          </Td>
+                                        </Tr>
+                                      ),
+                                    )}
+                                  </Tbody>
+                                </Table>
+                              ) : null}
+                              {isCellExpanded(item, "severity") ? (
                                 <List isPlain>
                                   {Array.from(item.advisories.values()).map(
                                     (e) => (
@@ -423,7 +477,43 @@ export const SbomScan: React.FC = () => {
                                       <Th>Qualifiers</Th>
                                     </Tr>
                                   </Thead>
-                                  <Tbody>affected dependencies</Tbody>
+                                  <Tbody>
+                                    {Array.from(item.purls.values()).map(
+                                      (purl) => {
+                                        const decomposedPurl =
+                                          decomposePurl(purl);
+
+                                        if (decomposedPurl) {
+                                          return (
+                                            <Tr key={purl}>
+                                              <Td>{decomposedPurl?.type}</Td>
+                                              <Td>
+                                                {decomposedPurl?.namespace}
+                                              </Td>
+                                              <Td>{decomposedPurl?.name}</Td>
+                                              <Td>{decomposedPurl?.version}</Td>
+                                              <Td>{decomposedPurl?.path}</Td>
+                                              <Td>
+                                                {decomposedPurl?.qualifiers && (
+                                                  <PackageQualifiers
+                                                    value={
+                                                      decomposedPurl?.qualifiers
+                                                    }
+                                                  />
+                                                )}
+                                              </Td>
+                                            </Tr>
+                                          );
+                                        }
+
+                                        return (
+                                          <Tr key={purl}>
+                                            <Td colSpan={6}>{purl}</Td>
+                                          </Tr>
+                                        );
+                                      },
+                                    )}
+                                  </Tbody>
                                 </Table>
                               ) : null}
                             </ExpandableRowContent>

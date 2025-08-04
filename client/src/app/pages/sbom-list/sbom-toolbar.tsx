@@ -39,7 +39,10 @@ export const SbomToolbar: React.FC<SbomToolbarProps> = ({ showFilters }) => {
           <>
             <FilterToolbar {...filterToolbarProps} />
             <ToolbarItem>
-              <Button variant="primary" onClick={() => navigate(Paths.sbomUpload)}>
+              <Button
+                variant="primary"
+                onClick={() => navigate(Paths.sbomUpload)}
+              >
                 Upload SBOM
               </Button>
             </ToolbarItem>
@@ -48,7 +51,7 @@ export const SbomToolbar: React.FC<SbomToolbarProps> = ({ showFilters }) => {
                 variant="secondary"
                 onClick={() => navigate(Paths.sbomScan)}
               >
-                Scan SBOM
+                Generate SBOM report
               </Button>
             </ToolbarItem>
           </>

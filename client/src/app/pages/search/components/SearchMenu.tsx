@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { generatePath, Link } from "react-router-dom";
 
 import {
   Label,
@@ -14,13 +14,14 @@ import {
 
 import { useDebounceValue } from "usehooks-ts";
 
-import { FILTER_TEXT_CATEGORY_KEY } from "@app/Constants";
 import type { HubRequestParams } from "@app/api/models";
+import { FILTER_TEXT_CATEGORY_KEY } from "@app/Constants";
 import { SbomSearchContext } from "@app/pages/sbom-list/sbom-context";
 import { useFetchAdvisories } from "@app/queries/advisories";
 import { useFetchPackages } from "@app/queries/packages";
 import { useFetchSBOMs } from "@app/queries/sboms";
 import { useFetchVulnerabilities } from "@app/queries/vulnerabilities";
+import { Paths } from "@app/Routes";
 
 export interface IEntity {
   id: string;
@@ -87,7 +88,7 @@ function useAllEntities(filterText: string, disableSearch: boolean) {
     id: `advisory-${item.uuid}`,
     title: item.document_id,
     description: item.title?.substring(0, 75),
-    navLink: `/advisories/${item.uuid}`,
+    navLink: generatePath(Paths.advisoryDetails, { advisoryId: item.uuid }),
     type: "Advisory",
     typeColor: "blue",
   }));
@@ -95,7 +96,7 @@ function useAllEntities(filterText: string, disableSearch: boolean) {
   const transformedPackages: IEntity[] = packages.map((item) => ({
     id: `package-${item.uuid}`,
     title: item.purl,
-    navLink: `/packages/${item.uuid}`,
+    navLink: generatePath(Paths.packageDetails, { packageId: item.uuid }),
     type: "Package",
     typeColor: "teal",
   }));
@@ -104,7 +105,7 @@ function useAllEntities(filterText: string, disableSearch: boolean) {
     id: `sbom-${item.id}`,
     title: item.name,
     description: item.suppliers.join(", "),
-    navLink: `/sboms/details/${item.id}`,
+    navLink: generatePath(Paths.sbomDetails, { sbomId: item.id }),
     type: "SBOM",
     typeColor: "purple",
   }));
@@ -113,7 +114,9 @@ function useAllEntities(filterText: string, disableSearch: boolean) {
     id: `vulnerability-${item.identifier}`,
     title: item.identifier,
     description: item.description?.substring(0, 75),
-    navLink: `/vulnerabilities/${item.identifier}`,
+    navLink: generatePath(Paths.vulnerabilityDetails, {
+      vulnerabilityId: item.identifier,
+    }),
     type: "Vulnerability",
     typeColor: "orange",
   }));
