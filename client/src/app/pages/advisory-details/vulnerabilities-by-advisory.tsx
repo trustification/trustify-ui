@@ -1,5 +1,5 @@
 import type React from "react";
-import { Link } from "react-router-dom";
+import { generatePath, Link } from "react-router-dom";
 
 import type { AxiosError } from "axios";
 
@@ -27,6 +27,7 @@ import { TdWithFocusStatus } from "@app/components/TdWithFocusStatus";
 import { VulnerabilityDescription } from "@app/components/VulnerabilityDescription";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 import { formatDate } from "@app/utils/utils";
+import { Paths } from "@app/Routes";
 
 interface VulnerabilitiesByAdvisoryProps {
   isFetching: boolean;
@@ -123,7 +124,11 @@ export const VulnerabilitiesByAdvisory: React.FC<
                       modifier="breakWord"
                       {...getTdProps({ columnKey: "identifier" })}
                     >
-                      <Link to={`/vulnerabilities/${item.identifier}`}>
+                      <Link
+                        to={generatePath(Paths.vulnerabilityDetails, {
+                          vulnerabilityId: item.identifier,
+                        })}
+                      >
                         {item.identifier}
                       </Link>
                     </Td>

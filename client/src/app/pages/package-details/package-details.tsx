@@ -19,7 +19,7 @@ import {
 } from "@patternfly/react-core";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
-import { PathParam, useRouteParams } from "@app/Routes";
+import { PathParam, Paths, useRouteParams } from "@app/Routes";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { PackageQualifiers } from "@app/components/PackageQualifiers";
 import { useFetchPackageById } from "@app/queries/packages";
@@ -56,7 +56,7 @@ export const PackageDetails: React.FC = () => {
       <PageSection type="breadcrumb">
         <Breadcrumb>
           <BreadcrumbItem>
-            <Link to="/packages">Packages</Link>
+            <Link to={Paths.packages}>Packages</Link>
           </BreadcrumbItem>
           <BreadcrumbItem isActive>Package details</BreadcrumbItem>
         </Breadcrumb>
