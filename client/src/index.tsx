@@ -10,7 +10,13 @@ import reportWebVitals from "@app/reportWebVitals";
 import "@app/dayjs";
 import { OidcProvider } from "@app/components/OidcProvider";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const container = document.getElementById("root");
 
