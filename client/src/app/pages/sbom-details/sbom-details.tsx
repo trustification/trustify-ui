@@ -25,8 +25,7 @@ import {
 } from "@patternfly/react-core";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
-import { PathParam, useRouteParams } from "@app/Routes";
-
+import { PathParam, Paths, useRouteParams } from "@app/Routes";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useDownload } from "@app/hooks/domain-controls/useDownload";
 import { useFetchSBOMById } from "@app/queries/sboms";
@@ -70,7 +69,7 @@ export const SbomDetails: React.FC = () => {
       <PageSection type="breadcrumb">
         <Breadcrumb>
           <BreadcrumbItem>
-            <Link to="/sboms">SBOMs</Link>
+            <Link to={Paths.sboms}>SBOMs</Link>
           </BreadcrumbItem>
           <BreadcrumbItem isActive>SBOM details</BreadcrumbItem>
         </Breadcrumb>

@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { generatePath, NavLink } from "react-router-dom";
 
 import { Modal, ModalBody, ModalHeader } from "@patternfly/react-core";
 import {
@@ -24,6 +24,7 @@ import { formatDate } from "@app/utils/utils";
 import { joinKeyValueAsString } from "@app/api/model-utils";
 import type { SbomSummary } from "@app/client";
 import { LabelsAsList } from "@app/components/LabelsAsList";
+import { Paths } from "@app/Routes";
 
 import { SBOMEditLabelsForm } from "./components/SBOMEditLabelsForm";
 import { SBOMVulnerabilities } from "./components/SbomVulnerabilities";
@@ -99,7 +100,13 @@ export const SbomTable: React.FC = () => {
                         rowIndex,
                       })}
                     >
-                      <NavLink to={`/sboms/${item.id}`}>{item.name}</NavLink>
+                      <NavLink
+                        to={generatePath(Paths.sbomDetails, {
+                          sbomId: item.id,
+                        })}
+                      >
+                        {item.name}
+                      </NavLink>
                     </Td>
                     <Td
                       width={10}
