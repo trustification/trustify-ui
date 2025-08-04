@@ -10,6 +10,7 @@ import {
 
 import { FilterToolbar } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
+import { Paths } from "@app/Routes";
 
 import { SbomSearchContext } from "./sbom-context";
 
@@ -38,9 +39,14 @@ export const SbomToolbar: React.FC<SbomToolbarProps> = ({ showFilters }) => {
           <>
             <FilterToolbar {...filterToolbarProps} />
             <ToolbarItem>
+              <Button variant="primary" onClick={() => navigate(Paths.sbomUpload)}>
+                Upload SBOM
+              </Button>
+            </ToolbarItem>
+            <ToolbarItem>
               <Button
                 variant="secondary"
-                onClick={() => navigate("/sboms/scan")}
+                onClick={() => navigate(Paths.sbomScan)}
               >
                 Scan SBOM
               </Button>

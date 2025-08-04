@@ -1,22 +1,23 @@
 import type React from "react";
-import { Link } from "react-router-dom";
+import { generatePath, Link } from "react-router-dom";
 
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
-import { TablePersistenceKeyPrefixes } from "@app/Constants";
 import { FilterType } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
   TableHeaderContentWithControls,
 } from "@app/components/TableControls";
+import { TablePersistenceKeyPrefixes } from "@app/Constants";
 import {
   getHubRequestParams,
   useTableControlProps,
   useTableControlState,
 } from "@app/hooks/table-controls";
 import { useFetchSbomsByPackageId } from "@app/queries/sboms";
+import { Paths } from "@app/Routes";
 
 interface SbomsByPackageProps {
   purl: string;
@@ -120,7 +121,11 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
                     modifier="breakWord"
                     {...getTdProps({ columnKey: "name" })}
                   >
-                    <Link to={`/sboms/details/${item.id}`}>{item.name}</Link>
+                    <Link
+                      to={generatePath(Paths.sbomDetails, { sbomId: item.id })}
+                    >
+                      {item.name}
+                    </Link>
                   </Td>
                   <Td
                     width={15}

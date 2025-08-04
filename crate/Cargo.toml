@@ -12,4 +12,6 @@ static-files = "0.2.1"
 tera = "1.19.1"
 
 [build-dependencies]
+anyhow = "1"
 static-files = "0.2.1"
+walkdir = "2"
