@@ -1,5 +1,5 @@
 import type React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { generatePath, Link, useNavigate } from "react-router-dom";
 
 import {
   Chart,
@@ -36,8 +36,8 @@ import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useVulnerabilitiesOfSboms } from "@app/hooks/domain-controls/useVulnerabilitiesOfSbom";
 import { useFetchAdvisories } from "@app/queries/advisories";
 import { useFetchSBOMs } from "@app/queries/sboms";
+import { Paths } from "@app/Routes";
 import { formatDateTime } from "@app/utils/utils";
-import { buildPath } from "@app/Routes";
 
 interface Legend {
   severity: ExtendedSeverity;
@@ -171,7 +171,7 @@ export const MonitoringSection: React.FC = () => {
                                   );
                                   if (sbom) {
                                     navigate(
-                                      buildPath.sbomsDetails({
+                                      generatePath(Paths.sbomDetails, {
                                         sbomId: sbom.id,
                                       }),
                                     );
@@ -268,13 +268,15 @@ export const MonitoringSection: React.FC = () => {
                             {formatDateTime(barchartSboms?.[0]?.ingested)}
                           </StackItem>
                           <StackItem>
-                            <Link
-                              to={buildPath.sbomsDetails({
-                                sbomId: barchartSboms?.[0]?.id,
-                              })}
-                            >
-                              {barchartSboms?.[0]?.name}
-                            </Link>
+                            {barchartSboms?.[0] && (
+                              <Link
+                                to={generatePath(Paths.sbomDetails, {
+                                  sbomId: barchartSboms?.[0]?.id,
+                                })}
+                              >
+                                {barchartSboms?.[0]?.name}
+                              </Link>
+                            )}
                           </StackItem>
                         </Stack>
                       </DescriptionListDescription>
@@ -303,13 +305,15 @@ export const MonitoringSection: React.FC = () => {
                             {formatDateTime(advisories?.[0]?.ingested)}
                           </StackItem>
                           <StackItem>
-                            <Link
-                              to={buildPath.advisoriesDetails({
-                                advisoryId: advisories?.[0]?.uuid,
-                              })}
-                            >
-                              {advisories?.[0]?.document_id}
-                            </Link>
+                            {advisories?.[0] && (
+                              <Link
+                                to={generatePath(Paths.advisoryDetails, {
+                                  advisoryId: advisories?.[0]?.uuid,
+                                })}
+                              >
+                                {advisories?.[0]?.document_id}
+                              </Link>
+                            )}
                           </StackItem>
                         </Stack>
                       </DescriptionListDescription>

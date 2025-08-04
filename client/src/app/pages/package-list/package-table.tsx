@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { generatePath, NavLink } from "react-router-dom";
 
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 
@@ -10,7 +10,7 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
-import { buildPath } from "@app/Routes";
+import { Paths } from "@app/Routes";
 
 import { PackageVulnerabilities } from "./components/PackageVulnerabilities";
 import { PackageSearchContext } from "./package-context";
@@ -67,7 +67,11 @@ export const PackageTable: React.FC = () => {
                       modifier="breakWord"
                       {...getTdProps({ columnKey: "name" })}
                     >
-                      <NavLink to={buildPath.packageDetails(item.uuid)}>
+                      <NavLink
+                        to={generatePath(Paths.packageDetails, {
+                          packageId: item.uuid,
+                        })}
+                      >
                         {item.decomposedPurl
                           ? item.decomposedPurl?.name
                           : item.purl}

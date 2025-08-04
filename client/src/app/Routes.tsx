@@ -39,50 +39,51 @@ export enum PathParam {
 }
 
 export const Paths = {
-  advisoriesList: "/advisories",
-  advisoriesUpload: "/advisories/upload",
-  advisoriesDetails: `/advisories/details/:${PathParam.ADVISORY_ID}`,
-  vulnerabilitiesList: "/vulnerabilities",
-  vulnerabilitiesDetails: `/vulnerabilities/:${PathParam.VULNERABILITY_ID}`,
-  sbomsList: "/sboms",
-  sbomsUpload: "/sboms/upload",
-  sbomsDetails: `/sboms/:${PathParam.SBOM_ID}`,
-  packagesList: "/packages",
-  packagesDetails: `/packages/:${PathParam.PACKAGE_ID}`,
-  importersList: "/importers",
+  advisories: "/advisories",
+  advisoryUpload: "/advisories/upload",
+  advisoryDetails: `/advisories/:${PathParam.ADVISORY_ID}`,
+  vulnerabilities: "/vulnerabilities",
+  vulnerabilityDetails: `/vulnerabilities/:${PathParam.VULNERABILITY_ID}`,
+  sboms: "/sboms",
+  sbomUpload: "/sboms/upload",
+  sbomDetails: `/sboms/:${PathParam.SBOM_ID}`,
+  packages: "/packages",
+  packageDetails: `/packages/:${PathParam.PACKAGE_ID}`,
   search: "/search",
-};
+  importers: "/importers",
+} as const;
 
 export const AppRoutes = () => {
   const allRoutes = useRoutes([
     { path: "/", element: <Home /> },
-    { path: Paths.advisoriesList, element: <AdvisoryList /> },
-    { path: Paths.advisoriesUpload, element: <AdvisoryUpload /> },
+    { path: Paths.advisories, element: <AdvisoryList /> },
+    { path: Paths.advisoryUpload, element: <AdvisoryUpload /> },
     {
-      path: Paths.advisoriesDetails,
+      path: Paths.advisoryDetails,
       element: <AdvisoryDetails />,
     },
-    { path: Paths.vulnerabilitiesList, element: <VulnerabilityList /> },
+    { path: Paths.vulnerabilities, element: <VulnerabilityList /> },
     {
-      path: Paths.vulnerabilitiesDetails,
+      path: Paths.vulnerabilityDetails,
       element: <VulnerabilityDetails />,
     },
-    { path: Paths.packagesList, element: <PackageList /> },
+    { path: Paths.packages, element: <PackageList /> },
     {
-      path: Paths.packagesDetails,
+      path: Paths.packageDetails,
       element: <PackageDetails />,
     },
-    { path: Paths.sbomsList, element: <SBOMList /> },
-    { path: Paths.sbomsUpload, element: <SBOMUpload /> },
+    { path: Paths.sboms, element: <SBOMList /> },
+    { path: Paths.sbomUpload, element: <SBOMUpload /> },
     {
-      path: Paths.sbomsDetails,
+      path: Paths.sbomDetails,
       element: <SBOMDetails />,
     },
     {
-      path: Paths.importersList,
+      path: Paths.importers,
       element: <ImporterList />,
     },
     { path: Paths.search, element: <Search /> },
+    { path: Paths.upload, element: <Upload /> },
   ]);
 
   return (
@@ -109,30 +110,4 @@ export const useRouteParams = (pathParam: PathParam) => {
     );
   }
   return value;
-};
-
-export const buildPath = {
-  advisoriesDetails: ({ advisoryId }: { advisoryId: string }) => {
-    return formatPath(Paths.advisoriesDetails, { advisoryId });
-  },
-  vulnerabilityDetails: ({ vulnerabilityId }: { vulnerabilityId: string }) => {
-    return formatPath(Paths.vulnerabilitiesDetails, { vulnerabilityId });
-  },
-  sbomsDetails: ({ sbomId }: { sbomId: string }) => {
-    return formatPath(Paths.sbomsDetails, { sbomId });
-  },
-  packageDetails: ({ packageId }: { packageId: string }) => {
-    return formatPath(Paths.packagesDetails, { packageId });
-  },
-};
-
-const formatPath = (path: string, data: Record<string, string | number>) => {
-  let url = path as string;
-
-  for (const k of Object.keys(data)) {
-    const regex = new RegExp(`:${k}(/|$)`, "g");
-    url = url.replace(regex, `${data[k]}$1`);
-  }
-
-  return url;
 };

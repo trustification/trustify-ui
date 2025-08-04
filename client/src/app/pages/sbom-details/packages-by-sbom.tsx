@@ -1,5 +1,5 @@
 import type React from "react";
-import { Link } from "react-router-dom";
+import { generatePath, Link } from "react-router-dom";
 
 import {
   Label,
@@ -36,7 +36,7 @@ import {
 } from "@app/hooks/table-controls";
 import { useFetchPackagesBySbomId } from "@app/queries/packages";
 import { useFetchSbomsLicenseIds } from "@app/queries/sboms";
-import { buildPath } from "@app/Routes";
+import { Paths } from "@app/Routes";
 
 import { PackageVulnerabilities } from "../package-list/components/PackageVulnerabilities";
 
@@ -223,7 +223,11 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                       })}
                     >
                       {item.purl.length === 1 ? (
-                        <Link to={buildPath.packageDetails(item.purl[0].uuid)}>
+                        <Link
+                          to={generatePath(Paths.packageDetails, {
+                            packageId: item.purl[0].uuid,
+                          })}
+                        >
                           {item.purl[0].purl}
                         </Link>
                       ) : (
@@ -274,7 +278,11 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                               {item.purl.map((e) => {
                                 return (
                                   <ListItem key={e.uuid}>
-                                    <Link to={buildPath.packageDetails(e.uuid)}>
+                                    <Link
+                                      to={generatePath(Paths.packageDetails, {
+                                        packageId: e.uuid,
+                                      })}
+                                    >
                                       {e.purl}
                                     </Link>
                                   </ListItem>
