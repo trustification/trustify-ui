@@ -22,7 +22,7 @@ export const SbomUpload: React.FC = () => {
       <PageSection type="breadcrumb">
         <Breadcrumb>
           <BreadcrumbItem>
-            <Link to={Paths.sbomsList}>SBOMs</Link>
+            <Link to={Paths.sboms}>SBOMs</Link>
           </BreadcrumbItem>
           <BreadcrumbItem isActive>Upload SBOM</BreadcrumbItem>
         </Breadcrumb>

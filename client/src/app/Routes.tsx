@@ -83,7 +83,6 @@ export const AppRoutes = () => {
       element: <ImporterList />,
     },
     { path: Paths.search, element: <Search /> },
-    { path: Paths.upload, element: <Upload /> },
   ]);
 
   return (

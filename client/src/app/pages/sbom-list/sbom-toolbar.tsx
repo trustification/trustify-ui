@@ -10,9 +10,9 @@ import {
 
 import { FilterToolbar } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
+import { Paths } from "@app/Routes";
 
 import { SbomSearchContext } from "./sbom-context";
-import { Paths } from "@app/Routes";
 
 interface SbomToolbarProps {
   showFilters?: boolean;
@@ -37,7 +37,7 @@ export const SbomToolbar: React.FC<SbomToolbarProps> = ({ showFilters }) => {
       <ToolbarContent>
         {showFilters && <FilterToolbar {...filterToolbarProps} />}
         <ToolbarItem>
-          <Button variant="primary" onClick={() => navigate(Paths.sbomsUpload)}>
+          <Button variant="primary" onClick={() => navigate(Paths.sbomUpload)}>
             Upload SBOM
           </Button>
         </ToolbarItem>

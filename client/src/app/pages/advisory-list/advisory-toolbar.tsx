@@ -11,9 +11,9 @@ import {
 
 import { FilterToolbar } from "@app/components/FilterToolbar";
 import { SimplePagination } from "@app/components/SimplePagination";
+import { Paths } from "@app/Routes";
 
 import { AdvisorySearchContext } from "./advisory-context";
-import { Paths } from "@app/Routes";
 
 interface AdvisoryToolbarProps {
   showFilters?: boolean;
@@ -23,9 +23,6 @@ export const AdvisoryToolbar: React.FC<AdvisoryToolbarProps> = ({
   showFilters,
 }) => {
   const navigate = useNavigate();
-
-  const [_isUploadDrawerExpanded, _setIsUploadDrawerExpandedd] =
-    React.useState(false);
 
   const { tableControls } = React.useContext(AdvisorySearchContext);
 
@@ -45,7 +42,7 @@ export const AdvisoryToolbar: React.FC<AdvisoryToolbarProps> = ({
         <ToolbarItem>
           <Button
             variant="primary"
-            onClick={() => navigate(Paths.advisoriesUpload)}
+            onClick={() => navigate(Paths.advisoryUpload)}
           >
             Upload Advisory
           </Button>

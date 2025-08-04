@@ -22,7 +22,7 @@ export const AdvisoryUpload: React.FC = () => {
       <PageSection type="breadcrumb">
         <Breadcrumb>
           <BreadcrumbItem>
-            <Link to={Paths.advisoriesList}>Advisories</Link>
+            <Link to={Paths.advisories}>Advisories</Link>
           </BreadcrumbItem>
           <BreadcrumbItem isActive>Upload Advisory</BreadcrumbItem>
         </Breadcrumb>
