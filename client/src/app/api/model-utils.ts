@@ -115,7 +115,11 @@ export const splitStringAsKeyValue = (v: string): Label => {
  * @param val
  * @returns a numeric value of the priority associated to the ScoreType
  */
-const getScoreTypePriority = (val: ScoreType) => {
+const getScoreTypePriority = (val: ScoreType | null) => {
+  if (!val) {
+    return 0;
+  }
+
   switch (val) {
     case "3.1":
       return 1;
@@ -131,7 +135,7 @@ const getScoreTypePriority = (val: ScoreType) => {
 };
 
 export function compareByScoreTypeFn<T>(
-  scoreTypeExtractor: (elem: T) => ScoreType,
+  scoreTypeExtractor: (elem: T) => ScoreType | null,
 ) {
   return (a: T, b: T) => {
     return (

@@ -1,7 +1,7 @@
 import React from "react";
 
 import {
-  compareBySeverityFn,
+  compareByScoreTypeFn,
   extractPriorityScoreFromScores,
 } from "@app/api/model-utils";
 import {
@@ -14,6 +14,7 @@ import type {
   SbomAdvisory,
   SbomPackage,
   SbomStatus,
+  Score,
   VulnerabilityHead,
 } from "@app/client";
 import {
@@ -198,17 +199,23 @@ export const useVulnerabilitiesOfSboms = (sbomIds: string[]) => {
 
 //
 
-type AdvisoryWr = {
-  severity: ExtendedSeverity;
-  severity_score: number | null;
+type AdvisoryFromAnalysis = {
   advisory: AdvisoryHead;
+  scores: Score[];
+  opinionatedScore: Score | null;
+  opinionatedExtendedSeverity: ExtendedSeverity;
 };
 
-interface Pac {
+interface VulnerabilityOfSbomFromAnalysis {
   vulnerability: VulnerabilityHead;
   status: VulnerabilityStatus;
-  advisories: Map<string, AdvisoryWr>;
+  advisories: Map<string, AdvisoryFromAnalysis>;
   purls: Set<string>;
+  opinionatedAvisory: {
+    advisory: AdvisoryHead | null;
+    score: Score | null;
+    extendedSeverity: ExtendedSeverity;
+  };
 }
 
 export const useVulnerabilitiesOfSbomByPurls = (purls: string[]) => {
@@ -229,13 +236,12 @@ export const useVulnerabilitiesOfSbomByPurls = (purls: string[]) => {
           return Object.entries(vulnerability.status).flatMap(
             ([status, advisories]) => {
               return advisories.map((advisory) => {
-                const score = extractPriorityScoreFromScores(advisory.scores);
                 return {
                   purl,
                   vulnerability,
                   status: status as VulnerabilityStatus,
                   advisory,
-                  score,
+                  scores: advisory.scores,
                 };
               });
             },
@@ -245,8 +251,8 @@ export const useVulnerabilitiesOfSbomByPurls = (purls: string[]) => {
       //group
       .reduce((prev, current) => {
         const areVulnerabilityOfPackageEqual = (
-          a: Pick<Pac, "vulnerability" | "status">,
-          b: Pick<Pac, "vulnerability" | "status">,
+          a: Pick<VulnerabilityOfSbomFromAnalysis, "vulnerability" | "status">,
+          b: Pick<VulnerabilityOfSbomFromAnalysis, "vulnerability" | "status">,
         ) => {
           return (
             a.vulnerability.identifier === b.vulnerability.identifier &&
@@ -254,7 +260,7 @@ export const useVulnerabilitiesOfSbomByPurls = (purls: string[]) => {
           );
         };
 
-        let result: Pac[];
+        let result: VulnerabilityOfSbomFromAnalysis[];
 
         const existingElement = prev.find((item) => {
           return areVulnerabilityOfPackageEqual(item, current);
@@ -265,65 +271,122 @@ export const useVulnerabilitiesOfSbomByPurls = (purls: string[]) => {
             (item) => !areVulnerabilityOfPackageEqual(item, existingElement),
           );
 
+          const score = extractPriorityScoreFromScores(current.scores);
           const extendedSeverity = extendedSeverityFromSeverity(
-            current.score?.severity,
+            score?.severity,
           );
 
-          const advisories = new Map<string, AdvisoryWr>(
+          // new advisories
+          const advisories = new Map<string, AdvisoryFromAnalysis>(
             existingElement.advisories,
           );
           advisories.set(current.advisory.identifier, {
-            severity: extendedSeverity,
-            severity_score: current.score?.value ?? null,
             advisory: current.advisory,
+            scores: current.scores,
+            opinionatedScore: score,
+            opinionatedExtendedSeverity: extendedSeverity,
           });
 
+          // new purls
           const purls = new Set(existingElement.purls);
           purls.add(current.purl);
 
-          const updatedItemInArray: Pac = {
-            ...existingElement,
+          // new opinionated advisory
+          let opinionatedAdvisory: AdvisoryHead | null = null;
+          let opinionatedScore: Score | null = null;
+          if (existingElement.opinionatedAvisory.score?.type !== score?.type) {
+            const preferedAdvisoryScore = [
+              {
+                advisory: existingElement.opinionatedAvisory.advisory,
+                score: existingElement.opinionatedAvisory.score,
+              },
+              {
+                advisory: current.advisory,
+                score: score,
+              },
+            ].sort(compareByScoreTypeFn((item) => item.score?.type ?? null))[0];
+
+            opinionatedAdvisory = preferedAdvisoryScore.advisory;
+            opinionatedScore = preferedAdvisoryScore.score;
+          } else {
+            const {
+              advisory: newOpinionatedAdvisory,
+              score: newOpinionatedScore,
+            } =
+              (score?.value ?? 0) >
+              (existingElement.opinionatedAvisory.score?.value ?? 0)
+                ? {
+                    score: score,
+                    advisory: current.advisory,
+                  }
+                : {
+                    score: existingElement.opinionatedAvisory.score,
+                    advisory: existingElement.opinionatedAvisory.advisory,
+                  };
+
+            opinionatedAdvisory = newOpinionatedAdvisory;
+            opinionatedScore = newOpinionatedScore;
+          }
+
+          const opinionatedExtendedSeverity = extendedSeverityFromSeverity(
+            opinionatedScore?.severity,
+          );
+
+          const updatedItemInArray: VulnerabilityOfSbomFromAnalysis = {
+            // existing element
+            vulnerability: existingElement.vulnerability,
+            status: existingElement.status,
+            // new values,
             advisories,
             purls,
+            opinionatedAvisory: {
+              advisory: opinionatedAdvisory,
+              score: opinionatedScore,
+              extendedSeverity: opinionatedExtendedSeverity,
+            },
           };
 
           result = [...arrayWithoutExistingItem, updatedItemInArray];
         } else {
+          const score = extractPriorityScoreFromScores(current.scores);
           const extendedSeverity = extendedSeverityFromSeverity(
-            current.score?.severity,
+            score?.severity,
           );
 
-          const advisories = new Map<string, AdvisoryWr>();
+          // advisories
+          const advisories = new Map<string, AdvisoryFromAnalysis>();
           advisories.set(current.advisory.identifier, {
-            severity: extendedSeverity,
-            severity_score: current.score?.value ?? null,
             advisory: current.advisory,
+            scores: current.scores,
+            opinionatedExtendedSeverity: extendedSeverity,
+            opinionatedScore: score,
           });
 
+          // purls
           const purls = new Set<string>();
           purls.add(current.purl);
 
-          const newItemInArray: Pac = {
+          const newItemInArray: VulnerabilityOfSbomFromAnalysis = {
             vulnerability: current.vulnerability,
             status: current.status,
             advisories,
             purls,
+            opinionatedAvisory: {
+              advisory: current.advisory,
+              score: score,
+              extendedSeverity: extendedSeverity,
+            },
           };
           result = [...prev.slice(), newItemInArray];
         }
 
         return result;
-      }, [] as Pac[]);
+      }, [] as VulnerabilityOfSbomFromAnalysis[]);
 
     const summary = vulnerabilities.reduce(
       (prev, current) => {
-        // Select the advisory with the highest severity
-        const advisory = Array.from(current.advisories.values()).sort(
-          compareBySeverityFn((e) => e.severity),
-        )[0];
-
         const vulnStatus = current.status as VulnerabilityStatus;
-        const severity = advisory.severity;
+        const severity = current.opinionatedAvisory.extendedSeverity;
 
         const prevVulnStatusValue = prev.vulnerabilityStatus[vulnStatus];
 

@@ -23,7 +23,7 @@ import FileIcon from "@patternfly/react-icons/dist/esm/icons/file-code-icon";
 import UploadIcon from "@patternfly/react-icons/dist/esm/icons/upload-icon";
 
 export interface IUploadFilesProps {
-  uploads: Map<File, Upload<any, any>>;
+  uploads: Map<File, Upload<unknown, unknown>>;
   handleUpload: (files: File[]) => void;
   handleRemoveUpload: (file: File) => void;
   extractSuccessMessage: (response: AxiosResponse) => string;
