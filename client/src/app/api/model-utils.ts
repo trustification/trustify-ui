@@ -19,6 +19,7 @@ import {
 } from "@patternfly/react-tokens";
 
 import type { ExtendedSeverity, Label } from "./models";
+import type { Score, ScoreType } from "@app/client";
 
 type ListType = {
   [key in ExtendedSeverity]: {
@@ -107,4 +108,47 @@ export const joinKeyValueAsString = ({ key, value }: Label): string => {
 export const splitStringAsKeyValue = (v: string): Label => {
   const [key, value] = v.split("=");
   return { key, value: value ?? "" };
+};
+
+/**
+ * Determines the favorite ScoreType to be chosen to get the severity
+ * @param val
+ * @returns a numeric value of the priority associated to the ScoreType
+ */
+const getScoreTypePriority = (val: ScoreType | null) => {
+  if (!val) {
+    return 0;
+  }
+
+  switch (val) {
+    case "3.1":
+      return 1;
+    case "3.0":
+      return 2;
+    case "4.0":
+      return 3;
+    case "2.0":
+      return 4;
+    default:
+      return 0;
+  }
+};
+
+export function compareByScoreTypeFn<T>(
+  scoreTypeExtractor: (elem: T) => ScoreType | null,
+) {
+  return (a: T, b: T) => {
+    return (
+      getScoreTypePriority(scoreTypeExtractor(a)) -
+      getScoreTypePriority(scoreTypeExtractor(b))
+    );
+  };
+}
+
+export const extractPriorityScoreFromScores = (scores: Score[]) => {
+  if (scores.length === 0) {
+    return null;
+  }
+
+  return scores.sort(compareByScoreTypeFn((item) => item.type))[0];
 };
