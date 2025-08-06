@@ -28,7 +28,7 @@ jobs:
 
       - name: install trustify
         id: install-trustify
-        uses: ./trustify-ui/.github/actions/start-trustify
+        uses: .github/actions/start-trustify
         with:
           ui_image: ${{ inputs.ui_image }}
           server_image: ${{ inputs.server_image }}
