@@ -151,7 +151,6 @@ jobs:
           server_db_image: ${{ inputs.server_db_image }}
 
       - name: Run Playwright tests
-        working-directory: trustify-tests
         run: |
           script=""
           if [ "${{ inputs.run_api_tests }}" = "true" ] && [ "${{ inputs.run_ui_tests }}" = "true" ]; then
