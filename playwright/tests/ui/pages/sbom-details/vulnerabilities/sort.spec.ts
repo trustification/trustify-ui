@@ -1,7 +1,6 @@
 // @ts-check
 
-import { test } from "@playwright/test";
-
+import { test } from "../../../fixtures";
 import { login } from "../../../helpers/Auth";
 import { VulnerabilitiesTab } from "./VulnerabilitiesTab";
 import { expectSort } from "../../Helpers";
