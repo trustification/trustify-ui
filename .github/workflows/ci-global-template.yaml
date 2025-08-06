@@ -164,4 +164,4 @@ jobs:
 
           echo "script to run: ${script}"
 
-          PW_TEST_CONNECT_WS_ENDPOINT=ws://localhost:5000/ TRUSTIFY_URL=http://localhost:8081 TRUSTIFY_AUTH_ENABLED=false npm run $script
+          PW_TEST_CONNECT_WS_ENDPOINT=ws://localhost:5000/ TRUSTIFY_URL=http://localhost:8081 TRUSTIFY_AUTH_ENABLED=false npm run -w playwright $script
