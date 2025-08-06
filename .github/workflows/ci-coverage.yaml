@@ -33,17 +33,17 @@ jobs:
           ui_image: ${{ inputs.ui_image }}
           server_image: ${{ inputs.server_image }}
           server_db_image: ${{ inputs.server_db_image }}
-      
+
       - name: trustify-ui - start in dev mode
         run: |
-          AUTH_REQUIRED=false npm run start:dev & echo "dev ui started"      
+          AUTH_REQUIRED=false npm run start:dev & echo "dev ui started"
       - name: trustify-ui - wait
         run: |
           until curl -s http://localhost:3000 | grep -qi "<html"; do
             echo "Waiting for HTML page"
             sleep 2
           done
-      
+
       - name: Tests with coverage
         working-directory: playwright
         run: |
