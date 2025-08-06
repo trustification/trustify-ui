@@ -58,12 +58,14 @@ jobs:
           path: playwright/nyc_output.zip
 
       - name: Generate coverage report
-        working-directory: playwright
-        run: |
-          ls -la
-          npx nyc report --reporter=html --reporter=text --reporter=lcov      
+        run: |          
+          # Report can only be generate in the trustify-ui directory
+          cp -r playwright/.nyc_output .nyc_output
+
+          # Generate report from trustify-ui
+          npx nyc report --reporter=html --reporter=text --reporter=lcov
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: playwright/coverage
+          path: coverage
