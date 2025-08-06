@@ -1,0 +1,98 @@
+name: CI Coverage (global trustify CI)
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+  workflow_call:
+  merge_group:
+
+concurrency:
+  group: ci-coverage-global-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: trustify-ui - clone
+        uses: actions/checkout@v4
+        with:
+          path: trustify-ui
+      - name: trustify-ui - use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: trustify-ui/package-lock.json
+      - name: trustify-ui - install dependencies
+        working-directory: trustify-ui
+        run: npm ci
+
+      - name: Extract pull request number from inputs or PR description
+        env:
+          body: ${{ github.event.pull_request.body }}
+        run: |
+          PULL_REQUEST_NUMBER=$(echo ${body} | grep -oP '[T|t]ests [P|p][R|r]: \K\d+' || true)
+          [ -z "$PULL_REQUEST_NUMBER" ] \
+            && TESTS_REF=${{ inputs.tests_ref }} \
+            || TESTS_REF=refs/pull/$PULL_REQUEST_NUMBER/merge
+
+          echo "TESTS_REF=${TESTS_REF}" >>"$GITHUB_ENV"
+          echo "Using TESTS_REF \`${TESTS_REF}\`" >>"$GITHUB_STEP_SUMMARY"
+      - name: trustify-tests - clone
+        uses: actions/checkout@v4
+        with:
+          repository: trustification/trustify-tests
+          path: trustify-tests
+          ref: "${{ env.TESTS_REF }}"
+      - name: trustify-tests - use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: trustify-tests/package-lock.json
+      - name: trustify-tests - install dependencies
+        working-directory: trustify-tests
+        run: npm ci
+
+      - name: install trustify
+        id: install-trustify
+        uses: ./trustify-ui/.github/actions/start-trustify
+        with:
+          ui_image: ${{ inputs.ui_image }}
+          server_image: ${{ inputs.server_image }}
+          server_db_image: ${{ inputs.server_db_image }}
+      
+      - name: trustify-ui - start in dev mode
+        working-directory: trustify-ui
+        run: |
+          AUTH_REQUIRED=false npm run start:dev & echo "dev ui started"      
+      - name: trustify-ui - wait
+        run: |
+          until curl -s http://localhost:3000 | grep -qi "<html"; do
+            echo "Waiting for HTML page"
+            sleep 2
+          done
+      
+      - name: Tests with coverage
+        working-directory: trustify-tests
+        run: |
+          PW_TEST_CONNECT_WS_ENDPOINT=ws://localhost:${{ steps.install-trustify.outputs.playwright_port }}/ TRUSTIFY_URL=http://localhost:3000 TRUSTIFY_AUTH_ENABLED=false npm run test:ui
+          ls -l .nyc_output
+      - name: Generate coverage report
+        run: |
+          # Report can only be generate in the trustify-ui directory
+          cp -r trustify-tests/.nyc_output trustify-ui/.nyc_output
+          
+          # Generate report from trustify-ui
+          cd trustify-ui
+          npx nyc report --reporter=html --reporter=text --reporter=lcov
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: trustify-ui/coverage
