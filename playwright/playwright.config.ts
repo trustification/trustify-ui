@@ -59,6 +59,12 @@ export default defineConfig({
     },
 
     {
+      name: "api",
+      testDir: "./tests/api/features",
+      testMatch: /.*\.ts/,
+      dependencies: ["setup-api-data"],
+    },
+    {
       name: "setup-api-data",
       testDir: "./tests/api/dependencies",
       testMatch: "*.setup.ts",

@@ -28,7 +28,8 @@
   "workspaces": [
     "common",
     "client",
-    "server"
+    "server",
+    "playwright"
   ],
   "dependencies": {
     "@types/express": "^4.17.21",
