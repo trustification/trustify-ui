@@ -182,7 +182,7 @@ export const SbomScan: React.FC = () => {
           { value: "critical", label: "Critical" },
         ],
         matcher: (filter, item) => {
-          return filter === item.vulnOpinionatedExtendedSeverity;
+          return filter === item.opinionatedAvisory.extendedSeverity;
         },
       },
       {
