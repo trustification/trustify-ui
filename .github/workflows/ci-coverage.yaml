@@ -48,22 +48,11 @@ jobs:
         working-directory: playwright
         run: |
           PW_TEST_CONNECT_WS_ENDPOINT=ws://localhost:${{ steps.install-trustify.outputs.playwright_port }}/ TRUSTIFY_URL=http://localhost:3000 TRUSTIFY_AUTH_ENABLED=false npm run test:ui
-          
           ls -la .nyc_output
-          zip -r nyc_output.zip .nyc_output/ 
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v4
-        with:
-          name: nyc_output
-          path: playwright/nyc_output.zip
 
       - name: Generate coverage report
-        run: |          
-          # Report can only be generate in the trustify-ui directory
-          cp -r playwright/.nyc_output .nyc_output
-
-          # Generate report from trustify-ui
-          npx nyc report --reporter=html --reporter=text --reporter=lcov
+        run: |
+          npx nyc report --temp-dir playwright/.nyc_output --reporter=html --reporter=text --reporter=lcov
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
