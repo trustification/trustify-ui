@@ -19,7 +19,7 @@ import {
 } from "@patternfly/react-core";
 import DownloadIcon from "@patternfly/react-icons/dist/esm/icons/download-icon";
 
-import { PathParam, useRouteParams } from "@app/Routes";
+import { PathParam, Paths, useRouteParams } from "@app/Routes";
 
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { useDownload } from "@app/hooks/domain-controls/useDownload";
@@ -53,7 +53,7 @@ export const AdvisoryDetails: React.FC = () => {
       <PageSection type="breadcrumb">
         <Breadcrumb>
           <BreadcrumbItem>
-            <Link to="/advisories">Advisories</Link>
+            <Link to={Paths.advisories}>Advisories</Link>
           </BreadcrumbItem>
           <BreadcrumbItem isActive>Advisory details</BreadcrumbItem>
         </Breadcrumb>
