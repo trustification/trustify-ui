@@ -195,7 +195,7 @@ jobs:
           ui_image: ${{ inputs.ui_image }}
           server_image: ${{ inputs.server_image }}
           server_db_image: ${{ inputs.server_db_image }}
-          playwright_version: 1.49.1
+          playwright_version: v1.49.1
 
       - name: Run Playwright tests
         working-directory: trustify-tests
