@@ -6,58 +6,80 @@ import { Bullseye, Spinner } from "@patternfly/react-core";
 import { ErrorFallback } from "./components/ErrorFallback";
 
 const Home = lazy(() => import("./pages/home"));
+
+// Advisory
 const AdvisoryList = lazy(() => import("./pages/advisory-list"));
 const AdvisoryDetails = lazy(() => import("./pages/advisory-details"));
+
+// Vulnerability
 const VulnerabilityList = lazy(() => import("./pages/vulnerability-list"));
 const VulnerabilityDetails = lazy(
   () => import("./pages/vulnerability-details"),
 );
+
+// Package
 const PackageList = lazy(() => import("./pages/package-list"));
 const PackageDetails = lazy(() => import("./pages/package-details"));
+
+// SBOM
 const SBOMList = lazy(() => import("./pages/sbom-list"));
 const SBOMDetails = lazy(() => import("./pages/sbom-details"));
+
+// Others
 const Search = lazy(() => import("./pages/search"));
 const ImporterList = lazy(() => import("./pages/importer-list"));
 const Upload = lazy(() => import("./pages/upload"));
 
 export enum PathParam {
-  PRODUCT_ID = "productId",
   ADVISORY_ID = "advisoryId",
   VULNERABILITY_ID = "vulnerabilityId",
   SBOM_ID = "sbomId",
   PACKAGE_ID = "packageId",
-  IMPORTER_ID = "importerId",
 }
+
+export const Paths = {
+  advisories: "/advisories",
+  advisoryDetails: `/advisories/:${PathParam.ADVISORY_ID}`,
+  vulnerabilities: "/vulnerabilities",
+  vulnerabilityDetails: `/vulnerabilities/:${PathParam.VULNERABILITY_ID}`,
+  sboms: "/sboms",
+  sbomDetails: `/sboms/:${PathParam.SBOM_ID}`,
+  packages: "/packages",
+  packageDetails: `/packages/:${PathParam.PACKAGE_ID}`,
+  search: "/search",
+  importers: "/importers",
+  upload: "/upload",
+} as const;
 
 export const AppRoutes = () => {
   const allRoutes = useRoutes([
     { path: "/", element: <Home /> },
-    { path: "/advisories", element: <AdvisoryList /> },
+    { path: Paths.advisories, element: <AdvisoryList /> },
     {
-      path: `/advisories/:${PathParam.ADVISORY_ID}`,
+      path: Paths.advisoryDetails,
       element: <AdvisoryDetails />,
     },
-    { path: "/vulnerabilities", element: <VulnerabilityList /> },
+    { path: Paths.vulnerabilities, element: <VulnerabilityList /> },
     {
-      path: `/vulnerabilities/:${PathParam.VULNERABILITY_ID}`,
+      path: Paths.vulnerabilityDetails,
       element: <VulnerabilityDetails />,
     },
-    { path: "/packages", element: <PackageList /> },
+    { path: Paths.packages, element: <PackageList /> },
     {
-      path: `/packages/:${PathParam.PACKAGE_ID}`,
+      path: Paths.packageDetails,
       element: <PackageDetails />,
     },
-    { path: "/search", element: <Search /> },
-    { path: "/sboms", element: <SBOMList /> },
+    { path: Paths.sboms, element: <SBOMList /> },
     {
-      path: `/sboms/:${PathParam.SBOM_ID}`,
+      path: Paths.sbomDetails,
       element: <SBOMDetails />,
     },
     {
-      path: "/importers",
+      path: Paths.importers,
       element: <ImporterList />,
     },
-    { path: "/upload", element: <Upload /> },
+    { path: Paths.search, element: <Search /> },
+    { path: Paths.upload, element: <Upload /> },
   ]);
 
   return (
