@@ -90,7 +90,7 @@ export const SidebarApp: React.FC = () => {
                 return css(LINK_CLASS, isActive ? ACTIVE_LINK_CLASS : "");
               }}
             >
-              Importers
+              Data sources
             </NavLink>
           </li>
           <li className={nav.navItem}>
