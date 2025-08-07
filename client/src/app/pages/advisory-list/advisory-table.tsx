@@ -19,7 +19,15 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
+import { joinKeyValueAsString } from "@app/api/model-utils.ts";
+import {
+  type ExtendedSeverity,
+  extendedSeverityFromSeverity,
+} from "@app/api/models";
 import type { AdvisorySummary } from "@app/client";
+import { ConfirmDialog } from "@app/components/ConfirmDialog.tsx";
+import { LabelsAsList } from "@app/components/LabelsAsList.tsx";
+import { NotificationsContext } from "@app/components/NotificationsContext.tsx";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -28,19 +36,9 @@ import {
 } from "@app/components/TableControls";
 import { VulnerabilityGallery } from "@app/components/VulnerabilityGallery";
 import { useDownload } from "@app/hooks/domain-controls/useDownload";
-import {
-  type ExtendedSeverity,
-  extendedSeverityFromSeverity,
-} from "@app/api/models";
-import { formatDate } from "@app/utils/utils";
-import { NotificationsContext } from "@app/components/NotificationsContext.tsx";
 import { useDeleteAdvisoryMutation } from "@app/queries/advisories.ts";
-import { LabelsAsList } from "@app/components/LabelsAsList.tsx";
-import { joinKeyValueAsString } from "@app/api/model-utils.ts";
-import { ConfirmDialog } from "@app/components/ConfirmDialog.tsx";
-import { joinKeyValueAsString } from "@app/api/model-utils";
-import { LabelsAsList } from "@app/components/LabelsAsList";
 import { Paths } from "@app/Routes";
+import { formatDate } from "@app/utils/utils";
 
 import { AdvisorySearchContext } from "./advisory-context";
 import { AdvisoryEditLabelsForm } from "./components/AdvisoryEditLabelsForm";

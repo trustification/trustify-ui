@@ -15,10 +15,6 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import {
-  sbomDeletedErrorMessage,
-  sbomDeletedSuccessMessage,
-} from "@app/Constants";
 import { joinKeyValueAsString } from "@app/api/model-utils";
 import type { SbomSummary } from "@app/client";
 import { ConfirmDialog } from "@app/components/ConfirmDialog";
@@ -30,14 +26,14 @@ import {
   TableHeaderContentWithControls,
   TableRowContentWithControls,
 } from "@app/components/TableControls";
+import {
+  sbomDeletedErrorMessage,
+  sbomDeletedSuccessMessage,
+} from "@app/Constants";
 import { useDownload } from "@app/hooks/domain-controls/useDownload";
 import { useDeleteSbomMutation } from "@app/queries/sboms";
-import { formatDate } from "@app/utils/utils";
-
-import { joinKeyValueAsString } from "@app/api/model-utils";
-import type { SbomSummary } from "@app/client";
-import { LabelsAsList } from "@app/components/LabelsAsList";
 import { Paths } from "@app/Routes";
+import { formatDate } from "@app/utils/utils";
 
 import { SBOMEditLabelsForm } from "./components/SBOMEditLabelsForm";
 import { SBOMVulnerabilities } from "./components/SbomVulnerabilities";
