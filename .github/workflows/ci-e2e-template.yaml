@@ -37,18 +37,6 @@ on:
         type: boolean
         required: false
         default: true
-      tests_ref:
-        description: |
-          The branch or PR of the trustify-tests repository to clone.
-          For a pull request, the reference format would be "refs/pull/${PR_NUMBER}/merge".
-          For a branch, the reference format would just be the branch name.
-          This input can be set automatically on a pull request by adding a string of the format:
-            UI tests PR: 140
-          replacing "140" with the appropriate PR number. This will make it easier to coordinate changes
-          that require updating the global tests as well.
-        required: false
-        type: string
-        default: main
   workflow_dispatch:
     inputs:
       artifact:
@@ -85,18 +73,6 @@ on:
         type: boolean
         required: false
         default: true
-      tests_ref:
-        description: |
-          The branch or PR of the trustify-tests repository to clone.
-          For a pull request, the reference format would be "refs/pull/${PR_NUMBER}/merge".
-          For a branch, the reference format would just be the branch name.
-          This input can be set automatically on a pull request by adding a string of the format:
-            UI tests PR: 140
-          replacing "140" with the appropriate PR number. This will make it easier to coordinate changes
-          that require updating the global tests as well.
-        required: false
-        type: string
-        default: main
 
 jobs:
   check-images:
@@ -147,33 +123,6 @@ jobs:
     needs: check-images
     runs-on: ubuntu-latest
     steps:
-      - name: Extract pull request number from inputs or PR description
-        env:
-          body: ${{ github.event.pull_request.body }}
-        run: |
-          PULL_REQUEST_NUMBER=$(echo ${body} | grep -oP '[T|t]ests [P|p][R|r]: \K\d+' || true)
-          [ -z "$PULL_REQUEST_NUMBER" ] \
-            && TESTS_REF=${{ inputs.tests_ref }} \
-            || TESTS_REF=refs/pull/$PULL_REQUEST_NUMBER/merge
-
-          echo "TESTS_REF=${TESTS_REF}" >>"$GITHUB_ENV"
-          echo "Using TESTS_REF \`${TESTS_REF}\`" >>"$GITHUB_STEP_SUMMARY"
-
-      - name: Checkout tests repo
-        uses: actions/checkout@v4
-        with:
-          repository: trustification/trustify-tests
-          path: trustify-tests
-          ref: "${{ env.TESTS_REF }}"
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "npm"
-          cache-dependency-path: "trustify-tests/package-lock.json"
-      - name: Install dependencies
-        run: npm ci
-        working-directory: trustify-tests
-
       - name: Download artifact
         if: "${{ inputs.artifact != '' }}"
         uses: actions/download-artifact@v4
@@ -187,18 +136,21 @@ jobs:
 
       - name: Checkout ui repo
         uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          path: trustify-ui
+          node-version: 22
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+
       - name: Start trustify
-        uses: ./trustify-ui/.github/actions/start-trustify
+        uses: ./.github/actions/start-trustify
         with:
           ui_image: ${{ inputs.ui_image }}
           server_image: ${{ inputs.server_image }}
           server_db_image: ${{ inputs.server_db_image }}
-          playwright_version: 1.49.1
 
       - name: Run Playwright tests
-        working-directory: trustify-tests
         run: |
           script=""
           if [ "${{ inputs.run_api_tests }}" = "true" ] && [ "${{ inputs.run_ui_tests }}" = "true" ]; then
@@ -211,4 +163,4 @@ jobs:
 
           echo "script to run: ${script}"
 
-          PW_TEST_CONNECT_WS_ENDPOINT=ws://localhost:5000/ TRUSTIFY_URL=http://localhost:8081 TRUSTIFY_AUTH_ENABLED=false npm run $script
+          PW_TEST_CONNECT_WS_ENDPOINT=ws://localhost:5000/ TRUSTIFY_URL=http://localhost:8081 TRUSTIFY_AUTH_ENABLED=false npm run -w playwright $script

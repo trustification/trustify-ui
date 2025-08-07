@@ -39,3 +39,10 @@ jobs:
       artifact: trustify-ui
       ui_image: ghcr.io/trustification/trustify-ui:pr-test
       run_api_tests: false
+
+  run-e2e-ci:
+    needs: build-and-upload-for-global-ci
+    uses: ./.github/workflows/ci-e2e-template.yaml
+    with:
+      artifact: trustify-ui
+      ui_image: ghcr.io/trustification/trustify-ui:pr-test
