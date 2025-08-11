@@ -59,4 +59,4 @@ export const advisoryDeletedSuccessMessage = (sbom: AdvisorySummary) =>
   `The Advisory ${sbom.identifier} was deleted`;
 
 export const advisoryDeletedErrorMessage = (_error: AxiosError) =>
-  "Error occurred while deleting the SBOM";
+  "Error occurred while deleting the Advisory";
