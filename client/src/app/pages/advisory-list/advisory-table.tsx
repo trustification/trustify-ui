@@ -272,7 +272,7 @@ export const AdvisoryTable: React.FC = () => {
         titleIconVariant="warning"
         isOpen={!!advisoryToDelete}
         message="Are you sure you want to delete this Advisory? This action cannot be undone."
-        aria-label="Delete SBOM"
+        aria-label="Delete Advisory"
         confirmBtnVariant={ButtonVariant.danger}
         confirmBtnLabel="Delete"
         cancelBtnLabel="Cancel"
