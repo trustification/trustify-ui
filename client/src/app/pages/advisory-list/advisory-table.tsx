@@ -42,6 +42,7 @@ import { formatDate } from "@app/utils/utils";
 
 import { AdvisorySearchContext } from "./advisory-context";
 import { AdvisoryEditLabelsForm } from "./components/AdvisoryEditLabelsForm";
+import { advisoryDeleteDialogProps } from "@app/Constants";
 
 export const AdvisoryTable: React.FC = () => {
   const { pushNotification } = React.useContext(NotificationsContext);
@@ -267,12 +268,10 @@ export const AdvisoryTable: React.FC = () => {
       </Modal>
 
       <ConfirmDialog
+        {...advisoryDeleteDialogProps(advisoryToDelete)}
         inProgress={isDeletingAdvisory}
-        title={`Delete ${advisoryToDelete?.identifier}`}
         titleIconVariant="warning"
         isOpen={!!advisoryToDelete}
-        message="Are you sure you want to delete this Advisory? This action cannot be undone."
-        aria-label="Delete Advisory"
         confirmBtnVariant={ButtonVariant.danger}
         confirmBtnLabel="Delete"
         cancelBtnLabel="Cancel"

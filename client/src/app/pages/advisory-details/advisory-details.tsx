@@ -22,12 +22,13 @@ import {
   SplitItem,
   Tab,
   TabContent,
-  TabTitleText,
   Tabs,
+  TabTitleText,
 } from "@patternfly/react-core";
 
 import {
   advisoryDeletedErrorMessage,
+  advisoryDeleteDialogProps,
   advisoryDeletedSuccessMessage,
 } from "@app/Constants";
 import { PathParam, Paths, useRouteParams } from "@app/Routes";
@@ -223,12 +224,10 @@ export const AdvisoryDetails: React.FC = () => {
       </PageSection>
 
       <ConfirmDialog
+        {...advisoryDeleteDialogProps(advisory)}
         inProgress={isDeleting}
-        title={`Delete ${advisory?.identifier}`}
         titleIconVariant="warning"
         isOpen={isDeleteDialogOpen}
-        message="Are you sure you want to delete this Advisory? This action cannot be undone."
-        aria-label="Delete Advisory"
         confirmBtnVariant={ButtonVariant.danger}
         confirmBtnLabel="Delete"
         cancelBtnLabel="Cancel"

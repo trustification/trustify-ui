@@ -49,6 +49,18 @@ export const ANSICOLOR = {
   red: "\x1b[31m",
 };
 
+export const sbomDeleteDialogProps = (sbom?: SbomSummary | null) => ({
+  title: "Permanently delete SBOM?",
+  message: `This action permanently deletes the ${sbom?.name} SBOM.`,
+});
+
+export const advisoryDeleteDialogProps = (
+  advisory?: AdvisorySummary | null,
+) => ({
+  title: "Permanently delete Advisory?",
+  message: `This action permanently deletes the ${advisory?.document_id} Advisory.`,
+});
+
 export const sbomDeletedSuccessMessage = (sbom: SbomSummary) =>
   `The SBOM ${sbom.name} was deleted`;
 
@@ -56,7 +68,7 @@ export const sbomDeletedErrorMessage = (_error: AxiosError) =>
   "Error occurred while deleting the SBOM";
 
 export const advisoryDeletedSuccessMessage = (sbom: AdvisorySummary) =>
-  `The Advisory ${sbom.identifier} was deleted`;
+  `The Advisory ${sbom.document_id} was deleted`;
 
 export const advisoryDeletedErrorMessage = (_error: AxiosError) =>
   "Error occurred while deleting the Advisory";

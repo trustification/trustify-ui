@@ -28,6 +28,7 @@ import {
 } from "@app/components/TableControls";
 import {
   sbomDeletedErrorMessage,
+  sbomDeleteDialogProps,
   sbomDeletedSuccessMessage,
 } from "@app/Constants";
 import { useDownload } from "@app/hooks/domain-controls/useDownload";
@@ -269,12 +270,10 @@ export const SbomTable: React.FC = () => {
       </Modal>
 
       <ConfirmDialog
+        {...sbomDeleteDialogProps(sbomToDelete)}
         inProgress={isDeletingSbom}
-        title={`Delete ${sbomToDelete?.name}`}
         titleIconVariant="warning"
         isOpen={!!sbomToDelete}
-        message="Are you sure you want to delete this SBOM? This action cannot be undone."
-        aria-label="Delete SBOM"
         confirmBtnVariant={ButtonVariant.danger}
         confirmBtnLabel="Delete"
         cancelBtnLabel="Cancel"

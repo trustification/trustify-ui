@@ -24,16 +24,17 @@ import {
   Tab,
   TabAction,
   TabContent,
-  TabTitleText,
   Tabs,
+  TabTitleText,
 } from "@patternfly/react-core";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 
-import { PathParam, Paths, useRouteParams } from "@app/Routes";
 import {
   sbomDeletedErrorMessage,
+  sbomDeleteDialogProps,
   sbomDeletedSuccessMessage,
 } from "@app/Constants";
+import { PathParam, Paths, useRouteParams } from "@app/Routes";
 import type { SbomSummary } from "@app/client";
 import { ConfirmDialog } from "@app/components/ConfirmDialog";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
@@ -263,12 +264,10 @@ export const SbomDetails: React.FC = () => {
       </PageSection>
 
       <ConfirmDialog
+        {...sbomDeleteDialogProps(sbom)}
         inProgress={isDeleting}
-        title={`Delete ${sbom?.name}`}
         titleIconVariant="warning"
         isOpen={isDeleteDialogOpen}
-        message="Are you sure you want to delete this SBOM? This action cannot be undone."
-        aria-label="Delete SBOM"
         confirmBtnVariant={ButtonVariant.danger}
         confirmBtnLabel="Delete"
         cancelBtnLabel="Cancel"
