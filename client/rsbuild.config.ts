@@ -12,7 +12,6 @@ import {
   TRUSTIFICATION_ENV,
   brandingStrings,
   encodeEnv,
-  proxyMap,
 } from "@trustify-ui/common";
 
 /**
@@ -142,6 +141,15 @@ export default defineConfig({
     ],
   },
   server: {
-    proxy: proxyMap,
+    proxy: {
+      "/auth": {
+        target: TRUSTIFICATION_ENV.OIDC_SERVER_URL || "http://localhost:8090",
+        changeOrigin: true,
+      },
+      "/api": {
+        target: TRUSTIFICATION_ENV.TRUSTIFY_API_URL || "http://localhost:8080",
+        changeOrigin: true,
+      },
+    },
   },
 });
