@@ -160,7 +160,7 @@ jobs:
           echo "Using TESTS_REF \`${TESTS_REF}\`" >>"$GITHUB_STEP_SUMMARY"
 
       - name: Checkout tests repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: trustification/trustify-tests
           path: trustify-tests
@@ -186,7 +186,7 @@ jobs:
           docker load --input /tmp/${{ inputs.artifact }}.tar
 
       - name: Checkout ui repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: trustify-ui
       - name: Start trustify
