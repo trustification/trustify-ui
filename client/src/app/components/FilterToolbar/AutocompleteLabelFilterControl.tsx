@@ -25,7 +25,7 @@ export const AutocompleteLabelFilterControl = <TItem,>({
   isDisabled = false,
 }: React.PropsWithChildren<
   IAutocompleteLabelFilterControlProps<TItem>
->): JSX.Element | null => {
+>): React.JSX.Element | null => {
   const optionMap = React.useRef(
     new Map<string, FilterSelectOptionProps | null>(),
   );
