@@ -14,7 +14,7 @@ import spacing from "@patternfly/react-styles/css/utilities/Spacing/spacing";
 import { NotificationsContext } from "@app/components/NotificationsContext";
 
 const usePrevious = <T,>(value: T) => {
-  const ref = useRef<T>();
+  const ref = useRef<T>(null);
   useEffect(() => {
     ref.current = value;
   }, [value]);
