@@ -19,7 +19,7 @@ export const CheckboxFilterControl = <TItem,>({
   setFilterValue,
 }: React.PropsWithChildren<
   IMultiselectFilterControlProps<TItem>
->): JSX.Element | null => {
+>): React.JSX.Element | null => {
   const [selectOptions, setSelectOptions] = React.useState<
     FilterSelectOptionProps[]
   >(Array.isArray(category.selectOptions) ? category.selectOptions : []);

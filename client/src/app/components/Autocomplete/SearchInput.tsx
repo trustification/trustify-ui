@@ -22,7 +22,7 @@ export interface SearchInputProps {
   onKeyHandling: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   onClick: () => void;
   inputValue: string;
-  inputRef: React.RefObject<HTMLInputElement>;
+  inputRef: React.RefObject<HTMLInputElement | null>;
 
   options: AutocompleteOptionProps[];
 
