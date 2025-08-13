@@ -44,7 +44,7 @@ export const WatchedSbom: React.FC<WatchedSbomProps> = ({
 }) => {
   const { patch } = React.useContext(WatchedSbomsContext);
 
-  const textInputRef = React.useRef<HTMLInputElement>();
+  const textInputRef = React.useRef<HTMLInputElement>(null);
   const [inputValue, setInputValue] = React.useState<string>("");
   const [debouncedInputValue, setDebouncedInputValue] = React.useState("");
 

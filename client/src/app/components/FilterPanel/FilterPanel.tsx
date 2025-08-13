@@ -25,7 +25,7 @@ export const FilterPanel = <TItem, TFilterCategoryKey extends string>({
   omitFilterCategoryKeys = [],
 }: React.PropsWithChildren<
   IFilterPanelProps<TItem, TFilterCategoryKey>
->): JSX.Element | null => {
+>): React.JSX.Element | null => {
   const setFilterValue = (
     category: FilterCategory<TItem, TFilterCategoryKey>,
     newValue: FilterValue,
