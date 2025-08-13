@@ -31,8 +31,7 @@
     "server"
   ],
   "dependencies": {
-    "@types/express": "^5.0.3",
-    "http-proxy-middleware": "^3.0.5"
+    "typescript": "^5.7.3"
   },
   "peerDependencies": {
     "react": "^19.1.1",

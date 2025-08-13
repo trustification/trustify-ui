@@ -17,9 +17,15 @@
     "start": "npm run build && node --enable-source-maps dist/index.js"
   },
   "dependencies": {
+    "cookie": "^1.0.2",
     "cookie-parser": "^1.4.6",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
+    "http-proxy-middleware": "^3.0.5",
     "http-terminator": "^3.2.0"
+  },
+  "devDependencies": {
+    "@types/ejs": "^3.1.5",
+    "@types/express": "^5.0.3"
   }
 }
