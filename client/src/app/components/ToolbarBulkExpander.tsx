@@ -15,7 +15,7 @@ export const ToolbarBulkExpander = ({
   onExpandAll,
   areAllExpanded,
   isExpandable,
-}: React.PropsWithChildren<ITToolbarBulkExpanderProps>): JSX.Element | null => {
+}: React.PropsWithChildren<ITToolbarBulkExpanderProps>): React.JSX.Element | null => {
   const toggleCollapseAll = (collapse: boolean) => {
     if (onExpandAll) {
       onExpandAll(!collapse);
