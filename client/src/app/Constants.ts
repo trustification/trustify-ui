@@ -1,3 +1,5 @@
+import type { AxiosError } from "axios";
+import type { AdvisorySummary, SbomSummary } from "./client";
 import ENV from "./env";
 
 export const FILTER_TEXT_CATEGORY_KEY = "";
@@ -46,3 +48,27 @@ export const ANSICOLOR = {
   lightBlue: "\x1b[94m",
   red: "\x1b[31m",
 };
+
+export const sbomDeleteDialogProps = (sbom?: SbomSummary | null) => ({
+  title: "Permanently delete SBOM?",
+  message: `This action permanently deletes the ${sbom?.name} SBOM.`,
+});
+
+export const advisoryDeleteDialogProps = (
+  advisory?: AdvisorySummary | null,
+) => ({
+  title: "Permanently delete Advisory?",
+  message: `This action permanently deletes the ${advisory?.document_id} Advisory.`,
+});
+
+export const sbomDeletedSuccessMessage = (sbom: SbomSummary) =>
+  `The SBOM ${sbom.name} was deleted`;
+
+export const sbomDeletedErrorMessage = (_error: AxiosError) =>
+  "Error occurred while deleting the SBOM";
+
+export const advisoryDeletedSuccessMessage = (sbom: AdvisorySummary) =>
+  `The Advisory ${sbom.document_id} was deleted`;
+
+export const advisoryDeletedErrorMessage = (_error: AxiosError) =>
+  "Error occurred while deleting the Advisory";
