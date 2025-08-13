@@ -19,7 +19,7 @@ export const RadioFilterControl = <TItem, TFilterCategoryKey extends string>({
   isDisabled = false,
 }: React.PropsWithChildren<
   ISelectFilterControlProps<TItem, TFilterCategoryKey>
->): JSX.Element | null => {
+>): React.JSX.Element | null => {
   const getOptionFromOptionValue = (optionValue: string) =>
     category.selectOptions.find(({ value }) => value === optionValue);
 

@@ -39,7 +39,7 @@ export const DateRangeFilter = <TItem,>({
   isDisabled = false,
 }: React.PropsWithChildren<
   IFilterControlProps<TItem, string>
->): JSX.Element | null => {
+>): React.JSX.Element | null => {
   const selectedFilters = filterValue ?? [];
 
   const validFilters =
