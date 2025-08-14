@@ -39,7 +39,7 @@ export interface SearchTabsProps {
   filterPanelProps: {
     advisoryFilterPanelProps: IFilterPanelProps<
       AdvisorySummary,
-      "" | "modified" | "average_severity" | "labels"
+      "" | "modifiedBefore" | "modifiedAfter" | "average_severity" | "labels"
     >;
     packageFilterPanelProps: IFilterPanelProps<
       PackageTableData,
@@ -47,11 +47,11 @@ export interface SearchTabsProps {
     >;
     sbomFilterPanelProps: IFilterPanelProps<
       SbomSummary,
-      "" | "published" | "labels"
+      "" | "publishedBefore" | "publishedAfter" | "labels"
     >;
     vulnerabilityFilterPanelProps: IFilterPanelProps<
       VulnerabilitySummary,
-      "" | "base_severity" | "published"
+      "" | "base_severity" | "publishedBefore" | "publishedAfter"
     >;
   };
 

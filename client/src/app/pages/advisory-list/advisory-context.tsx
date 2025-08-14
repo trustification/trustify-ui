@@ -27,7 +27,7 @@ interface IAdvisorySearchContext {
     AdvisorySummary,
     "identifier" | "title" | "type" | "labels" | "modified" | "vulnerabilities",
     "identifier" | "modified",
-    "" | "average_severity" | "modified" | "labels",
+    "" | "average_severity" | "modifiedBefore" | "modifiedAfter" | "labels",
     string
   >;
 
@@ -88,9 +88,18 @@ export const AdvisorySearchProvider: React.FunctionComponent<
         type: FilterType.search,
       },
       {
-        categoryKey: "modified",
-        title: "Revision",
-        type: FilterType.dateRange,
+        categoryKey: "modifiedBefore",
+        serverFilterField: "modified",
+        title: "Revised before",
+        type: FilterType.date,
+        operator: "<",
+      },
+      {
+        categoryKey: "modifiedAfter",
+        serverFilterField: "modified",
+        title: "Revised after",
+        type: FilterType.date,
+        operator: ">",
       },
       {
         categoryKey: "labels",
