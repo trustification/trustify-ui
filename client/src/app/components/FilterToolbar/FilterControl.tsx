@@ -1,6 +1,7 @@
 import type * as React from "react";
 
 import { AutocompleteLabelFilterControl } from "./AutocompleteLabelFilterControl";
+import { DateFilter } from "./DateFilter";
 import { DateRangeFilter } from "./DateRangeFilter";
 import {
   type FilterCategory,
@@ -59,6 +60,9 @@ export const FilterControl = <TItem, TFilterCategoryKey extends string>({
         {...props}
       />
     );
+  }
+  if (category.type === FilterType.date) {
+    return <DateFilter category={category} {...props} />;
   }
   if (category.type === FilterType.dateRange) {
     return <DateRangeFilter category={category} {...props} />;

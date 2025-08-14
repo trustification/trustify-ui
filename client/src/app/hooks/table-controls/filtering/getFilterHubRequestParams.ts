@@ -3,7 +3,10 @@ import {
   type FilterCategory,
   getFilterLogicOperator,
 } from "@app/components/FilterToolbar";
-import { parseInterval } from "@app/components/FilterToolbar/dateUtils";
+import {
+  parseAmericanDate,
+  parseInterval,
+} from "@app/components/FilterToolbar/dateUtils";
 import { objectKeys } from "@app/utils/utils";
 import type { IFilterState } from "./useFilterState";
 
@@ -17,7 +20,7 @@ const pushOrMergeFilter = (
   newFilter: HubFilter,
 ) => {
   const existingFilterIndex = existingFilters.findIndex(
-    (f) => f.field === newFilter.field,
+    (f) => f.field === newFilter.field && f.operator === newFilter.operator,
   );
   const existingFilter =
     existingFilterIndex === -1 ? null : existingFilters[existingFilterIndex];
@@ -138,6 +141,14 @@ export const getFilterHubRequestParams = <
             list: serverFilterValue,
             operator: getFilterLogicOperator(filterCategory, "OR"),
           },
+        });
+      }
+      if (filterCategory.type === "date") {
+        const date = parseAmericanDate(serverFilterValue[0]);
+        pushOrMergeFilter(filters, {
+          field: serverFilterField,
+          operator: filterCategory.operator ?? "=",
+          value: date.toISOString(),
         });
       }
       if (filterCategory.type === "dateRange") {

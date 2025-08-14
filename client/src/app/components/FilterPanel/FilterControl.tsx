@@ -10,6 +10,7 @@ import {
 } from "../FilterToolbar";
 import { AutocompleteLabelFilterControl } from "./AutocompleteLabelFilterControl";
 import { CheckboxFilterControl } from "./CheckboxFilterControl";
+import { DateFilter } from "./DateFilter";
 import { DateRangeFilter } from "./DateRangeFilter";
 import { RadioFilterControl } from "./RadioFilterControl";
 import { SearchFilterControl } from "./SearchFilterControl";
@@ -57,6 +58,9 @@ export const FilterControl = <TItem, TFilterCategoryKey extends string>({
         {...props}
       />
     );
+  }
+  if (category.type === FilterType.date) {
+    return <DateFilter category={category} {...props} />;
   }
   if (category.type === FilterType.dateRange) {
     return <DateRangeFilter category={category} {...props} />;
