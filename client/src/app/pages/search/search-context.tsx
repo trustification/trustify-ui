@@ -18,7 +18,7 @@ function composeProviders<TProviders extends Array<Provider<any>>>(
   }) => {
     const initialJSX = <>{children}</>;
 
-    return providers.reduceRight<JSX.Element>(
+    return providers.reduceRight<React.JSX.Element>(
       (prevJSX, { Component: CurrentProvider, props = {} }) => {
         return (
           <CurrentProvider key={prevJSX.key} {...props}>
