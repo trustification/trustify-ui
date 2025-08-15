@@ -123,6 +123,16 @@ export default defineConfig({
           : []),
       ]);
     },
+    swc: {
+      jsc: {
+        experimental: {
+          plugins:
+            process.env.NODE_ENV === "development"
+              ? [["swc-plugin-coverage-instrument", {}]]
+              : [],
+        },
+      },
+    },
   },
   output: {
     copy: [
@@ -139,6 +149,7 @@ export default defineConfig({
         to: "branding",
       },
     ],
+    sourceMap: process.env.NODE_ENV === "development",
   },
   server: {
     proxy: {
