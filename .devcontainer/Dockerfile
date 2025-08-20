@@ -1,5 +1,5 @@
 # Image tag should match package.json > @playwright/test
-FROM mcr.microsoft.com/playwright:v1.54.2-jammy
+FROM mcr.microsoft.com/playwright:v1.55.0-jammy
 
 RUN apt update && \
     apt install sudo && \
