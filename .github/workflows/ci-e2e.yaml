@@ -1,4 +1,4 @@
-name: CI (global trustify CI)
+name: CI (e2e)
 
 on:
   push:
@@ -32,10 +32,9 @@ jobs:
           path: /tmp/trustify-ui.tar
           retention-days: 1
 
-  run-global-ci:
+  run-e2e-ci:
     needs: build-and-upload-for-global-ci
-    uses: ./.github/workflows/ci-global-template.yaml
+    uses: ./.github/workflows/ci-e2e-template.yaml
     with:
       artifact: trustify-ui
       ui_image: ghcr.io/trustification/trustify-ui:pr-test
-      run_api_tests: false
