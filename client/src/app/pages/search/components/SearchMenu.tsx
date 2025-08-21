@@ -194,8 +194,10 @@ export const SearchMenu: React.FC<ISearchMenu> = ({ onChangeSearch }) => {
   const [isAutocompleteOpen, setIsAutocompleteOpen] =
     React.useState<boolean>(false);
 
-  const searchInputRef: React.RefObject<HTMLInputElement> = React.useRef(null);
-  const autocompleteRef: React.RefObject<HTMLInputElement> = React.useRef(null);
+  const searchInputRef: React.RefObject<HTMLInputElement | null> =
+    React.useRef(null);
+  const autocompleteRef: React.RefObject<HTMLInputElement | null> =
+    React.useRef(null);
 
   const onChangeSearchValue = (newValue: string) => {
     if (

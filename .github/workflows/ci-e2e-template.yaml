@@ -1,0 +1,166 @@
+name: Run e2e Trustify CI tests
+
+on:
+  workflow_call:
+    inputs:
+      artifact:
+        description: |
+          The name of the component being tested, ie server etc.
+          Must correspond to an artifact storing the custom built image, named <artifact>,
+          and should contain the file <artifact>.tar inside.
+        required: false
+        type: string
+      ui_image:
+        description: image uri for the ui (ie. ghcr.io/<namespace>/<image-name>:<tag>)
+        type: string
+        required: false
+        default: ""
+      server_image:
+        description: image uri for the server (ie. ghcr.io/<namespace>/<image-name>:<tag>)
+        type: string
+        required: false
+        default: ""
+      server_db_image:
+        description: image uri for server-postgres (ie. ghcr.io/<namespace>/<image-name>:<tag>)
+        type: string
+        required: false
+        default: ""
+      run_api_tests:
+        description: |
+          A flag that determines whether the API tests should be run or not
+        type: boolean
+        required: false
+        default: true
+      run_ui_tests:
+        description: |
+          A flag that determines whether the UI tests should be run or not
+        type: boolean
+        required: false
+        default: true
+  workflow_dispatch:
+    inputs:
+      artifact:
+        description: |
+          The name of the component being tested, ie server etc.
+          Must correspond to an artifact storing the custom built image, named <artifact>,
+          and should contain the file <artifact>.tar inside.
+        required: false
+        type: string
+      ui_image:
+        description: image uri for the ui (ie. ghcr.io/<namespace>/<image-name>:<tag>)
+        type: string
+        required: false
+        default: ""
+      server_image:
+        description: image uri for the server (ie. ghcr.io/<namespace>/<image-name>:<tag>)
+        type: string
+        required: false
+        default: ""
+      server_db_image:
+        description: image uri for server-postgres (ie. ghcr.io/<namespace>/<image-name>:<tag>)
+        type: string
+        required: false
+        default: ""
+      run_api_tests:
+        description: |
+          A flag that determines whether the API tests should be run or not
+        type: boolean
+        required: false
+        default: true
+      run_ui_tests:
+        description: |
+          A flag that determines whether the UI tests should be run or not
+        type: boolean
+        required: false
+        default: true
+
+jobs:
+  check-images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        if: "${{ inputs.artifact != '' }}"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact }}
+          path: /tmp
+      - name: Load images
+        if: ${{ inputs.artifact != '' }}
+        run: |
+          docker load --input /tmp/${{ inputs.artifact }}.tar
+      - name: Check ui image exists
+        if: ${{ inputs.ui_image != '' }}
+        run: |
+          if docker image inspect ${{ inputs.ui_image }} >/dev/null 2>&1; then
+              echo "Image exists locally"
+              docker image inspect ${{ inputs.ui_image }}
+          else
+              echo "Image does not exist locally"
+              docker manifest inspect ${{ inputs.ui_image }}
+          fi
+      - name: Check server image exists
+        if: ${{ inputs.server_image != '' }}
+        run: |
+          if docker image inspect ${{ inputs.server_image }} >/dev/null 2>&1; then
+              echo "Image exists locally"
+              docker image inspect ${{ inputs.server_image }}
+          else
+              echo "Image does not exist locally"
+              docker manifest inspect ${{ inputs.server_image }}
+          fi
+      - name: Check server_db_image image exists
+        if: ${{ inputs.server_db_image != '' }}
+        run: |
+          if docker image inspect ${{ inputs.server_db_image }} >/dev/null 2>&1; then
+              echo "Image exists locally"
+              docker image inspect ${{ inputs.server_db_image }}
+          else
+              echo "Image does not exist locally"
+              docker manifest inspect ${{ inputs.server_db_image }}
+          fi
+
+  e2e-integration-tests:
+    needs: check-images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        if: "${{ inputs.artifact != '' }}"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact }}
+          path: /tmp
+      - name: Load images
+        if: ${{ inputs.artifact != '' }}
+        run: |
+          docker load --input /tmp/${{ inputs.artifact }}.tar
+
+      - name: Checkout ui repo
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start trustify
+        uses: ./.github/actions/start-trustify
+        with:
+          ui_image: ${{ inputs.ui_image }}
+          server_image: ${{ inputs.server_image }}
+          server_db_image: ${{ inputs.server_db_image }}
+
+      - name: Run Playwright tests
+        run: |
+          script=""
+          if [ "${{ inputs.run_api_tests }}" = "true" ] && [ "${{ inputs.run_ui_tests }}" = "true" ]; then
+            script="test"
+          elif [ "${{ inputs.run_api_tests }}" = "true" ]; then
+            script="test:api"
+          elif [ "${{ inputs.run_ui_tests }}" = "true" ]; then
+            script="test:ui"
+          fi
+
+          echo "script to run: ${script}"
+
+          PW_TEST_CONNECT_WS_ENDPOINT=ws://localhost:5000/ TRUSTIFY_UI_URL=http://localhost:8081 AUTH_REQUIRED=false npm run -w e2e $script
