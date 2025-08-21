@@ -47,11 +47,17 @@ test.describe("Columns validations", { tag: "@tier1" }, () => {
     await table._table.locator(`td[data-label="Licenses"]`).click();
 
     await expect(
-      table._table.locator(`td[data-label="Licenses"]`).nth(1),
-    ).toContainText("Apache-2.0");
+      table._table
+        .locator(`td[data-label="Licenses"]`)
+        .nth(1)
+        .locator("ul > li", { hasText: "Apache-2.0" }),
+    ).toBeVisible();
     await expect(
-      table._table.locator(`td[data-label="Licenses"]`).nth(1),
-    ).toContainText("NOASSERTION");
+      table._table
+        .locator(`td[data-label="Licenses"]`)
+        .nth(1)
+        .locator("ul > li", { hasText: "NOASSERTION" }),
+    ).toBeVisible();
 
     // PURL
     await expect(table._table.locator(`td[data-label="PURLs"]`)).toContainText(
