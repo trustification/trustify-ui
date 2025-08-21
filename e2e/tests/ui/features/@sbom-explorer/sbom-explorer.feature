@@ -126,7 +126,6 @@ Feature: SBOM Explorer - View SBOM details
         | sbomName    |
         | quarkus-bom |
 
-    @only
     Scenario Outline: Add Labels to SBOM from SBOM List Page
         Given An ingested SBOM "<sbomName>" is available
         When User Adds Labels "<Labels>" to "<sbomName>" SBOM from List Page
@@ -135,7 +134,6 @@ Feature: SBOM Explorer - View SBOM details
         | sbomName    |     Labels    |
         | quarkus-bom | RANDOM_LABELS |
 
-    @only
     Scenario Outline: Add Labels to SBOM from SBOM Explorer Page
         Given An ingested SBOM "<sbomName>" is available
         When User visits SBOM details Page of "<sbomName>"

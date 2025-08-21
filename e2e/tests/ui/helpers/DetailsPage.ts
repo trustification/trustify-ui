@@ -243,14 +243,6 @@ export class DetailsPage {
           await this.page.waitForTimeout(500);
         }
       }
-      // for (const elem of labelElements) {
-      //   if (labels.length > 0) {
-      //     const labelText = await elem.innerText({ timeout: 2000 });
-      //     labels = labels.filter((label) => label !== labelText);
-      //   } else {
-      //     break;
-      //   }
-      // }
       if (labelExpected.length === 0) {
         labelFound = false;
       }
