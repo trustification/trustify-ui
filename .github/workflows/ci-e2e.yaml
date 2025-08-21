@@ -41,18 +41,19 @@ jobs:
     steps:
       - name: Extract env vars for main
         shell: bash
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name != 'pull_request' && github.ref == 'refs/heads/main') }}
         run: |
           echo "image_tag=latest" >> $GITHUB_ENV
-      - name: Extract env vars from tag
+      - name: Extract env vars for other branches on PR
         shell: bash
-        if: contains(github.ref, 'tags')
+        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref != 'main' }}
         run: |
-          tag=$(echo ${GITHUB_REF#refs/tags/})
-          echo "image_tag=$tag" >> $GITHUB_ENV
-      - name: Extract env vars from all other branches
+          branch=${{ github.event.pull_request.base.ref }}
+          branch_version="${branch#release/}"
+          echo "image_tag=$branch_version" >> $GITHUB_ENV
+      - name: Extract env vars for other branches on Push
         shell: bash
-        if: contains(github.ref, 'refs/heads/main') == false && contains(github.ref, 'tags') == false
+        if: ${{ github.event_name != 'pull_request' && contains(github.ref, 'refs/heads/main') == false }}
         run: |
           branch=$(echo ${GITHUB_REF#refs/heads/})
           branch_version="${branch#release/}"
@@ -60,7 +61,7 @@ jobs:
       - name: Set outputs
         id: set-outputs
         run: |
-          run: echo "image_tag=${{ env.image_tag }}" >> "$GITHUB_OUTPUT"
+          echo "image_tag=${{ env.image_tag }}" >> "$GITHUB_OUTPUT"
 
   run-e2e-ci:
     needs:
