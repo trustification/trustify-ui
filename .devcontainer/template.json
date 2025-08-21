@@ -1,0 +1,34 @@
+{
+  "name": "playwright",
+  "image": "mcr.microsoft.com/playwright:v1.55.0-jammy",
+  "workspaceFolder": "/workspaces/trustify-ui/e2e",
+  "runArgs": [
+    "--privileged",
+    "--userns=keep-id",
+    "--network=host",
+    "--add-host=${HOSTNAME}:127.0.0.1",
+    "-e DISPLAY=:2"
+  ],
+  "remoteUser": "pwuser",
+  "features": {
+    "ghcr.io/devcontainers/features/desktop-lite:1": {
+      "VNC_RESOLUTION": "1920x1200x16"
+    }
+  },
+  "forwardPorts": [6080, 5901],
+  "portsAttributes": {
+    "6080": {
+      "label": "browser vnc"
+    },
+    "5901": {
+      "label": "real vnc"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-playwright.playwright"
+      ]
+    }
+  }
+}

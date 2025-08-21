@@ -23,12 +23,19 @@
     "start:dev:client": "npm run start:dev -w client",
     "start:dev": "npm run build -w common && concurrently -n common,client -c 'white.bold.inverse,green.bold.inverse,blue.bold.inverse' 'npm:start:dev:common' 'npm:start:dev:client'",
     "start": "npm run build -w common -w client && npm run start -w server",
-    "test": "npm run test -ws --if-present --"
+    "test": "npm run test -w common -w client -w server --if-present --",
+    "e2e:codegen": "npm run codegen -w e2e --if-present --",
+    "e2e:test": "npm run test -w e2e --if-present --",
+    "e2e:test:api": "npm run test:api -w e2e --if-present --",
+    "e2e:test:ui": "npm run test:ui -w e2e --if-present --",
+    "e2e:test:ui:trace": "npm run test:ui:trace -w e2e --if-present --",
+    "e2e:test:ui:host": "npm run test:ui:host -w e2e --if-present --"
   },
   "workspaces": [
     "common",
     "client",
-    "server"
+    "server",
+    "e2e"
   ],
   "dependencies": {
     "typescript": "^5.7.3"
