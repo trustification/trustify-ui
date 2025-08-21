@@ -30,8 +30,7 @@
     "vscode": {
       "extensions": [
         "ms-playwright.playwright",
-        "alexkrechik.cucumberautocomplete",
-        "esbenp.prettier-vscode"
+        "alexkrechik.cucumberautocomplete"
       ]
     }
   }
