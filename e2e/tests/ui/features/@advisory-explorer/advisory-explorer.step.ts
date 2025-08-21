@@ -9,16 +9,17 @@ export const { Given, When, Then } = createBdd(test);
 const VULN_TABLE_NAME = "vulnerability table";
 
 Given(
-  "User visits Advisory details Page of {string}",
-  async ({ page }, advisoryName) => {
+  "User visits Advisory details Page of {string} with type {string}",
+  async ({ page }, advisoryName, advisoryType) => {
     const searchPage = new SearchPage(page, "Advisories");
     await searchPage.dedicatedSearch(advisoryName);
-    await page.getByRole("link", { name: advisoryName }).click();
+    const advisory = `xpath=//tr[contains(.,'${advisoryName}') and contains(.,'${advisoryType}')]/td/a`;
+    await page.locator(advisory).click();
   },
 );
 
 Then(
-  "User navigates to the Vulnerabilites tab on the Advisory Overview page",
+  "User navigates to the Vulnerabilities tab on the Advisory Overview page",
   async ({ page }) => {
     await page.getByRole("tab", { name: "Vulnerabilities" }).click();
   },
@@ -54,7 +55,9 @@ Then(
 Then(
   "The {string} information should be visible for each vulnerability",
   async ({ page }, headers: string) => {
-    const headersArr = headers.split(`,`).map((column) => column.trim());
+    const headersArr = headers
+      .split(`,`)
+      .map((column: String) => column.trim());
     for (const label of headersArr) {
       const header = page.getByRole("columnheader", { name: label });
       if (await header.count()) {
