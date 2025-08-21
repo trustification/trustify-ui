@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  playwright:
+    image: ${PLAYWRIGHT_IMAGE:?PLAYWRIGHT_IMAGE is required}:${PLAYWRIGHT_VERSION:?PLAYWRIGHT_VERSION is required}${UBUNTU_VERSION_ALIAS}
+    container_name: playwright
+    init: true
+    restart: always
+    # 'host' means "Use the host network". Thus, `ports` mapping section is not
+    # needed since it is ignored in this case.
+    network_mode: host
+    ipc: host
+    working_dir: ${PLAYWRIGHT_HOME:-/home/pwuser}
+    command:
+      - /bin/sh
+      - -c
+      - npx -y playwright@${PLAYWRIGHT_VERSION:?PLAYWRIGHT_VERSION is required} run-server --port ${PLAYWRIGHT_PORT:-5000}
