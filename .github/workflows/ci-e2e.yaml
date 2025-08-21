@@ -4,18 +4,20 @@ on:
   push:
     branches:
       - "main"
+      - "release/*"
   pull_request:
     branches:
       - "main"
+      - "release/*"
   workflow_call:
   merge_group:
 
 concurrency:
-  group: ci-global-${{ github.ref }}
+  group: ci-e2e-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build-and-upload-for-global-ci:
+  build-and-upload-for-e2e-ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -32,9 +34,40 @@ jobs:
           path: /tmp/trustify-ui.tar
           retention-days: 1
 
+  discover-envs-for-e2e-ci:
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.set-outputs.outputs.image_tag }}
+    steps:
+      - name: Extract env vars for main
+        shell: bash
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          echo "image_tag=latest" >> $GITHUB_ENV          
+      - name: Extract env vars from tag
+        shell: bash
+        if: contains(github.ref, 'tags')
+        run: |
+          tag=$(echo ${GITHUB_REF#refs/tags/})
+          echo "image_tag=$tag" >> $GITHUB_ENV          
+      - name: Extract env vars from all other branches
+        shell: bash
+        if: contains(github.ref, 'refs/heads/main') == false && contains(github.ref, 'tags') == false
+        run: |
+          branch=$(echo ${GITHUB_REF#refs/heads/})
+          branch_version="${branch#release/}"
+          echo "image_tag=$branch_version" >> $GITHUB_ENV
+      - name: Set outputs
+        id: set-outputs
+        run: |
+          run: echo "image_tag=${{ env.image_tag }}" >> "$GITHUB_OUTPUT"
+          
   run-e2e-ci:
-    needs: build-and-upload-for-global-ci
+    needs:
+      - build-and-upload-for-e2e-ci
+      - discover-envs-for-e2e-ci
     uses: ./.github/workflows/ci-e2e-template.yaml
     with:
       artifact: trustify-ui
       ui_image: ghcr.io/trustification/trustify-ui:pr-test
+      server_image: ghcr.io/trustification/trustd:${{ needs.discover-envs-for-e2e-ci.outputs.image_tag }}
