@@ -22,7 +22,7 @@ export const AutocompleteLabelFilterControl = <TItem,>({
   isDisabled = false,
 }: React.PropsWithChildren<
   IAutocompleteLabelFilterControlProps<TItem>
->): JSX.Element | null => {
+>): React.JSX.Element | null => {
   const [selectOptions, setSelectOptions] = React.useState<
     FilterSelectOptionProps[]
   >(Array.isArray(category.selectOptions) ? category.selectOptions : []);
