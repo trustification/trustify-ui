@@ -12,7 +12,7 @@ Trustify UI Component
 
 | branch | last merge e2e CI | nightly e2e CI |
 | :----- | :---------------- | :------------- |
-| main   | [![CI (global Trustify CI)](https://github.com/trustification/trustify-ui/actions/workflows/ci-global.yaml/badge.svg?branch=main&event=push)](https://github.com/trustification/trustify-ui/actions/workflows/ci-global.yaml?query=branch%3Amain+event%3Apush)               | [![Nightly CI (global trustify CI @main)](https://github.com/trustification/trustify-ui/actions/workflows/nightly-ci-global.yaml/badge.svg?branch=main&event=schedule)](https://github.com/trustification/trustify-ui/actions/workflows/nightly-ci-global.yaml?query=branch%3Amain+event%3Aschedule)            |
+| main   | [![CI (e2e Trustify CI)](https://github.com/trustification/trustify-ui/actions/workflows/ci-e2e.yaml/badge.svg?branch=main&event=push)](https://github.com/trustification/trustify-ui/actions/workflows/ci-e2e.yaml?query=branch%3Amain+event%3Apush)               | [![Nightly CI (e2e trustify CI @main)](https://github.com/trustification/trustify-ui/actions/workflows/nightly-ci-e2e.yaml/badge.svg?branch=main&event=schedule)](https://github.com/trustification/trustify-ui/actions/workflows/nightly-ci-e2e.yaml?query=branch%3Amain+event%3Aschedule)            |
 
 ## Development
 
