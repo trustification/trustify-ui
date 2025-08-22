@@ -1,0 +1,3897 @@
+openapi: 3.1.0
+info:
+  title: Trustify
+  description: Software Supply-Chain Security API
+  license:
+    name: Apache License, Version 2.0
+    identifier: Apache-2.0
+  version: 0.2.9
+paths:
+  /.well-known/trustify:
+    get:
+      operationId: info
+      responses:
+        '200':
+          description: Get information
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - version
+                properties:
+                  build:
+                    type: object
+                  version:
+                    type: string
+  /api/v2/advisory:
+    get:
+      tags:
+        - advisory
+      summary: List advisories
+      operationId: listAdvisories
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: |-
+            The first item to return, skipping all that come before it.
+
+            NOTE: The order of items is defined by the API being called.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of entries to return.
+
+            Zero means: no limit
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: deprecated
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - Ignore
+              - Consider
+      responses:
+        '200':
+          description: Matching vulnerabilities
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResults_AdvisorySummary'
+    post:
+      tags:
+        - advisory
+      summary: Upload a new advisory
+      operationId: uploadAdvisory
+      parameters:
+        - name: issuer
+          in: query
+          description: Optional issuer if it cannot be determined from advisory contents.
+          required: false
+          schema:
+            type:
+              - string
+              - 'null'
+        - name: labels
+          in: query
+          description: |-
+            Optional labels.
+
+            Only use keys with a prefix of `labels.`
+          required: true
+          schema:
+            $ref: '#/components/schemas/Labels'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              format: binary
+        required: true
+      responses:
+        '201':
+          description: Upload a file
+        '400':
+          description: The file could not be parsed as an advisory
+  /api/v2/advisory/{id}/label:
+    put:
+      tags:
+        - advisory
+      summary: Replace the labels of an advisory
+      operationId: updateAdvisoryLabels
+      parameters:
+        - name: id
+          in: path
+          description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Labels'
+        required: true
+      responses:
+        '204':
+          description: Replaced the labels of the advisory
+        '404':
+          description: The advisory could not be found
+    patch:
+      tags:
+        - advisory
+      summary: Modify existing labels of an advisory
+      operationId: patchAdvisoryLabels
+      parameters:
+        - name: id
+          in: path
+          description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Labels'
+        required: true
+      responses:
+        '204':
+          description: Modified the labels of the advisory
+        '404':
+          description: The advisory could not be found
+  /api/v2/advisory/{key}:
+    get:
+      tags:
+        - advisory
+      summary: Get an advisory
+      operationId: getAdvisory
+      parameters:
+        - name: key
+          in: path
+          description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Matching advisory
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdvisoryDetails'
+        '404':
+          description: Matching advisory not found
+    delete:
+      tags:
+        - advisory
+      summary: Delete an advisory
+      operationId: deleteAdvisory
+      parameters:
+        - name: key
+          in: path
+          description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Matching advisory
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdvisoryDetails'
+        '404':
+          description: Matching advisory not found
+  /api/v2/advisory/{key}/download:
+    get:
+      tags:
+        - advisory
+      summary: Download an advisory document
+      operationId: downloadAdvisory
+      parameters:
+        - name: key
+          in: path
+          description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Download a an advisory
+          content:
+            application/json:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: The document could not be found
+  /api/v2/analysis/component:
+    get:
+      tags:
+        - analysis
+      summary: Retrieve SBOM components (packages) by a complex search.
+      operationId: searchComponent
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: |-
+            The first item to return, skipping all that come before it.
+
+            NOTE: The order of items is defined by the API being called.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of entries to return.
+
+            Zero means: no limit
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: ancestors
+          in: query
+          description: |-
+            The level of ancestors to return.
+
+            Zero, the default, meaning none.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: descendants
+          in: query
+          description: |-
+            The level of descendants to return.
+
+            Zero, the default, meaning none.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: relationships
+          in: query
+          description: |-
+            A set of relationships to filter for, deserialized from a
+            comma-delimited string
+
+            An empty set, the default, meaning all relationships.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Retrieved component(s) located by search
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResults_Node'
+        '401':
+          description: The user did not provide valid authentication credentials
+        '403':
+          description: The user lacks the required permission
+  /api/v2/analysis/component/{key}:
+    get:
+      tags:
+        - analysis
+      summary: Retrieve SBOM components (packages) by name, Package URL, or CPE.
+      operationId: getComponent
+      parameters:
+        - name: key
+          in: path
+          description: provide component name, URL-encoded pURL, or CPE itself
+          required: true
+          schema:
+            type: string
+        - name: q
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: sort
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: |-
+            The first item to return, skipping all that come before it.
+
+            NOTE: The order of items is defined by the API being called.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of entries to return.
+
+            Zero means: no limit
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: ancestors
+          in: query
+          description: |-
+            The level of ancestors to return.
+
+            Zero, the default, meaning none.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: descendants
+          in: query
+          description: |-
+            The level of descendants to return.
+
+            Zero, the default, meaning none.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: relationships
+          in: query
+          description: |-
+            A set of relationships to filter for, deserialized from a
+            comma-delimited string
+
+            An empty set, the default, meaning all relationships.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Retrieved component(s) located by name, pURL, or CPE
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResults_Node'
+        '401':
+          description: The user did not provide valid authentication credentials
+        '403':
+          description: The user lacks the required permission
+  /api/v2/analysis/sbom/{sbom}/render.{ext}:
+    get:
+      tags:
+        - analysis
+      summary: Render an SBOM graph
+      operationId: renderSbomGraph
+      parameters:
+        - name: sbom
+          in: path
+          description: ID of the SBOM
+          required: true
+          schema:
+            type: string
+        - name: ext
+          in: path
+          description: Renderer to use
+          required: true
+          schema:
+            type: string
+            enum:
+              - gv
+      responses:
+        '200':
+          description: A rendered version of the SBOM graph in the format requested
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: The user did not provide valid authentication credentials
+        '403':
+          description: The user lacks the required permission
+        '404':
+          description: The SBOM was not found
+        '415':
+          description: Unsupported rendering format
+  /api/v2/analysis/status:
+    get:
+      tags:
+        - analysis
+      summary: Get the status of the analysis service.
+      operationId: status
+      responses:
+        '200':
+          description: Analysis status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisStatus'
+        '401':
+          description: The user did not provide valid authentication credentials
+        '403':
+          description: The user lacks the required permission
+  /api/v2/dataset:
+    post:
+      tags:
+        - dataset
+      summary: Upload a new dataset
+      operationId: uploadDataset
+      parameters:
+        - name: labels
+          in: query
+          description: |-
+            Optional labels.
+
+            Only use keys with a prefix of `labels.`
+          required: true
+          schema:
+            $ref: '#/components/schemas/Labels'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              format: binary
+        required: true
+      responses:
+        '201':
+          description: Uploaded the dataset
+        '400':
+          description: The file could not be parsed as an dataset
+  /api/v2/importer:
+    get:
+      tags:
+        - importer
+      summary: List importer configurations
+      operationId: listImporters
+      responses:
+        '200':
+          description: List importer configurations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Importer'
+  /api/v2/importer/{name}:
+    get:
+      tags:
+        - importer
+      summary: Get an importer configuration
+      operationId: getImporter
+      parameters:
+        - name: name
+          in: path
+          description: The name of the importer
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Retrieved importer configuration
+          headers:
+            etag:
+              schema:
+                type: string
+              description: Revision ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Revisioned_Importer'
+        '404':
+          description: An importer with that name could not be found
+    put:
+      tags:
+        - importer
+      summary: Update an existing importer configuration
+      operationId: updateImporter
+      parameters:
+        - name: name
+          in: path
+          description: The name of the importer
+          required: true
+          schema:
+            type: string
+        - name: if-match
+          in: header
+          description: The revision to update
+          required: false
+          schema:
+            type:
+              - string
+              - 'null'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImporterConfiguration'
+        required: true
+      responses:
+        '201':
+          description: Updated the importer configuration
+        '409':
+          description: An importer with that name does not exist
+        '412':
+          description: The provided if-match header did not match the stored revision
+    post:
+      tags:
+        - importer
+      summary: Create a new importer configuration
+      operationId: createImporter
+      parameters:
+        - name: name
+          in: path
+          description: The name of the importer
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImporterConfiguration'
+        required: true
+      responses:
+        '201':
+          description: Created a new importer configuration
+        '409':
+          description: An importer with that name already exists
+    delete:
+      tags:
+        - importer
+      summary: Delete an importer configuration
+      operationId: deleteImporter
+      parameters:
+        - name: name
+          in: path
+          description: The name of the importer
+          required: true
+          schema:
+            type: string
+        - name: if-match
+          in: header
+          description: The revision to delete
+          required: false
+          schema:
+            type:
+              - string
+              - 'null'
+      responses:
+        '201':
+          description: Delete the importer configuration
+    patch:
+      tags:
+        - importer
+      summary: Update an existing importer configuration
+      operationId: patchImporter
+      parameters:
+        - name: name
+          in: path
+          description: The name of the importer
+          required: true
+          schema:
+            type: string
+        - name: if-match
+          in: header
+          description: The revision to update
+          required: false
+          schema:
+            type:
+              - string
+              - 'null'
+      requestBody:
+        content:
+          application/merge-patch+json:
+            schema: {}
+        required: true
+      responses:
+        '201':
+          description: Created a new importer configuration
+        '409':
+          description: An importer with that name does not exist
+        '412':
+          description: The provided if-match header did not match the stored revision
+  /api/v2/importer/{name}/enabled:
+    put:
+      tags:
+        - importer
+      summary: Update an existing importer configuration
+      operationId: enableImporter
+      parameters:
+        - name: name
+          in: path
+          description: The name of the importer
+          required: true
+          schema:
+            type: string
+        - name: if-match
+          in: header
+          description: The revision to update
+          required: false
+          schema:
+            type:
+              - string
+              - 'null'
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              type: boolean
+        required: true
+      responses:
+        '201':
+          description: Updated the enable state
+        '404':
+          description: An importer with that name does not exist
+        '412':
+          description: The provided if-match header did not match the stored revision
+  /api/v2/importer/{name}/force:
+    post:
+      tags:
+        - importer
+      summary: Force an importer to run as soon as possible
+      operationId: forceRunImporter
+      parameters:
+        - name: name
+          in: path
+          description: The name of the importer
+          required: true
+          schema:
+            type: string
+        - name: if-match
+          in: header
+          description: The revision to update
+          required: false
+          schema:
+            type:
+              - string
+              - 'null'
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              type: boolean
+        required: true
+      responses:
+        '201':
+          description: Updated the state
+        '404':
+          description: An importer with that name does not exist
+        '412':
+          description: The provided if-match header did not match the stored revision
+  /api/v2/importer/{name}/report:
+    get:
+      tags:
+        - importer
+      summary: Get reports for an importer
+      operationId: listImporterReports
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Retrieved importer reports
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResults_ImporterReport'
+  /api/v2/license:
+    get:
+      tags:
+        - license
+      summary: List licenses
+      operationId: listLicenses
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: |-
+            The first item to return, skipping all that come before it.
+
+            NOTE: The order of items is defined by the API being called.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of entries to return.
+
+            Zero means: no limit
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Matching licenses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResults_LicenseSummary'
+  /api/v2/license/spdx/license:
+    get:
+      tags:
+        - spdx license
+      summary: List SPDX licenses
+      operationId: listSpdxLicenses
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: |-
+            The first item to return, skipping all that come before it.
+
+            NOTE: The order of items is defined by the API being called.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of entries to return.
+
+            Zero means: no limit
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Matching licenses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResults_SpdxLicenseSummary'
+  /api/v2/license/spdx/license/{id}:
+    get:
+      tags:
+        - spdx license
+      summary: Get SPDX license details
+      operationId: getSpdxLicense
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: SPDX license details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpdxLicenseDetails'
+  /api/v2/license/{uuid}:
+    get:
+      tags:
+        - license
+      summary: Retrieve license details
+      operationId: getLicenses
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: The license
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LicenseSummary'
+  /api/v2/license/{uuid}/purl:
+    get:
+      tags:
+        - license
+      summary: Retrieve pURLs covered by a license
+      operationId: getLicensePurls
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: |-
+            The first item to return, skipping all that come before it.
+
+            NOTE: The order of items is defined by the API being called.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of entries to return.
+
+            Zero means: no limit
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The versioned pURLs allowing the license
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LicenseSummary'
+  /api/v2/organization:
+    get:
+      tags:
+        - organization
+      summary: List organizations
+      operationId: listOrganizations
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: |-
+            The first item to return, skipping all that come before it.
+
+            NOTE: The order of items is defined by the API being called.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of entries to return.
+
+            Zero means: no limit
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Matching organizations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationSummary'
+  /api/v2/organization/{id}:
+    get:
+      tags:
+        - organization
+      summary: Retrieve organization details
+      operationId: getOrganization
+      parameters:
+        - name: id
+          in: path
+          description: Opaque ID of the organization
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Matching organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationDetails'
+        '404':
+          description: Matching organization not found
+  /api/v2/product:
+    get:
+      tags:
+        - product
+      operationId: listProducts
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: |-
+            The first item to return, skipping all that come before it.
+
+            NOTE: The order of items is defined by the API being called.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of entries to return.
+
+            Zero means: no limit
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Matching products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResults_ProductSummary'
+  /api/v2/product/{id}:
+    get:
+      tags:
+        - product
+      operationId: getProduct
+      parameters:
+        - name: id
+          in: path
+          description: Opaque ID of the product
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Matching product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetails'
+        '404':
+          description: Matching product not found
+    delete:
+      tags:
+        - product
+      operationId: deleteProduct
+      parameters:
+        - name: id
+          in: path
+          description: Opaque ID of the product
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Matching product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetails'
+        '404':
+          description: Matching product not found
+  /api/v2/purl:
+    get:
+      tags:
+        - purl
+      summary: List fully-qualified pURLs
+      operationId: listPurl
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: |-
+            The first item to return, skipping all that come before it.
+
+            NOTE: The order of items is defined by the API being called.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of entries to return.
+
+            Zero means: no limit
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: All relevant matching qualified PURLs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResults_PurlSummary'
+  /api/v2/purl/base:
+    get:
+      tags:
+        - base purl
+      summary: List base versionless pURLs
+      operationId: listBasePurls
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: |-
+            The first item to return, skipping all that come before it.
+
+            NOTE: The order of items is defined by the API being called.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of entries to return.
+
+            Zero means: no limit
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: All relevant matching versionless base PURL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResults_BasePurlSummary'
+  /api/v2/purl/base/{key}:
+    get:
+      tags:
+        - base purl
+      summary: Retrieve details about a base versionless pURL
+      operationId: getBasePurl
+      parameters:
+        - name: key
+          in: path
+          description: opaque identifier for a base PURL, or a URL-encoded pURL itself
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Details for the versionless base PURL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasePurlDetails'
+  /api/v2/purl/type:
+    get:
+      tags:
+        - purl type
+      summary: List known pURL types
+      operationId: listPurlTypes
+      responses:
+        '200':
+          description: List of all known PURL types
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TypeSummary'
+  /api/v2/purl/type/{type}:
+    get:
+      tags:
+        - purl type
+      summary: Retrieve details about a pURL type
+      operationId: getPurlType
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: |-
+            The first item to return, skipping all that come before it.
+
+            NOTE: The order of items is defined by the API being called.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of entries to return.
+
+            Zero means: no limit
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: type
+          in: path
+          description: PURL identifier of a type
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Information regarding PURLs within an type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResults_BasePurlSummary'
+  /api/v2/purl/type/{type}/{namespace_and_name}:
+    get:
+      tags:
+        - purl type
+      summary: Retrieve base pURL details of a type
+      operationId: getBasePurlOfType
+      parameters:
+        - name: type
+          in: path
+          description: PURL identifier of a type
+          required: true
+          schema:
+            type: string
+        - name: namespace_and_name
+          in: path
+          description: name of the package optionally preceded by its namespace
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Matching vulnerabilities
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasePurlDetails'
+  /api/v2/purl/type/{type}/{namespace_and_name}@{version}:
+    get:
+      tags:
+        - purl
+      summary: Retrieve versioned pURL details of a type
+      operationId: getVersionedPurlOfType
+      parameters:
+        - name: type
+          in: path
+          description: PURL identifier of a type
+          required: true
+          schema:
+            type: string
+        - name: namespace_and_name
+          in: path
+          description: name of the package optionally preceded by its namespace
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: path
+          description: version of the package
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Matching vulnerabilities
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionedPurlDetails'
+  /api/v2/purl/version/{key}:
+    get:
+      tags:
+        - versioned purl
+      summary: Retrieve details of a versioned, non-qualified pURL
+      operationId: getVersionedPurl
+      parameters:
+        - name: key
+          in: path
+          description: opaque ID identifier for a package version, or URL-ecnoded pURL itself
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Details for the version of a PURL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionedPurlDetails'
+  /api/v2/purl/{key}:
+    get:
+      tags:
+        - purl
+      summary: Retrieve details of a fully-qualified pURL
+      operationId: getPurl
+      parameters:
+        - name: deprecated
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - Ignore
+              - Consider
+        - name: key
+          in: path
+          description: opaque identifier for a fully-qualified PURL, or URL-encoded pURL itself
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Details for the qualified PURL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurlDetails'
+  /api/v2/sbom:
+    get:
+      tags:
+        - sbom
+      operationId: listSboms
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: |-
+            The first item to return, skipping all that come before it.
+
+            NOTE: The order of items is defined by the API being called.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of entries to return.
+
+            Zero means: no limit
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Matching SBOMs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResults_SbomSummary'
+    post:
+      tags:
+        - sbom
+      summary: Upload a new SBOM
+      operationId: uploadSbom
+      parameters:
+        - name: labels
+          in: query
+          description: |-
+            Optional labels.
+
+            Only use keys with a prefix of `labels.`
+          required: true
+          schema:
+            $ref: '#/components/schemas/Labels'
+        - name: location
+          in: query
+          description: Source the document came from
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              type: array
+              items:
+                type: integer
+                format: int32
+                minimum: 0
+        required: true
+      responses:
+        '201':
+          description: Upload an SBOM
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestResult'
+        '400':
+          description: The file could not be parsed as an advisory
+  /api/v2/sbom/by-package:
+    get:
+      tags:
+        - sbom
+      summary: Find all SBOMs containing the provided package.
+      description: |-
+        The package can be provided either via a PURL or using the ID of a package as returned by
+        other APIs, but not both.
+      operationId: listRelatedSboms
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: |-
+            The first item to return, skipping all that come before it.
+
+            NOTE: The order of items is defined by the API being called.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of entries to return.
+
+            Zero means: no limit
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: purl
+          in: query
+          description: Find by PURL
+          required: false
+          schema:
+            oneOf:
+              - type: 'null'
+              - $ref: '#/components/schemas/Purl'
+        - name: cpe
+          in: query
+          description: Find by CPE
+          required: false
+          schema:
+            oneOf:
+              - type: 'null'
+              - $ref: '#/components/schemas/Cpe'
+      responses:
+        '200':
+          description: Matching SBOMs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResults_SbomSummary'
+  /api/v2/sbom/count-by-package:
+    get:
+      tags:
+        - sbom
+      summary: Count all SBOMs containing the provided packages.
+      description: |-
+        The packages can be provided either via a PURL or using the ID of a package as returned by
+        other APIs, but not both.
+      operationId: countRelatedSboms
+      parameters:
+        - name: purl
+          in: path
+          description: Find by PURL
+          required: true
+          schema:
+            oneOf:
+              - type: 'null'
+              - $ref: '#/components/schemas/Purl'
+        - name: cpe
+          in: path
+          description: Find by CPE
+          required: true
+          schema:
+            oneOf:
+              - type: 'null'
+              - $ref: '#/components/schemas/Cpe'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ExternalReferenceQuery'
+        required: true
+      responses:
+        '200':
+          description: Number of matching SBOMs per package
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: integer
+                  format: int64
+  /api/v2/sbom/{id}:
+    get:
+      tags:
+        - sbom
+      operationId: getSbom
+      parameters:
+        - name: id
+          in: path
+          description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Matching SBOM
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SbomSummary'
+        '404':
+          description: Matching SBOM not found
+    delete:
+      tags:
+        - sbom
+      operationId: deleteSbom
+      parameters:
+        - name: id
+          in: path
+          description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Matching SBOM
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SbomSummary'
+        '404':
+          description: Matching SBOM not found
+  /api/v2/sbom/{id}/advisory:
+    get:
+      tags:
+        - sbom
+      operationId: getSbomAdvisories
+      parameters:
+        - name: id
+          in: path
+          description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Matching SBOM
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SbomAdvisory'
+        '404':
+          description: Matching SBOM not found
+  /api/v2/sbom/{id}/label:
+    put:
+      tags:
+        - sbom
+      summary: Replace the labels of an SBOM
+      operationId: updateSbomLabels
+      parameters:
+        - name: id
+          in: path
+          description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Labels'
+        required: true
+      responses:
+        '204':
+          description: Replaced the labels of the SBOM
+        '404':
+          description: The SBOM could not be found
+    patch:
+      tags:
+        - sbom
+      summary: Modify existing labels of an SBOM
+      operationId: patchSbomLabels
+      parameters:
+        - name: id
+          in: path
+          description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>' or 'urn:uuid:<uuid>'
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Labels'
+        required: true
+      responses:
+        '204':
+          description: Modified the labels of the SBOM
+        '404':
+          description: The SBOM could not be found
+  /api/v2/sbom/{id}/packages:
+    get:
+      tags:
+        - sbom
+      summary: Search for packages of an SBOM
+      operationId: listPackages
+      parameters:
+        - name: id
+          in: path
+          description: ID of the SBOM to get packages for
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: |-
+            The first item to return, skipping all that come before it.
+
+            NOTE: The order of items is defined by the API being called.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of entries to return.
+
+            Zero means: no limit
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Packages
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResults_SbomPackage'
+  /api/v2/sbom/{id}/related:
+    get:
+      tags:
+        - sbom
+      summary: Search for related packages in an SBOM
+      operationId: listRelatedPackages
+      parameters:
+        - name: id
+          in: path
+          description: ID of SBOM to search packages in
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: reference
+          in: query
+          description: The Package to use as reference
+          required: false
+          schema:
+            type:
+              - string
+              - 'null'
+        - name: which
+          in: query
+          description: Which side the reference should be on
+          required: false
+          schema:
+            type: string
+            enum:
+              - left
+              - right
+        - name: relationship
+          in: query
+          description: Optional relationship filter
+          required: false
+          schema:
+            oneOf:
+              - type: 'null'
+              - $ref: '#/components/schemas/Relationship'
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: |-
+            The first item to return, skipping all that come before it.
+
+            NOTE: The order of items is defined by the API being called.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of entries to return.
+
+            Zero means: no limit
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Packages
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResults_SbomPackageRelation'
+  /api/v2/sbom/{key}/download:
+    get:
+      tags:
+        - sbom
+      operationId: downloadSbom
+      parameters:
+        - name: key
+          in: path
+          description: Digest/hash of the document, prefixed by hash type, such as 'sha256:<hash>'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Download a an SBOM
+          content:
+            application/json:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: The document could not be found
+  /api/v2/userPreference/{key}:
+    get:
+      tags:
+        - userPreferences
+      summary: Get user preferences
+      operationId: getUserPreferences
+      parameters:
+        - name: key
+          in: path
+          description: The key to the user preferences
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User preference stored under this key
+          headers:
+            etag:
+              schema:
+                type: string
+              description: Revision ID
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Unknown user preference key
+    put:
+      tags:
+        - userPreferences
+      summary: Set user preferences
+      operationId: setUserPreferences
+      parameters:
+        - name: key
+          in: path
+          description: The key to the user preferences
+          required: true
+          schema:
+            type: string
+        - name: if-match
+          in: header
+          description: The revision to update
+          required: false
+          schema:
+            type:
+              - string
+              - 'null'
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+        required: true
+      responses:
+        '200':
+          description: User preference stored under this key
+          headers:
+            etag:
+              schema:
+                type: string
+              description: Revision ID
+        '412':
+          description: The provided If-Match revision did not match the actual revision
+    delete:
+      tags:
+        - userPreferences
+      summary: Delete user preferences
+      operationId: deleteUserPreferences
+      parameters:
+        - name: key
+          in: path
+          description: The key to the user preferences
+          required: true
+          schema:
+            type: string
+        - name: if-match
+          in: header
+          description: The revision to delete
+          required: false
+          schema:
+            type:
+              - string
+              - 'null'
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+        required: true
+      responses:
+        '201':
+          description: User preferences are deleted
+        '412':
+          description: The provided If-Match revision did not match the actual revision
+  /api/v2/vulnerability:
+    get:
+      tags:
+        - vulnerability
+      summary: List vulnerabilities
+      operationId: listVulnerabilities
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: |-
+            The first item to return, skipping all that come before it.
+
+            NOTE: The order of items is defined by the API being called.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of entries to return.
+
+            Zero means: no limit
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Matching vulnerabilities
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResults_VulnerabilitySummary'
+  /api/v2/vulnerability/{id}:
+    get:
+      tags:
+        - vulnerability
+      summary: Retrieve vulnerability details
+      operationId: getVulnerability
+      parameters:
+        - name: id
+          in: path
+          description: ID of the vulnerability
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Specified vulnerability
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VulnerabilityDetails'
+        '404':
+          description: Specified vulnerability not found
+    delete:
+      tags:
+        - vulnerability
+      summary: Delete vulnerability
+      operationId: deleteVulnerability
+      parameters:
+        - name: id
+          in: path
+          description: ID of the vulnerability
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Specified vulnerability
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VulnerabilityDetails'
+        '404':
+          description: Specified vulnerability not found
+  /api/v2/weakness:
+    get:
+      tags:
+        - weakness
+      summary: List weaknesses
+      operationId: listWeaknesses
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: |-
+            The first item to return, skipping all that come before it.
+
+            NOTE: The order of items is defined by the API being called.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of entries to return.
+
+            Zero means: no limit
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        '200':
+          description: Matching weaknesses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResults_LicenseSummary'
+  /api/v2/weakness/{id}:
+    get:
+      tags:
+        - weakness
+      summary: Retrieve weakness details
+      operationId: getWeakness
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The weakness
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LicenseSummary'
+components:
+  schemas:
+    AdvisoryDetails:
+      allOf:
+        - $ref: '#/components/schemas/AdvisoryHead'
+        - oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/SourceDocument'
+        - type: object
+          required:
+            - vulnerabilities
+            - average_severity
+            - average_score
+          properties:
+            average_score:
+              type:
+                - number
+                - 'null'
+              format: double
+              description: Average (arithmetic mean) score of the advisory aggregated from *all* related vulnerability assertions.
+            average_severity:
+              oneOf:
+                - type: 'null'
+                - $ref: '#/components/schemas/Severity'
+                  description: Average (arithmetic mean) severity of the advisory aggregated from *all* related vulnerability assertions.
+            vulnerabilities:
+              type: array
+              items:
+                $ref: '#/components/schemas/AdvisoryVulnerabilitySummary'
+              description: Vulnerabilities addressed within this advisory.
+    AdvisoryHead:
+      type: object
+      required:
+        - uuid
+        - identifier
+        - document_id
+        - issuer
+        - published
+        - withdrawn
+        - title
+        - labels
+      properties:
+        document_id:
+          type: string
+          description: The identifier of the advisory, as provided by the document.
+        identifier:
+          type: string
+          description: The identifier of the advisory, as assigned by the issuing organization.
+        issuer:
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/OrganizationSummary'
+              description: |-
+                The issuer of the advisory, if known. If no issuer is able to be
+                determined, this field will not be included in a response.
+        labels:
+          $ref: '#/components/schemas/Labels'
+          description: Informational labels attached by the system or users to this advisory.
+        modified:
+          type:
+            - string
+            - 'null'
+          format: date-time
+          description: The date (in RFC3339 format) of when the advisory was last modified, if any.
+        published:
+          type:
+            - string
+            - 'null'
+          format: date-time
+          description: The date (in RFC3339 format) of when the advisory was published, if any.
+        title:
+          type:
+            - string
+            - 'null'
+          description: The title of the advisory as assigned by the issuing organization.
+        uuid:
+          type: string
+          description: The opaque UUID of the advisory.
+        withdrawn:
+          type:
+            - string
+            - 'null'
+          format: date-time
+          description: The date (in RFC3339 format) of when the advisory was withdrawn, if any.
+    AdvisorySummary:
+      allOf:
+        - $ref: '#/components/schemas/AdvisoryHead'
+        - oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/SourceDocument'
+              description: Information pertaning to the underlying source document, if any.
+        - type: object
+          required:
+            - average_severity
+            - average_score
+            - vulnerabilities
+          properties:
+            average_score:
+              type:
+                - number
+                - 'null'
+              format: double
+              description: Average (arithmetic mean) score of the advisory aggregated from *all* related vulnerability assertions.
+            average_severity:
+              type:
+                - string
+                - 'null'
+              description: Average (arithmetic mean) severity of the advisory aggregated from *all* related vulnerability assertions.
+            vulnerabilities:
+              type: array
+              items:
+                $ref: '#/components/schemas/AdvisoryVulnerabilityHead'
+              description: Vulnerabilities addressed within this advisory.
+    AdvisoryVulnerabilityHead:
+      allOf:
+        - $ref: '#/components/schemas/VulnerabilityHead'
+        - type: object
+          required:
+            - severity
+            - score
+          properties:
+            score:
+              type: number
+              format: double
+              description: |-
+                The average (arithmetic mean) score this advisory assigns to
+                the particular vulnerability.
+            severity:
+              $ref: '#/components/schemas/Severity'
+              description: |-
+                The English-language word description of the severity of the given
+                vulnerability, as asserted by the advisory, using the CVSS bucketing
+                ranges.
+
+                Critical: 9.0–10.0
+                High: 7.0–8.9
+                Medium: 4.0–6.9
+                Low: 0.1–3.9
+                None: 0
+    AdvisoryVulnerabilitySummary:
+      allOf:
+        - $ref: '#/components/schemas/AdvisoryVulnerabilityHead'
+        - type: object
+          required:
+            - cvss3_scores
+          properties:
+            cvss3_scores:
+              type: array
+              items:
+                type: string
+              description: |-
+                All CVSS3 scores from the advisory for the given vulnerability.
+                May include several, varying by minor version of the CVSS3 vector.
+      description: Summary of information from this advisory regarding a single specific vulnerability.
+    AnalysisStatus:
+      type: object
+      required:
+        - sbom_count
+        - graph_count
+      properties:
+        graph_count:
+          type: integer
+          format: int32
+          description: The number of graphs loaded in memory
+          minimum: 0
+        sbom_count:
+          type: integer
+          format: int32
+          description: The number of SBOMs found in the database
+          minimum: 0
+    BasePurlDetails:
+      allOf:
+        - $ref: '#/components/schemas/BasePurlHead'
+        - type: object
+          required:
+            - versions
+          properties:
+            versions:
+              type: array
+              items:
+                $ref: '#/components/schemas/VersionedPurlSummary'
+    BasePurlHead:
+      type: object
+      required:
+        - uuid
+        - purl
+      properties:
+        purl:
+          $ref: '#/components/schemas/Purl'
+          description: The actual base PURL
+        uuid:
+          type: string
+          format: uuid
+          description: The ID of the base PURL
+    BasePurlSummary:
+      allOf:
+        - $ref: '#/components/schemas/BasePurlHead'
+    BaseSummary:
+      type: object
+      required:
+        - sbom_id
+        - node_id
+        - purl
+        - cpe
+        - name
+        - version
+        - published
+        - document_id
+        - product_name
+        - product_version
+      properties:
+        cpe:
+          type: array
+          items:
+            $ref: '#/components/schemas/Cpe'
+        document_id:
+          type: string
+        name:
+          type: string
+        node_id:
+          type: string
+        product_name:
+          type: string
+        product_version:
+          type: string
+        published:
+          type: string
+        purl:
+          type: array
+          items:
+            $ref: '#/components/schemas/Purl'
+        sbom_id:
+          type: string
+        version:
+          type: string
+    BinaryByteSize:
+      type: string
+    ClearlyDefinedCurationImporter:
+      allOf:
+        - $ref: '#/components/schemas/CommonImporter'
+        - type: object
+          properties:
+            source:
+              type: string
+            types:
+              type: array
+              items:
+                $ref: '#/components/schemas/ClearlyDefinedPackageType'
+              uniqueItems: true
+    ClearlyDefinedImporter:
+      allOf:
+        - $ref: '#/components/schemas/CommonImporter'
+        - type: object
+          properties:
+            source:
+              type: string
+            types:
+              type: array
+              items:
+                $ref: '#/components/schemas/ClearlyDefinedPackageType'
+              uniqueItems: true
+    ClearlyDefinedPackageType:
+      type: string
+      enum:
+        - composer
+        - crate
+        - deb
+        - gem
+        - git
+        - go
+        - maven
+        - npm
+        - nuget
+        - pod
+        - pypi
+    CommonImporter:
+      type: object
+      required:
+        - period
+      properties:
+        description:
+          type:
+            - string
+            - 'null'
+          description: A description for users.
+        disabled:
+          type: boolean
+          description: A flag to disable the importer, without deleting it.
+        labels:
+          $ref: '#/components/schemas/Labels'
+          description: Labels which will be applied to the ingested documents.
+        period:
+          type: string
+          description: The period the importer should be run.
+    Cpe:
+      type: string
+      format: uri
+    CsafImporter:
+      allOf:
+        - $ref: '#/components/schemas/CommonImporter'
+        - type: object
+          required:
+            - source
+          properties:
+            fetchRetries:
+              type:
+                - integer
+                - 'null'
+              minimum: 0
+            ignoreMissing:
+              type: boolean
+            onlyPatterns:
+              type: array
+              items:
+                type: string
+            source:
+              type: string
+            v3Signatures:
+              type: boolean
+    CveImporter:
+      allOf:
+        - $ref: '#/components/schemas/CommonImporter'
+        - type: object
+          properties:
+            source:
+              type: string
+            startYear:
+              type:
+                - integer
+                - 'null'
+              format: int32
+              minimum: 0
+            years:
+              type: array
+              items:
+                type: integer
+                format: int32
+                minimum: 0
+              uniqueItems: true
+    CweImporter:
+      allOf:
+        - $ref: '#/components/schemas/CommonImporter'
+        - type: object
+          properties:
+            source:
+              type: string
+    ExternalReferenceQuery:
+      type: object
+      properties:
+        cpe:
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/Cpe'
+              description: Find by CPE
+        purl:
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/Purl'
+              description: Find by PURL
+    Id:
+      type: string
+      description: A hash/digest prefixed with its type.
+      example: sha256:dc60aeb735c16a71b6fc56e84ddb8193e3a6d1ef0b7e958d77e78fc039a5d04e
+    Importer:
+      allOf:
+        - $ref: '#/components/schemas/ImporterData'
+        - type: object
+          required:
+            - name
+          properties:
+            name:
+              type: string
+    ImporterConfiguration:
+      oneOf:
+        - type: object
+          required:
+            - sbom
+          properties:
+            sbom:
+              $ref: '#/components/schemas/SbomImporter'
+        - type: object
+          required:
+            - csaf
+          properties:
+            csaf:
+              $ref: '#/components/schemas/CsafImporter'
+        - type: object
+          required:
+            - osv
+          properties:
+            osv:
+              $ref: '#/components/schemas/OsvImporter'
+        - type: object
+          required:
+            - cve
+          properties:
+            cve:
+              $ref: '#/components/schemas/CveImporter'
+        - type: object
+          required:
+            - clearlyDefined
+          properties:
+            clearlyDefined:
+              $ref: '#/components/schemas/ClearlyDefinedImporter'
+        - type: object
+          required:
+            - clearlyDefinedCuration
+          properties:
+            clearlyDefinedCuration:
+              $ref: '#/components/schemas/ClearlyDefinedCurationImporter'
+        - type: object
+          required:
+            - cwe
+          properties:
+            cwe:
+              $ref: '#/components/schemas/CweImporter'
+    ImporterData:
+      type: object
+      required:
+        - configuration
+        - state
+        - lastChange
+      properties:
+        configuration:
+          $ref: '#/components/schemas/ImporterConfiguration'
+        continuation:
+          description: The continuation token of the importer.
+        lastChange:
+          type: string
+          format: date-time
+          description: The last state change
+        lastError:
+          type:
+            - string
+            - 'null'
+          description: The error of the last run (empty if successful)
+        lastRun:
+          type:
+            - string
+            - 'null'
+          format: date-time
+          description: The last run (successful or not)
+        lastSuccess:
+          type:
+            - string
+            - 'null'
+          format: date-time
+          description: The last successful run
+        progress:
+          $ref: '#/components/schemas/Progress'
+          description: The current progress.
+        state:
+          $ref: '#/components/schemas/State'
+          description: The current state of the importer
+    ImporterReport:
+      type: object
+      required:
+        - id
+        - importer
+        - creation
+      properties:
+        creation:
+          type: string
+          format: date-time
+          description: The time the report was created
+        error:
+          type:
+            - string
+            - 'null'
+          description: Errors captured by the report
+        id:
+          type: string
+          description: The ID of the report
+        importer:
+          type: string
+          description: The name of the importer this report belongs to
+        report:
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/Report'
+              description: Detailed report information
+    IngestResult:
+      type: object
+      description: The result of the ingestion process
+      required:
+        - id
+      properties:
+        document_id:
+          type:
+            - string
+            - 'null'
+          description: The ID declared by the document
+        id:
+          $ref: '#/components/schemas/Id'
+          description: The internal ID of the document
+        warnings:
+          type: array
+          items:
+            type: string
+          description: Warnings that occurred during the import process
+    Labels:
+      type: object
+      additionalProperties:
+        type: string
+    LicenseSummary:
+      type: object
+      required:
+        - id
+        - license
+        - spdx_licenses
+        - spdx_license_exceptions
+        - purls
+      properties:
+        id:
+          type: string
+        license:
+          type: string
+        purls:
+          type: integer
+          format: int64
+          minimum: 0
+        spdx_license_exceptions:
+          type: array
+          items:
+            type: string
+        spdx_licenses:
+          type: array
+          items:
+            type: string
+    Message:
+      type: object
+      required:
+        - severity
+        - message
+      properties:
+        message:
+          type: string
+          description: The message
+        severity:
+          $ref: '#/components/schemas/Severity'
+          description: The severity of the message
+    Node:
+      allOf:
+        - $ref: '#/components/schemas/BaseSummary'
+        - type: object
+          properties:
+            ancestors:
+              type:
+                - array
+                - 'null'
+              items:
+                $ref: '#/components/schemas/Node'
+              description: All ancestors of this node. [`None`] if not requested on this level.
+            descendants:
+              type:
+                - array
+                - 'null'
+              items:
+                $ref: '#/components/schemas/Node'
+              description: All descendents of this node. [`None`] if not requested on this level.
+            relationship:
+              oneOf:
+                - type: 'null'
+                - $ref: '#/components/schemas/Relationship'
+                  description: The relationship the node has to it's containing node, if any.
+    OrganizationDetails:
+      allOf:
+        - $ref: '#/components/schemas/OrganizationHead'
+        - type: object
+          required:
+            - advisories
+          properties:
+            advisories:
+              type: array
+              items:
+                $ref: '#/components/schemas/AdvisoryHead'
+              description: Advisories issued by the organization, if any.
+    OrganizationHead:
+      type: object
+      description: |-
+        An organization who may issue advisories, product SBOMs, or
+        otherwise be involved in supply-chain evidence.
+      required:
+        - id
+        - name
+        - cpe_key
+        - website
+      properties:
+        cpe_key:
+          type:
+            - string
+            - 'null'
+          description: The `CPE` key of the organization, if known.
+        id:
+          type: string
+          format: uuid
+          description: The opaque UUID of the organization.
+        name:
+          type: string
+          description: The name of the organization.
+        website:
+          type:
+            - string
+            - 'null'
+          description: The website of the organization, if known.
+    OrganizationSummary:
+      allOf:
+        - $ref: '#/components/schemas/OrganizationHead'
+    OsvImporter:
+      allOf:
+        - $ref: '#/components/schemas/CommonImporter'
+        - type: object
+          required:
+            - source
+          properties:
+            branch:
+              type:
+                - string
+                - 'null'
+              description: An optional branch. Will use the default branch otherwise.
+            path:
+              type:
+                - string
+                - 'null'
+              description: An optional path to start searching for documents. Will use the root of the repository otherwise.
+            source:
+              type: string
+              description: The URL to the git repository of the OSV data
+            startYear:
+              type:
+                - integer
+                - 'null'
+              format: int32
+              minimum: 0
+            years:
+              type: array
+              items:
+                type: integer
+                format: int32
+                minimum: 0
+              uniqueItems: true
+    PaginatedResults_AdvisorySummary:
+      type: object
+      required:
+        - items
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/AdvisoryHead'
+              - oneOf:
+                  - type: 'null'
+                  - $ref: '#/components/schemas/SourceDocument'
+                    description: Information pertaning to the underlying source document, if any.
+              - type: object
+                required:
+                  - average_severity
+                  - average_score
+                  - vulnerabilities
+                properties:
+                  average_score:
+                    type:
+                      - number
+                      - 'null'
+                    format: double
+                    description: Average (arithmetic mean) score of the advisory aggregated from *all* related vulnerability assertions.
+                  average_severity:
+                    type:
+                      - string
+                      - 'null'
+                    description: Average (arithmetic mean) severity of the advisory aggregated from *all* related vulnerability assertions.
+                  vulnerabilities:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AdvisoryVulnerabilityHead'
+                    description: Vulnerabilities addressed within this advisory.
+        total:
+          type: integer
+          format: int64
+          minimum: 0
+    PaginatedResults_BasePurlSummary:
+      type: object
+      required:
+        - items
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/BasePurlHead'
+        total:
+          type: integer
+          format: int64
+          minimum: 0
+    PaginatedResults_ImporterReport:
+      type: object
+      required:
+        - items
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - importer
+              - creation
+            properties:
+              creation:
+                type: string
+                format: date-time
+                description: The time the report was created
+              error:
+                type:
+                  - string
+                  - 'null'
+                description: Errors captured by the report
+              id:
+                type: string
+                description: The ID of the report
+              importer:
+                type: string
+                description: The name of the importer this report belongs to
+              report:
+                oneOf:
+                  - type: 'null'
+                  - $ref: '#/components/schemas/Report'
+                    description: Detailed report information
+        total:
+          type: integer
+          format: int64
+          minimum: 0
+    PaginatedResults_LicenseSummary:
+      type: object
+      required:
+        - items
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - license
+              - spdx_licenses
+              - spdx_license_exceptions
+              - purls
+            properties:
+              id:
+                type: string
+              license:
+                type: string
+              purls:
+                type: integer
+                format: int64
+                minimum: 0
+              spdx_license_exceptions:
+                type: array
+                items:
+                  type: string
+              spdx_licenses:
+                type: array
+                items:
+                  type: string
+        total:
+          type: integer
+          format: int64
+          minimum: 0
+    PaginatedResults_Node:
+      type: object
+      required:
+        - items
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/BaseSummary'
+              - type: object
+                properties:
+                  ancestors:
+                    type:
+                      - array
+                      - 'null'
+                    items:
+                      $ref: '#/components/schemas/Node'
+                    description: All ancestors of this node. [`None`] if not requested on this level.
+                  descendants:
+                    type:
+                      - array
+                      - 'null'
+                    items:
+                      $ref: '#/components/schemas/Node'
+                    description: All descendents of this node. [`None`] if not requested on this level.
+                  relationship:
+                    oneOf:
+                      - type: 'null'
+                      - $ref: '#/components/schemas/Relationship'
+                        description: The relationship the node has to it's containing node, if any.
+        total:
+          type: integer
+          format: int64
+          minimum: 0
+    PaginatedResults_ProductSummary:
+      type: object
+      required:
+        - items
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/ProductHead'
+              - type: object
+                required:
+                  - versions
+                  - vendor
+                properties:
+                  vendor:
+                    oneOf:
+                      - type: 'null'
+                      - $ref: '#/components/schemas/OrganizationSummary'
+                  versions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductVersionHead'
+        total:
+          type: integer
+          format: int64
+          minimum: 0
+    PaginatedResults_PurlSummary:
+      type: object
+      required:
+        - items
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/PurlHead'
+              - type: object
+                required:
+                  - base
+                  - version
+                  - qualifiers
+                properties:
+                  base:
+                    $ref: '#/components/schemas/BasePurlHead'
+                  qualifiers:
+                    type: object
+                    additionalProperties:
+                      type: string
+                    propertyNames:
+                      type: string
+                  version:
+                    $ref: '#/components/schemas/VersionedPurlHead'
+        total:
+          type: integer
+          format: int64
+          minimum: 0
+    PaginatedResults_SbomPackage:
+      type: object
+      required:
+        - items
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - name
+              - purl
+              - cpe
+            properties:
+              cpe:
+                type: array
+                items:
+                  type: string
+              id:
+                type: string
+              name:
+                type: string
+              purl:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PurlSummary'
+              version:
+                type:
+                  - string
+                  - 'null'
+        total:
+          type: integer
+          format: int64
+          minimum: 0
+    PaginatedResults_SbomPackageRelation:
+      type: object
+      required:
+        - items
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+              - relationship
+              - package
+            properties:
+              package:
+                $ref: '#/components/schemas/SbomPackage'
+              relationship:
+                $ref: '#/components/schemas/Relationship'
+        total:
+          type: integer
+          format: int64
+          minimum: 0
+    PaginatedResults_SbomSummary:
+      type: object
+      required:
+        - items
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/SbomHead'
+              - oneOf:
+                  - type: 'null'
+                  - $ref: '#/components/schemas/SourceDocument'
+              - type: object
+                required:
+                  - described_by
+                properties:
+                  described_by:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SbomPackage'
+        total:
+          type: integer
+          format: int64
+          minimum: 0
+    PaginatedResults_SpdxLicenseSummary:
+      type: object
+      required:
+        - items
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - name
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+        total:
+          type: integer
+          format: int64
+          minimum: 0
+    PaginatedResults_VulnerabilitySummary:
+      type: object
+      required:
+        - items
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/VulnerabilityHead'
+              - type: object
+                required:
+                  - average_severity
+                  - average_score
+                  - advisories
+                properties:
+                  advisories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/VulnerabilityAdvisoryHead'
+                  average_score:
+                    type:
+                      - number
+                      - 'null'
+                    format: double
+                    description: Average (arithmetic mean) score of the vulnerability aggregated from *all* related advisories.
+                  average_severity:
+                    oneOf:
+                      - type: 'null'
+                      - $ref: '#/components/schemas/Severity'
+                        description: Average (arithmetic mean) severity of the vulnerability aggregated from *all* related advisories.
+        total:
+          type: integer
+          format: int64
+          minimum: 0
+    ProductDetails:
+      allOf:
+        - $ref: '#/components/schemas/ProductHead'
+        - type: object
+          required:
+            - versions
+            - vendor
+          properties:
+            vendor:
+              oneOf:
+                - type: 'null'
+                - $ref: '#/components/schemas/OrganizationSummary'
+            versions:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProductVersionDetails'
+    ProductHead:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    ProductSbomHead:
+      type: object
+      required:
+        - labels
+        - published
+      properties:
+        labels:
+          $ref: '#/components/schemas/Labels'
+        published:
+          type:
+            - string
+            - 'null'
+          format: date-time
+    ProductSummary:
+      allOf:
+        - $ref: '#/components/schemas/ProductHead'
+        - type: object
+          required:
+            - versions
+            - vendor
+          properties:
+            vendor:
+              oneOf:
+                - type: 'null'
+                - $ref: '#/components/schemas/OrganizationSummary'
+            versions:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProductVersionHead'
+    ProductVersionDetails:
+      allOf:
+        - $ref: '#/components/schemas/ProductVersionHead'
+        - type: object
+          properties:
+            sbom:
+              oneOf:
+                - type: 'null'
+                - $ref: '#/components/schemas/ProductSbomHead'
+    ProductVersionHead:
+      type: object
+      required:
+        - id
+        - version
+      properties:
+        id:
+          type: string
+        sbom_id:
+          type: string
+        version:
+          type: string
+    Progress:
+      allOf:
+        - oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/ProgressDetails'
+        - type: object
+          properties:
+            message:
+              type:
+                - string
+                - 'null'
+    ProgressDetails:
+      type: object
+      required:
+        - current
+        - total
+        - percent
+        - rate
+        - estimatedSecondsRemaining
+        - estimatedCompletion
+      properties:
+        current:
+          type: integer
+          format: int32
+          description: The current processed items.
+          minimum: 0
+        estimatedCompletion:
+          type: string
+          format: date-time
+          description: The estimated time of completion.
+        estimatedSecondsRemaining:
+          type: integer
+          format: int64
+          description: The estimated remaining time in seconds.
+          minimum: 0
+        percent:
+          type: number
+          format: float
+          description: Progress in percent (0..=1)
+        rate:
+          type: number
+          format: float
+          description: The average processing rate (per second).
+        total:
+          type: integer
+          format: int32
+          description: The total number of items to be processed.
+          minimum: 0
+    Purl:
+      type: string
+      format: uri
+    PurlAdvisory:
+      allOf:
+        - $ref: '#/components/schemas/AdvisoryHead'
+        - type: object
+          required:
+            - status
+          properties:
+            status:
+              type: array
+              items:
+                $ref: '#/components/schemas/PurlStatus'
+    PurlDetails:
+      allOf:
+        - $ref: '#/components/schemas/PurlHead'
+        - type: object
+          required:
+            - version
+            - base
+            - advisories
+            - licenses
+          properties:
+            advisories:
+              type: array
+              items:
+                $ref: '#/components/schemas/PurlAdvisory'
+            base:
+              $ref: '#/components/schemas/BasePurlHead'
+            licenses:
+              type: array
+              items:
+                $ref: '#/components/schemas/PurlLicenseSummary'
+            version:
+              $ref: '#/components/schemas/VersionedPurlHead'
+    PurlHead:
+      type: object
+      required:
+        - uuid
+        - purl
+      properties:
+        purl:
+          $ref: '#/components/schemas/Purl'
+          description: The actual qualified PURL
+        uuid:
+          type: string
+          format: uuid
+          description: The ID of the qualified PURL
+    PurlLicenseSummary:
+      type: object
+      required:
+        - sbom
+        - licenses
+      properties:
+        licenses:
+          type: array
+          items:
+            type: string
+        sbom:
+          $ref: '#/components/schemas/SbomHead'
+    PurlStatus:
+      type: object
+      required:
+        - vulnerability
+        - average_severity
+        - status
+        - context
+      properties:
+        average_severity:
+          $ref: '#/components/schemas/Severity'
+        context:
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/StatusContext'
+        status:
+          type: string
+        vulnerability:
+          $ref: '#/components/schemas/VulnerabilityHead'
+    PurlSummary:
+      allOf:
+        - $ref: '#/components/schemas/PurlHead'
+        - type: object
+          required:
+            - base
+            - version
+            - qualifiers
+          properties:
+            base:
+              $ref: '#/components/schemas/BasePurlHead'
+            qualifiers:
+              type: object
+              additionalProperties:
+                type: string
+              propertyNames:
+                type: string
+            version:
+              $ref: '#/components/schemas/VersionedPurlHead'
+    Relationship:
+      type: string
+      enum:
+        - contains
+        - dependency
+        - dev_dependency
+        - optional_dependency
+        - provided_dependency
+        - test_dependency
+        - runtime_dependency
+        - example
+        - generates
+        - ancestor_of
+        - variant
+        - build_tool
+        - dev_tool
+        - describes
+        - package
+        - undefined
+    Report:
+      type: object
+      required:
+        - startDate
+        - endDate
+      properties:
+        endDate:
+          type: string
+          format: date-time
+          description: End of the import run
+        messages:
+          type: object
+          description: Messages emitted during processing
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: array
+              items:
+                $ref: '#/components/schemas/Message'
+            propertyNames:
+              type: string
+          propertyNames:
+            type: string
+            description: The phase of processing
+            enum:
+              - retrieval
+              - validation
+              - upload
+        numberOfItems:
+          type: integer
+          description: Number of processes items
+          minimum: 0
+        startDate:
+          type: string
+          format: date-time
+          description: Start of the import run
+    Revisioned_Importer:
+      type: object
+      description: |-
+        A struct wrapping an item with a revision.
+
+        If the revision should not be part of the payload, but e.g. an HTTP header (like `ETag`), this
+        struct can help carrying both pieces.
+      required:
+        - value
+        - revision
+      properties:
+        revision:
+          type: string
+          description: |-
+            The revision.
+
+            An opaque string that should have no meaning to the user, only to the backend.
+        value:
+          allOf:
+            - $ref: '#/components/schemas/ImporterData'
+            - type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+    SbomAdvisory:
+      allOf:
+        - $ref: '#/components/schemas/AdvisoryHead'
+        - type: object
+          required:
+            - status
+          properties:
+            status:
+              type: array
+              items:
+                $ref: '#/components/schemas/SbomStatus'
+    SbomHead:
+      type: object
+      required:
+        - id
+        - labels
+        - data_licenses
+        - published
+        - authors
+        - name
+        - number_of_packages
+      properties:
+        authors:
+          type: array
+          items:
+            type: string
+        data_licenses:
+          type: array
+          items:
+            type: string
+        document_id:
+          type:
+            - string
+            - 'null'
+        id:
+          type: string
+        labels:
+          $ref: '#/components/schemas/Labels'
+        name:
+          type: string
+        number_of_packages:
+          type: integer
+          format: int64
+          description: The number of packages this SBOM has
+          minimum: 0
+        published:
+          type:
+            - string
+            - 'null'
+          format: date-time
+    SbomImporter:
+      allOf:
+        - $ref: '#/components/schemas/CommonImporter'
+        - type: object
+          required:
+            - source
+          properties:
+            fetchRetries:
+              type:
+                - integer
+                - 'null'
+              minimum: 0
+            ignoreMissing:
+              type: boolean
+            keys:
+              type: array
+              items:
+                type: string
+                format: uri
+            onlyPatterns:
+              type: array
+              items:
+                type: string
+            sizeLimit:
+              oneOf:
+                - type: 'null'
+                - $ref: '#/components/schemas/BinaryByteSize'
+            source:
+              type: string
+            v3Signatures:
+              type: boolean
+    SbomPackage:
+      type: object
+      required:
+        - id
+        - name
+        - purl
+        - cpe
+      properties:
+        cpe:
+          type: array
+          items:
+            type: string
+        id:
+          type: string
+        name:
+          type: string
+        purl:
+          type: array
+          items:
+            $ref: '#/components/schemas/PurlSummary'
+        version:
+          type:
+            - string
+            - 'null'
+    SbomPackageRelation:
+      type: object
+      required:
+        - relationship
+        - package
+      properties:
+        package:
+          $ref: '#/components/schemas/SbomPackage'
+        relationship:
+          $ref: '#/components/schemas/Relationship'
+    SbomStatus:
+      allOf:
+        - $ref: '#/components/schemas/VulnerabilityHead'
+        - type: object
+          required:
+            - average_severity
+            - status
+            - packages
+          properties:
+            average_severity:
+              $ref: '#/components/schemas/Severity'
+            context:
+              oneOf:
+                - type: 'null'
+                - $ref: '#/components/schemas/StatusContext'
+            packages:
+              type: array
+              items:
+                $ref: '#/components/schemas/SbomPackage'
+            status:
+              type: string
+    SbomSummary:
+      allOf:
+        - $ref: '#/components/schemas/SbomHead'
+        - oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/SourceDocument'
+        - type: object
+          required:
+            - described_by
+          properties:
+            described_by:
+              type: array
+              items:
+                $ref: '#/components/schemas/SbomPackage'
+    Severity:
+      type: string
+      description: |-
+        Qualitative Severity Rating Scale
+
+        Described in CVSS v3.1 Specification: Section 5:
+        <https://www.first.org/cvss/specification-document#t17>
+
+        > For some purposes it is useful to have a textual representation of the
+        > numeric Base, Temporal and Environmental scores.
+      enum:
+        - none
+        - low
+        - medium
+        - high
+        - critical
+    SourceDocument:
+      type: object
+      required:
+        - sha256
+        - sha384
+        - sha512
+        - size
+        - ingested
+      properties:
+        ingested:
+          type: string
+          format: date-time
+          description: The timestamp the document was ingested
+        sha256:
+          type: string
+        sha384:
+          type: string
+        sha512:
+          type: string
+        size:
+          type: integer
+          format: int64
+          minimum: 0
+    SpdxLicenseDetails:
+      allOf:
+        - $ref: '#/components/schemas/SpdxLicenseSummary'
+        - type: object
+          required:
+            - text
+          properties:
+            text:
+              type: string
+    SpdxLicenseSummary:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    State:
+      type: string
+      enum:
+        - waiting
+        - running
+    StatusContext:
+      oneOf:
+        - type: object
+          required:
+            - purl
+          properties:
+            purl:
+              $ref: '#/components/schemas/Purl'
+        - type: object
+          required:
+            - cpe
+          properties:
+            cpe:
+              type: string
+    TypeCounts:
+      type: object
+      required:
+        - base
+        - version
+        - package
+      properties:
+        base:
+          type: integer
+          format: int64
+        package:
+          type: integer
+          format: int64
+        version:
+          type: integer
+          format: int64
+    TypeHead:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+    TypeSummary:
+      allOf:
+        - $ref: '#/components/schemas/TypeHead'
+        - type: object
+          required:
+            - counts
+          properties:
+            counts:
+              $ref: '#/components/schemas/TypeCounts'
+    VersionedPurlAdvisory:
+      allOf:
+        - $ref: '#/components/schemas/AdvisoryHead'
+        - type: object
+          required:
+            - status
+          properties:
+            status:
+              type: array
+              items:
+                $ref: '#/components/schemas/VersionedPurlStatus'
+    VersionedPurlDetails:
+      allOf:
+        - $ref: '#/components/schemas/VersionedPurlHead'
+        - type: object
+          required:
+            - base
+            - purls
+            - advisories
+          properties:
+            advisories:
+              type: array
+              items:
+                $ref: '#/components/schemas/VersionedPurlAdvisory'
+            base:
+              $ref: '#/components/schemas/BasePurlHead'
+            purls:
+              type: array
+              items:
+                $ref: '#/components/schemas/PurlHead'
+    VersionedPurlHead:
+      type: object
+      required:
+        - uuid
+        - purl
+        - version
+      properties:
+        purl:
+          $ref: '#/components/schemas/Purl'
+          description: The actual, versioned PURL
+        uuid:
+          type: string
+          format: uuid
+          description: The ID of the versioned PURL
+        version:
+          type: string
+          description: The version from the PURL
+    VersionedPurlStatus:
+      type: object
+      required:
+        - vulnerability
+        - status
+      properties:
+        status:
+          type: string
+        vulnerability:
+          $ref: '#/components/schemas/VulnerabilityHead'
+    VersionedPurlSummary:
+      allOf:
+        - $ref: '#/components/schemas/VersionedPurlHead'
+        - type: object
+          required:
+            - base
+            - purls
+          properties:
+            base:
+              $ref: '#/components/schemas/BasePurlHead'
+            purls:
+              type: array
+              items:
+                $ref: '#/components/schemas/PurlHead'
+    VulnerabilityAdvisoryHead:
+      allOf:
+        - $ref: '#/components/schemas/AdvisoryHead'
+        - type: object
+          required:
+            - severity
+            - score
+          properties:
+            score:
+              type:
+                - number
+                - 'null'
+              format: double
+            severity:
+              oneOf:
+                - type: 'null'
+                - $ref: '#/components/schemas/Severity'
+    VulnerabilityAdvisoryStatus:
+      type: object
+      required:
+        - base_purl
+        - version
+        - context
+      properties:
+        base_purl:
+          $ref: '#/components/schemas/BasePurlHead'
+        context:
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/StatusContext'
+        version:
+          type: string
+    VulnerabilityAdvisorySummary:
+      allOf:
+        - $ref: '#/components/schemas/VulnerabilityAdvisoryHead'
+        - type: object
+          required:
+            - cvss3_scores
+            - purls
+            - sboms
+            - number_of_vulnerabilities
+          properties:
+            cvss3_scores:
+              type: array
+              items:
+                type: string
+              description: CVSS3 scores from this advisory regarding the vulnerability.
+            number_of_vulnerabilities:
+              type: integer
+              format: int64
+              description: The total number of vulnerabilities described by this advisory
+              minimum: 0
+            purls:
+              type: object
+              additionalProperties:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VulnerabilityAdvisoryStatus'
+              propertyNames:
+                type: string
+            sboms:
+              type: array
+              items:
+                $ref: '#/components/schemas/VulnerabilitySbomStatus'
+              description: SBOMs claimed by this advisory to be addressed by this vulnerability.
+    VulnerabilityDetails:
+      allOf:
+        - $ref: '#/components/schemas/VulnerabilityHead'
+        - type: object
+          required:
+            - average_severity
+            - average_score
+            - advisories
+          properties:
+            advisories:
+              type: array
+              items:
+                $ref: '#/components/schemas/VulnerabilityAdvisorySummary'
+              description: Advisories addressing this vulnerability, if any.
+            average_score:
+              type:
+                - number
+                - 'null'
+              format: double
+              description: Average (arithmetic mean) score of the vulnerability aggregated from *all* related advisories.
+            average_severity:
+              oneOf:
+                - type: 'null'
+                - $ref: '#/components/schemas/Severity'
+                  description: Average (arithmetic mean) severity of the vulnerability aggregated from *all* related advisories.
+    VulnerabilityHead:
+      type: object
+      required:
+        - normative
+        - identifier
+        - title
+        - description
+        - reserved
+        - published
+        - modified
+        - withdrawn
+        - discovered
+        - released
+        - cwes
+      properties:
+        cwes:
+          type: array
+          items:
+            type: string
+          description: Associated CWE, if any.
+        description:
+          type:
+            - string
+            - 'null'
+          description: The description of the vulnerability, if known.
+        discovered:
+          type:
+            - string
+            - 'null'
+          format: date-time
+          description: The date (in RFC3339 format) of when the vulnerability was discovered, if any.
+        identifier:
+          type: string
+          description: |-
+            The globally-unique identifier for the vulnerability.
+            Traditionally (but not required) refers to the assigned
+            CVE identifier.
+        modified:
+          type:
+            - string
+            - 'null'
+          format: date-time
+          description: The date (in RFC3339 format) of when the vulnerability was last modified, if any.
+        normative:
+          type: boolean
+        published:
+          type:
+            - string
+            - 'null'
+          format: date-time
+          description: The date (in RFC3339 format) of when the vulnerability was published, if any.
+        released:
+          type:
+            - string
+            - 'null'
+          format: date-time
+          description: The date (in RFC3339 format) of when software containing the vulnerability first released, if known.
+        reserved:
+          type:
+            - string
+            - 'null'
+          format: date-time
+          description: The date (in RFC3339 format) of when the vulnerability identifier was reserved, if any.
+        title:
+          type:
+            - string
+            - 'null'
+          description: The title of the vulnerability, if known.
+        withdrawn:
+          type:
+            - string
+            - 'null'
+          format: date-time
+          description: The date (in RFC3339 format) of when the vulnerability was last withdrawn, if any.
+    VulnerabilitySbomStatus:
+      allOf:
+        - $ref: '#/components/schemas/SbomHead'
+        - type: object
+          required:
+            - purl_statuses
+          properties:
+            purl_statuses:
+              type: object
+              additionalProperties:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PurlSummary'
+                uniqueItems: true
+              propertyNames:
+                type: string
+            version:
+              type:
+                - string
+                - 'null'
+    VulnerabilitySummary:
+      allOf:
+        - $ref: '#/components/schemas/VulnerabilityHead'
+        - type: object
+          required:
+            - average_severity
+            - average_score
+            - advisories
+          properties:
+            advisories:
+              type: array
+              items:
+                $ref: '#/components/schemas/VulnerabilityAdvisoryHead'
+            average_score:
+              type:
+                - number
+                - 'null'
+              format: double
+              description: Average (arithmetic mean) score of the vulnerability aggregated from *all* related advisories.
+            average_severity:
+              oneOf:
+                - type: 'null'
+                - $ref: '#/components/schemas/Severity'
+                  description: Average (arithmetic mean) severity of the vulnerability aggregated from *all* related advisories.

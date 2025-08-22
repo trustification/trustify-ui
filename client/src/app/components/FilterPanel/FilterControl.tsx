@@ -27,7 +27,7 @@ export const FilterControl = <TItem, TFilterCategoryKey extends string>({
   ...props
 }: React.PropsWithChildren<
   IFilterControlProps<TItem, TFilterCategoryKey>
->): JSX.Element | null => {
+>): React.JSX.Element | null => {
   if (category.type === FilterType.select) {
     return (
       <RadioFilterControl
