@@ -41,7 +41,7 @@ export const ToolbarBulkSelector = ({
   onSelectCurrentPage,
   onSelectAllFiltered,
   onSelectAll,
-}: React.PropsWithChildren<IToolbarBulkSelectorProps>): JSX.Element | null => {
+}: React.PropsWithChildren<IToolbarBulkSelectorProps>): React.JSX.Element | null => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClose = (handler: () => void) => () => {

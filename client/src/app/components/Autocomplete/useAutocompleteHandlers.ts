@@ -13,8 +13,8 @@ interface IAutocompleteHandlersProps {
     selections: AutocompleteOptionProps[],
     value: AutocompleteOptionProps,
   ) => AutocompleteOptionProps[];
-  menuRef: React.RefObject<HTMLDivElement>;
-  searchInputRef: React.RefObject<HTMLDivElement>;
+  menuRef: React.RefObject<HTMLDivElement | null>;
+  searchInputRef: React.RefObject<HTMLDivElement | null>;
   onCreateNewOption?: (value: string) => AutocompleteOptionProps;
   validateNewOption?: (value: string) => boolean;
   onSearchChange?: (value: string) => void;
