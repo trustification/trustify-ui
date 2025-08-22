@@ -1,0 +1,28 @@
+{
+  "name": "@trustify-ui/e2e",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf ./test-results ./playwright-report",
+    "clean:all": "rimraf ./dist ./node_modules",
+    "codegen": "npx playwright codegen http://localhost:3000/",
+    "test": "npx bddgen && npx playwright test --project='api' --project='chromium' --project='bdd'",
+    "test:api": "npx playwright test --project='api'",
+    "test:ui": "npx bddgen && npx playwright test --project='chromium' --project='bdd'",
+    "test:ui:trace": "npx bddgen && npx playwright test --project='chromium' --project='bdd' --trace on",
+    "test:ui:host": "npx bddgen && npx playwright test --ui-host 127.0.0.1",
+    "check": "biome check .",
+    "check:write": "biome check --write .",
+    "format": "biome format .",
+    "format:fix": "biome format --write ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "axios": "^1.11.0",
+    "playwright-bdd": "^8.3.1"
+  }
+}
