@@ -1,4 +1,4 @@
-import { expect, type Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 
 /**
  * Describes the Details of an Entity. E.g. SBOM Details Page.
@@ -101,7 +101,7 @@ export class DetailsPage {
     delimiter: string,
   ): Promise<{ [key: string]: number }> {
     const elements = await this.page.locator(labelLocator).all();
-    const vulnLabelCount = {};
+    let vulnLabelCount: { [key: string]: number } = {};
     for (const element of elements) {
       const innerText = await element.textContent();
       const labelArr = await innerText?.split(delimiter);
@@ -141,7 +141,7 @@ export class DetailsPage {
     }
 
     while (nextPage) {
-      for (const cvssType in counts) {
+      for (let cvssType of Object.keys(counts) as Array<keyof typeof counts>) {
         const cvssLocator = await this.page
           .locator(`xpath=//td[@data-label='CVSS']//div[.='${cvssType}']`)
           .all();
@@ -153,5 +153,103 @@ export class DetailsPage {
       }
     }
     return counts;
+  }
+  /**
+   * Generates a random String with length of 6
+   */
+  public randomString(length: number = 6): string {
+    const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+    return Array.from(
+      { length },
+      () => chars[Math.floor(Math.random() * chars.length)],
+    ).join("");
+  }
+
+  /**
+   * Generates randomized labels for SBOM list page testing
+   */
+  public generateLabels(): string {
+    return `label_${this.randomString()}, key_${this.randomString(3)}=qe_${this.randomString(3)}`;
+  }
+
+  /**
+   * To click on Edit labels button on Details page
+   */
+  async editLabelsDetailsPage() {
+    await this.selectTab(`Info`);
+    await this.page.getByRole("button", { name: "Edit" }).click();
+  }
+
+  /**
+   * To add labels to edit model window
+   * @param labels List of labels to add to the entity
+   */
+  async addLabels(labelList: string) {
+    let labels = labelList.split(",").map((label) => label.trim());
+    await this.page.getByText("Edit labels").isVisible();
+    for (let label of labels) {
+      await this.page.getByPlaceholder("Add label").fill(label);
+      await this.page.getByPlaceholder("Add label").press("Enter");
+    }
+    await this.page.getByLabel("submit").click();
+  }
+
+  /**
+   * To verify the given labels exist with the Entity
+   * @param labels List of expected labels
+   * @param entity Entity name to which the Labels needs to be verified
+   * @param parentElem Parent element to identify the Labels element - Defaults to List page table rows
+   */
+  async verifyLabels(
+    labelList: string,
+    entity: string = "",
+    parentElem: Locator | undefined = undefined,
+  ) {
+    let labels = labelList.split(",").map((label) => label.trim());
+
+    if (!parentElem) {
+      parentElem = this.page.locator(`xpath=//td[.='${entity}']/parent::tr/td`);
+    }
+
+    const moreElem = parentElem.getByRole("button", { name: "more" });
+    if (await moreElem.isVisible({ timeout: 2000 })) {
+      await moreElem.click();
+    }
+    // Wait for Edit label modal window to close with retry
+    const editLabels = this.page.getByText("Edit labels");
+    if (await editLabels.isVisible({ timeout: 1000 })) {
+      await editLabels.waitFor({ state: "hidden", timeout: 5000 });
+    }
+    // Wait for labels container to be stable
+    const labelContainer = parentElem.locator(
+      `xpath=//ul[@aria-label='Label group category']`,
+    );
+    await expect(labelContainer).toBeVisible({ timeout: 5000 });
+    let max_attempts = 0;
+    let labelFound = true;
+    let labelExpected = [...labels];
+    while (max_attempts < 3 && labelFound) {
+      max_attempts++;
+      for (const label of labels) {
+        try {
+          const labelUI = await parentElem.locator(
+            `xpath=//ul[@aria-label='Label group category']/li[.='${label}']`,
+          );
+          await expect(labelUI).toBeVisible({ timeout: 2000 });
+          labelExpected = labelExpected.filter(
+            (labelTemp) => labelTemp !== label,
+          );
+        } catch {
+          await this.page.waitForTimeout(500);
+        }
+      }
+      if (labelExpected.length === 0) {
+        labelFound = false;
+      }
+    }
+    expect(
+      labelExpected.length,
+      `Labels missing from the given list: ${labelExpected.join(", ")}`,
+    ).toBe(0);
   }
 }

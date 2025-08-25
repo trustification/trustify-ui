@@ -461,6 +461,19 @@ export class ToolbarTable {
     }
   }
 
+  /**
+   * To Add given labels to an SBOM from list page
+   * @param entity Target SBOM
+   * @param labels List of Labels
+   */
+  async editLabelsListPage(entity: string) {
+    await this.waitForTableContent();
+    let sbomAction = `xpath=//td[.='${entity}']/parent::tr/td/button`;
+    let table = this.getTable();
+    await table.locator(sbomAction).click();
+    await this._page.getByRole("menuitem", { name: "Edit labels" }).click();
+  }
+
   private getTable() {
     return this._page.locator(`table[aria-label="${this._tableName}"]`);
   }

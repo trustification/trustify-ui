@@ -9,6 +9,7 @@ export const { Given, When, Then } = createBdd(test);
 
 const PACKAGE_TABLE_NAME = "Package table";
 const VULN_TABLE_NAME = "Vulnerability table";
+const SBOM_TABLE_NAME = "sbom-table";
 
 Given("An ingested SBOM {string} is available", async ({ page }, sbomName) => {
   const searchPage = new SearchPage(page, "SBOMs");
@@ -185,9 +186,76 @@ Then(
 Then(
   "Sorting of {string} Columns Works",
   async ({ page }, columnHeaders: string) => {
-    const headers = columnHeaders.split(`,`).map((column) => column.trim());
+    const headers = columnHeaders
+      .split(`,`)
+      .map((column: String) => column.trim());
     const toolbarTable = new ToolbarTable(page, VULN_TABLE_NAME);
     const vulnTableTopPagination = `xpath=//div[@id="vulnerability-table-pagination-top"]`;
     await toolbarTable.verifySorting(vulnTableTopPagination, headers);
+  },
+);
+
+When(
+  "User Adds Labels {string} to {string} SBOM from List Page",
+  async ({ page }, labelList, sbomName) => {
+    const toolbarTable = new ToolbarTable(page, SBOM_TABLE_NAME);
+    await toolbarTable.editLabelsListPage(sbomName);
+    const detailsPage = new DetailsPage(page);
+
+    // Generate random labels if placeholder is used
+    const labelsToAdd =
+      labelList === "RANDOM_LABELS" ? detailsPage.generateLabels() : labelList;
+    await detailsPage.addLabels(labelsToAdd);
+
+    // Store generated labels for verification
+    (page as any).testContext = {
+      ...(page as any).testContext,
+      generatedLabels: labelsToAdd,
+    };
+  },
+);
+
+Then(
+  "The Label list {string} added to the SBOM {string} on List Page",
+  async ({ page }, labelList, sbomName) => {
+    const detailsPage = new DetailsPage(page);
+
+    // Use stored generated labels if placeholder was used
+    const labelsToVerify =
+      labelList === "RANDOM_LABELS"
+        ? (page as any).testContext?.generatedLabels || labelList
+        : labelList;
+    await detailsPage.verifyLabels(labelsToVerify, sbomName);
+  },
+);
+
+When(
+  "User Adds Labels {string} to {string} SBOM from Explorer Page",
+  async ({ page }, labelList, sbomName) => {
+    const detailsPage = new DetailsPage(page);
+    await detailsPage.editLabelsDetailsPage();
+    const labelsToAdd =
+      labelList === "RANDOM_LABELS" ? detailsPage.generateLabels() : labelList;
+    await detailsPage.addLabels(labelsToAdd);
+    (page as any).testContext = {
+      ...(page as any).testContext,
+      generatedLabels: labelsToAdd,
+    };
+  },
+);
+
+Then(
+  "The Label list {string} added to the SBOM {string} on Explorer Page",
+  async ({ page }, labelList, sbomName) => {
+    const detailsPage = new DetailsPage(page);
+    await detailsPage.selectTab(`Info`);
+    let infoSection = page.locator("#refTabInfoSection");
+
+    // Use stored generated labels if placeholder was used
+    const labelsToVerify =
+      labelList === "RANDOM_LABELS"
+        ? (page as any).testContext?.generatedLabels || labelList
+        : labelList;
+    await detailsPage.verifyLabels(labelsToVerify, sbomName, infoSection);
   },
 );
