@@ -31,7 +31,7 @@ interface ISbomSearchContext {
     | "labels"
     | "vulnerabilities",
     "name" | "published",
-    "" | "published" | "labels",
+    "" | "publishedBefore" | "publishedAfter" | "labels",
     string
   >;
 
@@ -89,9 +89,18 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
         type: FilterType.search,
       },
       {
-        categoryKey: "published",
-        title: "Created on",
-        type: FilterType.dateRange,
+        categoryKey: "publishedBefore",
+        serverFilterField: "published",
+        title: "Created before",
+        type: FilterType.date,
+        operator: "<",
+      },
+      {
+        categoryKey: "publishedAfter",
+        serverFilterField: "published",
+        title: "Created after",
+        type: FilterType.date,
+        operator: ">",
       },
       {
         categoryKey: "labels",

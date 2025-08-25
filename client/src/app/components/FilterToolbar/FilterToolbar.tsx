@@ -19,6 +19,7 @@ export enum FilterType {
   multiselect = "multiselect",
   search = "search",
   numsearch = "numsearch",
+  date = "date",
   dateRange = "dateRange",
   autocompleteLabel = "autocompleteLabel",
 }
