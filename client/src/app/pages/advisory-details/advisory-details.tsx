@@ -1,34 +1,91 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+import type { AxiosError } from "axios";
 
 import {
   Breadcrumb,
   BreadcrumbItem,
-  Button,
+  ButtonVariant,
   Content,
+  Divider,
+  Dropdown,
+  DropdownItem,
+  DropdownList,
   Flex,
   FlexItem,
   Label,
+  MenuToggle,
+  type MenuToggleElement,
   PageSection,
   Split,
   SplitItem,
   Tab,
   TabContent,
-  TabTitleText,
   Tabs,
+  TabTitleText,
 } from "@patternfly/react-core";
-import DownloadIcon from "@patternfly/react-icons/dist/esm/icons/download-icon";
 
+import {
+  advisoryDeletedErrorMessage,
+  advisoryDeleteDialogProps,
+  advisoryDeletedSuccessMessage,
+} from "@app/Constants";
 import { PathParam, Paths, useRouteParams } from "@app/Routes";
-
+import type { AdvisorySummary } from "@app/client";
+import { ConfirmDialog } from "@app/components/ConfirmDialog";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
+import { NotificationsContext } from "@app/components/NotificationsContext";
 import { useDownload } from "@app/hooks/domain-controls/useDownload";
-import { useFetchAdvisoryById } from "@app/queries/advisories";
+import {
+  useDeleteAdvisoryMutation,
+  useFetchAdvisoryById,
+} from "@app/queries/advisories";
 
 import { Overview } from "./overview";
 import { VulnerabilitiesByAdvisory } from "./vulnerabilities-by-advisory";
 
 export const AdvisoryDetails: React.FC = () => {
+  const navigate = useNavigate();
+  const { pushNotification } = React.useContext(NotificationsContext);
+
+  const advisoryId = useRouteParams(PathParam.ADVISORY_ID);
+  const { advisory, isFetching, fetchError } = useFetchAdvisoryById(advisoryId);
+
+  // Actions Dropdown
+  const [isActionsDropdownOpen, setIsActionsDropdownOpen] =
+    React.useState(false);
+
+  const handleActionsDropdownToggle = () => {
+    setIsActionsDropdownOpen(!isActionsDropdownOpen);
+  };
+
+  // Download action
+  const { downloadAdvisory } = useDownload();
+
+  // Delete action
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+
+  const onDeleteAdvisorySuccess = (advisory: AdvisorySummary) => {
+    setIsDeleteDialogOpen(false);
+    pushNotification({
+      title: advisoryDeletedSuccessMessage(advisory),
+      variant: "success",
+    });
+    navigate("/advisories");
+  };
+
+  const onDeleteAdvisoryError = (error: AxiosError) => {
+    pushNotification({
+      title: advisoryDeletedErrorMessage(error),
+      variant: "danger",
+    });
+  };
+
+  const { mutate: deleteAdvisory, isPending: isDeleting } =
+    useDeleteAdvisoryMutation(onDeleteAdvisorySuccess, onDeleteAdvisoryError);
+
+  // Tabs
   const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
 
   const handleTabClick = (
@@ -40,13 +97,6 @@ export const AdvisoryDetails: React.FC = () => {
 
   const infoTabRef = React.createRef<HTMLElement>();
   const vulnerabilitiesTabRef = React.createRef<HTMLElement>();
-
-  //
-
-  const advisoryId = useRouteParams(PathParam.ADVISORY_ID);
-  const { advisory, isFetching, fetchError } = useFetchAdvisoryById(advisoryId);
-
-  const { downloadAdvisory } = useDownload();
 
   return (
     <>
@@ -78,23 +128,49 @@ export const AdvisoryDetails: React.FC = () => {
             </Flex>
           </SplitItem>
           <SplitItem>
-            {!isFetching && (
-              <Button
-                variant="secondary"
-                icon={<DownloadIcon />}
-                onClick={() => {
-                  if (advisoryId) {
-                    downloadAdvisory(
-                      advisoryId,
-                      advisory?.identifier
-                        ? `${advisory?.identifier}.json`
-                        : `${advisoryId}.json`,
-                    );
-                  }
-                }}
+            {advisory && (
+              <Dropdown
+                isOpen={isActionsDropdownOpen}
+                onSelect={() => setIsActionsDropdownOpen(false)}
+                onOpenChange={(isOpen) => setIsActionsDropdownOpen(isOpen)}
+                popperProps={{ position: "right" }}
+                toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+                  <MenuToggle
+                    ref={toggleRef}
+                    onClick={handleActionsDropdownToggle}
+                    isExpanded={isActionsDropdownOpen}
+                  >
+                    Actions
+                  </MenuToggle>
+                )}
+                ouiaId="BasicDropdown"
+                shouldFocusToggleOnSelect
               >
-                Download
-              </Button>
+                <DropdownList>
+                  <DropdownItem
+                    key="advisory"
+                    onClick={() => {
+                      if (advisoryId) {
+                        downloadAdvisory(
+                          advisoryId,
+                          advisory?.identifier
+                            ? `${advisory?.identifier}.json`
+                            : `${advisoryId}.json`,
+                        );
+                      }
+                    }}
+                  >
+                    Download Advisory
+                  </DropdownItem>
+                  <Divider component="li" key="separator" />
+                  <DropdownItem
+                    key="delete"
+                    onClick={() => setIsDeleteDialogOpen(true)}
+                  >
+                    Delete
+                  </DropdownItem>
+                </DropdownList>
+              </Dropdown>
             )}
           </SplitItem>
         </Split>
@@ -104,7 +180,7 @@ export const AdvisoryDetails: React.FC = () => {
           mountOnEnter
           activeKey={activeTabKey}
           onSelect={handleTabClick}
-          aria-label="Tabs that contain the SBOM information"
+          aria-label="Tabs that contain the Advisory information"
           role="region"
         >
           <Tab
@@ -136,7 +212,7 @@ export const AdvisoryDetails: React.FC = () => {
           eventKey={1}
           id="refVulnerabilitiesSection"
           ref={vulnerabilitiesTabRef}
-          aria-label="Vulnerabilities within the SBOM"
+          aria-label="Vulnerabilities within the Advisory"
           hidden
         >
           <VulnerabilitiesByAdvisory
@@ -146,6 +222,23 @@ export const AdvisoryDetails: React.FC = () => {
           />
         </TabContent>
       </PageSection>
+
+      <ConfirmDialog
+        {...advisoryDeleteDialogProps(advisory)}
+        inProgress={isDeleting}
+        titleIconVariant="warning"
+        isOpen={isDeleteDialogOpen}
+        confirmBtnVariant={ButtonVariant.danger}
+        confirmBtnLabel="Delete"
+        cancelBtnLabel="Cancel"
+        onCancel={() => setIsDeleteDialogOpen(false)}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onConfirm={() => {
+          if (advisory) {
+            deleteAdvisory(advisory.uuid);
+          }
+        }}
+      />
     </>
   );
 };

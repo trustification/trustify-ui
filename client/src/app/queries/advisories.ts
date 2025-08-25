@@ -103,17 +103,23 @@ export const useFetchAdvisoryById = (id: string) => {
 };
 
 export const useDeleteAdvisoryMutation = (
-  onSuccess?: (payload: AdvisoryDetails, id: string) => void,
-  onError?: (err: AxiosError, id: string) => void,
+  onSuccess: (payload: AdvisoryDetails, id: string) => void,
+  onError: (err: AxiosError) => void,
 ) => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
       const response = await deleteAdvisory({ client, path: { key: id } });
       return response.data as AdvisoryDetails;
     },
-    mutationKey: [AdvisoriesQueryKey],
-    onSuccess,
-    onError,
+    onSuccess: async (response, id) => {
+      onSuccess(response, id);
+      await queryClient.invalidateQueries({ queryKey: [AdvisoriesQueryKey] });
+    },
+    onError: async (err: AxiosError) => {
+      onError(err);
+      await queryClient.invalidateQueries({ queryKey: [AdvisoriesQueryKey] });
+    },
   });
 };
 
