@@ -9,6 +9,7 @@ const Home = lazy(() => import("./pages/home"));
 
 // Advisory
 const AdvisoryList = lazy(() => import("./pages/advisory-list"));
+const AdvisoryUpload = lazy(() => import("./pages/advisory-upload"));
 const AdvisoryDetails = lazy(() => import("./pages/advisory-details"));
 
 // Vulnerability
@@ -23,12 +24,12 @@ const PackageDetails = lazy(() => import("./pages/package-details"));
 
 // SBOM
 const SBOMList = lazy(() => import("./pages/sbom-list"));
+const SBOMUpload = lazy(() => import("./pages/sbom-upload"));
 const SBOMDetails = lazy(() => import("./pages/sbom-details"));
 
 // Others
 const Search = lazy(() => import("./pages/search"));
 const ImporterList = lazy(() => import("./pages/importer-list"));
-const Upload = lazy(() => import("./pages/upload"));
 
 export enum PathParam {
   ADVISORY_ID = "advisoryId",
@@ -39,22 +40,24 @@ export enum PathParam {
 
 export const Paths = {
   advisories: "/advisories",
+  advisoryUpload: "/advisories/upload",
   advisoryDetails: `/advisories/:${PathParam.ADVISORY_ID}`,
   vulnerabilities: "/vulnerabilities",
   vulnerabilityDetails: `/vulnerabilities/:${PathParam.VULNERABILITY_ID}`,
   sboms: "/sboms",
+  sbomUpload: "/sboms/upload",
   sbomDetails: `/sboms/:${PathParam.SBOM_ID}`,
   packages: "/packages",
   packageDetails: `/packages/:${PathParam.PACKAGE_ID}`,
   search: "/search",
   importers: "/importers",
-  upload: "/upload",
 } as const;
 
 export const AppRoutes = () => {
   const allRoutes = useRoutes([
     { path: "/", element: <Home /> },
     { path: Paths.advisories, element: <AdvisoryList /> },
+    { path: Paths.advisoryUpload, element: <AdvisoryUpload /> },
     {
       path: Paths.advisoryDetails,
       element: <AdvisoryDetails />,
@@ -70,6 +73,7 @@ export const AppRoutes = () => {
       element: <PackageDetails />,
     },
     { path: Paths.sboms, element: <SBOMList /> },
+    { path: Paths.sbomUpload, element: <SBOMUpload /> },
     {
       path: Paths.sbomDetails,
       element: <SBOMDetails />,
@@ -79,7 +83,6 @@ export const AppRoutes = () => {
       element: <ImporterList />,
     },
     { path: Paths.search, element: <Search /> },
-    { path: Paths.upload, element: <Upload /> },
   ]);
 
   return (
