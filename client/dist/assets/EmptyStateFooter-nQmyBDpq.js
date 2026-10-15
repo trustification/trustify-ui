@@ -1,0 +1,1 @@
+import{t as e}from"./react-DU3Tbf5h.js";import{E as t,a as n,w as r}from"./Bullseye-9zUM1LEv.js";var i=e(),a=e=>{var{children:a,className:o}=e,s=t(e,[`children`,`className`]);return(0,i.jsx)(`div`,Object.assign({className:r(n.emptyStateFooter,o)},s,{children:a}))};a.displayName=`EmptyStateFooter`;export{a as t};
