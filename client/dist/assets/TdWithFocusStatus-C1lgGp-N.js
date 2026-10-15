@@ -1,0 +1,1 @@
+import{r as e}from"./rolldown-runtime-hePW80VL.js";import{i as t,t as n}from"./react-DU3Tbf5h.js";var r=e(t(),1),i=n(),a=({children:e})=>{let[t,n]=r.useState(!1);return(0,i.jsx)(i.Fragment,{children:e(t,n)})};export{a as t};
