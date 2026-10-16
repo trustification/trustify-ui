@@ -42,7 +42,13 @@ const renderWithProvider = () => {
 describe("ReadOnlyContext", () => {
   it("disables mutations when the endpoint returns readOnly: true", () => {
     mockedUseFetchTrustifyInfo.mockReturnValue({
-      data: { version: "0.5.0", readOnly: true, exploitIntelligence: false },
+      data: {
+        version: "0.5.0",
+        readOnly: true,
+        exploitIntelligence: false,
+        capabilities: [],
+        variants: {},
+      },
       isLoading: false,
       error: null,
     });
@@ -55,7 +61,13 @@ describe("ReadOnlyContext", () => {
 
   it("allows mutations when the endpoint returns readOnly: false", () => {
     mockedUseFetchTrustifyInfo.mockReturnValue({
-      data: { version: "0.5.0", readOnly: false, exploitIntelligence: false },
+      data: {
+        version: "0.5.0",
+        readOnly: false,
+        exploitIntelligence: false,
+        capabilities: [],
+        variants: {},
+      },
       isLoading: false,
       error: null,
     });
