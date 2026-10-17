@@ -22,6 +22,12 @@ export class DetailsPage {
     await this.page.getByRole("menuitem", { name: actionName }).click();
   }
 
+  async openActionsMenu() {
+    const actionsButton = this.page.getByRole("button", { name: "Actions" });
+    await actionsButton.click();
+    await expect(actionsButton).toHaveAttribute("aria-expanded", "true");
+  }
+
   async clickOnPageButton(buttonName: string) {
     await this.page.getByRole("button", { name: buttonName }).click();
   }
@@ -33,7 +39,7 @@ export class DetailsPage {
   }
 
   async verifyActionIsAvailable(actionName: string) {
-    await this.page.getByRole("button", { name: "Actions" }).click();
+    await this.openActionsMenu();
     await expect(
       this.page.getByRole("menuitem", { name: actionName }),
     ).toBeVisible();

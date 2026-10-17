@@ -56,6 +56,23 @@ export const clickAndVerifyDownload = async (
 };
 
 /**
+ * Handles click action that triggers a download and returns the Download object
+ * @param page The Playwright Page object
+ * @param clickAction The async function that performs the click
+ * @returns The Download object
+ */
+export const clickAndDownload = async (
+  page: Page,
+  clickAction: () => Promise<void>,
+): Promise<Download> => {
+  const [download] = await Promise.all([
+    page.waitForEvent("download"),
+    clickAction(),
+  ]);
+  return download;
+};
+
+/**
  * Verifies comma-delimited expected values against child elements
  * Useful for comparing lists like qualifiers, tags, labels, severity values, etc.
  * @param elements The locator for child elements to verify

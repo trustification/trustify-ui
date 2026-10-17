@@ -22,12 +22,19 @@ import {
   type FileUploadMatchers,
 } from "./FileUploadMatchers";
 
+import type { DetailsPage } from "../helpers/DetailsPage";
+import {
+  detailsPageAssertions,
+  type DetailsPageMatchers,
+} from "./DetailsPageMatchers";
+
 const merged = mergeExpects(
   tableAssertions,
   paginationAssertions,
   toolbarAssertions,
   dialogAssertions,
   fileUploadAssertions,
+  detailsPageAssertions,
   // Add more custom assertions here
 );
 
@@ -88,6 +95,14 @@ function typedExpect(
   value: FileUpload,
 ): Omit<ReturnType<typeof merged<FileUpload>>, keyof FileUploadMatchers> &
   FileUploadMatchers;
+
+/**
+ * Overload from DetailsPageMatchers.ts
+ */
+function typedExpect(
+  value: DetailsPage,
+): Omit<ReturnType<typeof merged<DetailsPage>>, keyof DetailsPageMatchers> &
+  DetailsPageMatchers;
 
 // Default overload
 function typedExpect<T>(value: T): ReturnType<typeof merged<T>>;
