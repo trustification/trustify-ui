@@ -53,6 +53,7 @@ const makeSbomAdvisory = (opts: {
       withdrawn: null,
       status: s.status,
       context: null,
+      fixed_versions: [],
       scores: [],
       packages: s.purls.map((purl) => ({
         id: purl,
@@ -225,6 +226,7 @@ describe("buildVexByPurl", () => {
           title: null,
           withdrawn: null,
           status: "not_affected",
+          fixed_versions: [],
           scores: [],
           context: null,
           packages: [

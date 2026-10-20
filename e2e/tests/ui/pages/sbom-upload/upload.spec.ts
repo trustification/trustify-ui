@@ -11,6 +11,9 @@ import {
 } from "../common/upload-test-helpers";
 import { SBOMUploadPage } from "./SBOMUploadPage";
 
+// The dataset SBOMs below are ingested by `global.setup` before the UI tests
+// run, so re-uploading them from the UI is reported by the server as a
+// duplicate and rendered with the `warning` status.
 const TEST_FILES = {
   QUARKUS_BOM: path.join(
     __dirname,
@@ -36,7 +39,7 @@ test.describe("File Upload", { tag: ["@upload"] }, () => {
     files: [
       {
         path: TEST_FILES.QUARKUS_BOM,
-        status: "success",
+        status: "warning",
       },
     ],
     getConfig: async ({ page }) => {
@@ -64,11 +67,11 @@ test.describe("File Upload", { tag: ["@upload"] }, () => {
     files: [
       {
         path: TEST_FILES.QUARKUS_BOM,
-        status: "success",
+        status: "warning",
       },
       {
         path: TEST_FILES.UBI9_MINIMAL,
-        status: "success",
+        status: "warning",
       },
     ],
     getConfig: async ({ page }) => {
@@ -82,11 +85,11 @@ test.describe("File Upload", { tag: ["@upload"] }, () => {
     files: [
       {
         path: TEST_FILES.QUARKUS_BOM,
-        status: "success",
+        status: "warning",
       },
       {
         path: TEST_FILES.UBI9_MINIMAL,
-        status: "success",
+        status: "warning",
       },
     ],
     getConfig: async ({ page }) => {
@@ -100,11 +103,11 @@ test.describe("File Upload", { tag: ["@upload"] }, () => {
     files: [
       {
         path: TEST_FILES.QUARKUS_BOM,
-        status: "success",
+        status: "warning",
       },
       {
         path: TEST_FILES.UBI9_MINIMAL,
-        status: "success",
+        status: "warning",
       },
       {
         path: TEST_FILES.INVALID_JSON,
@@ -122,11 +125,11 @@ test.describe("File Upload", { tag: ["@upload"] }, () => {
     files: [
       {
         path: TEST_FILES.QUARKUS_BOM,
-        status: "success",
+        status: "warning",
       },
       {
         path: TEST_FILES.UBI9_MINIMAL,
-        status: "success",
+        status: "warning",
       },
       {
         path: TEST_FILES.INVALID_JSON,

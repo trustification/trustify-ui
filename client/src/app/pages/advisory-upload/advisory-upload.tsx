@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 
 import type { AxiosResponse } from "axios";
 
+import type { IngestResult } from "@app/client";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -68,9 +70,15 @@ export const AdvisoryUpload: React.FC = () => {
               uploads={uploads}
               handleUpload={handleUpload}
               handleRemoveUpload={handleRemoveUpload}
+              isDuplicate={(response: AxiosResponse<IngestResult>) =>
+                response.data.duplicate === true
+              }
               extractSuccessMessage={(
-                response: AxiosResponse<{ document_id: string }>,
+                response: AxiosResponse<IngestResult>,
               ) => {
+                if (response.data.duplicate) {
+                  return `${response.data.document_id ?? response.data.id} already uploaded`;
+                }
                 return `${response.data.document_id} uploaded`;
               }}
               extractErrorMessage={getAxiosErrorMessage}

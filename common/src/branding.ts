@@ -39,3 +39,6 @@ import * as stringsJson from "@branding/strings.json";
 
 export const brandingStrings =
   stringsJson.default as unknown as BrandingStrings;
+
+/** Display label for the vendor providing remediation recommendations. Productized builds override this to a specific vendor name. */
+export const REMEDIATION_VENDOR_LABEL = "Vendor";

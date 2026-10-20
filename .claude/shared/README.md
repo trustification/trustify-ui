@@ -8,6 +8,33 @@ Centralize validation rules, code quality standards, and testing patterns to mai
 
 ## Files
 
+### `api-test-standards.md`
+
+Core validation rules and code quality standards for Playwright API integration tests (`.ts` files in `e2e/tests/api/features/`).
+
+**Used by:**
+- `.claude/agents/api-test-generator.md` — API test generator
+- `.claude/agents/api-test-reviewer.md` — API test reviewer
+- `.claude/agents/api-coverage-analyzer.md` — Coverage analysis
+
+**Contents:**
+1. Import Order (MANDATORY)
+2. Fixture Usage (CRITICAL) — axios fixture, file location
+3. Query Parameter Handling (CRITICAL) — URLSearchParams vs plain object
+4. Assertions (HIGH) — objectContaining, toMatchObject, quantity checks
+5. Error Handling for Negative Tests (HIGH) — `.catch((err) => err.response)`
+6. Test Structure and File Organization (HIGH) — flat vs describe, test.skip
+7. Code Reusability (HIGH) — existing helpers, duplication severity
+8. Code Quality (MEDIUM) — TypeScript, naming, no hard-coded waits
+9. Bugfix / Regression Tests (MEDIUM) — Jira comment format
+10. Test Independence (MEDIUM) — mutable state rules
+11. Severity Levels for Issues
+12. Quick Reference Checklist
+
+**Cross-references:** Independent of UI test standards — API tests do not use page objects or custom UI assertions.
+
+---
+
 ### `playwright-standards.md`
 
 Core Playwright validation rules and code quality standards for vanilla Playwright tests (`.spec.ts`, `.test.ts`).
@@ -93,6 +120,14 @@ BDD-specific validation rules for playwright-bdd tests (`.step.ts`) and Gherkin 
 │       ↓                                                      │
 │  Uses: bdd-standards.md (Gherkin checks only)               │
 │                                                              │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  API Integration Tests (.ts in api/features/)               │
+│       ↓                                                      │
+│  api-test-reviewer / api-test-generator                     │
+│       ↓                                                      │
+│  Uses: api-test-standards.md                                │
+│                                                              │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -103,6 +138,16 @@ BDD-specific validation rules for playwright-bdd tests (`.step.ts`) and Gherkin 
 Use relative path with one level up:
 
 ```markdown
+# For API Test Standards
+See [API Test Standards](../shared/api-test-standards.md) for API integration test standards.
+
+Specific sections:
+- [Import Order](../shared/api-test-standards.md#1-import-order-mandatory)
+- [Fixture Usage](../shared/api-test-standards.md#2-fixture-usage-critical)
+- [Query Parameters](../shared/api-test-standards.md#3-query-parameter-handling-critical)
+- [Assertions](../shared/api-test-standards.md#4-assertions-high)
+- [Error Handling](../shared/api-test-standards.md#5-error-handling-for-negative-tests-high)
+
 # For Playwright Standards
 See [Playwright Standards](../shared/playwright-standards.md) for core test standards.
 
@@ -129,6 +174,14 @@ Specific sections:
 Use relative path with two levels up:
 
 ```markdown
+# For API Test Standards
+See [API Test Standards](../../.claude/shared/api-test-standards.md) for API integration test standards.
+
+Specific sections:
+- [Import Order](../../.claude/shared/api-test-standards.md#1-import-order-mandatory)
+- [Fixture Usage](../../.claude/shared/api-test-standards.md#2-fixture-usage-critical)
+- [Query Parameters](../../.claude/shared/api-test-standards.md#3-query-parameter-handling-critical)
+
 # For Playwright Standards
 See [Playwright Standards](../../.claude/shared/playwright-standards.md) for core test standards.
 
@@ -159,6 +212,15 @@ Specific sections:
 ## Maintenance
 
 When updating standards:
+
+### For API Test Standards
+1. Edit `api-test-standards.md` directly
+2. Changes automatically apply to:
+   - `api-test-generator`
+   - `api-test-reviewer`
+   - `api-coverage-analyzer`
+3. Commit changes with clear description
+4. Update version number at bottom of file
 
 ### For Core Playwright Standards
 1. Edit `playwright-standards.md` directly
@@ -197,7 +259,6 @@ If modifying how reviewers interact:
 
 Potential shared resources to add:
 
-- `api-test-standards.md` - Standards for API tests
 - `page-object-patterns.md` - Page Object Model patterns and examples
 - `custom-assertion-guide.md` - Guide for creating custom assertions
 - `test-data-fixtures.md` - Test data management patterns
@@ -206,5 +267,5 @@ Potential shared resources to add:
 
 ---
 
-**Last Updated**: 2026-01-21
+**Last Updated**: 2026-06-17
 **Maintained by**: Trustify UI team

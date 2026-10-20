@@ -24,12 +24,14 @@ import { SbomSearchContext } from "./sbom-context";
 
 interface ISbomProvider {
   sbomGroupId?: string;
+  cryptoAlgorithms?: string[];
   isBulkSelectionEnabled?: boolean;
   children: React.ReactNode;
 }
 
 export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
   sbomGroupId,
+  cryptoAlgorithms,
   isBulkSelectionEnabled,
   children,
 }) => {
@@ -135,6 +137,7 @@ export const SbomSearchProvider: React.FunctionComponent<ISbomProvider> = ({
     ),
     false,
     true,
+    cryptoAlgorithms,
   );
 
   const tableControls = useTableControlProps({

@@ -62,11 +62,19 @@ export const useFetchSBOMs = (
   labels: Label[] = [],
   disableQuery = false,
   advisories = false,
+  cryptoAlgorithms?: string[],
 ) => {
   const labelQuery = labelRequestParamsQuery(labels);
 
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: [SBOMsQueryKey, groupId, params, labelQuery, advisories],
+    queryKey: [
+      SBOMsQueryKey,
+      groupId,
+      params,
+      labelQuery,
+      advisories,
+      cryptoAlgorithms,
+    ],
     queryFn: () => {
       const { q, ...rest } = requestParamsQuery(params);
       return listSboms({
@@ -76,6 +84,7 @@ export const useFetchSBOMs = (
           group: groupId ? [groupId] : [],
           q: [q, labelQuery].filter((e) => e).join("&"),
           advisories,
+          ...(cryptoAlgorithms?.length ? { crypto: cryptoAlgorithms } : {}),
         },
       });
     },

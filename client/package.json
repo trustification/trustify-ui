@@ -19,7 +19,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@hookform/resolvers": "^2.9.11",
+    "@hookform/resolvers": "^5.9.1",
     "@patternfly/patternfly": "^6.6.1",
     "@patternfly/react-charts": "^8.6.1",
     "@patternfly/react-core": "^6.6.1",
@@ -28,7 +28,7 @@
     "@patternfly/react-tokens": "^6.4.0",
     "@tanstack/react-query": "^5.90.11",
     "@tanstack/react-query-devtools": "^5.61.0",
-    "axios": "^1.18.1",
+    "axios": "^1.20.0",
     "dayjs": "^1.11.18",
     "file-saver": "^2.0.5",
     "oidc-client-ts": "^3.3.0",
@@ -54,11 +54,11 @@
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^5.1.4",
     "jsdom": "^28.0.0",
-    "vite": "^8.1.2",
+    "vite": "^8.3.1",
     "vite-plugin-ejs": "^2.0.0",
     "vite-plugin-istanbul": "^9.0.1",
     "vite-plugin-static-copy": "^4.1.1",
-    "vitest": "^4.1.11"
+    "vitest": "^5.0.2"
   },
   "browserslist": {
     "production": [

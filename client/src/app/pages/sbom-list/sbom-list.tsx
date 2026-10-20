@@ -1,4 +1,5 @@
 import type React from "react";
+import { useSearchParams } from "react-router-dom";
 
 import { Content, PageSection } from "@patternfly/react-core";
 
@@ -9,6 +10,9 @@ import { SbomTable } from "./sbom-table";
 import { SbomToolbar } from "./sbom-toolbar";
 
 export const SbomList: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const cryptoAlgorithms = searchParams.getAll("crypto");
+
   return (
     <>
       <DocumentMetadata title="SBOMs" />
@@ -19,7 +23,10 @@ export const SbomList: React.FC = () => {
       </PageSection>
       <PageSection hasBodyWrapper={false}>
         <div>
-          <SbomSearchProvider isBulkSelectionEnabled>
+          <SbomSearchProvider
+            isBulkSelectionEnabled
+            cryptoAlgorithms={cryptoAlgorithms}
+          >
             <SbomToolbar showFilters showActions />
             <SbomTable />
           </SbomSearchProvider>

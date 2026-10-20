@@ -2,10 +2,9 @@ import type React from "react";
 import { generatePath, Link } from "react-router-dom";
 
 import {
-  Label,
-  LabelGroup,
   List,
   ListItem,
+  Skeleton,
   Toolbar,
   ToolbarContent,
   ToolbarItem,
@@ -37,10 +36,11 @@ import {
   useTableControlState,
 } from "@app/hooks/table-controls";
 import { useFetchPackagesBySbomId } from "@app/queries/packages";
+import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import { useFetchRecommendations } from "@app/queries/recommendations";
 import { useFetchSbomsLicenseIds } from "@app/queries/sboms";
 import { Paths } from "@app/Routes";
-import { decodePurl, decomposePurl, purlBaseEquals } from "@app/utils/utils";
+import { decodePurl } from "@app/utils/utils";
 
 import { PackageVulnerabilities } from "../package-list/components/PackageVulnerabilities";
 import { WithPackage } from "@app/components/WithPackage";
@@ -70,7 +70,7 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
       version: "Version",
       vulnerabilities: "Vulnerabilities",
       licenses: "Licenses",
-      remediation: "Remediation",
+      remediation: "Remediations",
       purls: "PURLs",
       cpes: "CPEs",
     },
@@ -116,16 +116,6 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
     total: true,
   });
 
-  const purls = useMemo(
-    () =>
-      packages
-        .map((item) => item.purl[0]?.purl)
-        .filter((p): p is string => Boolean(p)),
-    [packages],
-  );
-
-  const { recommendationsMap } = useFetchRecommendations(purls);
-
   const tableControls = useTableControlProps({
     ...tableControlState,
     idProperty: "id",
@@ -151,6 +141,16 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
     expansionDerivedState: { isCellExpanded },
   } = tableControls;
 
+  const purls = useMemo(
+    () =>
+      currentPageItems
+        .map((item) => item.purl[0]?.purl)
+        .filter((p): p is string => Boolean(p)),
+    [currentPageItems],
+  );
+
+  const { recommendationsMap } = useFetchRecommendations(purls);
+
   return (
     <>
       <Toolbar {...toolbarProps} aria-label="Package toolbar">
@@ -174,7 +174,12 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
               <Th {...getThProps({ columnKey: "version" })} />
               <Th {...getThProps({ columnKey: "vulnerabilities" })} />
               <Th {...getThProps({ columnKey: "licenses" })} />
-              <Th {...getThProps({ columnKey: "remediation" })} />
+              <Th {...getThProps({ columnKey: "remediation" })}>
+                Remediations{" "}
+                <Tooltip content="Number of CVEs with a fix available for this package. Open the package to see remediations per CVE in the Vulnerabilities tab.">
+                  <OutlinedQuestionCircleIcon />
+                </Tooltip>
+              </Th>
               <Th {...getThProps({ columnKey: "purls" })} />
               <Th {...getThProps({ columnKey: "cpes" })} />
             </TableHeaderContentWithControls>
@@ -190,9 +195,6 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
             const currentPurl = item.purl[0]?.purl;
             const rowRecommendations =
               recommendationsMap.get(currentPurl ?? "") ?? [];
-            const isRemediationApplied = rowRecommendations.some((rec) =>
-              purlBaseEquals(rec.package, currentPurl ?? ""),
-            );
 
             return (
               <Tbody key={item.id} isExpanded={isCellExpanded(item)}>
@@ -256,64 +258,52 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                       width={15}
                       {...getTdProps({ columnKey: "remediation" })}
                     >
-                      {isRemediationApplied ? (
-                        <Label color="blue" isCompact>
-                          Applied
-                        </Label>
-                      ) : rowRecommendations.length > 0 ? (
-                        <LabelGroup>
-                          {rowRecommendations.map((rec) => {
-                            const version =
-                              decomposePurl(rec.package)?.version ??
-                              rec.package;
-                            return (
-                              <Tooltip key={rec.package} content={rec.package}>
-                                <Label color="green" isCompact>
-                                  {version}
-                                </Label>
-                              </Tooltip>
-                            );
-                          })}
-                        </LabelGroup>
-                      ) : item.purl[0] ? (
+                      {item.purl[0] ? (
                         <WithPackage packageId={item.purl[0].uuid}>
-                          {(pkg) => {
-                            const fixedVersions: string[] = [];
-                            for (const advisory of pkg?.advisories ?? []) {
-                              for (const pkgStatus of advisory.status ?? []) {
-                                const versions = (
-                                  pkgStatus as unknown as {
-                                    fixed_versions?: string[];
-                                  }
-                                ).fixed_versions;
-                                if (versions) {
-                                  for (const v of versions) {
-                                    if (!fixedVersions.includes(v))
-                                      fixedVersions.push(v);
-                                  }
-                                }
-                              }
-                            }
-                            if (fixedVersions.length > 0) {
+                          {(pkg, isFetching) => {
+                            if (isFetching) {
                               return (
-                                <LabelGroup>
-                                  {fixedVersions.map((v) => (
-                                    <Label
-                                      key={v}
-                                      color="green"
-                                      variant="outline"
-                                      isCompact
-                                    >
-                                      {v}
-                                    </Label>
-                                  ))}
-                                </LabelGroup>
+                                <Skeleton screenreaderText="Loading remediations" />
                               );
                             }
-                            return null;
+                            const affectedStatuses = (
+                              pkg?.advisories ?? []
+                            ).flatMap((a) =>
+                              a.status.filter((s) => s.status === "affected"),
+                            );
+                            const affectedCveIds = pkg
+                              ? new Set(
+                                  affectedStatuses.map(
+                                    (s) => s.vulnerability.identifier,
+                                  ),
+                                )
+                              : null;
+                            const cveIdsWithRemediation = new Set<string>();
+                            for (const rec of rowRecommendations) {
+                              for (const vuln of rec.vulnerabilities) {
+                                if (
+                                  (vuln.status === "Fixed" ||
+                                    vuln.status === "NotAffected") &&
+                                  (!affectedCveIds ||
+                                    affectedCveIds.has(vuln.id))
+                                )
+                                  cveIdsWithRemediation.add(vuln.id);
+                              }
+                            }
+                            for (const s of affectedStatuses) {
+                              if (s.fixed_versions.length > 0) {
+                                cveIdsWithRemediation.add(
+                                  s.vulnerability.identifier,
+                                );
+                              }
+                            }
+                            const count = cveIdsWithRemediation.size;
+                            return `${count} ${count === 1 ? "Remediation" : "Remediations"}`;
                           }}
                         </WithPackage>
-                      ) : null}
+                      ) : (
+                        "0 Remediations"
+                      )}
                     </Td>
                     <Td
                       width={20}

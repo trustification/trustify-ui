@@ -19,10 +19,11 @@ const mockAlgorithms: CryptoAlgorithm[] = [
     asset_type: "algorithm",
     oid: null,
     properties: {
-      primitive: "pke",
-      cryptoFunctions: ["keygen"],
+      algorithmProperties: { primitive: "pke", cryptoFunctions: ["keygen"] },
     },
-    policy_status: "Compliant",
+    policy_status: "compliant",
+    packages_count: 0,
+    sboms_count: 0,
   },
   {
     node_id: "alg-2",
@@ -30,11 +31,14 @@ const mockAlgorithms: CryptoAlgorithm[] = [
     asset_type: "algorithm",
     oid: null,
     properties: {
-      primitive: "signature",
-      parameterSetIdentifier: "2048",
-      recommendation: "Replace with ML-DSA-65",
+      algorithmProperties: {
+        primitive: "signature",
+        parameterSetIdentifier: "2048",
+      },
     },
-    policy_status: "NonCompliant",
+    policy_status: "non_compliant",
+    packages_count: 0,
+    sboms_count: 0,
   },
 ];
 
@@ -45,9 +49,11 @@ const mockKeys: CryptoAlgorithm[] = [
     asset_type: "related-crypto-material",
     oid: null,
     properties: {
-      type: "private-key",
+      relatedCryptoMaterialProperties: { type: "private-key" },
     },
-    policy_status: "Compliant",
+    policy_status: "compliant",
+    packages_count: 0,
+    sboms_count: 0,
   },
 ];
 
@@ -164,7 +170,6 @@ describe("CryptoList", () => {
     expect(screen.getByText("RSA-2048")).toBeInTheDocument();
     expect(screen.getByText("Compliant")).toBeInTheDocument();
     expect(screen.getByText("Non-compliant")).toBeInTheDocument();
-    expect(screen.getByText("Replace with ML-DSA-65")).toBeInTheDocument();
   });
 
   /** Verifies that the Keys tab renders its 5 columns and key data. */

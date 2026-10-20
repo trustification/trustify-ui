@@ -35,6 +35,8 @@ export interface CryptoAlgorithm {
   oid: string | null;
   properties: Record<string, unknown>;
   policy_status: string;
+  packages_count: number;
+  sboms_count: number;
 }
 
 /** Shape of the policy evaluation summary returned by POST /v3/crypto/policy/evaluate. */

@@ -20,6 +20,7 @@ import {
   Label,
   LabelGroup,
   Popover,
+  Skeleton,
   Stack,
   StackItem,
   Switch,
@@ -28,6 +29,7 @@ import {
   ToolbarItem,
   Tooltip,
 } from "@patternfly/react-core";
+import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import {
   ActionsColumn,
   ExpandableRowContent,
@@ -66,6 +68,8 @@ import { useFetchSBOMById } from "@app/queries/sboms";
 import { Paths } from "@app/Routes";
 import { useWithUiId } from "@app/utils/query-utils";
 import { decomposePurl, formatDate, purlBaseEquals } from "@app/utils/utils";
+
+import { WithPackage } from "@app/components/WithPackage";
 
 import { ExploitIntelligenceAnalysisCell } from "./components/exploit-intelligence-analysis-cell";
 import { VulnerabilityScoreBreakdown } from "./components/vulnerability-score-breakdown";
@@ -137,22 +141,32 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
     [rawAdvisories, includeResolved],
   );
 
+  // Build a map of CVE ID → Set of PURLs that have upstream fixed_versions
+  // from SBOM-level advisory data, so the count on the CVE row includes both
+  // vendor backports (from recommendationsMap) and upstream fixes.
+  const fixedPurlsByCve = React.useMemo(() => {
+    const map = new Map<string, Set<string>>();
+    for (const advisory of rawAdvisories) {
+      for (const status of advisory.status ?? []) {
+        if ((status.fixed_versions ?? []).length > 0) {
+          const cveId = status.identifier;
+          if (!map.has(cveId)) map.set(cveId, new Set());
+          const purlSet = map.get(cveId)!;
+          for (const pkg of status.packages ?? []) {
+            for (const p of pkg.purl ?? []) {
+              purlSet.add(p.purl);
+            }
+          }
+        }
+      }
+    }
+    return map;
+  }, [rawAdvisories]);
+
   const tableDataWithUiId = useWithUiId(
     affectedVulnerabilities,
     (d) => `${d.vulnerability.identifier}-${d.vulnerabilityStatus}`,
   );
-
-  const allPurls = React.useMemo(
-    () =>
-      affectedVulnerabilities.flatMap((vuln) =>
-        Array.from(vuln.purls.values())
-          .filter((p) => !p.isOrphan)
-          .map((p) => p.purlSummary.purl),
-      ),
-    [affectedVulnerabilities],
-  );
-
-  const { recommendationsMap } = useFetchRecommendations(allPurls);
 
   const tableControls = useLocalTableControls({
     tableName: "vulnerability-table",
@@ -165,7 +179,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
       cvss: "CVSS",
       exploitAnalysis: "Exploit Intelligence",
       affectedDependencies: "Affected dependencies",
-      remediation: "Remediation",
+      remediation: "Remediations",
       published: "Published",
       updated: "Updated",
     },
@@ -210,6 +224,19 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
     },
     expansionDerivedState: { isCellExpanded },
   } = tableControls;
+
+  const allPurls = React.useMemo(
+    () =>
+      currentPageItems.flatMap((vuln) =>
+        Array.from(vuln.purls.values())
+          .filter((p) => !p.isOrphan)
+          .map((p) => p.purlSummary.purl),
+      ),
+    [currentPageItems],
+  );
+
+  const { recommendationsMap, isFetching: isFetchingRecommendations } =
+    useFetchRecommendations(allPurls);
 
   return (
     <Stack hasGutter>
@@ -310,7 +337,12 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                   <Th {...getThProps({ columnKey: "exploitAnalysis" })} />
                 )}
                 <Th {...getThProps({ columnKey: "affectedDependencies" })} />
-                <Th {...getThProps({ columnKey: "remediation" })} />
+                <Th {...getThProps({ columnKey: "remediation" })}>
+                  Remediations{" "}
+                  <Tooltip content="Number of affected packages with a fix available for this CVE. Expand Affected dependencies to see remediations per package.">
+                    <OutlinedQuestionCircleIcon />
+                  </Tooltip>
+                </Th>
                 <Th {...getThProps({ columnKey: "published" })} />
                 <Th {...getThProps({ columnKey: "updated" })} />
               </TableHeaderContentWithControls>
@@ -337,18 +369,19 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                 .filter((p) => !p.isOrphan)
                 .map((p) => p.purlSummary.purl);
 
-              const isRemediationApplied = rowPurls.some((purl) =>
-                (recommendationsMap.get(purl) ?? []).some((rec) =>
-                  purlBaseEquals(rec.package, purl),
-                ),
-              );
-
-              const rowRecommendations = rowPurls
-                .flatMap((purl) => recommendationsMap.get(purl) ?? [])
-                .filter(
-                  (rec, idx, all) =>
-                    all.findIndex((r) => r.package === rec.package) === idx,
-                );
+              const fixedPurls =
+                fixedPurlsByCve.get(item.vulnerability.identifier) ??
+                new Set<string>();
+              const remediationCount = rowPurls.filter(
+                (purl) =>
+                  (recommendationsMap.get(purl) ?? []).some((rec) =>
+                    rec.vulnerabilities.some(
+                      (v) =>
+                        v.id === item.vulnerability.identifier &&
+                        (v.status === "Fixed" || v.status === "NotAffected"),
+                    ),
+                  ) || fixedPurls.has(purl),
+              ).length;
 
               const hasVexResolution =
                 purlResolutions &&
@@ -495,29 +528,11 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                         width={15}
                         {...getTdProps({ columnKey: "remediation" })}
                       >
-                        {isRemediationApplied ? (
-                          <Label color="blue" isCompact>
-                            Applied
-                          </Label>
-                        ) : rowRecommendations.length > 0 ? (
-                          <LabelGroup>
-                            {rowRecommendations.map((rec) => {
-                              const version =
-                                decomposePurl(rec.package)?.version ??
-                                rec.package;
-                              return (
-                                <Tooltip
-                                  key={rec.package}
-                                  content={rec.package}
-                                >
-                                  <Label color="green" isCompact>
-                                    {version}
-                                  </Label>
-                                </Tooltip>
-                              );
-                            })}
-                          </LabelGroup>
-                        ) : null}
+                        {isFetchingRecommendations ? (
+                          <Skeleton screenreaderText="Loading remediations" />
+                        ) : (
+                          `${remediationCount} ${remediationCount === 1 ? "Remediation" : "Remediations"}`
+                        )}
                       </Td>
                       <Td
                         width={10}
@@ -572,6 +587,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                                   <Th>Version</Th>
                                   <Th>Path</Th>
                                   <Th>Qualifiers</Th>
+                                  <Th>Remediations</Th>
                                   {purlResolutions && <Th>VEX Status</Th>}
                                 </Tr>
                               </Thead>
@@ -612,6 +628,133 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                                                 }
                                               />
                                             )}
+                                          </Td>
+                                          <Td>
+                                            <WithPackage
+                                              packageId={purl.purlSummary.uuid}
+                                            >
+                                              {(pkg, isFetching) => {
+                                                if (isFetching) {
+                                                  return (
+                                                    <Skeleton screenreaderText="Loading remediations" />
+                                                  );
+                                                }
+                                                const purlRecs = (
+                                                  recommendationsMap.get(
+                                                    purl.purlSummary.purl,
+                                                  ) ?? []
+                                                ).filter((rec) =>
+                                                  rec.vulnerabilities.some(
+                                                    (v) =>
+                                                      v.id ===
+                                                        item.vulnerability
+                                                          .identifier &&
+                                                      (v.status === "Fixed" ||
+                                                        v.status ===
+                                                          "NotAffected"),
+                                                  ),
+                                                );
+                                                const vendorVersionSet =
+                                                  new Set(
+                                                    purlRecs.map(
+                                                      (rec) =>
+                                                        decomposePurl(
+                                                          rec.package,
+                                                        )?.version ??
+                                                        rec.package,
+                                                    ),
+                                                  );
+                                                const fixedVersions =
+                                                  new Set<string>();
+                                                for (const advisory of pkg?.advisories ??
+                                                  []) {
+                                                  for (const pkgStatus of advisory.status ??
+                                                    []) {
+                                                    if (
+                                                      pkgStatus.vulnerability
+                                                        .identifier ===
+                                                      item.vulnerability
+                                                        .identifier
+                                                    ) {
+                                                      for (const v of pkgStatus.fixed_versions ??
+                                                        []) {
+                                                        fixedVersions.add(v);
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                                const nonVendorVersions = [
+                                                  ...fixedVersions,
+                                                ].filter(
+                                                  (v) =>
+                                                    !vendorVersionSet.has(v),
+                                                );
+                                                const isRemediationApplied =
+                                                  purlRecs.some((rec) =>
+                                                    purlBaseEquals(
+                                                      rec.package,
+                                                      purl.purlSummary.purl,
+                                                    ),
+                                                  );
+                                                if (
+                                                  purlRecs.length === 0 &&
+                                                  nonVendorVersions.length === 0
+                                                ) {
+                                                  return null;
+                                                }
+                                                if (isRemediationApplied) {
+                                                  return (
+                                                    <Label
+                                                      color="blue"
+                                                      isCompact
+                                                    >
+                                                      Applied
+                                                    </Label>
+                                                  );
+                                                }
+                                                return (
+                                                  <LabelGroup>
+                                                    {purlRecs.map((rec) => {
+                                                      const version =
+                                                        decomposePurl(
+                                                          rec.package,
+                                                        )?.version ??
+                                                        rec.package;
+                                                      return (
+                                                        <Tooltip
+                                                          key={rec.package}
+                                                          content="Vendor backport — security fix applied in the same version stream (no major upgrade required)."
+                                                        >
+                                                          <Label
+                                                            color="blue"
+                                                            variant="outline"
+                                                            isCompact
+                                                          >
+                                                            {version}
+                                                          </Label>
+                                                        </Tooltip>
+                                                      );
+                                                    })}
+                                                    {nonVendorVersions.map(
+                                                      (v) => (
+                                                        <Tooltip
+                                                          key={v}
+                                                          content="Version upgrade — move to this newer release to get the fix."
+                                                        >
+                                                          <Label
+                                                            color="green"
+                                                            variant="outline"
+                                                            isCompact
+                                                          >
+                                                            {v}
+                                                          </Label>
+                                                        </Tooltip>
+                                                      ),
+                                                    )}
+                                                  </LabelGroup>
+                                                );
+                                              }}
+                                            </WithPackage>
                                           </Td>
                                           {purlResolutions && (
                                             <Td>
@@ -672,6 +815,7 @@ export const VulnerabilitiesBySbom: React.FC<VulnerabilitiesBySbomProps> = ({
                                           <Td />
                                           <Td />
                                           <Td>{purl.parentName}</Td>
+                                          <Td />
                                           <Td />
                                           <Td />
                                           <Td />

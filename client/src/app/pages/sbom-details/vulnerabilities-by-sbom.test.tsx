@@ -32,7 +32,14 @@ const mockVulnerability = {
 
 const mockRecommendationsMap = new Map<
   string,
-  { package: string; vulnerabilities: [] }[]
+  {
+    package: string;
+    vulnerabilities: {
+      id: string;
+      status?: string | null;
+      remediations: [];
+    }[];
+  }[]
 >();
 
 vi.mock("@app/hooks/domain-controls/useVulnerabilitiesOfSbom", () => ({
@@ -93,6 +100,14 @@ vi.mock("@app/components/SbomVulnerabilitiesDonutChart", () => ({
   SbomVulnerabilitiesDonutChart: () => null,
 }));
 
+vi.mock("@app/components/WithPackage", () => ({
+  WithPackage: ({
+    children,
+  }: {
+    children: (pkg: null, isFetching: boolean) => React.ReactNode;
+  }) => <>{children(null, false)}</>,
+}));
+
 vi.mock("@app/components/LoadingWrapper", () => ({
   LoadingWrapper: ({ children }: { children: React.ReactNode }) => (
     <div>{children}</div>
@@ -113,15 +128,55 @@ describe("VulnerabilitiesBySbom remediation column", () => {
     mockRecommendationsMap.clear();
   });
 
-  /** Verifies the "Remediation" column header renders in the vulnerabilities table. */
-  it("renders the Remediation column header", () => {
+  /** Verifies the "Remediations" column header renders in the vulnerabilities table. */
+  it("renders the Remediations column header", () => {
     renderComponent();
-    expect(screen.getByText("Remediation")).toBeInTheDocument();
+    expect(screen.getAllByText(/Remediations/).length).toBeGreaterThan(0);
   });
 
-  /** Verifies that a vulnerability row with recommendations renders the recommended version Label. */
-  it("renders recommended version Label when recommendations exist for an affected package", () => {
-    // Given a recommendation for the affected package PURL
+  /** Verifies that a CVE row counts packages with recommendations that have Fixed status for the CVE. */
+  it("renders count of packages with Fixed recommendations for a CVE row", () => {
+    // Given a recommendation with Fixed status for the affected CVE
+    const affectedPurl = "pkg:maven/org.apache.log4j/log4j-core@2.14.1";
+    mockRecommendationsMap.set(affectedPurl, [
+      {
+        package: "pkg:maven/org.apache.log4j/log4j-core@2.17.2",
+        vulnerabilities: [
+          { id: "CVE-2024-12345", status: "Fixed", remediations: [] },
+        ],
+      },
+    ]);
+
+    // When rendering the vulnerabilities table
+    renderComponent();
+
+    // Then the count shows 1 package with a remediation (singular)
+    expect(screen.getByText("1 Remediation")).toBeInTheDocument();
+  });
+
+  /** Verifies that a recommendation with Affected status is not counted in the remediation count. */
+  it("does not count recommendations with Affected status", () => {
+    // Given a recommendation with Affected status for the CVE
+    const affectedPurl = "pkg:maven/org.apache.log4j/log4j-core@2.14.1";
+    mockRecommendationsMap.set(affectedPurl, [
+      {
+        package: "pkg:maven/org.apache.log4j/log4j-core@2.17.2",
+        vulnerabilities: [
+          { id: "CVE-2024-12345", status: "Affected", remediations: [] },
+        ],
+      },
+    ]);
+
+    // When rendering the vulnerabilities table
+    renderComponent();
+
+    // Then the count shows 0 (Affected status does not count as remediation)
+    expect(screen.getByText("0 Remediations")).toBeInTheDocument();
+  });
+
+  /** Verifies that a recommendation with empty vulnerabilities array is not counted. */
+  it("does not count recommendations with empty vulnerabilities array", () => {
+    // Given a recommendation with an empty vulnerabilities array
     const affectedPurl = "pkg:maven/org.apache.log4j/log4j-core@2.14.1";
     mockRecommendationsMap.set(affectedPurl, [
       {
@@ -133,14 +188,13 @@ describe("VulnerabilitiesBySbom remediation column", () => {
     // When rendering the vulnerabilities table
     renderComponent();
 
-    // Then the recommended version is shown as a Label
-    expect(screen.getByText("2.17.2")).toBeInTheDocument();
+    // Then the count shows 0 (no VEX proof for this CVE)
+    expect(screen.getByText("0 Remediations")).toBeInTheDocument();
   });
 
-  /** Verifies that a vulnerability row with no recommendations renders no remediation content. */
-  it("renders no remediation content when no recommendations exist", () => {
+  /** Verifies that a CVE row with no recommendations renders "0 Remediations". */
+  it("renders 0 Remediations when no packages have recommendations", () => {
     renderComponent();
-    expect(screen.queryByText("Applied")).not.toBeInTheDocument();
-    expect(screen.queryByText("2.17.2")).not.toBeInTheDocument();
+    expect(screen.getByText("0 Remediations")).toBeInTheDocument();
   });
 });

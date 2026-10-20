@@ -35,6 +35,7 @@ const SBOMList = lazy(() => import("./pages/sbom-list"));
 const SBOMUpload = lazy(() => import("./pages/sbom-upload"));
 const SBOMScan = lazy(() => import("./pages/sbom-scan"));
 const SBOMDetails = lazy(() => import("./pages/sbom-details"));
+const RemediationReport = lazy(() => import("./pages/remediation-report"));
 
 // SBOM Groups
 const SbomGroupList = lazy(() => import("./pages/sbom-groups"));
@@ -67,6 +68,7 @@ export const Paths = {
   sboms: "/sboms",
   sbomUpload: "/sboms/upload",
   sbomScan: "/sboms/scan",
+  remediationReport: "/sboms/remediation-report",
   sbomDetails: `/sboms/:${PathParam.SBOM_ID}`,
   packages: "/packages",
   packageDetails: `/packages/:${PathParam.PACKAGE_ID}`,
@@ -203,6 +205,15 @@ export const AppRoutes = createBrowserRouter([
         path: Paths.sboms,
         element: (
           <LazyRouteElement identifier="sbom-list" component={<SBOMList />} />
+        ),
+      },
+      {
+        path: Paths.remediationReport,
+        element: (
+          <LazyRouteElement
+            identifier="remediation-report"
+            component={<RemediationReport />}
+          />
         ),
       },
       {

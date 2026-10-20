@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
 import { client } from "../axios-config/apiInit";
-import { recommend } from "../client";
+import { recommend, recommendReport } from "../client";
 import type { RecommendEntry } from "../client";
 
 export { type RecommendEntry };
@@ -39,5 +39,52 @@ export const useFetchRecommendations = (purls: string[]) => {
     recommendationsMap,
     isFetching: isLoading,
     fetchError: error as AxiosError | null,
+  };
+};
+
+/** Probe whether the recommendation feature is configured on the server.
+ * Returns false only when the endpoint responds with 422 and the structured
+ * error code is CapabilityDisabled. */
+export const useIsRecommendationEnabled = (): boolean => {
+  const { error, isLoading } = useQuery({
+    queryKey: ["recommendation-feature-probe"],
+    queryFn: () => recommend({ client, body: { purls: [] } }),
+    retry: false,
+    staleTime: Infinity,
+  });
+  if (isLoading) return true;
+  const axiosErr = error as AxiosError | null;
+  if (axiosErr?.response?.status !== 422) return true;
+  return (
+    (axiosErr.response.data as { error?: string } | null)?.error !==
+    "CapabilityDisabled"
+  );
+};
+
+export const RemediationReportQueryKey = "remediation-report";
+
+/** Fetch an aggregated vendor remediation report for the given SBOM IDs via POST /api/v3/purl/recommend/report. */
+export const useFetchRemediationReport = (sbomIds: string[]) => {
+  const sortedIds = useMemo(() => [...sbomIds].sort(), [sbomIds]);
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: [RemediationReportQueryKey, sortedIds],
+    queryFn: () =>
+      recommendReport({
+        client,
+        body: { sbom_ids: sortedIds },
+      }),
+    enabled: sortedIds.length > 0,
+    retry: false,
+  });
+
+  const isLimitExceeded =
+    (error as AxiosError | null)?.response?.status === 413;
+
+  return {
+    report: data?.data ?? null,
+    isFetching: isLoading,
+    fetchError: error as AxiosError | null,
+    isLimitExceeded,
   };
 };

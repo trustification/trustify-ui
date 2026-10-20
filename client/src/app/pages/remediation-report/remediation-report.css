@@ -1,0 +1,80 @@
+/* Remediation report — layout and typography from UX design */
+
+.rr-report {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pf-t--global--spacer--lg);
+}
+
+.rr-report__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pf-t--global--spacer--md);
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.rr-report__header-text {
+  flex: 1;
+  min-width: 16rem;
+}
+
+.rr-report__impact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--pf-t--global--spacer--lg);
+  margin-block-end: var(--pf-t--global--spacer--lg);
+}
+
+.rr-report__stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pf-t--global--spacer--xs);
+}
+
+.rr-report__stat-value {
+  display: flex;
+  align-items: baseline;
+  gap: var(--pf-t--global--spacer--xs);
+  font-size: var(--pf-t--global--font--size--4xl);
+  font-weight: var(--pf-t--global--font--weight--heading--bold);
+  line-height: 1;
+  color: var(--pf-t--global--text--color--regular);
+}
+
+.rr-report__stat-suffix {
+  font-size: var(--pf-t--global--font--size--xl);
+  font-weight: var(--pf-t--global--font--weight--body--bold);
+  color: var(--pf-t--global--text--color--subtle);
+}
+
+.rr-report__stat-label {
+  color: var(--pf-t--global--text--color--subtle);
+  font-size: var(--pf-t--global--font--size--body--sm);
+  font-weight: var(--pf-t--global--font--weight--body--bold);
+}
+
+.rr-report__stat-help {
+  color: var(--pf-t--global--text--color--subtle);
+  font-size: var(--pf-t--global--font--size--body--sm);
+}
+
+.rr-report__progress {
+  max-width: 28rem;
+  margin-block: var(--pf-t--global--spacer--lg) var(--pf-t--global--spacer--lg);
+}
+
+.rr-report__app-labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pf-t--global--spacer--xs);
+}
+
+.rr-report__card-title {
+  font-size: var(--pf-t--global--font--size--md);
+  font-weight: var(--pf-t--global--font--weight--heading--bold);
+}
+
+.rr-report__empty {
+  color: var(--pf-t--global--text--color--subtle);
+}

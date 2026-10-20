@@ -51,6 +51,7 @@ export const PackageSearchProvider: React.FunctionComponent<
       version: "Version",
       type: "Type",
       licenses: "Licenses",
+      remediation: "Remediations",
       path: "Path",
       qualifiers: "Qualifiers",
       vulnerabilities: "Vulnerabilities",

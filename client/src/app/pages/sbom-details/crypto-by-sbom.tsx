@@ -16,9 +16,7 @@ import {
   ToolbarItem,
 } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-
-import type { IconedStatusPreset } from "@app/components/IconedStatus";
-import { IconedStatus } from "@app/components/IconedStatus";
+import { PolicyLabel } from "@app/components/PolicyLabel";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
 import { LoadingWrapper } from "@app/components/LoadingWrapper";
 import { PageDrawerContent } from "@app/components/PageDrawerContext";
@@ -38,46 +36,36 @@ import type { CryptoAlgorithm } from "@app/pages/crypto-list/crypto-context";
 import { CryptoAlgorithmDetail } from "@app/pages/crypto-list/components/CryptoAlgorithmDetail";
 import { useFetchCryptoBySbom } from "@app/queries/crypto";
 
-const policyPresetMap: Record<string, IconedStatusPreset> = {
-  Compliant: "Compliant",
-  Warning: "Warning",
-  NonCompliant: "NonCompliant",
-};
+const algProps = (item: CryptoAlgorithm) =>
+  ((item.properties as Record<string, unknown>)?.algorithmProperties as Record<
+    string,
+    unknown
+  >) ?? {};
 
-const getPrimitive = (item: CryptoAlgorithm): string => {
-  const props = item.properties as Record<string, unknown>;
-  return (props?.primitive as string) ?? "--";
-};
+const rcmProps = (item: CryptoAlgorithm) =>
+  ((item.properties as Record<string, unknown>)
+    ?.relatedCryptoMaterialProperties as Record<string, unknown>) ?? {};
 
-const getKeyType = (item: CryptoAlgorithm): string => {
-  const props = item.properties as Record<string, unknown>;
-  return (props?.type as string) ?? item.asset_type ?? "--";
-};
+const getPrimitive = (item: CryptoAlgorithm): string =>
+  (algProps(item).primitive as string) ?? "--";
 
-const getRecommendation = (item: CryptoAlgorithm): string => {
-  const props = item.properties as Record<string, unknown>;
-  return (props?.recommendation as string) ?? "--";
-};
+const getKeyType = (item: CryptoAlgorithm): string =>
+  (rcmProps(item).type as string) ?? item.asset_type ?? "--";
 
-const getUsage = (item: CryptoAlgorithm): string => {
-  const props = item.properties as Record<string, unknown>;
-  return (props?.detectionContext as string) ?? "--";
-};
+const getRecommendation = (item: CryptoAlgorithm): string =>
+  (algProps(item).recommendation as string) ?? "--";
 
-const getOccurrences = (item: CryptoAlgorithm): number => {
-  const props = item.properties as Record<string, unknown>;
-  return (props?.occurrences as number) ?? 1;
-};
+const getUsage = (item: CryptoAlgorithm): string =>
+  (algProps(item).detectionContext as string) ?? "--";
 
-const getPackagesCount = (item: CryptoAlgorithm): number => {
-  const props = item.properties as Record<string, unknown>;
-  return (props?.packages as number) ?? 0;
-};
+const getOccurrences = (item: CryptoAlgorithm): number =>
+  (algProps(item).occurrences as number) ?? 1;
 
-const getParameterSet = (item: CryptoAlgorithm): string | undefined => {
-  const props = item.properties as Record<string, unknown>;
-  return (props?.parameterSetIdentifier as string) ?? undefined;
-};
+const getPackagesCount = (item: CryptoAlgorithm): number =>
+  (algProps(item).packages as number) ?? 0;
+
+const getParameterSet = (item: CryptoAlgorithm): string | undefined =>
+  (algProps(item).parameterSetIdentifier as string) ?? undefined;
 
 const formatPercent = (count: number, total: number): string => {
   if (total === 0) return "0%";
@@ -255,11 +243,7 @@ const AlgorithmsTable: React.FC<AssetTableProps> = ({
                         rowIndex,
                       })}
                     >
-                      <IconedStatus
-                        preset={
-                          policyPresetMap[item.policy_status] ?? "Unknown"
-                        }
-                      />
+                      <PolicyLabel policyStatus={item.policy_status} />
                     </Td>
                     <Td
                       width={15}
@@ -501,10 +485,10 @@ export const CryptoBySbom: React.FC<CryptoBySbomProps> = ({ sbomId }) => {
   } = useFetchCryptoBySbom(sbomId, { total: true }, "related-crypto-material");
 
   const compliantCount = allAlgorithms.filter(
-    (a) => a.policy_status === "Compliant",
+    (a) => a.policy_status === "compliant",
   ).length;
   const classicalCount = allAlgorithms.filter(
-    (a) => a.policy_status === "Warning",
+    (a) => a.policy_status === "warning",
   ).length;
 
   return (

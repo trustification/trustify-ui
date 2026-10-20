@@ -53,7 +53,6 @@ import {
   forceRunImporter,
 } from "@app/client";
 import { FilterToolbar, FilterType } from "@app/components/FilterToolbar";
-import { IconedStatus } from "@app/components/IconedStatus";
 import { SimplePagination } from "@app/components/SimplePagination";
 import {
   ConditionalTableBody,
@@ -62,9 +61,13 @@ import {
 } from "@app/components/TableControls";
 import { useLocalTableControls } from "@app/hooks/table-controls";
 
+import CheckCircleIcon from "@patternfly/react-icons/dist/esm/icons/check-circle-icon";
+import ExclamationCircleIcon from "@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon";
+import InProgressIcon from "@patternfly/react-icons/dist/esm/icons/in-progress-icon";
+import PendingIcon from "@patternfly/react-icons/dist/esm/icons/pending-icon";
+
 import { ANSICOLOR } from "@app/Constants";
 import { ImporterProgress } from "./components/importer-progress";
-import { ImporterStatusIcon } from "./components/importer-status-icon";
 import { DocumentMetadata } from "@app/components/DocumentMetadata";
 
 type ImporterStatus = "disabled" | "scheduled" | "running";
@@ -380,8 +383,16 @@ export const ImporterList: React.FC = () => {
                             <Label color="orange">Disabled</Label>
                           ) : importerStatus === "running" && item.progress ? (
                             <ImporterProgress value={item.progress} />
+                          ) : importerStatus === "running" ? (
+                            <Label color="blue" icon={<InProgressIcon />}>
+                              Running
+                            </Label>
+                          ) : item.state === "waiting" ? (
+                            <Label color="blue" icon={<PendingIcon />}>
+                              Scheduled
+                            </Label>
                           ) : (
-                            <ImporterStatusIcon state={item.state} />
+                            <Label>Not started</Label>
                           )}
                         </Td>
                         <Td isActionCell>
@@ -666,9 +677,13 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
         >
           {currentPageItems?.map((item, rowIndex) => {
             const statusIcon = item.error ? (
-              <IconedStatus preset="Failed" label={item.error} />
+              <Label color="red" icon={<ExclamationCircleIcon />}>
+                {item.error}
+              </Label>
             ) : (
-              <IconedStatus preset="Completed" label="Finished successfully" />
+              <Label color="green" icon={<CheckCircleIcon />}>
+                Finished successfully
+              </Label>
             );
 
             return (
@@ -706,7 +721,9 @@ export const ImporterExpandedArea: React.FC<ImporterExpandedAreaProps> = ({
                       {...getTdProps({ columnKey: "status" })}
                     >
                       {item.isRunning ? (
-                        <ImporterStatusIcon state="running" />
+                        <Label color="blue" icon={<InProgressIcon />}>
+                          Running
+                        </Label>
                       ) : item.messages ? (
                         <Button
                           isInline

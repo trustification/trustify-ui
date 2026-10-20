@@ -21,9 +21,9 @@ interface ICryptoProvider {
 
 /** Maps a backend policy_status value to a display label for the filter dropdown. */
 const policyStatusOptions = [
-  { value: "Compliant", label: "Compliant" },
-  { value: "Warning", label: "Warning" },
-  { value: "NonCompliant", label: "Non-compliant" },
+  { value: "compliant", label: "Compliant" },
+  { value: "warning", label: "Warning" },
+  { value: "non_compliant", label: "Non-compliant" },
 ];
 
 /** Context provider that manages table state and data fetching for the cryptography algorithm list. */
