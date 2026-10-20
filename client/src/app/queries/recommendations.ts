@@ -52,7 +52,7 @@ export const useIsRecommendationEnabled = (): boolean => {
     retry: false,
     staleTime: Infinity,
   });
-  if (isLoading) return true;
+  if (isLoading) return false;
   const axiosErr = error as AxiosError | null;
   if (axiosErr?.response?.status !== 422) return true;
   return (
