@@ -1,0 +1,13 @@
+name: Upload Playwright artifacts
+description: Upload Playwright artifacts after a test run
+runs:
+  using: "composite"
+  steps:
+    - name: Upload Playwright artifacts
+      uses: actions/upload-artifact@v7
+      with:
+        name: playwright-artifacts
+        path: |
+            e2e/test-results
+            e2e/playwright-report
+
