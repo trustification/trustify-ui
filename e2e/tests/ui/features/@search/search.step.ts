@@ -159,9 +159,19 @@ Then(
     // Find the row containing the search term, then click the link in the Name column
     if (type === "Package") {
       const rows = table._table.locator("tbody tr");
-      const idx = await findRowIndexContaining(rows, arg);
-      if (idx === -1)
-        throw new Error(`No package row found containing "${arg}"`);
+      let idx = -1;
+      await expect
+        .poll(
+          async () => {
+            idx = await findRowIndexContaining(rows, arg);
+            return idx;
+          },
+          {
+            timeout: 15000,
+            message: `No package row found containing "${arg}"`,
+          },
+        )
+        .not.toBe(-1);
       const nameCell = rows.nth(idx).locator("td").first();
       const link = nameCell.getByRole("link");
       await expect(link).toBeVisible({ timeout: 10000 });
@@ -291,11 +301,12 @@ Then(
     await table.waitUntilDataIsLoaded();
 
     // Verify the sort direction toggled (ascending -> descending or descending -> ascending)
-    const toggledAriaSortValue =
-      await defaultColumnHeader.getAttribute("aria-sort");
     const expectedToggledDirection =
       defaultSort.direction === "ascending" ? "descending" : "ascending";
-    expect(toggledAriaSortValue).toBe(expectedToggledDirection);
+    await expect(defaultColumnHeader).toHaveAttribute(
+      "aria-sort",
+      expectedToggledDirection,
+    );
 
     // Verify table has data after sorting
     const rows = table._table.locator("tbody tr").first();
@@ -345,6 +356,7 @@ Then(
     const firstButton = pagination.getFirstPageButton();
     if (await firstButton.isEnabled()) {
       await firstButton.click();
+      await expect(pagination.getPageInput()).toHaveValue("1");
     }
 
     // Select 20 per page

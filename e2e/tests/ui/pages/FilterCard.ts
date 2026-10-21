@@ -71,8 +71,6 @@ export class FilterCard {
       const isChecked = await checkboxLabel.isChecked();
       if (!isChecked) {
         await checkboxLabel.click();
-        // Wait for the checkbox state to update
-        await this._page.waitForTimeout(300);
         await expect(checkboxLabel).toBeChecked();
       }
     }

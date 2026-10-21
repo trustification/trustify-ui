@@ -38,9 +38,6 @@ export class SearchPage {
     } else if (category === "Advisories") {
       this._category = "advisory";
     }
-
-    // Wait for the tab content to load
-    await this._page.waitForTimeout(500);
   }
 
   async getFilterCard() {
@@ -119,8 +116,12 @@ export class SearchPage {
     );
     await searchInput.click();
     await searchInput.fill(searchText);
-    // Wait for debounce and autocomplete to potentially appear
-    await this._page.waitForTimeout(600);
+    await Promise.all([
+      this._page.waitForResponse(/api\/v3\/sbom/),
+      this._page.waitForResponse(/api\/v3\/advisory/),
+      this._page.waitForResponse(/api\/v3\/purl/),
+      this._page.waitForResponse(/api\/v3\/vulnerability/),
+    ]);
   }
 
   getAutoFillMenu() {
