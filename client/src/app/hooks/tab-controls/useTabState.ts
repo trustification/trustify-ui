@@ -25,9 +25,12 @@ export const useTabState = <
   args: ITabStateArgs<TTabKey> & IFeaturePersistenceArgs<TPersistenceKeyPrefix>,
 ): ITabState<TTabKey> => {
   const { persistTo = "state", persistenceKeyPrefix } = args;
-  const defaultActiveTab: IActiveTab<TTabKey> = args.defaultActiveTab ?? {
-    tabKey: args.tabKeys[0],
-  };
+  const firstTabKey = args.tabKeys[0];
+  // Falls back to null (rather than a tab with an undefined key) when tabKeys is
+  // empty; ITabState already models "no active tab" as null.
+  const defaultActiveTab: IActiveTab<TTabKey> | null =
+    args.defaultActiveTab ??
+    (firstTabKey !== undefined ? { tabKey: firstTabKey } : null);
 
   const [activeTab, setActiveTab] = usePersistentState<
     IActiveTab<TTabKey> | null,

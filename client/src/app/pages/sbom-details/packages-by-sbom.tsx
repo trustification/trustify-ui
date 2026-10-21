@@ -315,7 +315,7 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                         rowIndex,
                       })}
                     >
-                      {item.purl.length === 1 ? (
+                      {item.purl.length === 1 && item.purl[0] ? (
                         <Link
                           to={generatePath(Paths.packageDetails, {
                             packageId: item.purl[0].uuid,

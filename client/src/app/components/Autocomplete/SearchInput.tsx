@@ -49,8 +49,9 @@ export const SearchInputComponent: React.FC<SearchInputProps> = ({
       return "";
     }
 
-    if (options.length === 1 && inputValue) {
-      const fullHint = getString(options[0].name);
+    const onlyOption = options[0];
+    if (options.length === 1 && onlyOption && inputValue) {
+      const fullHint = getString(onlyOption.name);
       if (fullHint.toLowerCase().indexOf(inputValue.toLowerCase()) === 0) {
         return inputValue + fullHint.substring(inputValue.length);
       }

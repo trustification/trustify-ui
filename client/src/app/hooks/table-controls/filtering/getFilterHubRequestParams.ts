@@ -129,7 +129,7 @@ export const getFilterHubRequestParams = <
           value: serverFilterValue[0],
         });
       }
-      if (filterCategory.type === "select") {
+      if (filterCategory.type === "select" && serverFilterValue[0]) {
         pushOrMergeFilter(filters, {
           field: serverFilterField,
           operator:
@@ -155,7 +155,7 @@ export const getFilterHubRequestParams = <
           },
         });
       }
-      if (filterCategory.type === "dateRange") {
+      if (filterCategory.type === "dateRange" && serverFilterValue[0]) {
         const [start, end] = parseInterval(serverFilterValue[0]);
         if (start) {
           pushOrMergeFilter(filters, {
@@ -176,7 +176,7 @@ export const getFilterHubRequestParams = <
         // Do nothing as labels do not follow the pattern {field}{operator}{value}
         // It is expected for the app to add manually those fields to the REST API
       }
-      if (filterCategory.type === "toggle") {
+      if (filterCategory.type === "toggle" && serverFilterValue[0]) {
         pushOrMergeFilter(filters, {
           field: serverFilterField,
           operator:

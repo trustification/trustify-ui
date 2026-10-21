@@ -63,10 +63,16 @@ describe("FilterToolbar DateRangeFilter", () => {
     expect(toInput()).toHaveValue("");
   });
 
-  // Pins a latent crash: parseInterval returns a 1-element array for an interval
-  // with no "/" separator, so `to` is undefined and `to.toDate()` throws a
-  // TypeError out of the effect, taking the whole component down.
-  it("throws for a malformed interval with no separator", () => {
-    expect(() => renderFilter(["2024-01-05"])).toThrow(TypeError);
+  // BEHAVIOR CHANGE: parseInterval returns a 1-element array for an interval
+  // with no "/" separator, so `to` was undefined and `to.toDate()` threw a
+  // TypeError out of the effect, taking the whole component down. It is now a
+  // no-op for the missing bound.
+  it("renders gracefully for a malformed interval with no separator", () => {
+    expect(() => renderFilter(["2024-01-05"])).not.toThrow();
+
+    expect(fromInput()).toHaveValue("01/05/2024");
+    expect(toInput()).toHaveValue("");
+    // The malformed range is not a valid interval, so it produces no labels.
+    expect(screen.queryByText("01/05/2024")).not.toBeInTheDocument();
   });
 });

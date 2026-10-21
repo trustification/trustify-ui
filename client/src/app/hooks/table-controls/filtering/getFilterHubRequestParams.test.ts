@@ -341,11 +341,11 @@ describe("getFilterHubRequestParams - select", () => {
     ]);
   });
 
-  // Pins a latent bug: unlike `search`/`numsearch`, the `select` branch does not
-  // guard on `serverFilterValue[0]`, so an empty value array emits a filter whose
-  // `value` is undefined. That violates the HubFilter type and makes
-  // serializeFilterForHub throw if it is ever called directly.
-  it("emits an undefined-valued filter for an empty value array", () => {
+  // BEHAVIOR CHANGE: this previously emitted
+  // `{ field: "status", operator: "=", value: undefined }`, which violates the
+  // HubFilter type and makes serializeFilterForHub throw if called directly. The
+  // `select` branch now guards on `serverFilterValue[0]` like `search` always has.
+  it("emits no filter for an empty value array", () => {
     const result = getFilterHubRequestParams<TestItem>({
       filterState: {
         filterValues: { status: [] },
@@ -355,14 +355,13 @@ describe("getFilterHubRequestParams - select", () => {
         category({ categoryKey: "status", type: FilterType.select }),
       ],
     });
-    expect(result.filters).toEqual([
-      { field: "status", operator: "=", value: undefined },
-    ]);
+    expect(result.filters).toEqual([]);
   });
 
-  // Pins a latent bug: an empty-string selection emits `value: ""`, which
-  // serializes to the meaningless query fragment `status=`. `search` drops "".
-  it("emits an empty-string filter for an empty-string value", () => {
+  // BEHAVIOR CHANGE: this previously emitted
+  // `{ field: "status", operator: "=", value: "" }`, which serialized to the
+  // meaningless query fragment `status=`. Matches how `search` treats "".
+  it("emits no filter for an empty-string value", () => {
     const result = getFilterHubRequestParams<TestItem>({
       filterState: {
         filterValues: { status: [""] },
@@ -372,9 +371,7 @@ describe("getFilterHubRequestParams - select", () => {
         category({ categoryKey: "status", type: FilterType.select }),
       ],
     });
-    expect(result.filters).toEqual([
-      { field: "status", operator: "=", value: "" },
-    ]);
+    expect(result.filters).toEqual([]);
   });
 });
 
@@ -524,11 +521,11 @@ describe("getFilterHubRequestParams - dateRange", () => {
     expect(result.filters).toEqual([]);
   });
 
-  // Pins a latent crash: parseInterval("") returns a single *invalid* dayjs,
-  // which is still a truthy object, so the `if (start)` guard passes and
-  // `start.toISOString()` throws. The `dateRange` branch does not guard on
-  // `serverFilterValue[0]` the way `search`/`numsearch` do.
-  it("throws for an empty-string interval", () => {
+  // BEHAVIOR CHANGE: this previously threw `RangeError: Invalid time value`.
+  // parseInterval("") returns a single *invalid* dayjs, which is still truthy,
+  // so the `if (start)` guard passed and `start.toISOString()` blew up. The
+  // `dateRange` branch now guards on `serverFilterValue[0]`.
+  it("emits no filter for an empty-string interval", () => {
     const run = () =>
       getFilterHubRequestParams<TestItem>({
         filterState: {
@@ -539,7 +536,8 @@ describe("getFilterHubRequestParams - dateRange", () => {
           category({ categoryKey: "published", type: FilterType.dateRange }),
         ],
       });
-    expect(run).toThrow(RangeError);
+    expect(run).not.toThrow();
+    expect(run().filters).toEqual([]);
   });
 });
 
@@ -587,9 +585,10 @@ describe("getFilterHubRequestParams - toggle", () => {
     expect(seen).toEqual([["NULL"]]);
   });
 
-  // Pins a latent bug: like `select`, the `toggle` branch does not guard on
-  // `serverFilterValue[0]`, so an empty value array emits an undefined value.
-  it("emits an undefined-valued filter for an empty value array", () => {
+  // BEHAVIOR CHANGE: this previously emitted
+  // `{ field: "publishedOnly", operator: "=", value: undefined }`.
+  // The `toggle` branch now guards on `serverFilterValue[0]`.
+  it("emits no filter for an empty value array", () => {
     const result = getFilterHubRequestParams<TestItem>({
       filterState: {
         filterValues: { publishedOnly: [] },
@@ -599,9 +598,7 @@ describe("getFilterHubRequestParams - toggle", () => {
         category({ categoryKey: "publishedOnly", type: FilterType.toggle }),
       ],
     });
-    expect(result.filters).toEqual([
-      { field: "publishedOnly", operator: "=", value: undefined },
-    ]);
+    expect(result.filters).toEqual([]);
   });
 });
 
@@ -1003,12 +1000,12 @@ describe("end-to-end: getFilterHubRequestParams -> serializeFilterRequestParamsF
     expect(params.get("q")).toBe("");
   });
 
-  // Pins a latent bug: two empty `select` filters sharing a serverFilterField are
-  // merged by pushOrMergeFilter into `{ list: [undefined, undefined], operator:
-  // "AND" }`, which passes the `list.length > 0` guard in
-  // serializeFilterRequestParamsForHub, so wrapAndEscape stringifies each entry
-  // and the app ships the literal fragment `status=undefined,undefined`.
-  it("ships `undefined` literals when two empty select filters share a field", () => {
+  // BEHAVIOR CHANGE: two empty `select` filters sharing a serverFilterField
+  // used to be merged by pushOrMergeFilter into
+  // `{ list: [undefined, undefined], operator: "AND" }`, which passed the
+  // `list.length > 0` guard in serializeFilterRequestParamsForHub and shipped
+  // the literal query fragment `status=undefined,undefined` to the API.
+  it("emits no `undefined` literals when two empty select filters share a field", () => {
     const deserialized = getFilterHubRequestParams<TestItem>({
       filterState: {
         filterValues: { a: [], b: [] },
@@ -1030,6 +1027,6 @@ describe("end-to-end: getFilterHubRequestParams -> serializeFilterRequestParamsF
 
     const params = new URLSearchParams();
     serializeFilterRequestParamsForHub(deserialized, params);
-    expect(params.get("q")).toBe("status=undefined,undefined");
+    expect(params.get("q")).toBe("");
   });
 });

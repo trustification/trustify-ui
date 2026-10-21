@@ -8,7 +8,7 @@ import dayjs from "dayjs";
  */
 export const isInClosedRange = (interval: string, date: string): boolean => {
   const [start, end] = parseInterval(interval);
-  if (!isValidInterval([start, end])) {
+  if (!start || !end || !isValidInterval([start, end])) {
     return false;
   }
   const target = dayjs(date);
@@ -41,7 +41,7 @@ export const isValidInterval = ([from, to]: dayjs.Dayjs[]) =>
 
 export const localizeInterval = (interval: string) => {
   const [start, end] = parseInterval(interval);
-  if (!isValidInterval([start, end])) {
+  if (!start || !end || !isValidInterval([start, end])) {
     return [];
   }
   return [

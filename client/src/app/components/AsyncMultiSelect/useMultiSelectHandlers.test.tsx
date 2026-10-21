@@ -172,10 +172,10 @@ describe("useMultiSelectHandlers arrow-key navigation", () => {
       result.current.handleKeyDown(keyEvent("Enter"));
     });
 
-    // Today the out-of-range index leaves activeItem as `undefined`, which the
-    // `activeItem !== null` guard lets through, so a bogus `undefined` is pushed
-    // into the selection.
-    expect(onChange).toHaveBeenCalledWith([undefined]);
+    // BEHAVIOR CHANGE: the out-of-range index previously left activeItem as
+    // `undefined`, which the `activeItem !== null` guard let through, pushing a
+    // bogus `undefined` into the selection. `?? null` makes the guard work.
+    expect(onChange).not.toHaveBeenCalled();
   });
 
   it("toggles the active item on Enter", () => {

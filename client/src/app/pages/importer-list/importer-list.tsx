@@ -72,8 +72,16 @@ import { DocumentMetadata } from "@app/components/DocumentMetadata";
 
 type ImporterStatus = "disabled" | "scheduled" | "running";
 
+/**
+ * An Importer's `configuration` always carries exactly one key (e.g. `sbom`,
+ * `csaf`), so the first key is the importer type. The assertion keeps the
+ * existing runtime behavior while satisfying `noUncheckedIndexedAccess`.
+ */
+const getImporterType = (configuration: Importer["configuration"]) =>
+  Object.keys(configuration ?? {})[0] as string;
+
 const getImporterStatus = (importer: Importer): ImporterStatus => {
-  const importerType = Object.keys(importer.configuration ?? {})[0];
+  const importerType = getImporterType(importer.configuration);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- allowed
   const configValues = (importer.configuration as any)[
     importerType
@@ -117,7 +125,7 @@ export const ImporterList: React.FC = () => {
   );
 
   const execEnableDisableImporter = (row: Importer, enable: boolean) => {
-    const importerType = Object.keys(row.configuration ?? {})[0];
+    const importerType = getImporterType(row.configuration);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- allowed
     const currentConfigValues = (row.configuration as any)[
       importerType
@@ -323,7 +331,7 @@ export const ImporterList: React.FC = () => {
               numRenderedColumns={numRenderedColumns}
             >
               {currentPageItems?.map((item, rowIndex) => {
-                const importerType = Object.keys(item.configuration ?? {})[0];
+                const importerType = getImporterType(item.configuration);
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- allowed
                 const configValues = (item.configuration as any)[
                   importerType

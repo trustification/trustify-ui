@@ -60,7 +60,7 @@ export const MultiselectFilterControl = <TItem,>({
         .some((it) => it.includes(inputValue?.trim().toLowerCase() ?? "")),
   );
 
-  const [firstGroup, ...otherGroups] = [
+  const groups = [
     ...new Set([
       ...(category.selectOptions
         ?.map(({ groupLabel }) => groupLabel)
@@ -68,6 +68,10 @@ export const MultiselectFilterControl = <TItem,>({
       defaultGroup,
     ]),
   ];
+  // `defaultGroup` is always part of the Set, so `groups` is never empty and
+  // `groups[0]` is always defined; the `??` only satisfies the type checker.
+  const firstGroup = groups[0] ?? defaultGroup;
+  const otherGroups = groups.slice(1);
 
   const onFilterClearGroup = (groupName: string) =>
     setFilterValue(
@@ -77,10 +81,12 @@ export const MultiselectFilterControl = <TItem,>({
           category.selectOptions?.find(({ value }) => filter === value),
         ])
         .filter(([, option]) => option)
-        .map(([filter, { groupLabel = defaultGroup } = {}]) => [
-          filter,
-          groupLabel,
-        ])
+        .map(
+          ([filter, { groupLabel = defaultGroup } = {}]): [string, string] => [
+            filter,
+            groupLabel,
+          ],
+        )
         .filter(([, groupLabel]) => groupLabel !== groupName)
         .map(([filter]) => filter),
     );

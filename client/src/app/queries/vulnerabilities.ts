@@ -45,10 +45,11 @@ export const useFetchVulnerabilitiesByPackageIds = (
   includeResolved = false,
 ) => {
   const chunkedIds = ids.reduce<string[][]>((chunks, item, index) => {
-    if (index % 100 === 0) {
+    const currentChunk = chunks[chunks.length - 1];
+    if (index % 100 === 0 || !currentChunk) {
       chunks.push([item]);
     } else {
-      chunks[chunks.length - 1].push(item);
+      currentChunk.push(item);
     }
     return chunks;
   }, []);

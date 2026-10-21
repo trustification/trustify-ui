@@ -77,10 +77,10 @@ describe("useTabState", () => {
   });
 
   /**
-   * Pins the empty-tabKeys fallback as it behaves today: `args.tabKeys[0]` is
-   * undefined, so the default active tab is the bogus object { tabKey: undefined }
-   * rather than null. Consumers (getTabDerivedState / useTabControls) read it via
-   * `activeTab?.tabKey`, so they see undefined either way.
+   * BEHAVIOR CHANGE: this previously produced the bogus object
+   * { tabKey: undefined }; it now produces null, which ITabState already allows
+   * and which consumers (getTabDerivedState / useTabControls) already handle via
+   * `activeTab?.tabKey` -- so they see undefined either way.
    * No real call site passes an empty tabKeys array.
    */
   it("should have no active tab when tabKeys is empty", () => {
@@ -89,7 +89,7 @@ describe("useTabState", () => {
       wrapper,
     });
 
-    // Then the active tab is the bogus { tabKey: undefined } object
-    expect(result.current.activeTab).toEqual({ tabKey: undefined });
+    // Then there is no active tab
+    expect(result.current.activeTab).toBeNull();
   });
 });
