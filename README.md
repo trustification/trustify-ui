@@ -31,11 +31,11 @@ Access the application at `http://localhost:3000` (development) or your deployed
 
 ### Requisites
 
-[NodeJS](https://nodejs.org) >= 22. Use [nvm](https://nodejs.org/en/download) to install NodeJS
+[NodeJS](https://nodejs.org) >= 24. Use [nvm](https://nodejs.org/en/download) to install NodeJS
 
 ```shell
-nvm install 22
-nvm use 22
+nvm install 24
+nvm use 24
 ```
 
 - Backend. Clone [trustify](https://github.com/guacsec/trustify) and there execute:
