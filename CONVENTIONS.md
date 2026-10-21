@@ -12,7 +12,7 @@
 - E2E testing: Playwright with playwright-bdd (Gherkin features)
 - Unit testing: Vitest
 - Linting/formatting: ESLint + Prettier
-- Package manager: npm workspaces (Node.js >= 22)
+- Package manager: npm workspaces (Node.js >= 24)
 
 ## Code Style
 

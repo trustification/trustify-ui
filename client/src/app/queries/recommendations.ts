@@ -46,13 +46,13 @@ export const useFetchRecommendations = (purls: string[]) => {
  * Returns false only when the endpoint responds with 422 and the structured
  * error code is CapabilityDisabled. */
 export const useIsRecommendationEnabled = (): boolean => {
-  const { error, isLoading } = useQuery({
+  const { error, isPending } = useQuery({
     queryKey: ["recommendation-feature-probe"],
     queryFn: () => recommend({ client, body: { purls: [] } }),
     retry: false,
     staleTime: Infinity,
   });
-  if (isLoading) return true;
+  if (isPending) return false;
   const axiosErr = error as AxiosError | null;
   if (axiosErr?.response?.status !== 422) return true;
   return (

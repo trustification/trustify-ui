@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- NodeJS 22
+- NodeJS 24
 - A running instance of Trustify
 
 ## Running the Tests
