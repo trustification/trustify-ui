@@ -352,11 +352,11 @@ Then(
     await Page.switchTo(arg as Tabs);
     const pagination = await Page.getPagination(true);
 
-    // Go to first page
-    const firstButton = pagination.getFirstPageButton();
-    if (await firstButton.isEnabled()) {
-      await firstButton.click();
-      await expect(pagination.getPageInput()).toHaveValue("1");
+    // Go to first page if not already there
+    const pageInput = pagination.getPageInput();
+    if ((await pageInput.inputValue()) !== "1") {
+      await pagination.getFirstPageButton().click();
+      await expect(pageInput).toHaveValue("1");
     }
 
     // Select 20 per page

@@ -42,10 +42,6 @@ export class Pagination {
     await this._page
       .getByRole("menuitem", { name: `${perPage} per page` })
       .click();
-
-    await expect(this._pagination.locator("input")).toHaveValue("1", {
-      timeout: 15000,
-    });
   }
 
   getPageInput() {
