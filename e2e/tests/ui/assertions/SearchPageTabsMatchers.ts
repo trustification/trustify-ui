@@ -23,7 +23,7 @@ export const searchPageTabsAssertions =
         const badge = searchPageTabs.getBadge();
 
         // Wait until the badge has some text
-        await baseExpect(badge).toHaveText(/[\d]/, { timeout: 60000 });
+        await baseExpect(badge).toHaveText(/[\d]/);
 
         const countText = await badge.textContent();
 
