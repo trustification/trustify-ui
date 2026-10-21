@@ -18,6 +18,10 @@ export class PackageListPage {
     return new PackageListPage(page);
   }
 
+  static fromCurrentPage(page: Page) {
+    return new PackageListPage(page);
+  }
+
   async getToolbar() {
     return await Toolbar.build(this._page, "package-toolbar", {
       "Filter text": "string",

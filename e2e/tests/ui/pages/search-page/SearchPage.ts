@@ -1,10 +1,13 @@
 import type { Page } from "@playwright/test";
 import { Navigation } from "../Navigation";
 import { FilterCard } from "../FilterCard";
-import { Table } from "../Table";
 import { Pagination } from "../Pagination";
 import { SearchPageTabs } from "../SearchPageTabs";
 import { Toolbar } from "../Toolbar";
+import { SbomListPage } from "../sbom-list/SbomListPage";
+import { PackageListPage } from "../package-list/PackageListPage";
+import { VulnerabilityListPage } from "../vulnerability-list/VulnerabilityListPage";
+import { AdvisoryListPage } from "../advisory-list/AdvisoryListPage";
 
 type Category = "sbom" | "package" | "vulnerability" | "advisory";
 export type Tabs = "SBOMs" | "Packages" | "Vulnerabilities" | "Advisories";
@@ -41,12 +44,7 @@ export class SearchPage {
   }
 
   async getFilterCard() {
-    // The filter panel is in the left side of the Split component
-    // Find it by looking for the card that contains filter headings
-    const filterPanel = this._page.locator(".pf-v6-c-card__body").filter({
-      has: this._page.locator("button:has-text('Clear all filters')"),
-    });
-    return await FilterCard.buildFromLocator(this._page, filterPanel);
+    return await FilterCard.buildFromLocator(this._page, this._filterCard);
   }
 
   get _filterCard() {
@@ -95,58 +93,13 @@ export class SearchPage {
 
     switch (this._category) {
       case "sbom":
-        return await Table.build(
-          this._page,
-          "sbom-table",
-          [
-            "Name",
-            "Version",
-            "Supplier",
-            "Labels",
-            "Created on",
-            "Dependencies",
-            "Vulnerabilities",
-          ],
-          ["Edit labels", "Download SBOM", "Download License Report", "Delete"],
-        );
+        return SbomListPage.fromCurrentPage(this._page).getTable();
       case "package":
-        return await Table.build(
-          this._page,
-          "Package table",
-          [
-            "Name",
-            "Namespace",
-            "Version",
-            "Type",
-            "Licenses",
-            "Path",
-            "Qualifiers",
-            "Vulnerabilities",
-          ],
-          [],
-        );
+        return PackageListPage.fromCurrentPage(this._page).getTable();
       case "vulnerability":
-        return await Table.build(
-          this._page,
-          "Vulnerability table",
-          ["ID", "Title", "CVSS", "Published", "SBOMs"],
-          [],
-        );
+        return VulnerabilityListPage.fromCurrentPage(this._page).getTable();
       case "advisory":
-        return await Table.build(
-          this._page,
-          "advisory-table",
-          [
-            "ID",
-            "Title",
-            "Type",
-            "Labels",
-            "Revision",
-            "Vulnerabilities",
-            "Average severity",
-          ],
-          ["Edit labels", "Download advisory", "Delete"],
-        );
+        return AdvisoryListPage.fromCurrentPage(this._page).getTable();
       default:
         throw new Error(`Unknown category: ${this._category}`);
     }

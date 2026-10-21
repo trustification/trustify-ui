@@ -1,4 +1,5 @@
 import { createBdd } from "playwright-bdd";
+import type { Locator } from "@playwright/test";
 
 import { test } from "../../fixtures";
 
@@ -12,6 +13,20 @@ export const { Given, When, Then } = createBdd(test);
 
 let Page!: SearchPage;
 let currentType = "";
+
+async function findRowIndexContaining(
+  rows: Locator,
+  text: string,
+): Promise<number> {
+  const count = await rows.count();
+  for (let i = 0; i < count; i++) {
+    const rowText = await rows.nth(i).textContent();
+    if (rowText?.toLowerCase().includes(text.toLowerCase())) {
+      return i;
+    }
+  }
+  return -1;
+}
 
 // Store API responses captured during page load
 const apiResponses: Map<string, number> = new Map();
@@ -75,22 +90,22 @@ Then(
 
 When(
   "user starts typing a {string} in the search bar",
-  async ({ page }, searchText: string) => {
-    const searchPage = new SearchPage(page);
-    await searchPage.typeInSearchBox(searchText);
+  async ({ page: _page }, searchText: string) => {
+    await Page.typeInSearchBox(searchText);
   },
 );
 
-Then("The autofill drop down should not show any values", async ({ page }) => {
-  const searchPage = new SearchPage(page);
-  await expect(searchPage).toHaveAutoFillHidden();
-});
+Then(
+  "The autofill drop down should not show any values",
+  async ({ page: _page }) => {
+    await expect(Page).toHaveAutoFillHidden();
+  },
+);
 
 When(
   "user types a {string} in the search bar",
-  async ({ page }, searchText: string) => {
-    const searchPage = new SearchPage(page);
-    await searchPage.typeInSearchBox(searchText);
+  async ({ page: _page }, searchText: string) => {
+    await Page.typeInSearchBox(searchText);
   },
 );
 
@@ -107,33 +122,15 @@ Then(
     // For packages, search across all text in the row since the term might be in namespace
     if (type === "Packages" || type === "Package") {
       const rows = table._table.locator("tbody tr");
-      const count = await rows.count();
-      let found = false;
-      for (let i = 0; i < count; i++) {
-        const text = await rows.nth(i).textContent();
-        if (text?.toLowerCase().includes(name.toLowerCase())) {
-          found = true;
-          break;
-        }
-      }
-      expect(found).toBe(true);
+      const idx = await findRowIndexContaining(rows, name);
+      expect(idx).toBeGreaterThanOrEqual(0);
     } else {
       // For other types, look in the specific column
       const { columnName } = getTableInfo(type);
       // @ts-expect-error - columnName is dynamically determined from type, TypeScript can't verify it matches table columns
       const column = await table.getColumn(columnName);
-
-      // Check if any of the visible items contain the search term (case-insensitive)
-      const count = await column.count();
-      let found = false;
-      for (let i = 0; i < count; i++) {
-        const text = await column.nth(i).textContent();
-        if (text?.toLowerCase().includes(name.toLowerCase())) {
-          found = true;
-          break;
-        }
-      }
-      expect(found).toBe(true);
+      const idx = await findRowIndexContaining(column, name);
+      expect(idx).toBeGreaterThanOrEqual(0);
     }
   },
 );
@@ -161,23 +158,14 @@ Then(
     // For packages, the search term might be in namespace (not in the link text)
     // Find the row containing the search term, then click the link in the Name column
     if (type === "Package") {
-      // Find the row that contains the search term anywhere in its text
       const rows = table._table.locator("tbody tr");
-      const count = await rows.count();
-
-      for (let i = 0; i < count; i++) {
-        const rowText = await rows.nth(i).textContent();
-        if (rowText?.toLowerCase().includes(arg.toLowerCase())) {
-          // Found the row, now click the link in the Name column (first cell)
-          const nameCell = rows.nth(i).locator("td").first();
-          const link = nameCell.getByRole("link");
-          await expect(link).toBeVisible({ timeout: 10000 });
-          await link.click();
-          return;
-        }
-      }
-
-      throw new Error(`No package row found containing "${arg}"`);
+      const idx = await findRowIndexContaining(rows, arg);
+      if (idx === -1)
+        throw new Error(`No package row found containing "${arg}"`);
+      const nameCell = rows.nth(idx).locator("td").first();
+      const link = nameCell.getByRole("link");
+      await expect(link).toBeVisible({ timeout: 10000 });
+      await link.click();
     } else {
       // For other types, look in the specific column
       const { columnName } = getTableInfo(type);
@@ -413,19 +401,17 @@ Then(
 
 Then(
   "the autofill dropdown should display items matching the {string}",
-  async ({ page }, arg: string) => {
-    const searchPage = new SearchPage(page);
-    await expect(searchPage).toHaveRelevantAutoFillResults(arg);
+  async ({ page: _page }, arg: string) => {
+    await expect(Page).toHaveRelevantAutoFillResults(arg);
   },
 );
 
 Then(
   "the results should be limited to {int} suggestions",
-  async ({ page }, arg: number) => {
-    const searchPage = new SearchPage(page);
-    const totalResults = await searchPage.totalAutoFillResults();
+  async ({ page: _page }, arg: number) => {
+    const totalResults = await Page.totalAutoFillResults();
     expect(totalResults).toBeLessThanOrEqual(arg * 4);
-    await expect(searchPage).toHaveAutoFillCategoriesWithinLimit(arg);
+    await expect(Page).toHaveAutoFillCategoriesWithinLimit(arg);
   },
 );
 
