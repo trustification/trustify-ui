@@ -31,6 +31,13 @@ const config: JestConfigWithTsJest = {
     "@patternfly/react-icons/dist/esm/icons/":
       "<rootDir>/src/mocks/fileMock.ts",
 
+    // resolve workspace packages from source (dist/ may not be built)
+    "@trustify-ui/common": "<rootDir>/../common/src/index.ts",
+    // @branding/strings.json is a rollup virtual module; use the stub for tests
+    "@branding/strings.json": "<rootDir>/../common/src/branding-strings-stub.json",
+    // strip .js extension from relative imports so jest resolves .ts files
+    "^(\\.{1,2}/.+)\\.js$": "$1",
+
     // match the paths in tsconfig.json
     "@app/(.*)": "<rootDir>/src/app/$1",
     "@assets/(.*)":
