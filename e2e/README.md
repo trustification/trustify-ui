@@ -38,12 +38,14 @@ General:
 
 For UI tests:
 
-| Variable                 | Default Value         | Description                              |
-|--------------------------|-----------------------|------------------------------------------|
-| TRUSTIFY_UI_URL          | http://localhost:3000 | The UI URL                               |
-| AUTH_REQUIRED            | true                  | Whether or not auth is enabled in the UI |
-| PLAYWRIGHT_AUTH_USER     | admin                 | User name to be used when authenticating |
-| PLAYWRIGHT_AUTH_PASSWORD | admin                 | Password to be used when authenticating  |
+| Variable                 | Default Value         | Description                                                                                                                   |
+|--------------------------|-----------------------|-------------------------------------------------------------------------------------------------------------------------------|
+| TRUSTIFY_UI_URL          | http://localhost:3000 | The UI URL                                                                                                                    |
+| AUTH_REQUIRED            | true                  | Whether or not auth is enabled in the UI                                                                                      |
+| PLAYWRIGHT_AUTH_USER     | admin                 | User name to be used when authenticating (form mode)                                                                          |
+| PLAYWRIGHT_AUTH_PASSWORD | admin                 | Password to be used when authenticating (form mode)                                                                           |
+| PLAYWRIGHT_UI_AUTH_MODE  | form                  | Auth mode: `form` (fill login form) or `token_injection` (client credentials)                                                 |
+| PLAYWRIGHT_AUTH_SCOPE    |                       | OAuth2 scope for client_credentials token requests (required for token_injection, for EntraID e.g. `api://<app-id>/.default`) |
 
 For API tests:
 
@@ -54,6 +56,7 @@ For API tests:
 | PLAYWRIGHT_AUTH_URL           |                                                 | OIDC Base URL, e.g. `http://localhost:9090/realms/trustd`. If not set, we will try to discover it from `index.html` |
 | PLAYWRIGHT_AUTH_CLIENT_ID     | cli                                             | OIDC Client ID                                                                                                      |
 | PLAYWRIGHT_AUTH_CLIENT_SECRET | secret                                          | OIDC Client Secret                                                                                                  |
+| PLAYWRIGHT_AUTH_SCOPE         |                                                 | OAuth2 scope for client_credentials (required for Entra ID, e.g. `api://<app-id>/.default`)                         |
 
 ## Available Commands
 

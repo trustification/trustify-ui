@@ -5,18 +5,22 @@ export const TRUSTIFY_API_URL =
   "http://localhost:8080/";
 
 /**
- * API only environment variables
+ * Shared auth environment variables (used by both API and UI tests)
  */
 export const AUTH_URL = process.env.PLAYWRIGHT_AUTH_URL;
 export const AUTH_CLIENT_ID = process.env.PLAYWRIGHT_AUTH_CLIENT_ID ?? "cli";
 export const AUTH_CLIENT_SECRET =
   process.env.PLAYWRIGHT_AUTH_CLIENT_SECRET ?? "secret";
+export const AUTH_SCOPE = process.env.PLAYWRIGHT_AUTH_SCOPE;
 
 /**
  * UI only environment variables
  */
 export const AUTH_USER = process.env.PLAYWRIGHT_AUTH_USER ?? "admin";
 export const AUTH_PASSWORD = process.env.PLAYWRIGHT_AUTH_PASSWORD ?? "admin";
+export const UI_AUTH_MODE = process.env.PLAYWRIGHT_UI_AUTH_MODE ?? "form";
+export const TRUSTIFY_UI_URL =
+  process.env.TRUSTIFY_UI_URL ?? "http://localhost:3000/";
 
 /**
  * Log definition

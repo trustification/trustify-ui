@@ -6,6 +6,7 @@ import {
   AUTH_CLIENT_ID,
   AUTH_CLIENT_SECRET,
   AUTH_REQUIRED,
+  AUTH_SCOPE,
   AUTH_URL,
   logger,
   TRUSTIFY_API_URL,
@@ -53,6 +54,9 @@ const getToken = async (baseURL?: string) => {
   data.append("grant_type", "client_credentials");
   data.append("client_id", AUTH_CLIENT_ID);
   data.append("client_secret", AUTH_CLIENT_SECRET);
+  if (AUTH_SCOPE) {
+    data.append("scope", AUTH_SCOPE);
+  }
 
   return await axios.post<TokenResponse>(tokenServiceURL, data, {
     headers: {
