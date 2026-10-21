@@ -46,7 +46,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@hey-api/openapi-ts": "^0.94.0",
+    "@hey-api/openapi-ts": "^0.99.0",
     "@rsbuild/core": "^1.5.11",
     "@rsbuild/plugin-react": "^1.4.0",
     "@rsbuild/plugin-type-check": "^1.2.4",
