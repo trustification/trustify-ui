@@ -4,6 +4,7 @@ import {
   createComparator,
   decodePurl,
   getAxiosErrorMessage,
+  getFilenameFromContentDisposition,
   getToolbarChipKey,
 } from "./utils";
 
@@ -252,6 +253,70 @@ describe("utils", () => {
   it("decodePurl: returns empty string for null or undefined", () => {
     expect(decodePurl(null)).toBe("");
     expect(decodePurl(undefined)).toBe("");
+  });
+
+  // getFilenameFromContentDisposition
+
+  describe("getFilenameFromContentDisposition", () => {
+    it("extracts a double-quoted filename", () => {
+      expect(
+        getFilenameFromContentDisposition('attachment; filename="license.txt"'),
+      ).toBe("license.txt");
+    });
+
+    it("extracts an unquoted filename", () => {
+      expect(
+        getFilenameFromContentDisposition("attachment; filename=license.txt"),
+      ).toBe("license.txt");
+    });
+
+    it("stops at the closing quote when more parameters follow", () => {
+      expect(
+        getFilenameFromContentDisposition(
+          'attachment; filename="sbom.json"; charset=utf-8',
+        ),
+      ).toBe("sbom.json");
+    });
+
+    it("greedily swallows trailing parameters when the filename is unquoted", () => {
+      // Pins current (quirky) behaviour: without quotes the character class
+      // keeps consuming until the end of the header value.
+      expect(
+        getFilenameFromContentDisposition(
+          "attachment; filename=sbom.json; charset=utf-8",
+        ),
+      ).toBe("sbom.json; charset=utf-8");
+    });
+
+    it("extracts a filename containing spaces and dots", () => {
+      expect(
+        getFilenameFromContentDisposition(
+          'attachment; filename="my report v1.2.tar.gz"',
+        ),
+      ).toBe("my report v1.2.tar.gz");
+    });
+
+    it("returns null when the header has no filename parameter", () => {
+      expect(getFilenameFromContentDisposition("attachment")).toBeNull();
+    });
+
+    it("returns null for an empty header", () => {
+      expect(getFilenameFromContentDisposition("")).toBeNull();
+    });
+
+    it("returns null for an empty quoted filename", () => {
+      expect(
+        getFilenameFromContentDisposition('attachment; filename=""'),
+      ).toBeNull();
+    });
+
+    it("returns a string (never undefined) when a filename matches", () => {
+      const result = getFilenameFromContentDisposition(
+        'attachment; filename="a"',
+      );
+      expect(typeof result).toBe("string");
+      expect(result).not.toBeUndefined();
+    });
   });
 
   describe("createComparator", () => {
