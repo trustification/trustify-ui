@@ -70,3 +70,11 @@ test_suite_analysis/
 # AgentReady
 .agentready/*.md
 .agentready/*.html
+
+# e2e generated files
+e2e/tests/common/dataset/advisory/cve/CVE-2026-15227.json.bz2
+e2e/tests/common/dataset/advisory/cve/CVE-2026-18209.json.bz2
+e2e/tests/common/dataset/advisory/cve/CVE-2026-18236.json.bz2
+e2e/tests/common/dataset/advisory/cve/CVE-2026-18358.json.bz2
+e2e/tests/common/dataset/advisory/cve/CVE-2026-46594.json.bz2
+e2e/tests/common/dataset/advisory/cve/CVE-2026-63223.json.bz2
