@@ -23,9 +23,11 @@ export interface ToolbarMatchers<
 }
 
 type ToolbarMatcherDefinitions = {
-  readonly [
-    K in keyof ToolbarMatchers<Record<string, TFilterValue>, string, string[]>
-  ]: <
+  readonly [K in keyof ToolbarMatchers<
+    Record<string, TFilterValue>,
+    string,
+    string[]
+  >]: <
     TFilter extends Record<string, TFilterValue>,
     TFilterName extends Extract<keyof TFilter, string>,
     TKebabActions extends readonly string[],

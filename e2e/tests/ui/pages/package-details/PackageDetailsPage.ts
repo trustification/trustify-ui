@@ -28,8 +28,11 @@ export class PackageDetailsPage {
 
     await toolbar.applyFilter({ "Filter text": packageDetail.Name });
 
-    // Get rows matching the package name
-    const matchingRows = await table.getRowsByCellValue(packageDetail);
+    // Get rows matching the package name, using exact match if version is provided
+    const matchingRows = await table.getRowsByCellValue(
+      packageDetail,
+      !!packageDetail.Version,
+    );
     await matchingRows
       .getByRole("link", { name: packageDetail.Name, exact: true })
       .click();

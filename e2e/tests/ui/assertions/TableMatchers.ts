@@ -20,6 +20,7 @@ export interface TableMatchers<
     greaterThan?: number;
     lessThan?: number;
   }): Promise<MatcherResult>;
+  toHaveColumnHeader(columnName: TColumns[number]): Promise<MatcherResult>;
   toHaveEmptyState(): Promise<MatcherResult>;
   toHaveCvssCellContent(
     rowFilter: Partial<Record<TColumns[number], string>>,
@@ -151,6 +152,30 @@ export const tableAssertions = baseExpect.extend<TableMatcherDefinitions>({
       return {
         pass: true,
         message: () => "Table contains expected rows",
+      };
+    } catch (error) {
+      return {
+        pass: false,
+        message: () => (error instanceof Error ? error.message : String(error)),
+      };
+    }
+  },
+  toHaveColumnHeader: async <
+    const TColumns extends readonly string[],
+    const TActions extends readonly string[],
+  >(
+    table: Table<TColumns, TActions>,
+    columnName: TColumns[number],
+  ) => {
+    try {
+      const columnHeader = table._table.getByRole("columnheader", {
+        name: new RegExp(columnName),
+      });
+      await baseExpect(columnHeader.first()).toBeVisible();
+
+      return {
+        pass: true,
+        message: () => `Column header "${columnName}" is visible`,
       };
     } catch (error) {
       return {

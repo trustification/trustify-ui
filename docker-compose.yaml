@@ -58,7 +58,7 @@ services:
     environment:
       TRUSTD_DB_HOST: trustify-db
       TRUSTD_DB_MAX_CONN: "50"
-      TRUSTD_RECOMMEND_PATTERNS: "(.+)\\.redhat-\\d+$" 
+      TRUSTD_RECOMMEND_PATTERNS: "^(.+)\\.rhlw-[0-9]+$" 
       HTTP_SERVER_BIND_ADDR: "::"
       AUTH_DISABLED: true
       RUST_LOG: "error"

@@ -33,9 +33,27 @@ export class SbomListPage {
       },
       {
         buttonAriaLabel: "SBOM actions",
-        actions: ["Upload SBOM", "Generate vulnerability report"],
+        actions: [
+          "Upload SBOM",
+          "Generate vulnerability report",
+          "Generate remediation report",
+        ],
       },
     );
+  }
+
+  async selectSbomsByName(sbomNames: string[]) {
+    const table = await this.getTable();
+    for (const sbomName of sbomNames) {
+      const rows = await table.getRowsByCellValue({ Name: sbomName });
+      const checkbox = rows.first().locator('input[type="checkbox"]');
+      await checkbox.check();
+    }
+  }
+
+  async clickRemediationReport() {
+    const toolbar = await this.getToolbar();
+    await toolbar.clickKebabAction("Generate remediation report");
   }
 
   async getTable() {

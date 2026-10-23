@@ -1,4 +1,4 @@
-import type { Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
 import { Pagination } from "../../Pagination";
 import { Table } from "../../Table";
 import { Toolbar } from "../../Toolbar";
@@ -49,9 +49,23 @@ export class VulnerabilitiesTab {
     return await Table.build(
       this._page,
       "vulnerability table",
-      ["ID", "Description", "CVSS", "Date published"],
+      ["ID", "Description", "CVSS", "Date published", "Remediations"],
       [],
     );
+  }
+
+  /**
+   * Returns the remediation chip labels rendered in the "Remediations" cell of the
+   * given vulnerability's row. Use to assert the exact set of recommended versions
+   * (or the "Applied" state) per CVE.
+   */
+  async getRemediationLabels(vulnerabilityId: string): Promise<Locator> {
+    const table = await this.getTable();
+    const rows = await table.getRowsByCellValue({ ID: vulnerabilityId });
+    return rows
+      .first()
+      .locator('td[data-label="Remediations"]')
+      .locator(".pf-v6-c-label");
   }
 
   async getPagination(top: boolean = true) {

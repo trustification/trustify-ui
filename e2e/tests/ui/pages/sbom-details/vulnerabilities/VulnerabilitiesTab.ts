@@ -1,4 +1,6 @@
-import type { Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
+
+import { expect } from "../../../assertions";
 
 import { Pagination } from "../../Pagination";
 import { Table } from "../../Table";
@@ -47,6 +49,7 @@ export class VulnerabilitiesTab {
         "Description",
         "CVSS",
         "Affected dependencies",
+        "Remediations",
         "Published",
         "Updated",
       ],
@@ -61,6 +64,77 @@ export class VulnerabilitiesTab {
     const rows = await table.getRowsByCellValue({ Id: vulnerabilityID });
     const sourcesButton = rows.getByRole("button", { name: /Sources/i });
     await sourcesButton.click();
+  }
+
+  /**
+   * Returns the tbody that contains the row for the given vulnerability.
+   */
+  private async getVulnerabilityRow(vulnerabilityId: string): Promise<Locator> {
+    const table = await this.getTable();
+    const row = table._table.locator("tbody").filter({
+      has: this._page.getByRole("link", {
+        name: vulnerabilityId,
+        exact: true,
+      }),
+    });
+    await expect(row.first()).toBeVisible();
+    return row.first();
+  }
+
+  /**
+   * Expands the compound "Affected dependencies" cell of the given vulnerability
+   * row (idempotent) and returns the nested affected-dependencies sub-table,
+   * where the per-dependency "Remediations" chips are rendered.
+   */
+  async expandAffectedDependencies(vulnerabilityId: string): Promise<Locator> {
+    const row = await this.getVulnerabilityRow(vulnerabilityId);
+    const subTable = row.locator("table").first();
+
+    if (!(await subTable.isVisible())) {
+      await row
+        .locator('td[data-label="Affected dependencies"]')
+        .getByRole("button")
+        .click();
+    }
+
+    await expect(subTable).toBeVisible();
+    return subTable;
+  }
+
+  /**
+   * Expands the affected-dependencies sub-table for the given vulnerability and
+   * returns the dependency row for the given package, where its remediation
+   * chips can be asserted.
+   */
+  async getAffectedDependencyRow(
+    vulnerabilityId: string,
+    packageName: string,
+  ): Promise<Locator> {
+    const subTable = await this.expandAffectedDependencies(vulnerabilityId);
+    const dependencyRow = subTable.locator("tbody tr").filter({
+      has: this._page.getByRole("link", {
+        name: packageName,
+        exact: true,
+      }),
+    });
+    await expect(dependencyRow.first()).toBeVisible();
+    return dependencyRow.first();
+  }
+
+  /**
+   * Returns the remediation chip labels rendered in the "Remediations" cell of the
+   * given package's affected-dependency row. Use to assert the exact set of
+   * recommended versions (count + values).
+   */
+  async getAffectedDependencyRemediations(
+    vulnerabilityId: string,
+    packageName: string,
+  ): Promise<Locator> {
+    const dependencyRow = await this.getAffectedDependencyRow(
+      vulnerabilityId,
+      packageName,
+    );
+    return dependencyRow.locator("td").last().locator(".pf-v6-c-label");
   }
 
   async getPagination(top: boolean = true) {

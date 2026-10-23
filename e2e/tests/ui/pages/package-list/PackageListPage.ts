@@ -18,6 +18,15 @@ export class PackageListPage {
     return new PackageListPage(page);
   }
 
+  /**
+   * Build the page object from the current page state WITHOUT navigating.
+   * Use when the application is already on the Package list (e.g. after a filter
+   * has been applied) so the current filter/pagination state is preserved.
+   */
+  static async fromCurrentPage(page: Page) {
+    return new PackageListPage(page);
+  }
+
   async getToolbar() {
     return await Toolbar.build(this._page, "package-toolbar", {
       "Filter text": "string",
@@ -37,6 +46,7 @@ export class PackageListPage {
         "Version",
         "Type",
         "Licenses",
+        "Remediations",
         "Path",
         "Qualifiers",
         "Vulnerabilities",

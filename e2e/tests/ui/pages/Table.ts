@@ -136,6 +136,7 @@ export class Table<
   /**
    * Gets table rows that match specific cell value(s)
    * @param cellValues An object mapping column names to expected values
+   * @param exact When true, uses exact text matching instead of substring matching (default: false)
    * @returns A locator for all matching rows
    * @example
    * // Get rows where Name column contains "curl"
@@ -143,9 +144,13 @@ export class Table<
    *
    * // Get rows matching multiple criteria
    * const rows = table.getRowsByCellValue({ "Name": "curl", "Version": "7.29.0" });
+   *
+   * // Get rows with exact version match to avoid matching "8.1.2-1" when looking for "8.1.2"
+   * const rows = table.getRowsByCellValue({ "Version": "8.1.2" }, true);
    */
   async getRowsByCellValue(
     cellValues: Partial<Record<TColumns[number], string>>,
+    exact: boolean = false,
   ): Promise<Locator> {
     // Start with all table rows
     let rowLocator = this._table.locator("tbody tr");
@@ -155,11 +160,19 @@ export class Table<
       TColumns[number]
     >) {
       const value = cellValues[columnName];
-      rowLocator = rowLocator.filter({
-        has: this._page.locator(`td[data-label="${columnName}"]`, {
-          hasText: value,
-        }),
-      });
+      if (exact) {
+        rowLocator = rowLocator.filter({
+          has: this._page.locator(`td[data-label="${columnName}"]`, {
+            hasText: new RegExp(`^${value}$`),
+          }),
+        });
+      } else {
+        rowLocator = rowLocator.filter({
+          has: this._page.locator(`td[data-label="${columnName}"]`, {
+            hasText: value,
+          }),
+        });
+      }
     }
 
     await expect(rowLocator.first()).toBeVisible();
