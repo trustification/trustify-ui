@@ -44,6 +44,10 @@ export interface IUploadFilesProps {
     MultipleFileUploadProps,
     "onFileDrop" | "dropzoneProps"
   >;
+  /** MIME-type → extension mapping passed to the dropzone accept filter. */
+  dropzoneAccept?: Record<string, string[]>;
+  /** Info text shown below the drag-and-drop area. */
+  infoText?: string;
 }
 
 export const UploadFiles: React.FC<IUploadFilesProps> = ({
@@ -54,6 +58,8 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
   extractErrorMessage,
   isDuplicate,
   fileUploadProps,
+  dropzoneAccept,
+  infoText,
 }) => {
   const [showStatus, setShowStatus] = React.useState(false);
   const [statusIcon, setStatusIcon] = React.useState<
@@ -119,9 +125,7 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
     <MultipleFileUpload
       onFileDrop={handleFileDrop}
       dropzoneProps={{
-        accept: {
-          "application/xml": [".json", ".bz2"],
-        },
+        accept: dropzoneAccept ?? { "application/xml": [".json", ".bz2"] },
         onDropRejected: handleDropRejected,
         useFsAccessApi: false, // Required to make playwright work
       }}
@@ -131,7 +135,7 @@ export const UploadFiles: React.FC<IUploadFilesProps> = ({
         titleIcon={<UploadIcon />}
         titleText="Drag and drop files here"
         titleTextSeparator="or"
-        infoText="Accepted file types: .json, .bz2"
+        infoText={infoText ?? "Accepted file types: .json, .bz2"}
       />
       {showStatus && (
         <MultipleFileUploadStatus

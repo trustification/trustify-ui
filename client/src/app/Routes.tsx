@@ -46,6 +46,9 @@ const Search = lazy(() => import("./pages/search"));
 const ImporterList = lazy(() => import("./pages/importer-list"));
 const LicenseList = lazy(() => import("./pages/license-list"));
 const CryptoList = lazy(() => import("./pages/crypto-list"));
+const CryptoRemediationUpload = lazy(
+  () => import("./pages/crypto-remediation-upload"),
+);
 const ModelList = lazy(() => import("./pages/model-list"));
 const NotFound = lazy(() => import("./pages/not-found"));
 /* eslint-enable react-refresh/only-export-components */
@@ -75,6 +78,7 @@ export const Paths = {
   importers: "/importers",
   licenses: "/licenses",
   cryptography: "/cryptography",
+  cryptographyRemediationUpload: "/cryptography/remediation/import",
   models: "/models",
   sbomGroups: "/sbom-groups",
   sbomGroupDetails: `/sbom-groups/:${PathParam.SBOM_GROUP_ID}`,
@@ -160,6 +164,15 @@ export const AppRoutes = createBrowserRouter([
           <LazyRouteElement
             identifier="crypto-list"
             component={<CryptoList />}
+          />
+        ),
+      },
+      {
+        path: Paths.cryptographyRemediationUpload,
+        element: (
+          <LazyRouteElement
+            identifier="crypto-remediation-upload"
+            component={<CryptoRemediationUpload />}
           />
         ),
       },

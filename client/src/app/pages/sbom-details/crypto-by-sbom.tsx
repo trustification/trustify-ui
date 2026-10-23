@@ -53,7 +53,7 @@ const getKeyType = (item: CryptoAlgorithm): string =>
   (rcmProps(item).type as string) ?? item.asset_type ?? "--";
 
 const getRecommendation = (item: CryptoAlgorithm): string =>
-  (algProps(item).recommendation as string) ?? "--";
+  item.recommendation ?? "--";
 
 const getUsage = (item: CryptoAlgorithm): string =>
   (algProps(item).detectionContext as string) ?? "--";

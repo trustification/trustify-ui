@@ -37,6 +37,7 @@ export interface CryptoAlgorithm {
   policy_status: string;
   packages_count: number;
   sboms_count: number;
+  recommendation?: string | null;
 }
 
 /** Shape of the policy evaluation summary returned by POST /v3/crypto/policy/evaluate. */
