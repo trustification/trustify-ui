@@ -1,1 +1,0 @@
-import{In as e,i as t}from"./useBranding-Baiuy66J.js";import{t as n,w as r}from"./apiInit-YMiOU6As.js";var i=`licenses`,a=(a={},o=!1)=>{let{data:s,isLoading:c,error:l,refetch:u}=e({queryKey:[i,a],queryFn:()=>r({client:n,query:{...t(a)}}),enabled:!o});return{result:{data:s?.data?.items||[],total:s?.data?.total??0,params:a},isFetching:c,fetchError:l,refetch:u}};export{a as t};
