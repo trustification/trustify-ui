@@ -5,6 +5,7 @@
 
   "compilerOptions": {
     "strict": true,
+    "noUncheckedIndexedAccess": true,
     "types": ["node"],
     "target": "es2021",
     "module": "node16",

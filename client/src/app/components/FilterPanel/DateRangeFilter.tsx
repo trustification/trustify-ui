@@ -40,8 +40,8 @@ export const DateRangeFilter = <TItem,>({
   React.useEffect(() => {
     if (filterValue?.[0]) {
       const [from, to] = parseInterval(filterValue?.[0]);
-      setFrom(from.toDate());
-      setTo(to.toDate());
+      setFrom(from!.toDate());
+      setTo(to!.toDate());
     } else {
       setFrom(undefined);
       setTo(undefined);
