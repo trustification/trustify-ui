@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { cpSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import util from "node:util";
@@ -7,7 +7,6 @@ import nodeResolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import virtual from "@rollup/plugin-virtual";
 import ejs from "ejs";
-import copy from "rollup-plugin-copy";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const pathTo = (...relativePath) => path.resolve(__dirname, ...relativePath);
@@ -53,14 +52,14 @@ const config = {
   },
 
   plugins: [
-    copy({
-      targets: [
-        {
-          src: `${brandingPath.replace(/\\/g, "/")}/**/*`,
-          dest: "dist/branding",
-        },
-      ],
-    }),
+    {
+      name: "copy-branding",
+      buildStart() {
+        cpSync(brandingPath, path.resolve(__dirname, "dist/branding"), {
+          recursive: true,
+        });
+      },
+    },
     nodeResolve(),
     typescript(),
     virtual({
