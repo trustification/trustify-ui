@@ -18,6 +18,10 @@ export class AdvisoryListPage {
     return new AdvisoryListPage(page);
   }
 
+  static fromCurrentPage(page: Page) {
+    return new AdvisoryListPage(page);
+  }
+
   async getToolbar() {
     return await Toolbar.build(this._page, "advisory-toolbar", {
       "Filter text": "string",

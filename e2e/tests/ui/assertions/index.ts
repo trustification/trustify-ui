@@ -22,12 +22,26 @@ import {
   type FileUploadMatchers,
 } from "./FileUploadMatchers";
 
+import type { SearchPage } from "../pages/search-page/SearchPage";
+import {
+  searchPageAssertions,
+  type SearchPageMatchers,
+} from "./SearchPageMatchers";
+
+import type { SearchPageTabs } from "../pages/SearchPageTabs";
+import {
+  searchPageTabsAssertions,
+  type SearchPageTabsMatchers,
+} from "./SearchPageTabsMatchers";
+
 const merged = mergeExpects(
   tableAssertions,
   paginationAssertions,
   toolbarAssertions,
   dialogAssertions,
   fileUploadAssertions,
+  searchPageAssertions,
+  searchPageTabsAssertions,
   // Add more custom assertions here
 );
 
@@ -88,6 +102,25 @@ function typedExpect(
   value: FileUpload,
 ): Omit<ReturnType<typeof merged<FileUpload>>, keyof FileUploadMatchers> &
   FileUploadMatchers;
+
+/**
+ * Overload from SearchPageMatchers.ts
+ */
+function typedExpect(
+  value: SearchPage,
+): Omit<ReturnType<typeof merged<SearchPage>>, keyof SearchPageMatchers> &
+  SearchPageMatchers;
+
+/**
+ * Overload from SearchPageTabsMatchers.ts
+ */
+function typedExpect(
+  value: SearchPageTabs,
+): Omit<
+  ReturnType<typeof merged<SearchPageTabs>>,
+  keyof SearchPageTabsMatchers
+> &
+  SearchPageTabsMatchers;
 
 // Default overload
 function typedExpect<T>(value: T): ReturnType<typeof merged<T>>;

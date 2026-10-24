@@ -114,7 +114,7 @@ export const SearchTabs: React.FC<SearchTabsProps> = ({
     <Split hasGutter>
       <SplitItem>
         <Card isFullHeight>
-          <CardBody style={{ width: 241 }}>
+          <CardBody style={{ width: 241 }} aria-label="Filter panel">
             {isTabActive("sboms") ? (
               <FilterPanel
                 omitFilterCategoryKeys={["name"]}

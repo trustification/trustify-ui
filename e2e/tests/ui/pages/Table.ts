@@ -38,11 +38,10 @@ export class Table<
     return result;
   }
 
-  /**
-   * @param waitMs - Optional. Milliseconds to wait before checking table data.
-   */
-  public async waitUntilDataIsLoaded(waitMs = 500) {
-    await this._page.waitForTimeout(waitMs);
+  public async waitUntilDataIsLoaded() {
+    await this._table
+      .locator('tbody[aria-label="Table loading"]')
+      .waitFor({ state: "hidden" });
 
     const rows = this._table.locator(
       'xpath=//tbody[not(@aria-label="Table loading")]',

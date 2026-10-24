@@ -17,7 +17,7 @@ export class SbomListPage {
     return new SbomListPage(page);
   }
 
-  static async fromCurrentPage(page: Page) {
+  static fromCurrentPage(page: Page) {
     return new SbomListPage(page);
   }
 
