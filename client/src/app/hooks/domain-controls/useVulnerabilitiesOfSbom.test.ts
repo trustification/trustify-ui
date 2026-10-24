@@ -18,7 +18,7 @@ const makeAdvisory = (overrides: Partial<AdvisoryHead> = {}): AdvisoryHead => ({
 const makePurl = (purl: string) => ({
   uuid: `uuid-${purl}`,
   purl,
-  base: { uuid: `base-${purl}`, purl: purl.split("@")[0] },
+  base: { uuid: `base-${purl}`, purl: purl.split("@")[0]! },
   qualifiers: {},
   version: {
     uuid: `ver-${purl}`,

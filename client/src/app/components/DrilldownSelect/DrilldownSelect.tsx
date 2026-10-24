@@ -266,7 +266,7 @@ export const DrilldownSelect = ({
 
         if (nextIndex !== currentIndex) {
           event.preventDefault();
-          focusable[nextIndex].focus();
+          focusable[nextIndex]!.focus();
         }
       }}
     >

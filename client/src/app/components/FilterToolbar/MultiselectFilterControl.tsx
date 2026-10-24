@@ -77,10 +77,12 @@ export const MultiselectFilterControl = <TItem,>({
           category.selectOptions?.find(({ value }) => filter === value),
         ])
         .filter(([, option]) => option)
-        .map(([filter, { groupLabel = defaultGroup } = {}]) => [
-          filter,
-          groupLabel,
-        ])
+        .map(
+          ([filter, { groupLabel = defaultGroup } = {}]): [string, string] => [
+            filter,
+            groupLabel,
+          ],
+        )
         .filter(([, groupLabel]) => groupLabel !== groupName)
         .map(([filter]) => filter),
     );
@@ -236,12 +238,15 @@ export const MultiselectFilterControl = <TItem,>({
     <>
       {
         <ToolbarFilter
-          id={`${idPrefix}-${firstGroup}`}
-          labels={chipsFor(firstGroup)}
+          id={`${idPrefix}-${firstGroup!}`}
+          labels={chipsFor(firstGroup!)}
           deleteLabel={(_, chip) => onFilterClear(chip)}
-          deleteLabelGroup={() => onFilterClearGroup(firstGroup)}
-          categoryName={{ name: firstGroup, key: withGroupPrefix(firstGroup) }}
-          key={withGroupPrefix(firstGroup)}
+          deleteLabelGroup={() => onFilterClearGroup(firstGroup!)}
+          categoryName={{
+            name: firstGroup!,
+            key: withGroupPrefix(firstGroup!),
+          }}
+          key={withGroupPrefix(firstGroup!)}
           showToolbarItem={showToolbarItem}
         >
           <Select

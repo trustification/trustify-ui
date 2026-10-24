@@ -75,7 +75,7 @@ export const SelectFilterControl = <TItem, TFilterCategoryKey extends string>({
   const toggle = (toggleRef: React.Ref<MenuToggleElement>) => {
     let displayText = "Any";
     if (filterValue && filterValue.length > 0) {
-      const selectedKey = filterValue[0];
+      const selectedKey = filterValue[0]!;
       const selectedDisplayValue = getOptionFromOptionValue(selectedKey)?.label;
       displayText = selectedDisplayValue ? selectedDisplayValue : selectedKey;
     }
