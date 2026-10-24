@@ -1141,7 +1141,6 @@ paths:
         required: false
         schema:
           oneOf:
-          - type: 'null'
           - type: string
             description: |-
               Possible types of the cryptographic assets within a CBOM
@@ -1151,6 +1150,7 @@ paths:
             - certificate
             - protocol
             - related-crypto-material
+          - type: 'null'
       responses:
         '200':
           description: Matching crypto algorithms
@@ -1176,6 +1176,44 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PolicyEvaluationResponse'
+  /api/v3/crypto/remediation:
+    get:
+      tags:
+      - crypto
+      operationId: listCryptoRemediations
+      responses:
+        '200':
+          description: All stored remediation mappings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RemediationMapping'
+  /api/v3/crypto/remediation/import:
+    post:
+      tags:
+      - crypto
+      operationId: importCryptoRemediations
+      requestBody:
+        description: 'Algorithm-to-replacement mappings as a JSON array (application/json) or CSV rows (text/csv) with headers: algorithm_name, algorithm_primitive, replacement_name, replacement_standard, replacement_primitive'
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/RemediationImportItem'
+          text/csv:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: Import result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemediationImportResult'
   /api/v3/crypto/summary:
     get:
       tags:
@@ -3441,16 +3479,16 @@ paths:
         required: false
         schema:
           oneOf:
-          - type: 'null'
           - $ref: '#/components/schemas/Purl'
+          - type: 'null'
       - name: cpe
         in: query
         description: Find by CPE
         required: false
         schema:
           oneOf:
-          - type: 'null'
           - $ref: '#/components/schemas/Cpe'
+          - type: 'null'
       responses:
         '200':
           description: Matching SBOMs
@@ -3474,16 +3512,16 @@ paths:
         required: true
         schema:
           oneOf:
-          - type: 'null'
           - $ref: '#/components/schemas/Purl'
+          - type: 'null'
       - name: cpe
         in: path
         description: Find by CPE
         required: true
         schema:
           oneOf:
-          - type: 'null'
           - $ref: '#/components/schemas/Cpe'
+          - type: 'null'
       requestBody:
         content:
           application/json:
@@ -3834,7 +3872,6 @@ paths:
         required: false
         schema:
           oneOf:
-          - type: 'null'
           - type: string
             description: |-
               Possible types of the cryptographic assets within a CBOM
@@ -3844,6 +3881,7 @@ paths:
             - certificate
             - protocol
             - related-crypto-material
+          - type: 'null'
       responses:
         '200':
           description: Crypto assets for the SBOM
@@ -4211,8 +4249,8 @@ paths:
         required: false
         schema:
           oneOf:
-          - type: 'null'
           - $ref: '#/components/schemas/Relationship'
+          - type: 'null'
       - name: q
         in: query
         description: |
@@ -4777,11 +4815,11 @@ components:
           description: The identifier of the advisory, as assigned by the issuing organization.
         issuer:
           oneOf:
-          - type: 'null'
           - $ref: '#/components/schemas/OrganizationSummary'
             description: |-
               The issuer of the advisory, if known. If no issuer is able to be
               determined, this field will not be included in a response.
+          - type: 'null'
         labels:
           $ref: '#/components/schemas/Labels'
           description: Informational labels attached by the system or users to this advisory.
@@ -4982,9 +5020,9 @@ components:
       properties:
         details:
           oneOf:
-          - type: 'null'
           - $ref: '#/components/schemas/AnalysisStatusDetails'
             description: More details
+          - type: 'null'
         graph_count:
           type: integer
           format: int32
@@ -5353,9 +5391,9 @@ components:
             unsupported ecosystem) rather than genuinely failing.
         finding:
           oneOf:
-          - type: 'null'
           - $ref: '#/components/schemas/ExploitIntelligenceFinding'
             description: Analysis result from Exploit Intelligence, if completed.
+          - type: 'null'
         id:
           type: string
           format: uuid
@@ -5451,6 +5489,7 @@ components:
       - policy_status
       - packages_count
       - sboms_count
+      - recommendation
       properties:
         asset_type:
           $ref: '#/components/schemas/CryptoAssetType'
@@ -5473,6 +5512,11 @@ components:
           - 'null'
         properties:
           type: object
+        recommendation:
+          type:
+          - string
+          - 'null'
+          description: NIST PQC replacement recommendation for this algorithm, if a mapping exists.
         sbom_id:
           type: string
           format: uuid
@@ -5667,9 +5711,9 @@ components:
           description: Number of genuinely failed components (computed at query time, not stored).
         finding:
           oneOf:
-          - type: 'null'
           - $ref: '#/components/schemas/ExploitIntelligenceFinding'
             description: Analysis result computed from component findings.
+          - type: 'null'
         id:
           type: string
           format: uuid
@@ -5763,9 +5807,9 @@ components:
           description: Number of genuinely failed components (computed at query time, not stored).
         finding:
           oneOf:
-          - type: 'null'
           - $ref: '#/components/schemas/ExploitIntelligenceFinding'
             description: Analysis result from Exploit Intelligence.
+          - type: 'null'
         id:
           type: string
           format: uuid
@@ -5822,14 +5866,14 @@ components:
       properties:
         cpe:
           oneOf:
-          - type: 'null'
           - $ref: '#/components/schemas/Cpe'
             description: Find by CPE
+          - type: 'null'
         purl:
           oneOf:
-          - type: 'null'
           - $ref: '#/components/schemas/Purl'
             description: Find by PURL
+          - type: 'null'
     ExtractPackage:
       type: object
       description: Information extracted from a package
@@ -5986,9 +6030,9 @@ components:
         properties:
           auth:
             oneOf:
-            - type: 'null'
             - $ref: '#/components/schemas/AuthConfig'
               description: Optional authentication configuration for accessing the source.
+            - type: 'null'
           discovery:
             $ref: '#/components/schemas/HttpDiscovery'
             description: File-discovery strategy used to enumerate files in the source.
@@ -6164,9 +6208,9 @@ components:
           description: The name of the importer this report belongs to
         report:
           oneOf:
-          - type: 'null'
           - $ref: '#/components/schemas/Report'
             description: Detailed report information
+          - type: 'null'
     IngestResult:
       type: object
       description: The result of the ingestion process
@@ -6311,9 +6355,9 @@ components:
             description: All descendents of this node. [`None`] if not requested on this level.
           relationship:
             oneOf:
-            - type: 'null'
             - $ref: '#/components/schemas/Relationship'
               description: The relationship the node has to it's containing node, if any.
+            - type: 'null'
           warnings:
             type: array
             items:
@@ -6396,23 +6440,14 @@ components:
     OsvImporter:
       allOf:
       - $ref: '#/components/schemas/CommonImporter'
+      - $ref: '#/components/schemas/OsvTransport'
       - type: object
         required:
         - source
         properties:
-          branch:
-            type:
-            - string
-            - 'null'
-            description: An optional branch. Will use the default branch otherwise.
-          path:
-            type:
-            - string
-            - 'null'
-            description: An optional path to start searching for documents. Will use the root of the repository otherwise.
           source:
             type: string
-            description: The URL to the git repository of the OSV data
+            description: A Git repository URL or an OSV REST index URL.
           startYear:
             type:
             - integer
@@ -6426,6 +6461,41 @@ components:
               format: int32
               minimum: 0
             uniqueItems: true
+    OsvTransport:
+      oneOf:
+      - type: object
+        required:
+        - transport
+        properties:
+          branch:
+            type:
+            - string
+            - 'null'
+            description: An optional branch. Will use the default branch otherwise.
+          path:
+            type:
+            - string
+            - 'null'
+            description: An optional path to start searching for documents. Defaults to the repository root.
+          transport:
+            type: string
+            enum:
+            - git
+      - type: object
+        required:
+        - transport
+        properties:
+          baseUrl:
+            type:
+            - string
+            - 'null'
+            format: uri
+            description: Base URL for REST records (`<id>.json`). Defaults to the index directory.
+          transport:
+            type: string
+            enum:
+            - http
+      description: How OSV documents are retrieved. Defaults to Git when omitted.
     PaginatedResults_AdvisorySummary:
       type: object
       required:
@@ -6490,6 +6560,7 @@ components:
             - policy_status
             - packages_count
             - sboms_count
+            - recommendation
             properties:
               asset_type:
                 $ref: '#/components/schemas/CryptoAssetType'
@@ -6512,6 +6583,11 @@ components:
                 - 'null'
               properties:
                 type: object
+              recommendation:
+                type:
+                - string
+                - 'null'
+                description: NIST PQC replacement recommendation for this algorithm, if a mapping exists.
               sbom_id:
                 type: string
                 format: uuid
@@ -6620,9 +6696,9 @@ components:
                 description: Number of genuinely failed components (computed at query time, not stored).
               finding:
                 oneOf:
-                - type: 'null'
                 - $ref: '#/components/schemas/ExploitIntelligenceFinding'
                   description: Analysis result from Exploit Intelligence.
+                - type: 'null'
               id:
                 type: string
                 format: uuid
@@ -6760,9 +6836,9 @@ components:
                 description: The name of the importer this report belongs to
               report:
                 oneOf:
-                - type: 'null'
                 - $ref: '#/components/schemas/Report'
                   description: Detailed report information
+                - type: 'null'
         total:
           type:
           - integer
@@ -6855,9 +6931,9 @@ components:
                   description: All descendents of this node. [`None`] if not requested on this level.
                 relationship:
                   oneOf:
-                  - type: 'null'
                   - $ref: '#/components/schemas/Relationship'
                     description: The relationship the node has to it's containing node, if any.
+                  - type: 'null'
                 warnings:
                   type: array
                   items:
@@ -6886,8 +6962,8 @@ components:
               properties:
                 vendor:
                   oneOf:
-                  - type: 'null'
                   - $ref: '#/components/schemas/OrganizationSummary'
+                  - type: 'null'
                 versions:
                   type: array
                   items:
@@ -7382,8 +7458,8 @@ components:
         properties:
           vendor:
             oneOf:
-            - type: 'null'
             - $ref: '#/components/schemas/OrganizationSummary'
+            - type: 'null'
           versions:
             type: array
             items:
@@ -7421,8 +7497,8 @@ components:
         properties:
           vendor:
             oneOf:
-            - type: 'null'
             - $ref: '#/components/schemas/OrganizationSummary'
+            - type: 'null'
           versions:
             type: array
             items:
@@ -7434,8 +7510,8 @@ components:
         properties:
           sbom:
             oneOf:
-            - type: 'null'
             - $ref: '#/components/schemas/ProductSbomHead'
+            - type: 'null'
     ProductVersionHead:
       type: object
       required:
@@ -7451,8 +7527,8 @@ components:
     Progress:
       allOf:
       - oneOf:
-        - type: 'null'
         - $ref: '#/components/schemas/ProgressDetails'
+        - type: 'null'
       - type: object
         properties:
           message:
@@ -7565,8 +7641,8 @@ components:
           $ref: '#/components/schemas/AdvisoryHead'
         context:
           oneOf:
-          - type: 'null'
           - $ref: '#/components/schemas/StatusContext'
+          - type: 'null'
         fixed_versions:
           type: array
           items:
@@ -7580,8 +7656,8 @@ components:
           type: string
         version_range:
           oneOf:
-          - type: 'null'
           - $ref: '#/components/schemas/VersionRange'
+          - type: 'null'
         vulnerability:
           $ref: '#/components/schemas/VulnerabilityHead'
     PurlSummary:
@@ -7611,9 +7687,9 @@ components:
         properties:
           auth:
             oneOf:
-            - type: 'null'
             - $ref: '#/components/schemas/AuthConfig'
               description: Authentication configuration for accessing the Quay registry.
+            - type: 'null'
           concurrency:
             type:
             - integer
@@ -7627,9 +7703,9 @@ components:
             description: The namespace of the registry to "walk"
           sizeLimit:
             oneOf:
-            - type: 'null'
             - $ref: '#/components/schemas/BinaryByteSize'
               description: The max size of the ingested SBOM's (None is unlimited)
+            - type: 'null'
           source:
             type: string
             description: The name of the quay registry, e.g. quay.io
@@ -7801,6 +7877,69 @@ components:
       - no_fix_planned
       - none_available
       - will_not_fix
+    RemediationImportItem:
+      type: object
+      description: One entry in a remediation import payload (CSV row or JSON array element).
+      required:
+      - algorithm_name
+      - replacement_name
+      properties:
+        algorithm_name:
+          type: string
+        algorithm_primitive:
+          type:
+          - string
+          - 'null'
+        replacement_name:
+          type: string
+        replacement_primitive:
+          type:
+          - string
+          - 'null'
+        replacement_standard:
+          type:
+          - string
+          - 'null'
+    RemediationImportResult:
+      type: object
+      description: Result returned after a remediation import operation.
+      required:
+      - count
+      properties:
+        count:
+          type: integer
+          description: Number of mappings processed (inserted or updated).
+          minimum: 0
+    RemediationMapping:
+      type: object
+      description: A single algorithm-to-NIST-replacement remediation mapping.
+      required:
+      - id
+      - algorithm_name
+      - algorithm_primitive
+      - replacement_name
+      - replacement_standard
+      - replacement_primitive
+      properties:
+        algorithm_name:
+          type: string
+        algorithm_primitive:
+          type:
+          - string
+          - 'null'
+        id:
+          type: string
+          format: uuid
+        replacement_name:
+          type: string
+        replacement_primitive:
+          type:
+          - string
+          - 'null'
+        replacement_standard:
+          type:
+          - string
+          - 'null'
     RemediationSummary:
       type: object
       required:
@@ -8012,8 +8151,8 @@ components:
               type: string
           sizeLimit:
             oneOf:
-            - type: 'null'
             - $ref: '#/components/schemas/BinaryByteSize'
+            - type: 'null'
           source:
             type: string
           v3Signatures:
@@ -8133,8 +8272,8 @@ components:
         properties:
           context:
             oneOf:
-            - type: 'null'
             - $ref: '#/components/schemas/StatusContext'
+            - type: 'null'
           fixed_versions:
             type: array
             items:
@@ -8485,8 +8624,8 @@ components:
           $ref: '#/components/schemas/BasePurlHead'
         context:
           oneOf:
-          - type: 'null'
           - $ref: '#/components/schemas/StatusContext'
+          - type: 'null'
         version:
           type: string
     VulnerabilityAdvisorySummary:
@@ -8558,9 +8697,9 @@ components:
       properties:
         base_score:
           oneOf:
-          - type: 'null'
           - $ref: '#/components/schemas/BaseScore'
             description: The main, base score.
+          - type: 'null'
         cwes:
           type: array
           items:
@@ -8650,16 +8789,16 @@ components:
           type: string
         justification:
           oneOf:
-          - type: 'null'
           - $ref: '#/components/schemas/VexJustification'
+          - type: 'null'
         remediations:
           type: array
           items:
             $ref: '#/components/schemas/RemediationSummary'
         status:
           oneOf:
-          - type: 'null'
           - $ref: '#/components/schemas/VexStatus'
+          - type: 'null'
     VulnerabilitySummary:
       allOf:
       - $ref: '#/components/schemas/VulnerabilityHead'
