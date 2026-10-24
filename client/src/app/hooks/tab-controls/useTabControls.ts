@@ -9,9 +9,7 @@ import type { PersistTarget } from "../table-controls";
 import { getTabDerivedState } from "./getTabDerivedState";
 import { type ITabStateArgs, useTabState } from "./useTabState";
 
-export type ICommonPersistenceArgs<
-  TPersistenceKeyPrefix extends string = string,
-> = {
+type ICommonPersistenceArgs<TPersistenceKeyPrefix extends string = string> = {
   persistenceKeyPrefix?: DisallowCharacters<TPersistenceKeyPrefix, ":">;
   persistTo?: PersistTarget;
 };
