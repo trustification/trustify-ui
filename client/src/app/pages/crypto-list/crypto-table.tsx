@@ -40,7 +40,7 @@ const getKeyType = (item: CryptoAlgorithm): string =>
 
 /** Extracts the recommendation from algorithm properties. */
 const getRecommendation = (item: CryptoAlgorithm): string =>
-  (algProps(item).recommendation as string) ?? "--";
+  item.recommendation ?? "--";
 
 /** Extracts the usage context from crypto properties. */
 const getUsage = (item: CryptoAlgorithm): string =>
