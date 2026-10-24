@@ -161,7 +161,7 @@ export const useUpload = <T, E>({
     const queue: PromiseConfig<T, E>[] = [];
 
     for (let index = 0; index < acceptedFiles.length; index++) {
-      const file = acceptedFiles[index];
+      const file = acceptedFiles[index]!;
 
       // Upload
       const formData = new FormData();

@@ -48,7 +48,7 @@ export const useFetchVulnerabilitiesByPackageIds = (
     if (index % 100 === 0) {
       chunks.push([item]);
     } else {
-      chunks[chunks.length - 1].push(item);
+      chunks[chunks.length - 1]!.push(item);
     }
     return chunks;
   }, []);

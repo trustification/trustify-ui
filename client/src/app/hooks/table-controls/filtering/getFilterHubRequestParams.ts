@@ -136,7 +136,7 @@ export const getFilterHubRequestParams = <
             filterCategory.operator ??
             filterCategory.getOperator?.(serverFilterValue) ??
             "=",
-          value: serverFilterValue[0],
+          value: serverFilterValue[0]!,
         });
       }
       if (
@@ -156,7 +156,7 @@ export const getFilterHubRequestParams = <
         });
       }
       if (filterCategory.type === "dateRange") {
-        const [start, end] = parseInterval(serverFilterValue[0]);
+        const [start, end] = parseInterval(serverFilterValue[0]!);
         if (start) {
           pushOrMergeFilter(filters, {
             field: serverFilterField,
@@ -183,7 +183,7 @@ export const getFilterHubRequestParams = <
             filterCategory.operator ??
             filterCategory.getOperator?.(serverFilterValue) ??
             "=",
-          value: serverFilterValue[0],
+          value: serverFilterValue[0]!,
         });
       }
     }

@@ -27,7 +27,7 @@ export const toISODateInterval = (from?: Date, to?: Date) => {
 export const parseInterval = (interval: string): dayjs.Dayjs[] =>
   interval?.split("/").map((it) => dayjs(it, "YYYY-MM-DD", true)) ?? [];
 
-export const isValidInterval = ([from, to]: dayjs.Dayjs[]) =>
+export const isValidInterval = ([from, to]: (dayjs.Dayjs | undefined)[]) =>
   from?.isValid() && to?.isValid() && from?.isSameOrBefore(to);
 
 export const localizeInterval = (interval: string) => {
@@ -36,7 +36,7 @@ export const localizeInterval = (interval: string) => {
     return [];
   }
   return [
-    `${start.format("MM/DD")}-${end.format("MM/DD")}`,
-    `${start.format("MM/DD/YYYY")}-${end.format("MM/DD/YYYY")}`,
+    `${start!.format("MM/DD")}-${end!.format("MM/DD")}`,
+    `${start!.format("MM/DD/YYYY")}-${end!.format("MM/DD/YYYY")}`,
   ];
 };

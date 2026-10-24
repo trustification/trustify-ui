@@ -152,7 +152,7 @@ export const useAutocompleteHandlers = ({
     const focusedItem = optionsNotSelected.filter(
       ({ optionProps }) => !optionProps?.isDisabled,
     )[indexToFocus];
-    setActiveItem(focusedItem);
+    setActiveItem(focusedItem ?? null);
   };
 
   const handleClearSearchInput = () => {
