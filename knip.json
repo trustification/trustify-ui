@@ -1,0 +1,12 @@
+{
+  "workspaces": {
+    "client": {
+      "entry": ["src/index.tsx", "config/openapi-ts.config.ts"]
+    },
+    "e2e": {
+      "entry": ["tests/**/*.ts"]
+    }
+  },
+  "ignoreBinaries": ["bzcat", "bzip2"],
+  "ignoreDependencies": ["playwright-core", "playwright"]
+}

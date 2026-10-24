@@ -25,6 +25,8 @@
     "@patternfly/react-core": "^6.6.1",
     "@patternfly/react-log-viewer": "^6.5.0",
     "@patternfly/react-table": "^6.6.1",
+    "@patternfly/react-icons": "^6.6.1",
+    "@patternfly/react-styles": "^6.6.1",
     "@patternfly/react-tokens": "^6.4.0",
     "@tanstack/react-query": "^5.90.11",
     "@tanstack/react-query-devtools": "^5.61.0",
@@ -38,11 +40,9 @@
     "react-dom": "^19.2.8",
     "react-error-boundary": "6.0.0",
     "react-hook-form": "^7.66.1",
-    "react-markdown": "^8.0.7",
     "react-oidc-context": "^3.3.0",
     "react-router-dom": "^7.18.2",
     "usehooks-ts": "^3.1.1",
-    "victory": "^37.3.4",
     "yup": "^0.32.11"
   },
   "devDependencies": {
@@ -54,6 +54,7 @@
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^5.1.4",
     "jsdom": "^28.0.0",
+    "react-dropzone": "^14.4.1",
     "vite": "^8.3.5",
     "vite-plugin-ejs": "^2.0.0",
     "vite-plugin-istanbul": "^9.0.1",
