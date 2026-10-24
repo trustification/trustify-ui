@@ -69,33 +69,6 @@ export const formatDateTime = (value?: string | null) => {
   return value ? dayjs(value).format(RENDER_DATETIME_FORMAT) : null;
 };
 
-export const duplicateFieldCheck = <T>(
-  fieldKey: keyof T,
-  itemList: T[],
-  currentItem: T | null,
-  fieldValue: T[keyof T],
-) =>
-  (currentItem && currentItem[fieldKey] === fieldValue) ||
-  !itemList.some((item) => item[fieldKey] === fieldValue);
-
-export const duplicateNameCheck = <T extends { name?: string }>(
-  itemList: T[],
-  currentItem: T | null,
-  nameValue: T["name"],
-) => duplicateFieldCheck("name", itemList, currentItem, nameValue);
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- allowed
-export const dedupeFunction = (arr: any[]) =>
-  arr?.filter(
-    (value, index, self) =>
-      index === self.findIndex((t) => t.value === value.value),
-  );
-
-export const numStr = (num: number | undefined): string => {
-  if (num === undefined) return "";
-  return String(num);
-};
-
 export const parseMaybeNumericString = (
   numOrStr: string | undefined | null,
 ): string | number | null => {
@@ -113,10 +86,6 @@ export const getValidatedFromErrors = (
   isTouched: boolean | undefined,
 ) => {
   return error && (dirty || isTouched) ? "error" : "default";
-};
-
-export const getValidatedFromError = (error: unknown | undefined) => {
-  return error ? "error" : "default";
 };
 
 export const decomposePurl = (purl: string) => {

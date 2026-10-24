@@ -201,7 +201,7 @@ export const getFilterHubRequestParams = <
  * - Given a string or number, returns it as a string with quotes (`"`) around it.
  * - Adds an escape character before any existing quote (`"`) characters in the string.
  */
-export const wrapAndEscape = (value: string | number): string =>
+const wrapAndEscape = (value: string | number): string =>
   `${String(value)
     .replace("=", "\\=")
     .replace("~", "\\~")
@@ -221,32 +221,4 @@ export const serializeFilterForHub = (filter: HubFilter): string => {
         : `${value.list.map(wrapAndEscape).join(value.operator === "OR" ? "|" : ",")}`;
 
   return !field ? joinedValue : `${field}${operator}${joinedValue}`;
-};
-
-/**
- * Converts the values returned by getFilterHubRequestParams into the URL query strings expected by the hub API
- * - Appends converted URL params to the given `serializedParams` object for use in the hub API request
- * - Constructs part of the object returned by serializeRequestParamsForHub
- * @see serializeRequestParamsForHub
- */
-export const serializeFilterRequestParamsForHub = (
-  deserializedParams: HubRequestParams,
-  serializedParams: URLSearchParams,
-) => {
-  const { filters } = deserializedParams;
-  if (filters) {
-    serializedParams.append(
-      "q",
-      filters
-        .filter((filter) => {
-          const { value } = filter;
-          return typeof value === "string" || typeof value === "number"
-            ? value !== null && value !== undefined
-            : value && value.list.length > 0;
-        })
-        .sort((a, b) => a.field.localeCompare(b.field))
-        .map(serializeFilterForHub)
-        .join("&"),
-    );
-  }
 };

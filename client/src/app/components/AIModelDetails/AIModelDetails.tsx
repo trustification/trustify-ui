@@ -19,7 +19,7 @@ import type { SbomModel } from "@app/client";
 
 import { getModelProperties } from "./utils";
 
-export interface ExternalReference {
+interface ExternalReference {
   type: string;
   url: string;
   comment?: string;

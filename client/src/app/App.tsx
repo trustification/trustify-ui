@@ -14,7 +14,7 @@ import "@patternfly/patternfly/patternfly.css";
 import "@patternfly/patternfly/patternfly-addons.css";
 import "@patternfly/patternfly/patternfly-charts.css";
 
-export const STORAGE_KEY = "theme-preference";
+const STORAGE_KEY = "theme-preference";
 
 const App: React.FC = () => {
   const [mode, setMode] = useLocalStorage<ThemeMode>({

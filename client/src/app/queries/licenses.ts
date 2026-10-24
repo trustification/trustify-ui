@@ -6,7 +6,7 @@ import { client } from "@app/axios-config/apiInit";
 import { listLicenses } from "@app/client";
 import { requestParamsQuery } from "@app/hooks/table-controls";
 
-export const LicensesQueryKey = "licenses";
+const LicensesQueryKey = "licenses";
 
 export const useFetchLicenses = (
   params: HubRequestParams = {},

@@ -6,7 +6,7 @@ import { client } from "@app/axios-config/apiInit";
 import { listAllModels } from "@app/client";
 import { requestParamsQuery } from "@app/hooks/table-controls";
 
-export const ModelsQueryKey = "models";
+const ModelsQueryKey = "models";
 
 export const useFetchAllModels = (
   params: HubRequestParams = {},

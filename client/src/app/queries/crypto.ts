@@ -11,8 +11,8 @@ import type {
   CryptoPolicySummary,
 } from "@app/pages/crypto-list/crypto-context";
 
-export const CryptoAlgorithmsQueryKey = "crypto-algorithms";
-export const CryptoPolicySummaryQueryKey = "crypto-policy-summary";
+const CryptoAlgorithmsQueryKey = "crypto-algorithms";
+const CryptoPolicySummaryQueryKey = "crypto-policy-summary";
 
 /** Fetches a paginated list of cryptographic algorithms, optionally filtered by asset type. */
 export const useFetchCryptoAlgorithms = (
@@ -48,7 +48,7 @@ export const useFetchCryptoAlgorithms = (
   };
 };
 
-export const CryptoBySbomQueryKey = "crypto-by-sbom";
+const CryptoBySbomQueryKey = "crypto-by-sbom";
 
 /** Fetches cryptographic assets associated with a specific SBOM, optionally filtered by asset type. */
 export const useFetchCryptoBySbom = (
