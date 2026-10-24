@@ -8,5 +8,5 @@
     }
   },
   "ignoreBinaries": ["bzcat", "bzip2"],
-  "ignoreDependencies": ["playwright-core", "playwright"]
+  "ignoreDependencies": ["playwright-core", "playwright", "victory"]
 }
