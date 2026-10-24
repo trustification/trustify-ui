@@ -134,7 +134,7 @@ export const joinKeyValueAsString = ({ key, value }: Label): string => {
 };
 
 export const splitStringAsKeyValue = (v: string): Label => {
-  const [key, value] = v.split("=");
+  const [key = "", value] = v.split("=");
   return { key, value: value ?? "" };
 };
 
@@ -178,7 +178,7 @@ export const extractPriorityScoreFromScores = (scores: Score[]) => {
     return null;
   }
 
-  return [...scores].sort(compareByScoreTypeFn((item) => item.type))[0];
+  return [...scores].sort(compareByScoreTypeFn((item) => item.type))[0] ?? null;
 };
 
 export const extractPriorityItemBasedOnScoresType = <T>(
@@ -189,9 +189,13 @@ export const extractPriorityItemBasedOnScoresType = <T>(
     return null;
   }
 
-  return [...items].sort((a, b) => {
-    const scoreTypeA = getScoreType(a);
-    const scoreTypeB = getScoreType(b);
-    return getScoreTypePriority(scoreTypeA) - getScoreTypePriority(scoreTypeB);
-  })[0];
+  return (
+    [...items].sort((a, b) => {
+      const scoreTypeA = getScoreType(a);
+      const scoreTypeB = getScoreType(b);
+      return (
+        getScoreTypePriority(scoreTypeA) - getScoreTypePriority(scoreTypeB)
+      );
+    })[0] ?? null
+  );
 };
