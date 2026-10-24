@@ -192,7 +192,8 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
           numRenderedColumns={numRenderedColumns}
         >
           {currentPageItems?.map((item, rowIndex) => {
-            const currentPurl = item.purl[0]?.purl;
+            const firstPurl = item.purl[0];
+            const currentPurl = firstPurl?.purl;
             const rowRecommendations =
               recommendationsMap.get(currentPurl ?? "") ?? [];
 
@@ -219,8 +220,8 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                       modifier="breakWord"
                       {...getTdProps({ columnKey: "vulnerabilities" })}
                     >
-                      {item.purl[0] ? (
-                        <WithPackage packageId={item.purl[0].uuid}>
+                      {firstPurl ? (
+                        <WithPackage packageId={firstPurl.uuid}>
                           {(pkg, isFetching, fetchError) => (
                             <PackageVulnerabilities
                               pkg={pkg}
@@ -258,8 +259,8 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                       width={15}
                       {...getTdProps({ columnKey: "remediation" })}
                     >
-                      {item.purl[0] ? (
-                        <WithPackage packageId={item.purl[0].uuid}>
+                      {firstPurl ? (
+                        <WithPackage packageId={firstPurl.uuid}>
                           {(pkg, isFetching) => {
                             if (isFetching) {
                               return (
@@ -318,10 +319,10 @@ export const PackagesBySbom: React.FC<PackagesProps> = ({ sbomId }) => {
                       {item.purl.length === 1 ? (
                         <Link
                           to={generatePath(Paths.packageDetails, {
-                            packageId: item.purl[0].uuid,
+                            packageId: firstPurl!.uuid,
                           })}
                         >
-                          {decodePurl(item.purl[0].purl)}
+                          {decodePurl(firstPurl!.purl)}
                         </Link>
                       ) : (
                         `${item.purl.length} PURLs`
