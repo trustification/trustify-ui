@@ -54,6 +54,10 @@ jobs:
           PW_TEST_CONNECT_WS_ENDPOINT=ws://localhost:${{ steps.install-trustify.outputs.playwright_port }}/ TRUSTIFY_UI_URL=http://localhost:3000 AUTH_REQUIRED=false npm run test:ui
           ls -la .nyc_output
 
+      - name: Upload Playwright artifacts
+        if: failure() # only upload if tests failed
+        uses: ./.github/actions/upload-playwright-artifacts
+
       - name: Generate coverage report
         run: |
           npx nyc report --temp-dir e2e/.nyc_output --reporter=html --reporter=text --reporter=lcov
@@ -68,3 +72,4 @@ jobs:
           use_oidc: true
           flags: e2e
           slug: ${{ github.repository_owner }}/trustify-ui
+        

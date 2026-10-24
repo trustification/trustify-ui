@@ -167,9 +167,4 @@ jobs:
 
       - name: Upload Playwright artifacts
         if: failure() # only upload if tests failed
-        uses: actions/upload-artifact@v7
-        with:
-          name: playwright-artifacts
-          path: |
-            e2e/test-results
-            e2e/playwright-report
+        uses: ./.github/actions/upload-playwright-artifacts
