@@ -8,5 +8,11 @@
     }
   },
   "ignoreBinaries": ["bzcat", "bzip2"],
-  "ignoreDependencies": ["playwright-core", "playwright", "victory"]
+  "ignoreDependencies": [
+    "@vitest/coverage-v8",
+    "playwright-core",
+    "playwright",
+    "victory",
+    "vitest"
+  ]
 }

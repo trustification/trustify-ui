@@ -1,7 +1,8 @@
 import React from "react";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import {
   type MockedFunction,
+  afterEach,
   beforeEach,
   describe,
   expect,
@@ -101,11 +102,16 @@ const renderSearchMenu = ({
 
 describe("SearchMenu autocomplete fetch gating (TC-2443)", () => {
   beforeEach(() => {
+    vi.useFakeTimers();
     vi.clearAllMocks();
     mockedUseFetchAdvisories.mockReturnValue(emptyFetchResult);
     mockedUseFetchPackages.mockReturnValue(emptyFetchResult);
     mockedUseFetchSBOMs.mockReturnValue(emptyFetchResult);
     mockedUseFetchVulnerabilities.mockReturnValue(emptyFetchResult);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it("disables autocomplete fetches on initial mount with empty input", () => {
@@ -121,9 +127,11 @@ describe("SearchMenu autocomplete fetch gating (TC-2443)", () => {
       target: { value: "some" },
     });
 
-    await waitFor(() => {
-      expect(allAutocompleteEnabled(getDisableSearchFlags())).toBe(true);
+    await act(async () => {
+      await vi.runAllTimersAsync();
     });
+
+    expect(allAutocompleteEnabled(getDisableSearchFlags())).toBe(true);
   });
 
   it("disables autocomplete fetches for whitespace-only input while dirty", () => {
