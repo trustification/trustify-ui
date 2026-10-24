@@ -6,7 +6,7 @@ import {
   PaginationVariant,
 } from "@patternfly/react-core";
 
-export type PaginationStateProps = Pick<
+type PaginationStateProps = Pick<
   PaginationProps,
   "itemCount" | "perPage" | "page" | "onSetPage" | "onPerPageSelect"
 >;
