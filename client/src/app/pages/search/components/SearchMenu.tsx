@@ -23,7 +23,7 @@ import { useFetchSBOMs } from "@app/queries/sboms";
 import { useFetchVulnerabilities } from "@app/queries/vulnerabilities";
 import { decodePurl } from "@app/utils/utils";
 
-export interface IEntity {
+interface IEntity {
   id: string;
   title: string | null;
   description?: string | null;

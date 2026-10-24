@@ -55,7 +55,7 @@ export const MultiselectFilterControl = <TItem,>({
   const filteredOptions = category.selectOptions?.filter(
     ({ label, value, groupLabel }) =>
       [label ?? value, groupLabel]
-        .filter(Boolean)
+        .filter((it): it is string => it != null)
         .map((it) => it.toLocaleLowerCase())
         .some((it) => it.includes(inputValue?.trim().toLowerCase() ?? "")),
   );
@@ -64,7 +64,7 @@ export const MultiselectFilterControl = <TItem,>({
     ...new Set([
       ...(category.selectOptions
         ?.map(({ groupLabel }) => groupLabel)
-        .filter(Boolean) ?? []),
+        .filter((g): g is string => !!g) ?? []),
       defaultGroup,
     ]),
   ];
@@ -104,7 +104,7 @@ export const MultiselectFilterControl = <TItem,>({
             value === filter && groupLabel === groupName,
         ),
       )
-      .filter(Boolean)
+      .filter((option): option is FilterSelectOptionProps => !!option)
       .map((option) => {
         const { chipLabel, label, value } = option;
         const displayValue: string = chipLabel ?? label ?? value ?? "";

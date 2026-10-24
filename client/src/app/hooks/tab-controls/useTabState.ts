@@ -4,7 +4,7 @@ import {
   isPersistenceProvider,
 } from "../table-controls";
 
-export interface IActiveTab<TTabKey extends string> {
+interface IActiveTab<TTabKey extends string> {
   tabKey: TTabKey;
 }
 

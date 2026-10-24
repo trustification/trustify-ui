@@ -35,7 +35,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
   );
 };
 
-export const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
+const Search: React.FC<SearchPageProps> = ({ searchBodyOverride }) => {
   const { tableControls: sbomTableControls } =
     React.useContext(SbomSearchContext);
   const { tableControls: packageTableControls } =
