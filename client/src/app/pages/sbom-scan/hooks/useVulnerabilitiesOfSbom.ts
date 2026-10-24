@@ -121,7 +121,9 @@ export const useVulnerabilitiesOfSbomByPurls = (purls: string[]) => {
                 advisory: current.advisory,
                 score: score,
               },
-            ].sort(compareByScoreTypeFn((item) => item.score?.type ?? null))[0];
+            ].sort(
+              compareByScoreTypeFn((item) => item.score?.type ?? null),
+            )[0]!;
 
             opinionatedAdvisory = preferedAdvisoryScore.advisory;
             opinionatedScore = preferedAdvisoryScore.score;

@@ -26,7 +26,7 @@ export const useTabState = <
 ): ITabState<TTabKey> => {
   const { persistTo = "state", persistenceKeyPrefix } = args;
   const defaultActiveTab: IActiveTab<TTabKey> = args.defaultActiveTab ?? {
-    tabKey: args.tabKeys[0],
+    tabKey: args.tabKeys[0]!,
   };
 
   const [activeTab, setActiveTab] = usePersistentState<
