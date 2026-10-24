@@ -1,0 +1,6 @@
+ignores:
+  # used by .husky/commit-msg via `npx --no -- commitlint` (not scanned by depcheck)
+  - "@commitlint/cli"
+  - "@commitlint/config-conventional"
+  # used in root scripts (clean, clean:all, dist) — depcheck misses &&-chained commands
+  - "rimraf"

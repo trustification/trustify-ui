@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useLocalStorage } from "@app/hooks/useStorage";
 import type { ColumnSetting } from "../types";
 
-export interface ColumnState<TColumnKey extends string> {
+interface ColumnState<TColumnKey extends string> {
   id: TColumnKey;
   label: string;
   isVisible: boolean;

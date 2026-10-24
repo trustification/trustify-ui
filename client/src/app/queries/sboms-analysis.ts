@@ -4,7 +4,7 @@ import { uploadSbomForAnalysis } from "@app/api/rest";
 import type { ExtractResult } from "@app/client";
 import { useUpload } from "@app/hooks/useUpload";
 
-export const SBOMAnalysisQueryKey = "sbom-analysis";
+const SBOMAnalysisQueryKey = "sbom-analysis";
 
 export const useUploadAndAnalyzeSBOM = (
   onSuccess: (data: ExtractResult, file: File) => void,

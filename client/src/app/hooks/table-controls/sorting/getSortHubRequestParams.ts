@@ -37,20 +37,3 @@ export const getSortHubRequestParams = <TSortableColumnKey extends string>({
     },
   };
 };
-
-/**
- * Converts the values returned by getSortHubRequestParams into the URL query strings expected by the hub API
- * - Appends converted URL params to the given `serializedParams` object for use in the hub API request
- * - Constructs part of the object returned by serializeRequestParamsForHub
- * @see serializeRequestParamsForHub
- */
-export const serializeSortRequestParamsForHub = (
-  deserializedParams: HubRequestParams,
-  serializedParams: URLSearchParams,
-) => {
-  const { sort } = deserializedParams;
-  if (sort) {
-    const { field, direction } = sort;
-    serializedParams.append("sort", `${field}:${direction}`);
-  }
-};

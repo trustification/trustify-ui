@@ -12,7 +12,7 @@ import {
 } from "@app/client";
 import { requestParamsQuery } from "@app/hooks/table-controls";
 
-export const VulnerabilitiesQueryKey = "vulnerabilities";
+const VulnerabilitiesQueryKey = "vulnerabilities";
 
 export const useFetchVulnerabilities = (
   params: HubRequestParams = {},

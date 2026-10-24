@@ -99,7 +99,7 @@ export const vulnerabilityStatusList: VulnerabilityStatusListType = {
   },
 };
 
-export const getSeverityPriority = (val: ExtendedSeverity) => {
+const getSeverityPriority = (val: ExtendedSeverity) => {
   switch (val) {
     case "unknown":
       return 1;

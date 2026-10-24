@@ -5,15 +5,12 @@ import { DEFAULT_REFETCH_INTERVAL } from "@app/Constants";
 import { client } from "@app/axios-config/apiInit";
 import {
   type ImporterConfiguration,
-  createImporter,
-  deleteImporter,
-  getImporter,
   listImporterReports,
   listImporters,
   updateImporter,
 } from "@app/client";
 
-export const ImportersQueryKey = "importers";
+const ImportersQueryKey = "importers";
 
 export const useFetchImporters = (refetchDisabled = false) => {
   const { isLoading, error, refetch, data } = useQuery({
@@ -27,51 +24,6 @@ export const useFetchImporters = (refetchDisabled = false) => {
     isFetching: isLoading,
     fetchError: error,
     refetch,
-  };
-};
-
-export const useCreateImporterMutation = (
-  onSuccess: () => void,
-  onError: (
-    err: AxiosError,
-    payload: {
-      importerName: string;
-      configuration: ImporterConfiguration;
-    },
-  ) => void,
-) => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (payload: {
-      importerName: string;
-      configuration: ImporterConfiguration;
-    }) => {
-      return createImporter({
-        client,
-        path: { name: payload.importerName },
-        body: payload.configuration,
-      });
-    },
-    onSuccess: async (_, _payload) => {
-      onSuccess();
-      await queryClient.invalidateQueries({ queryKey: [ImportersQueryKey] });
-    },
-    onError,
-  });
-};
-
-export const useFetchImporterById = (id: string) => {
-  const { data, isLoading, error } = useQuery({
-    queryKey: [ImportersQueryKey, id],
-    queryFn: () => getImporter({ client, path: { name: id } }),
-    enabled: !!id,
-  });
-
-  return {
-    credentials: data,
-    isFetching: isLoading,
-    fetchError: error as AxiosError | null,
   };
 };
 
@@ -100,31 +52,6 @@ export const useUpdateImporterMutation = (
     },
     onError: onError,
   });
-};
-
-export const useDeleteIporterMutation = (
-  onSuccess: (id: string) => void,
-  onError: (err: AxiosError, id: string) => void,
-) => {
-  const queryClient = useQueryClient();
-
-  const { isPending, mutate, error } = useMutation({
-    mutationFn: (id: string) => deleteImporter({ client, path: { name: id } }),
-    onSuccess: async (_res, id) => {
-      onSuccess(id);
-      await queryClient.invalidateQueries({ queryKey: [ImportersQueryKey] });
-    },
-    onError: async (err: AxiosError, id) => {
-      onError(err, id);
-      await queryClient.invalidateQueries({ queryKey: [ImportersQueryKey] });
-    },
-  });
-
-  return {
-    mutate,
-    isPending,
-    error,
-  };
 };
 
 export const useFetchImporterReports = (

@@ -6,17 +6,14 @@ import {
   type IGetFilterHubRequestParamsArgs,
   getFilterHubRequestParams,
   serializeFilterForHub,
-  serializeFilterRequestParamsForHub,
 } from "./filtering";
 import {
   type IGetPaginationHubRequestParamsArgs,
   getPaginationHubRequestParams,
-  serializePaginationRequestParamsForHub,
 } from "./pagination";
 import {
   type IGetSortHubRequestParamsArgs,
   getSortHubRequestParams,
-  serializeSortRequestParamsForHub,
 } from "./sorting";
 
 // TODO move this outside this directory as part of decoupling Konveyor-specific code from table-controls.
@@ -43,21 +40,6 @@ export const getHubRequestParams = <
   ...getSortHubRequestParams(args),
   ...getPaginationHubRequestParams(args),
 });
-
-/**
- * Converts the HubRequestParams object created above into URLSearchParams (the browser API object for URL query parameters).
- * - NOTE: This is Konveyor-specific.
- * - Used internally by the application's useFetch[Resource] hooks
- */
-export const serializeRequestParamsForHub = (
-  deserializedParams: HubRequestParams,
-): URLSearchParams => {
-  const serializedParams = new URLSearchParams();
-  serializeFilterRequestParamsForHub(deserializedParams, serializedParams);
-  serializeSortRequestParamsForHub(deserializedParams, serializedParams);
-  serializePaginationRequestParamsForHub(deserializedParams, serializedParams);
-  return serializedParams;
-};
 
 interface HubRequestParamsQuery {
   /**
