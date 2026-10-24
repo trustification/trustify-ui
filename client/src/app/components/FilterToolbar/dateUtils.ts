@@ -12,7 +12,7 @@ export const isInClosedRange = (interval: string, date: string): boolean => {
     return false;
   }
   const target = dayjs(date);
-  return start.isSameOrBefore(target) && target.isSameOrBefore(end, "day");
+  return start!.isSameOrBefore(target) && target.isSameOrBefore(end!, "day");
 };
 
 export const isValidAmericanShortDate = (val: string) =>
