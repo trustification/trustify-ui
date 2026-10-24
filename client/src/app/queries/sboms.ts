@@ -1,7 +1,6 @@
 import {
   keepPreviousData,
   useMutation,
-  useQueries,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
@@ -17,7 +16,6 @@ import {
   type SbomHead,
   patchSbomGroupAssignments,
   deleteSbom,
-  downloadSbom,
   getSbom,
   getSbomAdvisories,
   listAllLicenseIds,
@@ -149,20 +147,6 @@ export const useDeleteSbomMutation = (
   });
 };
 
-export const useFetchSBOMSourceById = (key: string) => {
-  const { data, isLoading, error } = useQuery({
-    queryKey: [SBOMsQueryKey, key, "source"],
-    queryFn: () => downloadSbom({ client, path: { key } }),
-    enabled: key !== undefined,
-  });
-
-  return {
-    source: data,
-    isFetching: isLoading,
-    fetchError: error as AxiosError | null,
-  };
-};
-
 export const useUploadSBOM = () => {
   const queryClient = useQueryClient();
   return useUpload<IngestResult, { message: string }>({
@@ -243,33 +227,6 @@ export const useFetchSbomsAdvisory = (
     advisories: data?.data || [],
     isFetching: isLoading,
     fetchError: error as AxiosError | null,
-  };
-};
-
-export const useFetchSbomsAdvisoryBatch = (sbomIds: string[]) => {
-  const userQueries = useQueries({
-    queries: sbomIds.map((sbomId) => {
-      return {
-        queryKey: [
-          SBOMsQueryKey,
-          sbomId,
-          "advisory",
-          { includeResolved: false },
-        ],
-        queryFn: () => {
-          return getSbomAdvisories({
-            client,
-            path: { id: sbomId },
-          });
-        },
-      };
-    }),
-  });
-
-  return {
-    advisories: userQueries.map(({ data }) => data?.data || []),
-    isFetching: userQueries.some(({ isLoading }) => isLoading),
-    fetchError: userQueries.map(({ error }) => error as AxiosError | null),
   };
 };
 

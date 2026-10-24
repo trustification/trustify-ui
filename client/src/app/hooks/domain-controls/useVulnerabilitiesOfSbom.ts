@@ -18,10 +18,7 @@ import type {
   SbomStatus,
   ScoredVector,
 } from "@app/client";
-import {
-  useFetchSbomsAdvisory,
-  useFetchSbomsAdvisoryBatch,
-} from "@app/queries/sboms";
+import { useFetchSbomsAdvisory } from "@app/queries/sboms";
 
 const areVulnerabilityOfSbomEqual = (
   a: VulnerabilityOfSbom,
@@ -54,7 +51,7 @@ type PurlAnalysis =
   | { isOrphan: true; parentName: string }
   | { isOrphan: false; purlSummary: PurlSummary };
 
-export interface VulnerabilityOfSbom {
+interface VulnerabilityOfSbom {
   vulnerability: SbomStatus;
   vulnerabilityStatus: VulnerabilityStatus;
   advisories: Map<string, AdvisoryFromAnalysis>;
@@ -351,21 +348,4 @@ export const buildVexByPurl = (
     }
   }
   return result;
-};
-
-export const useVulnerabilitiesOfSboms = (sbomIds: string[]) => {
-  const { advisories, isFetching, fetchError } =
-    useFetchSbomsAdvisoryBatch(sbomIds);
-
-  const result = React.useMemo(() => {
-    return (advisories ?? []).map((item) => {
-      return advisoryToModels(item || []);
-    });
-  }, [advisories]);
-
-  return {
-    data: result,
-    isFetching: isFetching,
-    fetchError: fetchError,
-  };
 };
